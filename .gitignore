@@ -1,0 +1,14 @@
+bin/
+gen/
+local.properties
+*.sdf
+Release/
+Release_STL/
+Debug/
+Debug_STL/
+tinyXmlTest___Win32_Release/
+tinyXmlTest___Win32_Debug/
+tinyXmlTestSTL___Win32_Release/
+tinyXmlTestSTL___Win32_Debug/
+ipch/
+enc_temp_folder/
