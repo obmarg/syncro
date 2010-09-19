@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<RootFolder>
+    <Folder  name="Folder2">
+        <File>C:\SyncFiles\Folder2\New Bitmap Image.bmp</File>
+        <File>C:\SyncFiles\Folder2\New Text Document.txt</File>
+        <Folder  name="New folder">
+            <File>C:\SyncFiles\Folder2\New folder\New WinRAR archive.rar</File>
+        </Folder>
+    </Folder>
+</RootFolder>

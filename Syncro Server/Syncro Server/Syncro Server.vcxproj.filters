@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\webem">
+      <UniqueIdentifier>{04225202-2ed1-4189-bb4d-03b9e37bbad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\webem">
+      <UniqueIdentifier>{42418a84-2669-4b6f-a0b8-a5d35970db66}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SyncroServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="server\connection.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\connection_manager.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\header.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\mime_types.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\reply.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\request.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\request_handler.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="server\request_parser.hpp">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="cWebem.h">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="cWebemTable.h">
+      <Filter>Header Files\webem</Filter>
+    </ClInclude>
+    <ClInclude Include="FolderMan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Folder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadcastListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadcastThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SyncroServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cWebem.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\connection.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\connection_manager.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\mime_types.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\reply.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\request_handler.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\request_parser.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server.cpp">
+      <Filter>Source Files\webem</Filter>
+    </ClCompile>
+    <ClCompile Include="FolderMan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Folder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadcastListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadcastThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
