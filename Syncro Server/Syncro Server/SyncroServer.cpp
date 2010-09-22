@@ -12,6 +12,8 @@
 #include <memory>
 #include <boost/lexical_cast.hpp>
 #include "BroadcastThread.h"
+#include "ServerComms.h"
+#include <boost/asio.hpp>
 
 using namespace std;
 using std::tr1::shared_ptr;
@@ -29,7 +31,13 @@ CSyncroServer::~CSyncroServer() {
 
 bool 
 CSyncroServer::Run() {
-	m_oHTTP.Run();
+	//m_oHTTP.Run();
+	using boost::asio::io_service;
+	io_service oIO;
+	
+	CServerComms oComms(oIO);
+	oIO.run();
+
 	return true;
 }
 

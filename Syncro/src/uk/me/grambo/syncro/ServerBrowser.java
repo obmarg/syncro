@@ -105,7 +105,7 @@ public class ServerBrowser extends Activity
         
         m_oAddServerStatement.bindString(1,sServerName);
         m_oAddServerStatement.bindLong(2,nPort);
-        int nResult = m_oAddServerStatement.executeInsert();
+        int nResult = (int)m_oAddServerStatement.executeInsert();
         if( nResult == -1 )
         	Log.e("Syncro", "execute failed");
         else

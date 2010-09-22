@@ -89,6 +89,7 @@
     <ClInclude Include="cWebemTable.h" />
     <ClInclude Include="Folder.h" />
     <ClInclude Include="FolderMan.h" />
+    <ClInclude Include="ServerComms.h" />
     <ClInclude Include="server\connection.hpp" />
     <ClInclude Include="server\connection_manager.hpp" />
     <ClInclude Include="server\header.hpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="Folder.cpp" />
     <ClCompile Include="FolderMan.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ServerComms.cpp" />
     <ClCompile Include="server\connection.cpp" />
     <ClCompile Include="server\connection_manager.cpp" />
     <ClCompile Include="server\mime_types.cpp" />
