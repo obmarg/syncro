@@ -4,6 +4,7 @@
 #include <boost\asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
+#include <set>
 
 class CTCPConnection : public boost::enable_shared_from_this<CTCPConnection> {
 public:
@@ -29,10 +30,28 @@ private:
 	std::size_t m_nWaitingRecv;
 };
 
+class CAcceptHandler {
+public:
+	CAcceptHandler(int innPriority) : m_nPriority( innPriority ) {};
+	virtual CAcceptHandler() {};
+
+	virtual bool HandleAccept(CTCPConnection::TPointer inpNewConnection) = 0;
+	bool operator<(const CAcceptHandler& inoRHS) {
+		if( m_nPriority < inoRHS.m_nPriority )
+			return true;
+		return false;
+	}
+
+protected:
+	int m_nPriority;
+}
+
 class CServerComms {
 public:
 	CServerComms(boost::asio::io_service& inoIOService);
 	~CServerComms();
+
+	void AddAcceptHandler(boost::shared_ptr<CAcceptHandler> inoAcceptHandler);
 private:
 	CServerComms(const CServerComms& inoServerComms);
 	boost::asio::ip::tcp::acceptor m_oAcceptor;

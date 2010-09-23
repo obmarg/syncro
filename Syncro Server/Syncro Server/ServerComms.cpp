@@ -40,6 +40,7 @@ void CTCPConnection::StartRecv(int inBytes) {
 	if( inBytes == 0 ) 
 		inBytes = DEFAULT_RECV_BUFFER;
 	m_aBuffer.resize( inBytes );
+	m_nWaitingRecv = inBytes;
 	boost::asio::async_read( m_oSocket, boost::asio::buffer( m_aBuffer ), 
 		boost::bind(&CTCPConnection::IsRecvFinished, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred ),
 		boost::bind(&CTCPConnection::FinishedRecv, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred ) );
@@ -63,6 +64,8 @@ void CTCPConnection::FinishedRecv(const boost::system::error_code& inoError, std
 	if( inoError ) {
 		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
 		return;
-	} else
+	} else {
 		cout << "Received " << innBytes << "\n";
+		StartRecv( );
+	}
 }
