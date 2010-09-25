@@ -67,7 +67,6 @@ bool CTCPConnection::IsRecvFinished(const boost::system::error_code& inoError, s
 		cout << "Error when checking received:  Received " << innBytesSoFar << " bytes\n";
 		return true;
 	}
-/*	m_nWaitingRecv -= innBytesSoFar;*/
 	TCharBuffer oBuffer( m_aBuffer, innBytesSoFar );
 	TRecvHandlerMap::iterator pRecv;
 	for(pRecv = m_oRecvHandlers.begin(); pRecv != m_oRecvHandlers.end(); pRecv++ ) {

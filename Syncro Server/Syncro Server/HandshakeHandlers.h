@@ -40,7 +40,6 @@ public:
 	}
 
 protected:
-	const static std::string m_sResponse;
 
 	CTCPConnection::TPointer m_pConn;
 

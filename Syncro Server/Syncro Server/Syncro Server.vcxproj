@@ -101,7 +101,7 @@
     <ClInclude Include="server\request_parser.hpp" />
     <ClInclude Include="SyncroServer.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="XMLAcceptHandler.h" />
+    <ClInclude Include="XMLHandlers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BroadcastListener.cpp" />
@@ -120,7 +120,7 @@
     <ClCompile Include="server\request_parser.cpp" />
     <ClCompile Include="server\server.cpp" />
     <ClCompile Include="SyncroServer.cpp" />
-    <ClCompile Include="XMLAcceptHandler.cpp" />
+    <ClCompile Include="XMLHandlers.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

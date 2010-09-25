@@ -8,7 +8,6 @@ using std::vector;
 using std::string;
 
 const std::string CHandshakeRecv::m_sRecvString = "Hello Syncro?";
-const std::string CHandshakeResponse::m_sResponse = "Hello there!";
 
 CHandshakeRecv::CHandshakeRecv(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
 	m_fFoundString = false;
@@ -44,7 +43,9 @@ bool CHandshakeRecv::CanRemove() {
 }
 
 CHandshakeResponse::CHandshakeResponse(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
-	std::copy( m_sResponse.begin(), m_sResponse.end(), std::back_inserter(m_aBuffer) );
+	m_aBuffer.push_back(100);
+	m_aBuffer.push_back(200);
+	m_aBuffer.push_back(50);
 }
 
 CHandshakeResponse::~CHandshakeResponse() {
@@ -52,7 +53,7 @@ CHandshakeResponse::~CHandshakeResponse() {
 }
 
 bool CHandshakeResponse::HandleSend(int innSent) {
-	if( innSent >= (int)m_sResponse.length() )
+	if( innSent >= (int)m_aBuffer.size() )
 		return true;
 	return false;
 }

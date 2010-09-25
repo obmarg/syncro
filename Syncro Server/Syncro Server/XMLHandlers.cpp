@@ -1,4 +1,4 @@
-#include "XMLAcceptHandler.h"
+#include "XMLHandlers.h"
 #include "HandshakeHandlers.h"
 
 CXMLAcceptHandler::CXMLAcceptHandler() : CAcceptHandler( 1 ) {

@@ -75,7 +75,7 @@
     <ClInclude Include="HandshakeHandlers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="XMLAcceptHandler.h">
+    <ClInclude Include="XMLHandlers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -128,7 +128,7 @@
     <ClCompile Include="HandshakeHandlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XMLAcceptHandler.cpp">
+    <ClCompile Include="XMLHandlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

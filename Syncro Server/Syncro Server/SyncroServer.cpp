@@ -14,7 +14,7 @@
 #include "BroadcastThread.h"
 #include "ServerComms.h"
 #include <boost/asio.hpp>
-#include "XMLAcceptHandler.h"
+#include "XMLHandlers.h"
 
 using namespace std;
 using std::tr1::shared_ptr;
