@@ -18,5 +18,8 @@
         <activity android:name="FindServer"
         	android:label="@string/app_name">
         </activity>
-    </application>
+    <service android:name="SyncroService"><intent-filter android:label="StartServiceIntent"><action android:name="uk.me.grambo.syncro.SYNCRO_SYNC"></action>
+</intent-filter>
+</service>
+</application>
 </manifest> 

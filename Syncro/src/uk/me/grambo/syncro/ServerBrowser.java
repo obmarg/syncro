@@ -1,6 +1,7 @@
 package uk.me.grambo.syncro;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.*;
 import android.database.*;
@@ -22,6 +23,8 @@ public class ServerBrowser extends Activity
 	private SQLiteStatement m_oAddServerStatement;
 	
     String[] m_aServers;
+    String[] m_aServerAddresses;
+    int[] m_aServerPorts;
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -41,21 +44,40 @@ public class ServerBrowser extends Activity
         });
         
         ListView oListView = (ListView)findViewById(R.id.serverlist);
-        DBHelper oHelper = new DBHelper( this );
-        SQLiteDatabase m_oDB = oHelper.getReadableDatabase();
-        Cursor oResults = m_oDB.rawQuery("SELECT * From servers", null);
-        int nResults = oResults.getCount();
-        if( nResults > 0 ) {
-        	m_aServers = new String[nResults];
-        	oResults.moveToFirst();
-        	int n = 0;
-        	do {
-        		m_aServers[n] = oResults.getString(0);
-        		n++;
-        	} while( oResults.moveToNext() );
-        	oListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServers ));
+        try {
+        	DBHelper oHelper = new DBHelper( this );
+        	SQLiteDatabase m_oDB = oHelper.getReadableDatabase();
+        	Cursor oResults = m_oDB.rawQuery("SELECT Name,IP,Port From servers", null);
+	        int nResults = oResults.getCount();
+	        if( nResults > 0 ) {
+	        	m_aServers = new String[nResults];
+	        	m_aServerAddresses = new String[nResults];
+	        	m_aServerPorts = new int[nResults];
+	        	oResults.moveToFirst();
+	        	int n = 0;
+	        	do {
+	        		m_aServers[n] = oResults.getString(0);
+	        		m_aServerAddresses[n] = oResults.getString(1);
+	        		m_aServerPorts[n] = oResults.getInt(2);
+	        		n++;
+	        	} while( oResults.moveToNext() );
+	        	
+	        }
+	        if( nResults == 0 ) {
+	        	m_oDB.execSQL("INSERT INTO SERVERS(Name,IP,PORT) VALUES ('Ceephax','192.168.5.5',9998);");
+	        } else {
+	        	oListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServers ));
+	        }
+	        oResults.close();
+        }catch(SQLException oException) {
+        	oException.printStackTrace();
         }
-        oResults.close();
+        oListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        	public void onItemClick(AdapterView oParent,View oView,int innPosition,long innID) {
+        		oParent.getContext().startService( new Intent( "uk.me.grambo.syncro.SYNCRO_SYNC", Uri.parse("syncro://192.168.5.5:9998") ) );
+        	};
+		});
+        
         
         Button oManualAdd = (Button)findViewById(R.id.addserverbutton);
         oManualAdd.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +86,7 @@ public class ServerBrowser extends Activity
         	}
         });
         
-        m_oAddServerStatement = m_oDB.compileStatement("INSERT INTO servers(Name,IP) VALUES(?,?)");
+       // m_oAddServerStatement = m_oDB.compileStatement("INSERT INTO servers(Name,IP,Port) VALUES(?,?,?)");
     }
     
     protected Dialog onCreateDialog(int innID) {
@@ -104,7 +126,8 @@ public class ServerBrowser extends Activity
     	int nPort = Integer.parseInt(oPortEditText.getText().toString());
         
         m_oAddServerStatement.bindString(1,sServerName);
-        m_oAddServerStatement.bindLong(2,nPort);
+        m_oAddServerStatement.bindString(2,sServerName);
+        m_oAddServerStatement.bindLong(3,nPort);
         int nResult = (int)m_oAddServerStatement.executeInsert();
         if( nResult == -1 )
         	Log.e("Syncro", "execute failed");
