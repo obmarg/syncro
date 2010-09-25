@@ -13,18 +13,20 @@ import android.net.Uri;
 
 public class SyncroService extends IntentService {
 
-	public SyncroService(String name) {
-		super(name);
+	public SyncroService() {
+		super("SyncroService");
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected void onHandleIntent(Intent arg0) {
-		if( arg0.getAction().equals("SYNCRO_SYNC") ) {
+		if( arg0.getAction().equals("uk.me.grambo.syncro.SYNCRO_SYNC") ) {
 			Uri oURI = arg0.getData();
-			String sHost = oURI.getHost();
-			int nPort = oURI.getPort();
-			RunSync(sHost,nPort);
+			if( oURI != null ) {
+				String sHost = oURI.getHost();
+				int nPort = oURI.getPort();
+				RunSync(sHost,nPort);
+			}
 		}
 	}
 	
@@ -35,9 +37,10 @@ public class SyncroService extends IntentService {
 			OutputStream oOutput = oSock.getOutputStream();
 			OutputStreamWriter oWriter = new OutputStreamWriter(oOutput);
 			oWriter.write("Hello Syncro?");
+			oWriter.flush();
 			byte aHandshakeResponse[] = new byte[3];
 			oInput.read(aHandshakeResponse, 0, 3);
-			if( (aHandshakeResponse[0] == 100) && (aHandshakeResponse[1] == 200) && (aHandshakeResponse[2] == 50) ) {
+			if( (aHandshakeResponse[0] == 100) && (aHandshakeResponse[1] == 118) && (aHandshakeResponse[2] == 50) ) {
 				//We have a syncro server
 			}
 		} catch (IOException e) {

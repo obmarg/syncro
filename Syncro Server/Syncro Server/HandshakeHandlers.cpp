@@ -44,7 +44,7 @@ bool CHandshakeRecv::CanRemove() {
 
 CHandshakeResponse::CHandshakeResponse(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
 	m_aBuffer.push_back(100);
-	m_aBuffer.push_back(200);
+	m_aBuffer.push_back(118);
 	m_aBuffer.push_back(50);
 }
 

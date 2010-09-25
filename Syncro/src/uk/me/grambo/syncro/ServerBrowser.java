@@ -74,7 +74,10 @@ public class ServerBrowser extends Activity
         }
         oListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         	public void onItemClick(AdapterView oParent,View oView,int innPosition,long innID) {
-        		oParent.getContext().startService( new Intent( "uk.me.grambo.syncro.SYNCRO_SYNC", Uri.parse("syncro://192.168.5.5:9998") ) );
+        		Intent i = new Intent( ServerBrowser.this, SyncroService.class );
+        		i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
+        		i.setData(Uri.parse("syncro://10.0.2.2:9998"));
+        		ServerBrowser.this.startService( i );
         	};
 		});
         
