@@ -89,6 +89,7 @@
     <ClInclude Include="cWebemTable.h" />
     <ClInclude Include="Folder.h" />
     <ClInclude Include="FolderMan.h" />
+    <ClInclude Include="HandshakeHandlers.h" />
     <ClInclude Include="ServerComms.h" />
     <ClInclude Include="server\connection.hpp" />
     <ClInclude Include="server\connection_manager.hpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="server\request_parser.hpp" />
     <ClInclude Include="SyncroServer.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="XMLAcceptHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BroadcastListener.cpp" />
@@ -107,6 +109,7 @@
     <ClCompile Include="cWebem.cpp" />
     <ClCompile Include="Folder.cpp" />
     <ClCompile Include="FolderMan.cpp" />
+    <ClCompile Include="HandshakeHandlers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ServerComms.cpp" />
     <ClCompile Include="server\connection.cpp" />
@@ -117,6 +120,7 @@
     <ClCompile Include="server\request_parser.cpp" />
     <ClCompile Include="server\server.cpp" />
     <ClCompile Include="SyncroServer.cpp" />
+    <ClCompile Include="XMLAcceptHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

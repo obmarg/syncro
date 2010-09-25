@@ -72,6 +72,12 @@
     <ClInclude Include="ServerComms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HandshakeHandlers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLAcceptHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -117,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ServerComms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HandshakeHandlers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLAcceptHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

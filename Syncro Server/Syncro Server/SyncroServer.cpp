@@ -14,6 +14,7 @@
 #include "BroadcastThread.h"
 #include "ServerComms.h"
 #include <boost/asio.hpp>
+#include "XMLAcceptHandler.h"
 
 using namespace std;
 using std::tr1::shared_ptr;
@@ -36,6 +37,8 @@ CSyncroServer::Run() {
 	io_service oIO;
 	
 	CServerComms oComms(oIO);
+	CXMLAcceptHandler* pXMLAH = new CXMLAcceptHandler();
+	oComms.AddAcceptHandler( boost::shared_ptr<CAcceptHandler>( (pXMLAH) ) );
 	oIO.run();
 
 	return true;

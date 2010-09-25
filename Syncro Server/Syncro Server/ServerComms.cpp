@@ -2,6 +2,7 @@
 
 #include <boost/bind.hpp>
 #include <iostream>
+#include "HandshakeHandlers.h"
 
 using namespace boost::asio::ip;
 using boost::asio::io_service;
@@ -27,9 +28,20 @@ void CServerComms::StartAccept() {
 
 void CServerComms::HandleAccept(CTCPConnection::TPointer inoNewConn, const boost::system::error_code& inoError) {
 	if( !inoError ) {
-		inoNewConn->StartRecv(0);
-		StartAccept();
+		bool fOK = false;
+		for(TAcceptHandlerMap::iterator pAcceptHandler = m_oAcceptHandlers.begin(); pAcceptHandler != m_oAcceptHandlers.end(); pAcceptHandler++ ) {
+			if( (*pAcceptHandler)->HandleAccept( inoNewConn ) ) {
+				fOK = true;
+				break;
+			}
+		}
+		if( fOK )
+			StartAccept();
 	}
+}
+
+void CServerComms::AddAcceptHandler(CAcceptHandler::TPointer inoAcceptHandler) {
+	m_oAcceptHandlers.insert( inoAcceptHandler );
 }
 
 CTCPConnection::CTCPConnection(io_service& inoIOService) : m_oSocket(inoIOService) {
@@ -37,13 +49,17 @@ CTCPConnection::CTCPConnection(io_service& inoIOService) : m_oSocket(inoIOServic
 }
 
 void CTCPConnection::StartRecv(int inBytes) {
+
+	using namespace boost::asio;
+	using boost::bind;
+
 	if( inBytes == 0 ) 
 		inBytes = DEFAULT_RECV_BUFFER;
 	m_aBuffer.resize( inBytes );
-	m_nWaitingRecv = inBytes;
-	boost::asio::async_read( m_oSocket, boost::asio::buffer( m_aBuffer ), 
-		boost::bind(&CTCPConnection::IsRecvFinished, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred ),
-		boost::bind(&CTCPConnection::FinishedRecv, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred ) );
+//	m_nWaitingRecv = inBytes;
+	async_read( m_oSocket, buffer( m_aBuffer ), 
+		bind(&CTCPConnection::IsRecvFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
+		bind(&CTCPConnection::FinishedRecv, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
 }
 
 bool CTCPConnection::IsRecvFinished(const boost::system::error_code& inoError, std::size_t innBytesSoFar) {
@@ -51,10 +67,15 @@ bool CTCPConnection::IsRecvFinished(const boost::system::error_code& inoError, s
 		cout << "Error when checking received:  Received " << innBytesSoFar << " bytes\n";
 		return true;
 	}
-	m_nWaitingRecv -= innBytesSoFar;
-	if( m_nWaitingRecv <= 0 ) {
-		m_nWaitingRecv = 0;
-		cout << "Finished Receiving\n";
+/*	m_nWaitingRecv -= innBytesSoFar;*/
+	TCharBuffer oBuffer( m_aBuffer, innBytesSoFar );
+	TRecvHandlerMap::iterator pRecv;
+	for(pRecv = m_oRecvHandlers.begin(); pRecv != m_oRecvHandlers.end(); pRecv++ ) {
+		if( pRecv->second->CanHandleReceive( oBuffer ) )
+			break;
+	}
+	if( pRecv != m_oRecvHandlers.end() ) {
+		m_pSelectedRecvHandler = pRecv->second;
 		return true;
 	}
 	return false;
@@ -66,6 +87,52 @@ void CTCPConnection::FinishedRecv(const boost::system::error_code& inoError, std
 		return;
 	} else {
 		cout << "Received " << innBytes << "\n";
-		StartRecv( );
+
+		TCharBuffer oBuffer( m_aBuffer, innBytes );
+
+		m_pSelectedRecvHandler->HandleReceive(oBuffer);
+		m_pSelectedRecvHandler.reset();
 	}
+	TRecvHandlerMap::iterator pRecv;
+	for(pRecv = m_oRecvHandlers.begin(); pRecv != m_oRecvHandlers.end(); pRecv++ ) {
+		if( pRecv->second->CanRemove() ) {
+			m_oRecvHandlers.erase( pRecv );
+			pRecv = m_oRecvHandlers.begin();
+			if( pRecv == m_oRecvHandlers.end() )
+				break;
+		}
+	}
+}
+
+void CTCPConnection::Send(CSendHandler::TPointer inpSendHandler) {
+	using namespace boost::asio;
+	using boost::bind;
+
+	m_pSendHandler = inpSendHandler;
+	async_write( m_oSocket, buffer( inpSendHandler->GetBuffer().aBuffer ), 
+		bind(&CTCPConnection::IsSendFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
+		bind(&CTCPConnection::FinishedSend, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
+};
+
+bool 
+CTCPConnection::IsSendFinished(const boost::system::error_code& inoError, std::size_t innBytesSoFar) {
+	if( inoError ) {
+		cout << "Error when sending: Sent " << innBytesSoFar << " bytes\n";
+		return true;
+	}
+	return m_pSendHandler->HandleSend(innBytesSoFar);
+}
+
+void 
+CTCPConnection::FinishedSend(const boost::system::error_code& inoError, std::size_t innBytes) {
+	if( inoError ) {
+		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
+		return;
+	}
+	m_pSendHandler->SendDone(innBytes);
+	cout << "Sent " << innBytes << " OK!";
+}
+
+const TCharBuffer CSendHandler::GetBuffer() {
+	return TCharBuffer( m_aBuffer,m_aBuffer.size() );
 }
