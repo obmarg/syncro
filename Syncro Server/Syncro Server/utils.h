@@ -18,4 +18,20 @@ public:
 	}
 };
 
+template<typename T>
+T ToJavaEndian(const T& source) {
+#if BOOST_BIG_ENDIAN
+	return source;
+#else
+	T ret = 0;
+
+	for (int i = 0; i < sizeof(T); ++i)
+	{
+		*(reinterpret_cast<char*>(&ret) + i) =
+		*(reinterpret_cast<const char*>(&source) + sizeof(T) - i - 1);
+	}
+	return ret;
+#endif
+}
+
 #endif

@@ -44,7 +44,7 @@ public:
 		size_t nBufferSize = m_aBuffer.size();
 		if( nBufferSize < 5 ) 
 			return false;
-		*((long*)&m_aBuffer[1]) = (long)nBufferSize;
+		*((long*)&m_aBuffer[1]) = ToJavaEndian<long>((long)nBufferSize);
 		return true;
 	}
 	virtual void SendDone(int innSent);
