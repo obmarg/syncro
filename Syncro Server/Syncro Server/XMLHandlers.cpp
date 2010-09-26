@@ -43,7 +43,7 @@ bool CXMLReceiveHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	unsigned char nExpectedSize = inoBuffer.aBuffer[1];
 	string sGetFolderList = "GET_FOLDER_LIST";
 
-	string sBuffer( inoBuffer.aBuffer.begin() + 2, inoBuffer.aBuffer.end() );
+	string sBuffer( inoBuffer.begin() + 2, inoBuffer.end() );
 	if( sBuffer.compare(sGetFolderList) == 0 ) {
 		//Requesting folder list
 		if( m_oXMLBuilder.GetFolderXML() ) {

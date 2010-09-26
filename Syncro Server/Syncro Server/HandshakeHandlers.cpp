@@ -1,8 +1,10 @@
 #include "HandshakeHandlers.h"
+#include "XMLHandlers.h"
 
 #include <vector>
 #include <string>
 #include <iterator>
+
 
 using std::vector;
 using std::string;
@@ -59,6 +61,6 @@ bool CHandshakeResponse::HandleSend(int innSent) {
 }
 
 void CHandshakeResponse::SendDone(int innSent) {
-	m_pConn->AddRecvHandler( CHandshakeRecv::Create(m_pConn) , 0 );
+	m_pConn->AddRecvHandler( CXMLReceiveHandler::Create(m_pConn) , 0 );
 	m_pConn->StartRecv( 0 );
 }
