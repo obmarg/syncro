@@ -20,11 +20,8 @@ using namespace std;
 using std::tr1::shared_ptr;
 
 CSyncroServer::CSyncroServer() :
-	m_oHTTP("0.0.0.0", "9995", "C:\\Web\\"), m_oFolderMan( "C:\\SyncFiles\\" ),
-	m_oBroadcastThread( CBroadcastThread() )
-{
-		m_oHTTP.RegisterIncludeCode( "hello", boost::bind( &CSyncroServer::GetFolderXML, this ) );
-		m_oHTTP.RegisterActionCode( "foldercontents", boost::bind( &CSyncroServer::GetFolderContentsXML, this ) );
+	m_oBroadcastThread( CBroadcastThread() ){
+
 }
 
 CSyncroServer::~CSyncroServer() {
@@ -42,24 +39,4 @@ CSyncroServer::Run() {
 	oIO.run();
 
 	return true;
-}
-
-char* 
-CSyncroServer::GetFolderXML() {
-
-	return "";
-}
-
-char *
-CSyncroServer::GetFolderContentsXML() {
-	return "";
-}
-
-char* CSyncroServer::XmlToString( TiXmlDocument& inoDoc ) {
-	return NULL;
-}
-
-void
-CSyncroServer::ProcessFolder( TiXmlElement& inoParentElement, shared_ptr<class CFolder> inoFolder ) {
-
 }
