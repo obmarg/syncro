@@ -18,6 +18,18 @@ public class DBHelper extends SQLiteOpenHelper {
     
     private static final String SERVERS_TABLE_UPGRADE_V2 =
     			"DROP TABLE IF EXISTS " + SERVERS_TABLE_NAME + " ;\n";
+    
+    private static final String FOLDERS_TABLE_NAME = "folders";
+    private static final String FOLDERS_TABLE_CREATE = 
+    			"CREATE TABLE IF NOT EXISTS " + FOLDERS_TABLE_NAME + " (" +
+    			"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    			"ServerID INTEGER CONSTRAINT FOLDERS_SERVER_ID_FK REFERENCES " + SERVERS_TABLE_NAME + "(ID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+    			"Name TEXT, " +
+    			"ServerPath TEXT, " +
+    			"SyncToPhone INTEGER CONSTRAINT SYNC_TO_PHONE_DEFAULT DEFAULT 0, " + 
+    			"SyncFromPhone INTEGER CONSTRAINT SYNC_FROM_PHONE_DEFAULT DEFAULT 0" + 
+    			");";
+    			
 
     DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -26,6 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SERVERS_TABLE_CREATE);
+        db.execSQL(FOLDERS_TABLE_CREATE);
     }
     
     @Override
@@ -33,6 +46,9 @@ public class DBHelper extends SQLiteOpenHelper {
     	if( nOldVer <= 5 ) {
     		inDB.execSQL(SERVERS_TABLE_UPGRADE_V2);
     		inDB.execSQL(SERVERS_TABLE_CREATE);
+    	}
+    	if( nOldVer <= 6 ) {
+    		inDB.execSQL(FOLDERS_TABLE_CREATE);
     	}
     }
 }
