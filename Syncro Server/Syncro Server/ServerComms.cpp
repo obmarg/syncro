@@ -107,10 +107,16 @@ void CTCPConnection::Send(CSendHandler::TPointer inpSendHandler) {
 	using namespace boost::asio;
 	using boost::bind;
 
-	m_pSendHandler = inpSendHandler;
-	async_write( m_oSocket, buffer( inpSendHandler->GetBuffer().aBuffer ), 
-		bind(&CTCPConnection::IsSendFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
-		bind(&CTCPConnection::FinishedSend, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
+	if( m_pSendHandler.get() != NULL )
+		throw std::exception("Attempted 2 send operations on 1 TCP socket at once!");
+
+	if( inpSendHandler->SendStarting() ) {
+		m_pSendHandler = inpSendHandler;
+	
+		async_write( m_oSocket, buffer( inpSendHandler->GetBuffer().aBuffer ), 
+			bind(&CTCPConnection::IsSendFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
+			bind(&CTCPConnection::FinishedSend, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
+	}
 };
 
 bool 
@@ -128,7 +134,10 @@ CTCPConnection::FinishedSend(const boost::system::error_code& inoError, std::siz
 		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
 		return;
 	}
-	m_pSendHandler->SendDone(innBytes);
+	CSendHandler::TPointer pHandler = m_pSendHandler;
+	m_pSendHandler.reset();
+	pHandler->SendDone(innBytes);
+	
 	cout << "Sent " << innBytes << " OK!";
 }
 
