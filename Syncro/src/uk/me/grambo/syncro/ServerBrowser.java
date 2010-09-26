@@ -46,8 +46,8 @@ public class ServerBrowser extends Activity
         ListView oListView = (ListView)findViewById(R.id.serverlist);
         try {
         	DBHelper oHelper = new DBHelper( this );
-        	SQLiteDatabase m_oDB = oHelper.getReadableDatabase();
-        	Cursor oResults = m_oDB.rawQuery("SELECT Name,IP,Port From servers", null);
+        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
+        	Cursor oResults = oDB.rawQuery("SELECT Name,IP,Port From servers", null);
 	        int nResults = oResults.getCount();
 	        if( nResults > 0 ) {
 	        	m_aServers = new String[nResults];
@@ -64,11 +64,12 @@ public class ServerBrowser extends Activity
 	        	
 	        }
 	        if( nResults == 0 ) {
-	        	m_oDB.execSQL("INSERT INTO SERVERS(Name,IP,PORT) VALUES ('Ceephax','192.168.5.5',9998);");
+	        	oDB.execSQL("INSERT INTO SERVERS(Name,IP,PORT) VALUES ('Ceephax','192.168.5.5',9998);");
 	        } else {
 	        	oListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServers ));
 	        }
 	        oResults.close();
+	        oDB.close();
         }catch(SQLException oException) {
         	oException.printStackTrace();
         }
