@@ -9,17 +9,25 @@
 
 class CFolderMan {
 public:
+	struct sFolderInfo {
+		sFolderInfo( int innID, const std::string& insName ) : nFolderID( innID ), sFolderName( insName ) {};
+		int nFolderID;
+		std::string sFolderName;
+	};
+
+	typedef std::vector<sFolderInfo> TFolderInfoList;
 
 	CFolderMan( const std::string& insRoot );
 	~CFolderMan();
 
-	const std::vector<std::string>& GetFolders() { return m_oFolders; };
+	
+	const TFolderInfoList& GetFoldersInfo() { return m_aFolderInfo; };
 
 	boost::shared_ptr<CFolder> GetFolder( int nIndex );
 	
 private:
 	std::string m_sRoot;
-	std::vector<std::string> m_oFolders;
+	TFolderInfoList m_aFolderInfo;
 };
 
 #endif

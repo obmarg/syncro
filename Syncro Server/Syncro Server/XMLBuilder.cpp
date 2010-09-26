@@ -24,6 +24,7 @@ void CXMLBuilder::SaveDocAsFile(std::string insFile) {
 }
 
 bool CXMLBuilder::GetFolderXML() {
+
 	CFolderMan oFolderMan("C:\\SyncFiles\\");
 
 	m_oXML = TiXmlDocument();
@@ -32,11 +33,12 @@ bool CXMLBuilder::GetFolderXML() {
 	TiXmlElement *pFoldersElement = new TiXmlElement( "Folders" );
 	m_oXML.LinkEndChild( pFoldersElement );
 
-	const vector< string >& oFolders = oFolderMan.GetFolders();
+	const CFolderMan::TFolderInfoList& oFolders = oFolderMan.GetFoldersInfo();
 	TiXmlElement *pFolder;
-	for( vector<string>::const_iterator oFolder = oFolders.begin(); oFolder != oFolders.end(); oFolder++ ) {
+	for( CFolderMan::TFolderInfoList::const_iterator oFolder = oFolders.begin(); oFolder != oFolders.end(); oFolder++ ) {
 		pFolder = new TiXmlElement( "Folder" );
-		TiXmlText* pText = new TiXmlText( TiXmlText( oFolder->c_str() ) );
+		pFolder->SetAttribute("ID", oFolder->nFolderID );
+		TiXmlText* pText = new TiXmlText( TiXmlText( oFolder->sFolderName.c_str() ) );
 		pFolder->LinkEndChild( pText );
 		pFoldersElement->LinkEndChild( pFolder );
 	}

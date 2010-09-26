@@ -11,7 +11,8 @@ CFolderMan::CFolderMan( const string& insRoot ) : m_sRoot( insRoot ) {
 	int nCount = 0;
 	for( directory_iterator pItem( oPath ); pItem != directory_iterator(); pItem++ ) { 
 		if( is_directory( pItem->status() ) ) {
-			m_oFolders.push_back( pItem->path().native_directory_string() );
+			nCount++;
+			m_aFolderInfo.push_back( sFolderInfo( nCount, pItem->path().native_directory_string() ) );
 		}
 	}
 }
@@ -23,7 +24,7 @@ CFolderMan::~CFolderMan() {
 
 boost::shared_ptr<CFolder> 
 CFolderMan::GetFolder( int nIndex ) {
-	if( (nIndex < 0) || (nIndex > (int)m_oFolders.size()) )
+	if( (nIndex < 0) || (nIndex > (int)m_aFolderInfo.size()) )
 		return boost::shared_ptr<CFolder>();
-	return boost::shared_ptr<CFolder>( new CFolder( m_oFolders[ nIndex ] ) );
+	return boost::shared_ptr<CFolder>( new CFolder( m_aFolderInfo[ nIndex ].sFolderName ) );
 }
