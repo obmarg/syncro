@@ -52,7 +52,21 @@ void CXMLOutput::operator()(TCharBuffer::TBuff& inoBuffer) {
 
 	m_oBuilder.SaveDocAsFile("temp.xml");
 	
-	ifstream oStream( "temp.xml", ios::in );
-	copy( istream_iterator< TCharBuffer::TChar >( oStream ), istream_iterator< TCharBuffer::TChar >(), back_insert_iterator< TCharBuffer::TBuff >( inoBuffer ) );
+	ifstream oStream( "temp.xml", ios::in || ios::binary );
+	if( oStream.is_open() ) {
+		oStream.seekg( 0, ios::end );
+		size_t nSize = (size_t)oStream.tellg();
+		size_t nBuffStart = inoBuffer.size();
+		inoBuffer.resize( nSize + nBuffStart );
+
+		oStream.seekg( 0, ios::beg );
+		oStream.read( (char*)&inoBuffer[nBuffStart], nSize );
+		nSize = inoBuffer.size();
+		//Remove trailing nulls
+		while( inoBuffer[nSize-1] == 0 ) {
+			--nSize;
+		}
+		inoBuffer.resize( nSize );
+	}
 	return;
 }
