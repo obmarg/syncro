@@ -52,19 +52,7 @@ CSyncroServer::GetFolderXML() {
 
 char *
 CSyncroServer::GetFolderContentsXML() {
-	using std::tr1::shared_ptr;
-	shared_ptr<CFolder> pCurrentFolder = m_oFolderMan.GetFolder( boost::lexical_cast<int>( m_oHTTP.FindValue( "folderid" ) ) );
-
-	TiXmlDocument oDoc;
-	TiXmlDeclaration * oDecl = new TiXmlDeclaration( "1.0", "", "" );
-	oDoc.LinkEndChild( oDecl );
-	TiXmlElement *pFoldersElement = new TiXmlElement( "RootFolder" );
-	oDoc.LinkEndChild( pFoldersElement );
-	
-	ProcessFolder( *pFoldersElement, pCurrentFolder );
-	
-	return XmlToString( oDoc );
-
+	return "";
 }
 
 char* CSyncroServer::XmlToString( TiXmlDocument& inoDoc ) {
@@ -73,18 +61,5 @@ char* CSyncroServer::XmlToString( TiXmlDocument& inoDoc ) {
 
 void
 CSyncroServer::ProcessFolder( TiXmlElement& inoParentElement, shared_ptr<class CFolder> inoFolder ) {
-	TiXmlElement* pThisElement = new TiXmlElement( "Folder" );
-	pThisElement->SetAttribute( " name", inoFolder->GetName().c_str() );
-	inoParentElement.LinkEndChild( pThisElement );
-	vector< string > oFiles = inoFolder->GetFiles();
-	for( vector< string >::iterator oFile = oFiles.begin(); oFile != oFiles.end(); oFile++ ) {
-		TiXmlElement* pFileElement = new TiXmlElement( "File" );
-		TiXmlText *pText = new TiXmlText( oFile->c_str() );
-		pFileElement->LinkEndChild( pText );
-		pThisElement->LinkEndChild( pFileElement );
-	}
-	vector< shared_ptr<CFolder> > oChildren = inoFolder->GetChildren();
-	for( vector< shared_ptr<CFolder> >::iterator oChild = oChildren.begin(); oChild != oChildren.end(); oChild++ ) {
-		ProcessFolder( (*pThisElement), (*oChild) );
-	}
+
 }

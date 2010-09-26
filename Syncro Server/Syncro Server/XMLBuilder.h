@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "tinyxml.h"
+#include <boost/shared_ptr.hpp>
 
 class TiXmlDocument;
 
@@ -17,6 +18,9 @@ public:
 	bool GetFolderContentsXML();
 private:
 	TiXmlDocument m_oXML;
+
+	void ProcessFolder( TiXmlElement& inoParentElement, boost::shared_ptr<class CFolder> inoFolder );
+
 };
 
 class CXMLOutput {

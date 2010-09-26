@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <memory>
+#include <boost\shared_ptr.hpp>
 
 class CFolder {
 public:
@@ -12,11 +12,11 @@ public:
 
 	std::string GetName() { return m_sFolderName; }
 	std::vector< std::string >& GetFiles() { return m_oFiles; };
-	std::vector< std::tr1::shared_ptr<CFolder> >& GetChildren() { return m_oChildren; }
+	std::vector< boost::shared_ptr<CFolder> >& GetChildren() { return m_oChildren; }
 private:
 	std::string m_sPath;
 	std::string m_sFolderName;
-	std::vector< std::tr1::shared_ptr<CFolder> > m_oChildren;
+	std::vector< boost::shared_ptr<CFolder> > m_oChildren;
 	std::vector< std::string > m_oFiles;
 };
 

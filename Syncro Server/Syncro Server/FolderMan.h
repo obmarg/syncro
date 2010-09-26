@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "utils.h"
-#include <memory>
+#include <boost\shared_ptr.hpp>
 #include "Folder.h"
 
 class CFolderMan {
@@ -15,7 +15,7 @@ public:
 
 	const std::vector<std::string>& GetFolders() { return m_oFolders; };
 
-	std::tr1::shared_ptr<CFolder> GetFolder( int nIndex );
+	boost::shared_ptr<CFolder> GetFolder( int nIndex );
 	
 private:
 	std::string m_sRoot;

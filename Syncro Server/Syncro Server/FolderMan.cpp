@@ -21,9 +21,9 @@ CFolderMan::~CFolderMan() {
 }
 
 
-std::tr1::shared_ptr<CFolder> 
+boost::shared_ptr<CFolder> 
 CFolderMan::GetFolder( int nIndex ) {
 	if( (nIndex < 0) || (nIndex > (int)m_oFolders.size()) )
-		return std::tr1::shared_ptr<CFolder>( std::nullptr_t() );
-	return std::tr1::shared_ptr<CFolder>( new CFolder( m_oFolders[ nIndex ] ) );
+		return boost::shared_ptr<CFolder>();
+	return boost::shared_ptr<CFolder>( new CFolder( m_oFolders[ nIndex ] ) );
 }
