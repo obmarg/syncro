@@ -46,23 +46,8 @@ CSyncroServer::Run() {
 
 char* 
 CSyncroServer::GetFolderXML() {
-	
-	TiXmlDocument oDoc;
-	TiXmlDeclaration * oDecl = new TiXmlDeclaration( "1.0", "", "" );
-	oDoc.LinkEndChild( oDecl );
-	TiXmlElement *pFoldersElement = new TiXmlElement( "Folders" );
-	oDoc.LinkEndChild( pFoldersElement );
 
-	const vector< string >& oFolders = m_oFolderMan.GetFolders();
-	TiXmlElement *pFolder;
-	for( vector<string>::const_iterator oFolder = oFolders.begin(); oFolder != oFolders.end(); oFolder++ ) {
-		pFolder = new TiXmlElement( "Folder" );
-		TiXmlText* pText = new TiXmlText( TiXmlText( oFolder->c_str() ) );
-		pFolder->LinkEndChild( pText );
-		pFoldersElement->LinkEndChild( pFolder );
-	}
-
-	return XmlToString(oDoc);
+	return "";
 }
 
 char *
@@ -83,13 +68,7 @@ CSyncroServer::GetFolderContentsXML() {
 }
 
 char* CSyncroServer::XmlToString( TiXmlDocument& inoDoc ) {
-	inoDoc.SaveFile( "temp.xml" );
-	
-	std::ifstream oStream( "temp.xml", ios::in );
-	m_oOutputBuff.clear();
-	copy( istream_iterator< char >( oStream ), istream_iterator< char >(), back_insert_iterator< vector<char> >( m_oOutputBuff ) );
-	m_oOutputBuff.push_back( '\0' );
-	return &m_oOutputBuff[0];
+	return NULL;
 }
 
 void

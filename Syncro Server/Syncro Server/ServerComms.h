@@ -7,14 +7,7 @@
 #include <map>
 #include <set>
 #include "utils.h"
-
-struct TCharBuffer {
-	typedef std::vector<unsigned char> TBuff;
-	TCharBuffer(TBuff& inoBuff, unsigned int innSize) : aBuffer(inoBuff), nSize( innSize ) {};
-
-	TBuff& aBuffer;
-	unsigned int nSize;
-};
+#include "common.h"
 
 class CReceiveHandler {
 public:
@@ -29,8 +22,12 @@ class CSendHandler {
 public:
 	typedef boost::shared_ptr< CSendHandler > TPointer;
 
-	virtual bool HandleSend(int innSent) = 0;
-	virtual void SendDone(int innSent) = 0;
+	virtual bool HandleSend(int innSent) {
+		if( innSent >= (int)m_aBuffer.size() )
+			return true;
+		return false;
+	};
+	virtual void SendDone(int innSent)=0;
 
 	virtual const TCharBuffer GetBuffer();
 protected:
