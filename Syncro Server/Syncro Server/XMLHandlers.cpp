@@ -7,6 +7,7 @@
 using std::string;
 
 const unsigned char XML_REQUEST_FIRST_BYTE = 5;
+const unsigned char XML_RESPONSE_FIRST_BYTE = 6;
 
 CXMLAcceptHandler::CXMLAcceptHandler() : CAcceptHandler( 1 ) {
 
@@ -56,7 +57,12 @@ bool CXMLReceiveHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 }
 
 CXMLSendHandler::CXMLSendHandler(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
-
+	m_aBuffer.push_back( XML_RESPONSE_FIRST_BYTE );
+	//Add space for the legnth of the message, which will be added after XML
+	m_aBuffer.push_back( 0 );	
+	m_aBuffer.push_back( 0 );
+	m_aBuffer.push_back( 0 );
+	m_aBuffer.push_back( 0 );
 }
 
 CXMLSendHandler::~CXMLSendHandler() {

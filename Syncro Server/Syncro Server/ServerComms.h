@@ -22,6 +22,7 @@ class CSendHandler {
 public:
 	typedef boost::shared_ptr< CSendHandler > TPointer;
 
+	virtual bool SendStarting() { return true; };
 	virtual bool HandleSend(int innSent) {
 		if( innSent >= (int)m_aBuffer.size() )
 			return true;
