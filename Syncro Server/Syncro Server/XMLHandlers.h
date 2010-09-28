@@ -12,16 +12,16 @@ public:
 	virtual bool HandleAccept(CTCPConnection::TPointer inpNewConnection);
 };
 
-class CXMLReceiveHandler : public CReceiveHandler { 
+class CXMLRequestHandler : public CReceiveHandler { 
 public:
-	virtual ~CXMLReceiveHandler() {};
+	virtual ~CXMLRequestHandler() {};
 
 	virtual bool CanHandleReceive(const TCharBuffer& inoBuffer);
 	virtual bool HandleReceive(const TCharBuffer& inoBuffer);
 	virtual bool CanRemove() { return m_fCloseConnection; };
 
 	static CReceiveHandler::TPointer Create(CTCPConnection::TPointer inpConn) {
-		CXMLReceiveHandler* pNew = new CXMLReceiveHandler(inpConn);
+		CXMLRequestHandler* pNew = new CXMLRequestHandler(inpConn);
 		return CReceiveHandler::TPointer( static_cast<CReceiveHandler*>(pNew) );
 	}
 protected:
@@ -30,7 +30,7 @@ protected:
 	CTCPConnection::TPointer m_pConn;
 	CXMLBuilder m_oXMLBuilder;
 
-	CXMLReceiveHandler(CTCPConnection::TPointer inpConn);
+	CXMLRequestHandler(CTCPConnection::TPointer inpConn);
 };
 
 class CXMLSendHandler : public CSendHandler {

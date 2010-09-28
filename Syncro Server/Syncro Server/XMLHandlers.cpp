@@ -24,11 +24,11 @@ bool CXMLAcceptHandler::HandleAccept(CTCPConnection::TPointer inpNewConnection) 
 	return true;
 }
 
-CXMLReceiveHandler::CXMLReceiveHandler(CTCPConnection::TPointer inpConn) : m_pConn( inpConn ) {
+CXMLRequestHandler::CXMLRequestHandler(CTCPConnection::TPointer inpConn) : m_pConn( inpConn ) {
 	m_fCloseConnection = false;
 }
 
-bool CXMLReceiveHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
+bool CXMLRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 	if(inoBuffer.nSize > 2) {
 		if( inoBuffer.aBuffer[0] == XML_REQUEST_FIRST_BYTE  ) {
 			unsigned char nExpectedSize = inoBuffer.aBuffer[1];
@@ -39,7 +39,7 @@ bool CXMLReceiveHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 	return false;
 }
 
-bool CXMLReceiveHandler::HandleReceive(const TCharBuffer& inoBuffer) {
+bool CXMLRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	
 	unsigned char nExpectedSize = inoBuffer.aBuffer[1];
 	const string sGetFolderList = "GET_FOLDER_LIST";
