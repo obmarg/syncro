@@ -1,5 +1,6 @@
 #include "HandshakeHandlers.h"
 #include "XMLHandlers.h"
+#include "FileRequestHandler.h"
 
 #include <vector>
 #include <string>
@@ -62,5 +63,6 @@ bool CHandshakeResponse::HandleSend(int innSent) {
 
 void CHandshakeResponse::SendDone(int innSent) {
 	m_pConn->AddRecvHandler( CXMLRequestHandler::Create(m_pConn) , 0 );
+	m_pConn->AddRecvHandler( CFileRequestHandler::Create(m_pConn), 0 );
 	m_pConn->StartRecv( 0 );
 }

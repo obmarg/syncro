@@ -32,6 +32,7 @@ public:
 
 	virtual const TCharBuffer GetBuffer();
 protected:
+
 	TCharBuffer::TBuff m_aBuffer;
 };
 
