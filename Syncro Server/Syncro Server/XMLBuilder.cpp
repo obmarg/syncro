@@ -45,20 +45,19 @@ bool CXMLBuilder::GetFolderXML() {
 	return true;
 }
 
-bool CXMLBuilder::GetFolderContentsXML() {
+bool CXMLBuilder::GetFolderContentsXML(int innFolderID) {
 	using boost::shared_ptr;
 	
 	CFolderMan oFolderMan("C:\\SyncFiles\\");
 	
 	m_oXML = TiXmlDocument();
 
-	shared_ptr<CFolder> pCurrentFolder = oFolderMan.GetFolder( 0 );
+	shared_ptr<CFolder> pCurrentFolder = oFolderMan.GetFolder( innFolderID );
 
-	TiXmlDocument oDoc;
 	TiXmlDeclaration * oDecl = new TiXmlDeclaration( "1.0", "", "" );
-	oDoc.LinkEndChild( oDecl );
+	m_oXML.LinkEndChild( oDecl );
 	TiXmlElement *pFoldersElement = new TiXmlElement( "RootFolder" );
-	oDoc.LinkEndChild( pFoldersElement );
+	m_oXML.LinkEndChild( pFoldersElement );
 	
 	ProcessFolder( *pFoldersElement, pCurrentFolder );
 	return true;

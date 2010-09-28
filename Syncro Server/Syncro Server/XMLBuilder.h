@@ -15,7 +15,7 @@ public:
 	void SaveDocAsFile(std::string inoFile);
 
 	bool GetFolderXML();
-	bool GetFolderContentsXML();
+	bool GetFolderContentsXML(int innFolderID);
 private:
 	TiXmlDocument m_oXML;
 
@@ -28,6 +28,8 @@ public:
 	CXMLOutput(CXMLBuilder& inoBuilder) : m_oBuilder(inoBuilder) {
 
 	}
+	CXMLOutput(const CXMLOutput& inoOther) : m_oBuilder( inoOther.m_oBuilder ) {};
+
 	void operator()(TCharBuffer::TBuff& inoBuffer);
 private:
 	CXMLBuilder& m_oBuilder;

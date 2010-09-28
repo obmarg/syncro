@@ -3,6 +3,7 @@
 #include "HandshakeHandlers.h"
 #include "ServerComms.h"
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 using std::string;
 
@@ -41,7 +42,8 @@ bool CXMLReceiveHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 bool CXMLReceiveHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	
 	unsigned char nExpectedSize = inoBuffer.aBuffer[1];
-	string sGetFolderList = "GET_FOLDER_LIST";
+	const string sGetFolderList = "GET_FOLDER_LIST";
+	const string sGetFolderContents = "GET_FOLDER_CONTENTS:";
 
 	string sBuffer( inoBuffer.begin() + 2, inoBuffer.end() );
 	if( sBuffer.compare(sGetFolderList) == 0 ) {
@@ -52,6 +54,14 @@ bool CXMLReceiveHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 			m_pConn->Send( pSender );
 		} else
 			throw std::exception("Failed to get folder xml\n");
+	} 
+	else if( sBuffer.substr( 0, sGetFolderContents.length() ).compare( sGetFolderContents ) == 0 )
+	{
+		if( m_oXMLBuilder.GetFolderContentsXML( boost::lexical_cast<int>( sBuffer.substr( sGetFolderContents.length(),  sBuffer.length() - sGetFolderContents.length() ) ) ) ) {
+			CXMLSendHandler::TPointer pSender = CXMLSendHandler::Create(m_pConn);
+			pSender->CreateXML( CXMLOutput( m_oXMLBuilder ) );
+			m_pConn->Send( pSender );
+		}
 	}
 	return true;
 }

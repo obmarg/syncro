@@ -29,8 +29,8 @@ CSyncroServer::~CSyncroServer() {
 
 bool 
 CSyncroServer::Run() {
-	//m_oHTTP.Run();
 	using boost::asio::io_service;
+	
 	io_service oIO;
 	
 	CServerComms oComms(oIO);
