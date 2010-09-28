@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Vector;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,14 +24,17 @@ import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.util.Log;
 
-public class SyncroService extends IntentService {
+public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	private static final int XML_REQUEST_FIRST_BYTE = 5;
 	private static final int XML_RESPONSE_FIRST_BYTE = 6;
+	
+	private Vector<String> m_aFilesToDownload;
 
 	public SyncroService() {
 		super("SyncroService");
 		// TODO Auto-generated constructor stub
+		m_aFilesToDownload = new Vector<String>();
 	}
 
 	@Override
@@ -61,8 +65,9 @@ public class SyncroService extends IntentService {
 			if( DoHandshake( oSock ) ) {
 				DBHelper oHelper = new DBHelper( this );
 	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
-	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(ServerID,Name,ServerPath) VALUES(1,?,?)");
+	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(ID,ServerID,Name,ServerPath) VALUES(?,1,?,?)");
 				GetFolderList(oSock,oInsertStatement);
+				GetFolderContents(oSock,0);
 				oDB.close();
 				oDB = null;
 			}
@@ -113,5 +118,42 @@ public class SyncroService extends IntentService {
 		}
 		return true;
 	}
+	
+	protected boolean GetFolderContents(Socket inoSock,int innFolderID) throws IOException {
+		DataInputStream oInput = new DataInputStream( inoSock.getInputStream() );
+		DataOutputStream oOutput = new DataOutputStream( inoSock.getOutputStream() );
+		OutputStreamWriter oWriter = new OutputStreamWriter( inoSock.getOutputStream() );
+		
+		String sRequest = "GET_FOLDER_CONTENTS:";
+		sRequest += (new Integer(innFolderID)).toString();
+		oOutput.write( XML_REQUEST_FIRST_BYTE );
+		oOutput.write( sRequest.length() );
+		oOutput.flush();
+		oWriter.write( sRequest );
+		oWriter.flush();
+		if( oInput.read() != XML_RESPONSE_FIRST_BYTE ) {
+			return false;
+		}
+		int nSize = oInput.readInt();
+		if( nSize > 5 ) {
+			byte aData[] = new byte[nSize - 5];
+			if( oInput.read(aData) != (nSize-5) ) {
+				return false;
+			}
+			Log.i("Syncro",new String(aData) );
+			FolderContentsXMLHandler oHandler = new FolderContentsXMLHandler();
+			oHandler.AddFileHandler(this);
+			ProcessXML(new ByteArrayInputStream(aData), oHandler );
+			Log.i("Syncro","Files To Download:");
+			for(int n=0;n < m_aFilesToDownload.size();n++) {
+				Log.i("Syncro",m_aFilesToDownload.elementAt(n) );
+			}
+		}
+		return true;
+	}
 
+	@Override
+	public void HandleRemoteFile(String insFilename) {
+		m_aFilesToDownload.add(insFilename);
+	}
 }
