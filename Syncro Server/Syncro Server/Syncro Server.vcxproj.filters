@@ -57,6 +57,9 @@
     <ClInclude Include="FileSendHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileSendData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -96,6 +99,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileSendHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSendData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

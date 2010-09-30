@@ -11,18 +11,23 @@ public:
 
 	virtual ~CFileSendHandler();
 
-	virtual void SendDone(int innSent);
+	virtual void SendDone(int innSent) {};
 
-	static TPointer Create(CTCPConnection::TPointer inpConn,std::string insFilename) {
-		CFileSendHandler* pNew = new CFileSendHandler(inpConn,insFilename);
+	static TPointer Create(CTCPConnection::TPointer inpConn) {
+		CFileSendHandler* pNew = new CFileSendHandler(inpConn);
 		return TPointer( pNew );
+	}
+
+	template<typename tFunction>
+	void FillBuffer(tFunction oFunc) {
+		oFunc(m_aBuffer);
 	}
 
 protected:
 
 	CTCPConnection::TPointer m_pConn;
 
-	CFileSendHandler(CTCPConnection::TPointer inpConn,std::string insFilename);
+	CFileSendHandler(CTCPConnection::TPointer inpConn);
 
 private:
 };
