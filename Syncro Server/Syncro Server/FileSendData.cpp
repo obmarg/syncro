@@ -16,7 +16,10 @@ CFileSendData::CFileSendData(const std::string& insFilename) {
 	}
 }
 
-void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {
+CFileSendData::~CFileSendData() {
+}
+
+void CFileSendData::operator()(TCharBuffer::TBuff& inoBuffer) {
 
 	char inFirstByte = FILE_SECTION_FIRST_BYTE;
 	if( (m_oFile.tellg()) == std::ifstream::pos_type(0) ) {
@@ -36,6 +39,7 @@ void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {
 	if( m_oFile.eof() ) {
 		inoBuffer[0] = FILE_LAST_SECTION_FIRST_BYTE;
 	}
+
 }
 
 bool CFileSendData::IsFileFinished() {

@@ -1,8 +1,13 @@
+//TODO: Check if this is a good idea
+#pragma warning (disable: 4180)
+
 #include "FileRequestHandler.h"
 
 #include <string>
 #include "Filesendhandler.h"
 #include <boost/bind.hpp>
+
+
 
 using std::string;
 
@@ -41,9 +46,11 @@ bool CFileRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	}
 
 	CFileSendHandler::TPointer oSender = CFileSendHandler::Create(m_pConn);
-		
-	oSender->FillBuffer( boost::bind( (*m_pCurrentSend), &CFileSendData::FillBuffer ) );
-	m_pConn->Send( CSendHandler::TPointer( oSender.get() ) );
+	//suspect when the above TPointer goes out of scope, the object will be deleted
+	//TODO: need to figure out a way of transferring this stuff between shared_ptr types.  
+	
+	oSender->FillBuffer( m_pCurrentSend );
+	m_pConn->Send( oSender );
 
 	if( m_pCurrentSend->IsFileFinished() )
 		m_pCurrentSend.reset();		//Release pointer

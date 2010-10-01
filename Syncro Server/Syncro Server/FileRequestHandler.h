@@ -21,7 +21,7 @@ protected:
 	bool m_fCloseConnection;
 
 	CTCPConnection::TPointer m_pConn;
-	boost::scoped_ptr<CFileSendData> m_pCurrentSend;
+	CFileSendData::TPointer m_pCurrentSend;
 
 	CFileRequestHandler(CTCPConnection::TPointer inpConn);
 };

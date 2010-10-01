@@ -5,7 +5,7 @@
 #include <boost/shared_ptr.hpp>
 #include "ServerComms.h"
 
-class CFileSendHandler : CSendHandler {
+class CFileSendHandler : public CSendHandler {
 public:
 	typedef boost::shared_ptr<CFileSendHandler> TPointer;
 
@@ -18,9 +18,9 @@ public:
 		return TPointer( pNew );
 	}
 
-	template<typename tFunction>
-	void FillBuffer(tFunction oFunc) {
-		oFunc(m_aBuffer);
+	template<class tFuncType>
+	void FillBuffer( tFuncType oFunc ) {
+		(*oFunc)(m_aBuffer);
 	}
 
 protected:

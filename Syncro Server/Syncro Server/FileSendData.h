@@ -4,19 +4,25 @@
 #include "common.h"
 #include "utils.h"
 #include <fstream>
+#include <boost/shared_ptr.hpp>
+
+#include <boost/noncopyable.hpp>
 
 class CFileSendData {
 public:
-	typedef void result_type;
+	typedef boost::shared_ptr<CFileSendData> TPointer;
 
 	CFileSendData(const std::string& insFilename);
+	CFileSendData( const CFileSendData& ) {
+	}
 	~CFileSendData();
 
-	void FillBuffer(TCharBuffer::TBuff& inoBuffer);
+	void operator()(TCharBuffer::TBuff& inoBuffer);
 
 	bool IsFileFinished();
 
 private:
+
 	struct sHeader {
 	public:
 		sHeader( char inFirstByte, int inSize, unsigned char inFileOffset ) {
