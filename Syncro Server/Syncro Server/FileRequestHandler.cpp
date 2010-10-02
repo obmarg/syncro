@@ -24,9 +24,9 @@ bool CFileRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 	const int nHeaderLen = sizeof(char) + sizeof(unsigned int);
 	if(inoBuffer.nSize > nHeaderLen ) {
 		if( (inoBuffer.aBuffer[0] == FILE_REQUEST_FIRST_BYTE) || (inoBuffer.aBuffer[0] == FILE_SECTION_REQUEST_FIRST_BYTE) ) {
-			//TODO: Convert byte buffer to unsigned int (endianness matters too)
-			unsigned int nExpectedSize = inoBuffer.aBuffer[1];
-			if( inoBuffer.nSize > (unsigned int)nExpectedSize )
+			unsigned int nExpectedSize = ( *(int*)(&inoBuffer.aBuffer[1]) );
+			nExpectedSize = FromJavaEndian(nExpectedSize);
+			if( inoBuffer.nSize >= nExpectedSize )
 				return true;
 		}
 	}

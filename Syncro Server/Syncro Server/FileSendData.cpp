@@ -21,25 +21,37 @@ CFileSendData::~CFileSendData() {
 
 void CFileSendData::operator()(TCharBuffer::TBuff& inoBuffer) {
 
-	char inFirstByte = FILE_SECTION_FIRST_BYTE;
+	char nFirstByte = FILE_SECTION_FIRST_BYTE;
 	if( (m_oFile.tellg()) == std::ifstream::pos_type(0) ) {
-		inFirstByte = FILE_SEND_FIRST_BYTE;
+		nFirstByte = FILE_SEND_FIRST_BYTE;
 	}
+
+	sHeader sDummyHeader(0,0,0);
+	int nSizeOfHeader = sizeof( sDummyHeader.FirstByte ) + sizeof( sDummyHeader.Size ) + sizeof( sDummyHeader.FileOffset ) + sizeof( sDummyHeader.HashSize );
 	
-	int nBufferSize = DEFAULT_FILE_SEND_BUFFER_SIZE;
-	int inReadAmount = nBufferSize - sizeof(sHeader);
-	int inSizeLeft = m_nFileSize - (int)m_oFile.tellg();
-	inReadAmount = std::min( inReadAmount, inSizeLeft );
-	inoBuffer.resize( inReadAmount + sizeof(sHeader) );
+	//NOTE: sizeof(sHeader) is returning 16, when it should really be 10...
+	//		so, this code is going to be a bit of a mess.  hence:
+	//TODO: Clean this mess up
+	int nBufferSize = DEFAULT_FILE_SEND_BUFFER_SIZE;	
+	int nReadAmount = nBufferSize - nSizeOfHeader;
+	int nSizeLeft = m_nFileSize - (int)m_oFile.tellg();
+	nReadAmount = std::min( nReadAmount, nSizeLeft );
+	inoBuffer.resize( nReadAmount + nSizeOfHeader );
 
-	sHeader header(inFirstByte, inoBuffer.size(), 0 );
-	memcpy( &inoBuffer[0], &header, sizeof( header ) );
+	sHeader header(nFirstByte, inoBuffer.size(), 0 );
+	//TODO: Has to be a better way of doing this shit:
+	memcpy( &inoBuffer[0], &header.FirstByte, sizeof( header.FirstByte ) );
+	memcpy( &inoBuffer[1], &header.Size, sizeof( header.Size ) );
+	memcpy( &inoBuffer[5], &header.FileOffset, sizeof( header.FileOffset ) );
+	memcpy( &inoBuffer[9], &header.HashSize, sizeof( header.HashSize ) );
 
-	m_oFile.read( (char*)&inoBuffer[ sizeof( header ) ], inReadAmount );
-	if( m_oFile.eof() ) {
+	m_oFile.read( (char*)&inoBuffer[ sizeof( header ) ], nReadAmount );
+	
+	//DEBUG CODE:
+	if( m_oFile.eof() || (m_oFile.tellg() == (std::streamoff)m_nFileSize) ) {
+		//TODO: Not entirely sure why eof isn't returning true all the time.  Make sure i'm not fucking up the end of files.
 		inoBuffer[0] = FILE_LAST_SECTION_FIRST_BYTE;
 	}
-
 }
 
 bool CFileSendData::IsFileFinished() {

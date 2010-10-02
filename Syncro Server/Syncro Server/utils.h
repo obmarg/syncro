@@ -2,6 +2,7 @@
 #define _UTILS_H_
 
 #include <string>
+#include <boost\detail\endian.hpp>
 
 class CStringLessThan {
 public:
@@ -20,7 +21,23 @@ public:
 
 template<typename T>
 T ToJavaEndian(const T& source) {
-#if BOOST_BIG_ENDIAN
+#ifdef BOOST_BIG_ENDIAN
+	return source;
+#else
+	T ret = 0;
+
+	for (int i = 0; i < sizeof(T); ++i)
+	{
+		*(reinterpret_cast<char*>(&ret) + i) =
+		*(reinterpret_cast<const char*>(&source) + sizeof(T) - i - 1);
+	}
+	return ret;
+#endif
+}
+
+template<typename T>
+T FromJavaEndian(const T& source) {
+#ifdef BOOST_BIG_ENDIAN
 	return source;
 #else
 	T ret = 0;

@@ -31,8 +31,10 @@ CXMLRequestHandler::CXMLRequestHandler(CTCPConnection::TPointer inpConn) : m_pCo
 bool CXMLRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 	if(inoBuffer.nSize > 2) {
 		if( inoBuffer.aBuffer[0] == XML_REQUEST_FIRST_BYTE  ) {
-			unsigned char nExpectedSize = inoBuffer.aBuffer[1];
-			if( inoBuffer.nSize > (unsigned int)nExpectedSize )
+			//TODO: Convert endianness
+			unsigned int nExpectedSize = ( *(int*)(&inoBuffer.aBuffer[1]) );
+			nExpectedSize = FromJavaEndian(nExpectedSize);
+			if( inoBuffer.nSize >= nExpectedSize )
 				return true;
 		}
 	}
@@ -45,7 +47,7 @@ bool CXMLRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	const string sGetFolderList = "GET_FOLDER_LIST";
 	const string sGetFolderContents = "GET_FOLDER_CONTENTS:";
 
-	string sBuffer( inoBuffer.begin() + 2, inoBuffer.end() );
+	string sBuffer( inoBuffer.begin() + 1 + 4, inoBuffer.end() );
 	if( sBuffer.compare(sGetFolderList) == 0 ) {
 		//Requesting folder list
 		if( m_oXMLBuilder.GetFolderXML() ) {

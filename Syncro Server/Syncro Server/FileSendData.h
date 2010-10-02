@@ -25,15 +25,15 @@ private:
 
 	struct sHeader {
 	public:
-		sHeader( char inFirstByte, int inSize, unsigned char inFileOffset ) {
+		sHeader( unsigned char inFirstByte, unsigned int inSize, unsigned int inFileOffset ) {
 			FirstByte = inFirstByte;
 			Size = ToJavaEndian(inSize);
 			FileOffset = ToJavaEndian(inFileOffset);
 			HashSize = 0;
-		}
+		};
 		unsigned char FirstByte;
 		unsigned int Size;
-		unsigned long FileOffset;
+		unsigned int FileOffset;
 		unsigned char HashSize;
 		//insert hash here
 	};
