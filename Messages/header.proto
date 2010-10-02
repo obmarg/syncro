@@ -1,0 +1,8 @@
+package syncro;
+
+option java_package = "uk.me.grambo.syncro";
+
+message PacketHeader {
+	required int32 PacketType = 1;
+	repeated int32 SubpacketSizes = 2;
+}

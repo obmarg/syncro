@@ -1,0 +1,17 @@
+package syncro;
+
+option java_package = "uk.me.grambo.syncro";
+
+message BinaryPacketHeader {
+	optional int32 FileSize = 1;
+	optional int32 FileOffset = 2;
+	optional int32 HashSize = 3;
+	
+	enum SectionType {
+		START = 0;
+		MIDDLE = 1;
+		END = 2;
+	}
+	optional SectionType BinaryPacketType = 4;
+}
+
