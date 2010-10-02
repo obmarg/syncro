@@ -40,6 +40,7 @@ void CFileSendData::operator()(TCharBuffer::TBuff& inoBuffer) {
 
 	sHeader header(nFirstByte, inoBuffer.size(), 0 );
 	//TODO: Has to be a better way of doing this shit:
+	//		I.e. replace it with protocol buffers
 	memcpy( &inoBuffer[0], &header.FirstByte, sizeof( header.FirstByte ) );
 	memcpy( &inoBuffer[1], &header.Size, sizeof( header.Size ) );
 	memcpy( &inoBuffer[5], &header.FileOffset, sizeof( header.FileOffset ) );
