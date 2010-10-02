@@ -3,6 +3,10 @@ package uk.me.grambo.syncro;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +32,12 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	private static final int XML_REQUEST_FIRST_BYTE = 5;
 	private static final int XML_RESPONSE_FIRST_BYTE = 6;
+	private static final int FILE_REQUEST_FIRST_BYTE = 10;
+	private static final int FILE_SECTION_REQUEST_FIRST_BYTE = 15;
+	
+	private static final int FILE_SEND_FIRST_BYTE = 11;
+	private static final int FILE_SECTION_FIRST_BYTE = 16;
+	private static final int FILE_LAST_SECTION_FIRST_BYTE = 20;
 	
 	private Vector<String> m_aFilesToDownload;
 
@@ -68,6 +78,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(ID,ServerID,Name,ServerPath) VALUES(?,1,?,?)");
 				GetFolderList(oSock,oInsertStatement);
 				GetFolderContents(oSock,0);
+				GetFiles(oSock);
 				oDB.close();
 				oDB = null;
 			}
@@ -99,7 +110,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		
 		String sRequest = "GET_FOLDER_LIST";
 		oOutput.write( XML_REQUEST_FIRST_BYTE );
-		oOutput.write( sRequest.length() );
+		int nSendSize = sRequest.length() + 1 + 4; 
+		oOutput.writeInt( nSendSize );
 		oOutput.flush();
 		oWriter.write( sRequest );
 		oWriter.flush();
@@ -127,7 +139,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		String sRequest = "GET_FOLDER_CONTENTS:";
 		sRequest += (new Integer(innFolderID)).toString();
 		oOutput.write( XML_REQUEST_FIRST_BYTE );
-		oOutput.write( sRequest.length() );
+		//TODO: find out if the numbers added in the legnth below are correct
+		int nSendSize = sRequest.length() + 1 + 4; 
+		oOutput.writeInt( nSendSize );
 		oOutput.flush();
 		oWriter.write( sRequest );
 		oWriter.flush();
@@ -151,9 +165,97 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 		return true;
 	}
-
+	
 	@Override
 	public void HandleRemoteFile(String insFilename) {
 		m_aFilesToDownload.add(insFilename);
+	}
+	
+	protected boolean GetFiles(Socket inoSock) throws IOException {
+
+		boolean fOK = false;		
+		for(int nFile = 0;nFile < m_aFilesToDownload.size();nFile++) {
+			fOK = GetFile( inoSock, m_aFilesToDownload.elementAt(nFile) );
+			if( !fOK )
+				return false;
+		}
+		return fOK;
+	}
+	
+	protected boolean GetFile(Socket inoSock,String insFilename) throws IOException {
+		
+		boolean fOK = false;
+		fOK = StartDownloadingFile(inoSock,insFilename);
+		if( fOK ) {
+			FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( insFilename ) );
+			fOK = ReceiveFile(inoSock,oFile);
+			oFile.close();
+		}
+		return fOK;
+	}
+	
+	protected String GetDestinationFilename(String insFilename) {
+		return "/mnt/sdcard/1.txt";
+	}
+
+	private boolean StartDownloadingFile(Socket inoSock,String insFilename) throws IOException {
+		byte aOutBuffer[] = new byte[ 1 + 4 + insFilename.length()];
+		aOutBuffer[0] = FILE_REQUEST_FIRST_BYTE;
+		
+		DataOutputStream oOutput = new DataOutputStream( inoSock.getOutputStream() );
+		OutputStreamWriter oWriter = new OutputStreamWriter( inoSock.getOutputStream() );
+		
+		oOutput.write( FILE_REQUEST_FIRST_BYTE );
+		//TODO: again, check the numbers below
+		oOutput.writeInt( insFilename.length() + 1 + 4 );
+		oOutput.flush();
+		oWriter.write( insFilename );
+		oWriter.flush();
+		
+		return true;
+	}
+	
+	private boolean ReceiveFile(Socket inoSock, FileOutputStream inoFile) throws IOException {
+		DataInputStream oInput = new DataInputStream( inoSock.getInputStream() );
+		DataOutputStream oOutput = new DataOutputStream( inoSock.getOutputStream() );
+		
+		//char aInBuffer[];
+		byte nFirstByte;
+		int nSize;
+		int nFileOffset;
+		byte nHashSize;
+		nFirstByte = oInput.readByte();
+		if( (nFirstByte != FILE_SEND_FIRST_BYTE) && (nFirstByte != FILE_LAST_SECTION_FIRST_BYTE) )
+			return false;
+			
+		nSize = oInput.readInt();
+		nFileOffset = oInput.readInt();
+		nHashSize = oInput.readByte();
+		
+		int nLeftToRead = nSize - 10;	//nSize - sizeof(header)
+		byte aData[] = new byte[nLeftToRead];
+		oInput.read(aData);
+		inoFile.write(aData);
+		
+		while( nFirstByte != FILE_LAST_SECTION_FIRST_BYTE ) {
+			oOutput.write( FILE_SECTION_REQUEST_FIRST_BYTE );
+			oOutput.writeInt( 1 + 4 );
+			oOutput.flush();
+			nFirstByte = oInput.readByte();
+			if( (nFirstByte != FILE_SECTION_FIRST_BYTE) || (nFirstByte != FILE_LAST_SECTION_FIRST_BYTE) )
+				return false;
+				
+			nSize = oInput.readInt();
+			nFileOffset = oInput.readInt();
+			nHashSize = oInput.readByte();
+			nLeftToRead = nSize - 10;	//nSize - sizeof(header)
+			
+			if( aData.length < nLeftToRead )
+				aData = new byte[nLeftToRead];
+			oInput.read(aData,0,nLeftToRead);
+			inoFile.write(aData,0,nLeftToRead);
+		}
+		
+		return true;
 	}
 }
