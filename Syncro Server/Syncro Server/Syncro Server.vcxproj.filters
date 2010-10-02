@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Protocol Buffers">
+      <UniqueIdentifier>{6e16e8bc-4460-4f10-b983-3dad827a636a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Protocol Buffers">
+      <UniqueIdentifier>{f80f3e65-efbd-471c-ae07-7a2a7fa4fd3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SyncroServer.h">
@@ -60,6 +66,12 @@
     <ClInclude Include="FileSendData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="protocol_buffers\binarydata.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol_buffers\header.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -103,6 +115,12 @@
     </ClCompile>
     <ClCompile Include="FileSendData.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol_buffers\binarydata.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol_buffers\header.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
