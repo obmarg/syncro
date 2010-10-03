@@ -9,7 +9,7 @@ namespace syncro {
 
 class CBinaryDataRequest {
 public:
-	CBinaryDataRequest(TInputStreamList inaInputStreams) {
+	CBinaryDataRequest(TInputStreamList& inaInputStreams) {
 		pb::BinaryDataRequest oRequest;
 		if( inaInputStreams.size() == 1 ) {
 			if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
