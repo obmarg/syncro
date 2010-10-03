@@ -22,7 +22,6 @@
 #include <google/protobuf/generated_message_util.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
-#include <google/protobuf/generated_message_reflection.h>
 // @@protoc_insertion_point(includes)
 
 namespace syncro {
@@ -46,19 +45,9 @@ const BinaryPacketHeader_SectionType BinaryPacketHeader_SectionType_SectionType_
 const BinaryPacketHeader_SectionType BinaryPacketHeader_SectionType_SectionType_MAX = BinaryPacketHeader_SectionType_END;
 const int BinaryPacketHeader_SectionType_SectionType_ARRAYSIZE = BinaryPacketHeader_SectionType_SectionType_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* BinaryPacketHeader_SectionType_descriptor();
-inline const ::std::string& BinaryPacketHeader_SectionType_Name(BinaryPacketHeader_SectionType value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    BinaryPacketHeader_SectionType_descriptor(), value);
-}
-inline bool BinaryPacketHeader_SectionType_Parse(
-    const ::std::string& name, BinaryPacketHeader_SectionType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<BinaryPacketHeader_SectionType>(
-    BinaryPacketHeader_SectionType_descriptor(), name, value);
-}
 // ===================================================================
 
-class BinaryDataRequest : public ::google::protobuf::Message {
+class BinaryDataRequest : public ::google::protobuf::MessageLite {
  public:
   BinaryDataRequest();
   virtual ~BinaryDataRequest();
@@ -70,15 +59,6 @@ class BinaryDataRequest : public ::google::protobuf::Message {
     return *this;
   }
   
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-  
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-  
-  static const ::google::protobuf::Descriptor* descriptor();
   static const BinaryDataRequest& default_instance();
   
   void Swap(BinaryDataRequest* other);
@@ -86,8 +66,7 @@ class BinaryDataRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
   
   BinaryDataRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
   void CopyFrom(const BinaryDataRequest& from);
   void MergeFrom(const BinaryDataRequest& from);
   void Clear();
@@ -98,7 +77,6 @@ class BinaryDataRequest : public ::google::protobuf::Message {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -106,7 +84,7 @@ class BinaryDataRequest : public ::google::protobuf::Message {
   void SetCachedSize(int size) const;
   public:
   
-  ::google::protobuf::Metadata GetMetadata() const;
+  ::std::string GetTypeName() const;
   
   // nested types ----------------------------------------------------
   
@@ -124,7 +102,6 @@ class BinaryDataRequest : public ::google::protobuf::Message {
   
   // @@protoc_insertion_point(class_scope:syncro.pb.BinaryDataRequest)
  private:
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
   
   ::std::string* file_name_;
@@ -151,7 +128,7 @@ class BinaryDataRequest : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class BinaryPacketHeader : public ::google::protobuf::Message {
+class BinaryPacketHeader : public ::google::protobuf::MessageLite {
  public:
   BinaryPacketHeader();
   virtual ~BinaryPacketHeader();
@@ -163,15 +140,6 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
     return *this;
   }
   
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-  
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-  
-  static const ::google::protobuf::Descriptor* descriptor();
   static const BinaryPacketHeader& default_instance();
   
   void Swap(BinaryPacketHeader* other);
@@ -179,8 +147,7 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
   
   BinaryPacketHeader* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
   void CopyFrom(const BinaryPacketHeader& from);
   void MergeFrom(const BinaryPacketHeader& from);
   void Clear();
@@ -191,7 +158,6 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -199,7 +165,7 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
   void SetCachedSize(int size) const;
   public:
   
-  ::google::protobuf::Metadata GetMetadata() const;
+  ::std::string GetTypeName() const;
   
   // nested types ----------------------------------------------------
   
@@ -216,17 +182,6 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
     BinaryPacketHeader_SectionType_SectionType_MAX;
   static const int SectionType_ARRAYSIZE =
     BinaryPacketHeader_SectionType_SectionType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  SectionType_descriptor() {
-    return BinaryPacketHeader_SectionType_descriptor();
-  }
-  static inline const ::std::string& SectionType_Name(SectionType value) {
-    return BinaryPacketHeader_SectionType_Name(value);
-  }
-  static inline bool SectionType_Parse(const ::std::string& name,
-      SectionType* value) {
-    return BinaryPacketHeader_SectionType_Parse(name, value);
-  }
   
   // accessors -------------------------------------------------------
   
@@ -260,7 +215,6 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
   
   // @@protoc_insertion_point(class_scope:syncro.pb.BinaryPacketHeader)
  private:
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
   
   ::google::protobuf::int32 file_size_;
@@ -410,19 +364,6 @@ inline void BinaryPacketHeader::set_binary_packet_type(::syncro::pb::BinaryPacke
 
 }  // namespace pb
 }  // namespace syncro
-
-#ifndef SWIG
-namespace google {
-namespace protobuf {
-
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::syncro::pb::BinaryPacketHeader_SectionType>() {
-  return ::syncro::pb::BinaryPacketHeader_SectionType_descriptor();
-}
-
-}  // namespace google
-}  // namespace protobuf
-#endif  // SWIG
 
 // @@protoc_insertion_point(global_scope)
 

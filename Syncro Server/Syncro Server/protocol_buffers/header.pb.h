@@ -22,7 +22,6 @@
 #include <google/protobuf/generated_message_util.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
-#include <google/protobuf/generated_message_reflection.h>
 // @@protoc_insertion_point(includes)
 
 namespace syncro {
@@ -37,7 +36,7 @@ class PacketHeader;
 
 // ===================================================================
 
-class PacketHeader : public ::google::protobuf::Message {
+class PacketHeader : public ::google::protobuf::MessageLite {
  public:
   PacketHeader();
   virtual ~PacketHeader();
@@ -49,15 +48,6 @@ class PacketHeader : public ::google::protobuf::Message {
     return *this;
   }
   
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-  
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-  
-  static const ::google::protobuf::Descriptor* descriptor();
   static const PacketHeader& default_instance();
   
   void Swap(PacketHeader* other);
@@ -65,8 +55,7 @@ class PacketHeader : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
   
   PacketHeader* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
   void CopyFrom(const PacketHeader& from);
   void MergeFrom(const PacketHeader& from);
   void Clear();
@@ -77,7 +66,6 @@ class PacketHeader : public ::google::protobuf::Message {
       ::google::protobuf::io::CodedInputStream* input);
   void SerializeWithCachedSizes(
       ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -85,7 +73,7 @@ class PacketHeader : public ::google::protobuf::Message {
   void SetCachedSize(int size) const;
   public:
   
-  ::google::protobuf::Metadata GetMetadata() const;
+  ::std::string GetTypeName() const;
   
   // nested types ----------------------------------------------------
   
@@ -112,7 +100,6 @@ class PacketHeader : public ::google::protobuf::Message {
   
   // @@protoc_insertion_point(class_scope:syncro.pb.PacketHeader)
  private:
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
   
   ::google::protobuf::int32 packet_type_;
@@ -190,15 +177,6 @@ PacketHeader::mutable_subpacket_sizes() {
 
 }  // namespace pb
 }  // namespace syncro
-
-#ifndef SWIG
-namespace google {
-namespace protobuf {
-
-
-}  // namespace google
-}  // namespace protobuf
-#endif  // SWIG
 
 // @@protoc_insertion_point(global_scope)
 

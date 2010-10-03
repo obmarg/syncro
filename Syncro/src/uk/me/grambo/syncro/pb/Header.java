@@ -6,10 +6,10 @@ package uk.me.grambo.syncro.pb;
 public final class Header {
   private Header() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
+      com.google.protobuf.ExtensionRegistryLite registry) {
   }
   public static final class PacketHeader extends
-      com.google.protobuf.GeneratedMessage {
+      com.google.protobuf.GeneratedMessageLite {
     // Use PacketHeader.newBuilder() to construct.
     private PacketHeader() {
       initFields();
@@ -23,16 +23,6 @@ public final class Header {
     
     public PacketHeader getDefaultInstanceForType() {
       return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return uk.me.grambo.syncro.pb.Header.internal_static_syncro_pb_PacketHeader_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return uk.me.grambo.syncro.pb.Header.internal_static_syncro_pb_PacketHeader_fieldAccessorTable;
     }
     
     // required int32 packet_type = 1;
@@ -70,7 +60,6 @@ public final class Header {
       for (int element : getSubpacketSizesList()) {
         output.writeInt32(2, element);
       }
-      getUnknownFields().writeTo(output);
     }
     
     private int memoizedSerializedSize = -1;
@@ -92,7 +81,6 @@ public final class Header {
         size += dataSize;
         size += 1 * getSubpacketSizesList().size();
       }
-      size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
     }
@@ -172,7 +160,8 @@ public final class Header {
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Header.PacketHeader, Builder> {
       private uk.me.grambo.syncro.pb.Header.PacketHeader result;
       
       // Construct using uk.me.grambo.syncro.pb.Header.PacketHeader.newBuilder()
@@ -199,11 +188,6 @@ public final class Header {
       
       public Builder clone() {
         return create().mergeFrom(result);
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return uk.me.grambo.syncro.pb.Header.PacketHeader.getDescriptor();
       }
       
       public uk.me.grambo.syncro.pb.Header.PacketHeader getDefaultInstanceForType() {
@@ -243,15 +227,6 @@ public final class Header {
         return returnMe;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof uk.me.grambo.syncro.pb.Header.PacketHeader) {
-          return mergeFrom((uk.me.grambo.syncro.pb.Header.PacketHeader)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
       public Builder mergeFrom(uk.me.grambo.syncro.pb.Header.PacketHeader other) {
         if (other == uk.me.grambo.syncro.pb.Header.PacketHeader.getDefaultInstance()) return this;
         if (other.hasPacketType()) {
@@ -263,7 +238,6 @@ public final class Header {
           }
           result.subpacketSizes_.addAll(other.subpacketSizes_);
         }
-        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
@@ -271,19 +245,13 @@ public final class Header {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
         while (true) {
           int tag = input.readTag();
           switch (tag) {
             case 0:
-              this.setUnknownFields(unknownFields.build());
               return this;
             default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
                 return this;
               }
               break;
@@ -374,44 +342,8 @@ public final class Header {
     // @@protoc_insertion_point(class_scope:syncro.pb.PacketHeader)
   }
   
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_syncro_pb_PacketHeader_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_syncro_pb_PacketHeader_fieldAccessorTable;
   
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
   static {
-    java.lang.String[] descriptorData = {
-      "\n\014header.proto\022\tsyncro.pb\"<\n\014PacketHeade" +
-      "r\022\023\n\013packet_type\030\001 \002(\005\022\027\n\017subpacket_size" +
-      "s\030\002 \003(\005B\030\n\026uk.me.grambo.syncro.pb"
-    };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-      new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-        public com.google.protobuf.ExtensionRegistry assignDescriptors(
-            com.google.protobuf.Descriptors.FileDescriptor root) {
-          descriptor = root;
-          internal_static_syncro_pb_PacketHeader_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_syncro_pb_PacketHeader_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_syncro_pb_PacketHeader_descriptor,
-              new java.lang.String[] { "PacketType", "SubpacketSizes", },
-              uk.me.grambo.syncro.pb.Header.PacketHeader.class,
-              uk.me.grambo.syncro.pb.Header.PacketHeader.Builder.class);
-          return null;
-        }
-      };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
   }
   
   public static void internalForceInit() {}

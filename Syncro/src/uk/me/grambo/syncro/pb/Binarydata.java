@@ -6,10 +6,10 @@ package uk.me.grambo.syncro.pb;
 public final class Binarydata {
   private Binarydata() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
+      com.google.protobuf.ExtensionRegistryLite registry) {
   }
   public static final class BinaryDataRequest extends
-      com.google.protobuf.GeneratedMessage {
+      com.google.protobuf.GeneratedMessageLite {
     // Use BinaryDataRequest.newBuilder() to construct.
     private BinaryDataRequest() {
       initFields();
@@ -23,16 +23,6 @@ public final class Binarydata {
     
     public BinaryDataRequest getDefaultInstanceForType() {
       return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return uk.me.grambo.syncro.pb.Binarydata.internal_static_syncro_pb_BinaryDataRequest_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return uk.me.grambo.syncro.pb.Binarydata.internal_static_syncro_pb_BinaryDataRequest_fieldAccessorTable;
     }
     
     // optional string file_name = 1;
@@ -54,7 +44,6 @@ public final class Binarydata {
       if (hasFileName()) {
         output.writeString(1, getFileName());
       }
-      getUnknownFields().writeTo(output);
     }
     
     private int memoizedSerializedSize = -1;
@@ -67,7 +56,6 @@ public final class Binarydata {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(1, getFileName());
       }
-      size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
     }
@@ -147,7 +135,8 @@ public final class Binarydata {
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest, Builder> {
       private uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest result;
       
       // Construct using uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.newBuilder()
@@ -174,11 +163,6 @@ public final class Binarydata {
       
       public Builder clone() {
         return create().mergeFrom(result);
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.getDescriptor();
       }
       
       public uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest getDefaultInstanceForType() {
@@ -214,21 +198,11 @@ public final class Binarydata {
         return returnMe;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest) {
-          return mergeFrom((uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
       public Builder mergeFrom(uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest other) {
         if (other == uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.getDefaultInstance()) return this;
         if (other.hasFileName()) {
           setFileName(other.getFileName());
         }
-        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
@@ -236,19 +210,13 @@ public final class Binarydata {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
         while (true) {
           int tag = input.readTag();
           switch (tag) {
             case 0:
-              this.setUnknownFields(unknownFields.build());
               return this;
             default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
                 return this;
               }
               break;
@@ -296,7 +264,7 @@ public final class Binarydata {
   }
   
   public static final class BinaryPacketHeader extends
-      com.google.protobuf.GeneratedMessage {
+      com.google.protobuf.GeneratedMessageLite {
     // Use BinaryPacketHeader.newBuilder() to construct.
     private BinaryPacketHeader() {
       initFields();
@@ -312,18 +280,8 @@ public final class Binarydata {
       return defaultInstance;
     }
     
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return uk.me.grambo.syncro.pb.Binarydata.internal_static_syncro_pb_BinaryPacketHeader_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return uk.me.grambo.syncro.pb.Binarydata.internal_static_syncro_pb_BinaryPacketHeader_fieldAccessorTable;
-    }
-    
     public enum SectionType
-        implements com.google.protobuf.ProtocolMessageEnum {
+        implements com.google.protobuf.Internal.EnumLite {
       START(0, 0),
       MIDDLE(1, 1),
       END(2, 2),
@@ -353,39 +311,11 @@ public final class Binarydata {
       ;        }
             };
       
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.getDescriptor().getEnumTypes().get(0);
-      }
-      
-      private static final SectionType[] VALUES = {
-        START, MIDDLE, END, 
-      };
-      public static SectionType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
       private final int index;
       private final int value;
       private SectionType(int index, int value) {
         this.index = index;
         this.value = value;
-      }
-      
-      static {
-        uk.me.grambo.syncro.pb.Binarydata.getDescriptor();
       }
       
       // @@protoc_insertion_point(enum_scope:syncro.pb.BinaryPacketHeader.SectionType)
@@ -441,7 +371,6 @@ public final class Binarydata {
       if (hasBinaryPacketType()) {
         output.writeEnum(4, getBinaryPacketType().getNumber());
       }
-      getUnknownFields().writeTo(output);
     }
     
     private int memoizedSerializedSize = -1;
@@ -466,7 +395,6 @@ public final class Binarydata {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, getBinaryPacketType().getNumber());
       }
-      size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
     }
@@ -546,7 +474,8 @@ public final class Binarydata {
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader, Builder> {
       private uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader result;
       
       // Construct using uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.newBuilder()
@@ -573,11 +502,6 @@ public final class Binarydata {
       
       public Builder clone() {
         return create().mergeFrom(result);
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.getDescriptor();
       }
       
       public uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader getDefaultInstanceForType() {
@@ -613,15 +537,6 @@ public final class Binarydata {
         return returnMe;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader) {
-          return mergeFrom((uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
       public Builder mergeFrom(uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader other) {
         if (other == uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.getDefaultInstance()) return this;
         if (other.hasFileSize()) {
@@ -636,7 +551,6 @@ public final class Binarydata {
         if (other.hasBinaryPacketType()) {
           setBinaryPacketType(other.getBinaryPacketType());
         }
-        this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
       
@@ -644,19 +558,13 @@ public final class Binarydata {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
         while (true) {
           int tag = input.readTag();
           switch (tag) {
             case 0:
-              this.setUnknownFields(unknownFields.build());
               return this;
             default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
                 return this;
               }
               break;
@@ -676,9 +584,7 @@ public final class Binarydata {
             case 32: {
               int rawValue = input.readEnum();
               uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.SectionType value = uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.SectionType.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(4, rawValue);
-              } else {
+              if (value != null) {
                 setBinaryPacketType(value);
               }
               break;
@@ -775,62 +681,8 @@ public final class Binarydata {
     // @@protoc_insertion_point(class_scope:syncro.pb.BinaryPacketHeader)
   }
   
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_syncro_pb_BinaryDataRequest_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_syncro_pb_BinaryDataRequest_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_syncro_pb_BinaryPacketHeader_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_syncro_pb_BinaryPacketHeader_fieldAccessorTable;
   
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
   static {
-    java.lang.String[] descriptorData = {
-      "\n\020binarydata.proto\022\tsyncro.pb\"&\n\021BinaryD" +
-      "ataRequest\022\021\n\tfile_name\030\001 \001(\t\"\305\001\n\022Binary" +
-      "PacketHeader\022\021\n\tfile_size\030\001 \001(\005\022\023\n\013file_" +
-      "offset\030\002 \001(\005\022\021\n\thash_size\030\003 \001(\005\022E\n\022binar" +
-      "y_packet_type\030\004 \001(\0162).syncro.pb.BinaryPa" +
-      "cketHeader.SectionType\"-\n\013SectionType\022\t\n" +
-      "\005START\020\000\022\n\n\006MIDDLE\020\001\022\007\n\003END\020\002B\030\n\026uk.me.g" +
-      "rambo.syncro.pb"
-    };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-      new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-        public com.google.protobuf.ExtensionRegistry assignDescriptors(
-            com.google.protobuf.Descriptors.FileDescriptor root) {
-          descriptor = root;
-          internal_static_syncro_pb_BinaryDataRequest_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_syncro_pb_BinaryDataRequest_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_syncro_pb_BinaryDataRequest_descriptor,
-              new java.lang.String[] { "FileName", },
-              uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.class,
-              uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.Builder.class);
-          internal_static_syncro_pb_BinaryPacketHeader_descriptor =
-            getDescriptor().getMessageTypes().get(1);
-          internal_static_syncro_pb_BinaryPacketHeader_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_syncro_pb_BinaryPacketHeader_descriptor,
-              new java.lang.String[] { "FileSize", "FileOffset", "HashSize", "BinaryPacketType", },
-              uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.class,
-              uk.me.grambo.syncro.pb.Binarydata.BinaryPacketHeader.Builder.class);
-          return null;
-        }
-      };
-    com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
   }
   
   public static void internalForceInit() {}

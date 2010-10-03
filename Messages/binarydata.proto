@@ -1,6 +1,8 @@
 package syncro.pb;
 
 option java_package = "uk.me.grambo.syncro.pb";
+option optimize_for = LITE_RUNTIME;
+
 
 message BinaryDataRequest {
 	optional string file_name = 1;
