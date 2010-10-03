@@ -20,6 +20,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.helpers.DefaultHandler;
 
+import uk.me.grambo.syncro.pb.Binarydata;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,11 +42,13 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	private static final int FILE_LAST_SECTION_FIRST_BYTE = 20;
 	
 	private Vector<String> m_aFilesToDownload;
+	private PBSocketInterface m_oPBInterface;
 
 	public SyncroService() {
 		super("SyncroService");
 		// TODO Auto-generated constructor stub
 		m_aFilesToDownload = new Vector<String>();
+		m_oPBInterface = new PBSocketInterface();
 	}
 
 	@Override
@@ -187,9 +191,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		boolean fOK = false;
 		fOK = StartDownloadingFile(inoSock,insFilename);
 		if( fOK ) {
-			FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( insFilename ) );
-			fOK = ReceiveFile(inoSock,oFile);
-			oFile.close();
+			//FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( insFilename ) );
+			//fOK = ReceiveFile(inoSock,oFile);
+			//oFile.close();
 		}
 		return fOK;
 	}
@@ -199,19 +203,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 
 	private boolean StartDownloadingFile(Socket inoSock,String insFilename) throws IOException {
-		byte aOutBuffer[] = new byte[ 1 + 4 + insFilename.length()];
-		aOutBuffer[0] = FILE_REQUEST_FIRST_BYTE;
-		
-		DataOutputStream oOutput = new DataOutputStream( inoSock.getOutputStream() );
-		OutputStreamWriter oWriter = new OutputStreamWriter( inoSock.getOutputStream() );
-		
-		oOutput.write( FILE_REQUEST_FIRST_BYTE );
-		//TODO: again, check the numbers below
-		oOutput.writeInt( insFilename.length() + 1 + 4 );
-		oOutput.flush();
-		oWriter.write( insFilename );
-		oWriter.flush();
-		
+		Binarydata.BinaryDataRequest oRequest = Binarydata.BinaryDataRequest.newBuilder()
+			.setFileName(insFilename)
+			.build();
+		m_oPBInterface.SendObject(inoSock.getOutputStream(), PBSocketInterface.RequestTypes.BINARY_REQUEST ,oRequest);
 		return true;
 	}
 	
