@@ -20,6 +20,7 @@ public:
 		return m_aSubpackets.size();
 	};
 
+	//TODO: Write all this stuff to use ArrayOutputStreams?
 	virtual void WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert) {
 		std::copy( m_aSubpackets[inSubpacketIndex]->begin(),m_aSubpackets[inSubpacketIndex]->end(), inoInsert );
 	}

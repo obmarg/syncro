@@ -19,6 +19,9 @@ CBinaryDataResponse::CBinaryDataResponse(CFileSendData& inoFileData) {
 	if( inoFileData.IsFileFinished() )
 		oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
 	
+	pHeader->resize( oPacketHeader.ByteSize() );
+	oPacketHeader.SerializeToArray( &(*pHeader)[0], pHeader->size() );
+	
 	m_aSubpackets.push_back( pHeader );
 	m_aSubpackets.push_back( pFileChunk );
 
