@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BasePBResponse.h" />
     <ClInclude Include="BroadcastListener.h" />
     <ClInclude Include="BroadcastThread.h" />
     <ClInclude Include="common.h" />
@@ -96,6 +97,8 @@
     <ClInclude Include="Folder.h" />
     <ClInclude Include="FolderMan.h" />
     <ClInclude Include="HandshakeHandlers.h" />
+    <ClInclude Include="PBRequestHandler.h" />
+    <ClInclude Include="PBResponseSendHandler.h" />
     <ClInclude Include="protocol_buffers\binarydata.pb.h" />
     <ClInclude Include="protocol_buffers\header.pb.h" />
     <ClInclude Include="ServerComms.h" />
@@ -115,6 +118,8 @@
     <ClCompile Include="FolderMan.cpp" />
     <ClCompile Include="HandshakeHandlers.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PBRequestHandler.cpp" />
+    <ClCompile Include="PBResponseSendHandler.cpp" />
     <ClCompile Include="protocol_buffers\binarydata.pb.cc" />
     <ClCompile Include="protocol_buffers\header.pb.cc" />
     <ClCompile Include="ServerComms.cpp" />

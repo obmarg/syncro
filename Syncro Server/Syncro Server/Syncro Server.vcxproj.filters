@@ -72,6 +72,15 @@
     <ClInclude Include="protocol_buffers\header.pb.h">
       <Filter>Header Files\Protocol Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="PBRequestHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PBResponseSendHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasePBResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -121,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="protocol_buffers\header.pb.cc">
       <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="PBRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PBResponseSendHandler.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
