@@ -3,6 +3,8 @@
 
 #include "ServerComms.h"
 
+namespace syncro {
+
 class CHandshakeRecv : public CReceiveHandler {
 public:
 	virtual ~CHandshakeRecv();
@@ -47,5 +49,7 @@ protected:
 
 private:
 };
+
+};	//namespace syncro
 
 #endif

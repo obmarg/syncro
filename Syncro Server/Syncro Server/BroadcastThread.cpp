@@ -1,6 +1,8 @@
 #include "BroadcastThread.h"
 #include "BroadcastListener.h"
 
+namespace syncro {
+
 CBroadcastThread::CBroadcastThread() {
 
 }
@@ -18,3 +20,5 @@ CBroadcastThread::operator()() {
 		//TODO: sleep the thread or some shite here?
 	}
 }
+
+};

@@ -3,6 +3,8 @@
 
 #include <vector>
 
+namespace syncro {
+
 struct TCharBuffer {
 	typedef unsigned char TChar;
 	typedef std::vector<TChar> TBuff;
@@ -17,5 +19,7 @@ struct TCharBuffer {
 	TBuff& aBuffer;
 	unsigned int nSize;
 };
+
+}; //namespace syncro
 
 #endif

@@ -3,6 +3,8 @@
 #include <tinyxml.h>
 #include <boost\filesystem.hpp>
 
+namespace syncro {
+
 using namespace boost::filesystem;
 using boost::shared_ptr;
 
@@ -25,3 +27,5 @@ CFolder::CFolder( const string& insPath ) : m_sPath( insPath ) {
 CFolder::~CFolder( ) {
 
 }
+
+};		//end namespace syncro

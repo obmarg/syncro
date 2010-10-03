@@ -4,6 +4,8 @@
 #include "ServerComms.h"
 #include "XMLBuilder.h"
 
+namespace syncro {
+
 class CXMLAcceptHandler : public CAcceptHandler {
 public:
 	CXMLAcceptHandler();
@@ -67,5 +69,7 @@ protected:
 
 private:
 };
+
+};	//namespace syncro
 
 #endif 

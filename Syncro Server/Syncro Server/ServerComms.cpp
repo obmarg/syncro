@@ -4,6 +4,8 @@
 #include <iostream>
 #include "HandshakeHandlers.h"
 
+namespace syncro {
+
 using namespace boost::asio::ip;
 using boost::asio::io_service;
 using std::cout;
@@ -144,3 +146,5 @@ CTCPConnection::FinishedSend(const boost::system::error_code& inoError, std::siz
 const TCharBuffer CSendHandler::GetBuffer() {
 	return TCharBuffer( m_aBuffer,m_aBuffer.size() );
 }
+
+};

@@ -6,6 +6,7 @@
 #include <string>
 #include <iterator>
 
+namespace syncro {
 
 using std::vector;
 using std::string;
@@ -66,3 +67,5 @@ void CHandshakeResponse::SendDone(int innSent) {
 	m_pConn->AddRecvHandler( CFileRequestHandler::Create(m_pConn), 0 );
 	m_pConn->StartRecv( 0 );
 }
+
+};		//namespace syncro

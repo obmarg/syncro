@@ -7,6 +7,8 @@
 
 class TiXmlDocument;
 
+namespace syncro {
+
 class CXMLBuilder {
 public:
 	CXMLBuilder();
@@ -34,6 +36,8 @@ public:
 private:
 	CXMLBuilder& m_oBuilder;
 };
+
+};		//namespace syncro
 
 
 #endif

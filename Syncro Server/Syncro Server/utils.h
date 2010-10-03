@@ -4,6 +4,8 @@
 #include <string>
 #include <boost\detail\endian.hpp>
 
+namespace syncro {
+
 class CStringLessThan {
 public:
 	bool operator()(const std::string& inoLHS, const std::string& inoRHS) {
@@ -50,5 +52,7 @@ T FromJavaEndian(const T& source) {
 	return ret;
 #endif
 }
+
+};	//namespace syncro
 
 #endif

@@ -7,7 +7,7 @@
 #include "Filesendhandler.h"
 #include <boost/bind.hpp>
 
-
+namespace syncro {
 
 using std::string;
 
@@ -57,3 +57,5 @@ bool CFileRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 
 	return false;
 }
+
+}	//namespace syncro

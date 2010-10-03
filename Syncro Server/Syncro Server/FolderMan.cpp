@@ -1,6 +1,8 @@
 #include "FolderMan.h"
 #include <boost/filesystem.hpp>
 
+namespace syncro {
+
 using namespace std;
 using namespace boost::filesystem;
 
@@ -28,3 +30,5 @@ CFolderMan::GetFolder( int nIndex ) {
 		return boost::shared_ptr<CFolder>();
 	return boost::shared_ptr<CFolder>( new CFolder( m_aFolderInfo[ nIndex ].sFolderName ) );
 }
+
+};		//end namespace syncro

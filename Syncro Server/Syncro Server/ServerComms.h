@@ -9,6 +9,8 @@
 #include "utils.h"
 #include "common.h"
 
+namespace syncro {
+
 class CReceiveHandler {
 public:
 	typedef boost::shared_ptr<CReceiveHandler> TPointer;
@@ -105,5 +107,7 @@ private:
 	void StartAccept();
 	void HandleAccept(CTCPConnection::TPointer inpConnection, const boost::system::error_code& inoError);
 };
+
+};		//namespace syncro
 
 #endif

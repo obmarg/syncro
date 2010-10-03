@@ -5,6 +5,8 @@
 #include <boost/shared_ptr.hpp>
 #include "ServerComms.h"
 
+namespace syncro {
+
 class CFileSendHandler : public CSendHandler {
 public:
 	typedef boost::shared_ptr<CFileSendHandler> TPointer;
@@ -30,6 +32,8 @@ protected:
 	CFileSendHandler(CTCPConnection::TPointer inpConn);
 
 private:
+};
+
 };
 
 #endif

@@ -1,5 +1,7 @@
 #include "FileSendData.h"
 
+namespace syncro {
+
 const int DEFAULT_FILE_SEND_BUFFER_SIZE = 1024;
 
 const unsigned char FILE_SEND_FIRST_BYTE = 11;
@@ -58,3 +60,5 @@ void CFileSendData::operator()(TCharBuffer::TBuff& inoBuffer) {
 bool CFileSendData::IsFileFinished() {
 	return m_oFile.eof();
 }
+
+};		//namespace syncro

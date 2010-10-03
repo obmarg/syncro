@@ -5,6 +5,8 @@
 #include "ServerComms.h"
 #include "FileSendData.h"
 
+namespace syncro {
+
 class CFileRequestHandler : public CReceiveHandler { 
 public:
 	virtual ~CFileRequestHandler();
@@ -25,5 +27,7 @@ protected:
 
 	CFileRequestHandler(CTCPConnection::TPointer inpConn);
 };
+
+};		//namespace syncro
 
 #endif

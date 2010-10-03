@@ -2,6 +2,8 @@
 //#include "Logger.h"
 #include <ctype.h>
 
+namespace syncro {
+
 //extern CLogger Logger;
 //static int callback(void*,int,char**,char**);
 
@@ -85,3 +87,5 @@ void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv)
 	sqlite3_result_text(db,text,strlen(text),SQLITE_TRANSIENT);
 	//TODO: find out if i need to delete the text here.
 }
+
+};	//namespace syncro

@@ -4,6 +4,8 @@
 #include "FolderMan.h"
 #include <boost/thread.hpp>
 
+namespace syncro {
+
 class CSyncroServer {
 public:
 	CSyncroServer();
@@ -13,5 +15,7 @@ public:
 private:
 	boost::thread m_oBroadcastThread;
 };
+
+};		//namespace syncro
 
 #endif

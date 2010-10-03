@@ -1,6 +1,8 @@
 #include "BroadcastListener.h"
 #include <boost/bind.hpp>
 
+namespace syncro {
+
 using boost::asio::ip::udp;
 using std::string;
 
@@ -40,3 +42,5 @@ CBroadcastListener::StartRecieve() {
           boost::asio::placeholders::error,
           boost::asio::placeholders::bytes_transferred));
 }
+
+};	//namespace syncro

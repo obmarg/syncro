@@ -7,6 +7,8 @@
 #include <boost\shared_ptr.hpp>
 #include "Folder.h"
 
+namespace syncro {
+
 class CFolderMan {
 public:
 	struct sFolderInfo {
@@ -28,6 +30,8 @@ public:
 private:
 	std::string m_sRoot;
 	TFolderInfoList m_aFolderInfo;
+};
+
 };
 
 #endif

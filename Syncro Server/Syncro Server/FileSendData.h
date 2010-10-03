@@ -8,6 +8,8 @@
 
 #include <boost/noncopyable.hpp>
 
+namespace syncro {
+
 class CFileSendData {
 public:
 	typedef boost::shared_ptr<CFileSendData> TPointer;
@@ -42,5 +44,7 @@ private:
 
 	unsigned int	m_nFileSize;
 };
+
+} //end namespace syncro
 
 #endif

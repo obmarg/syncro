@@ -5,6 +5,8 @@
 #include <vector>
 #include <boost\shared_ptr.hpp>
 
+namespace syncro {
+
 class CFolder {
 public:
 	CFolder( const std::string& insPath );
@@ -19,6 +21,8 @@ private:
 	std::vector< boost::shared_ptr<CFolder> > m_oChildren;
 	std::vector< std::string > m_oFiles;
 };
+
+}
 
 
 #endif

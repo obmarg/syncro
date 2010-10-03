@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 
+namespace syncro {
 
 using std::vector;
 using std::string;
@@ -105,3 +106,5 @@ void CXMLOutput::operator()(TCharBuffer::TBuff& inoBuffer) {
 	}
 	return;
 }
+
+};		//end namespace syncro

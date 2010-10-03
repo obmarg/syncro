@@ -16,6 +16,8 @@
 #include <pthread.h>
 #endif
 
+namespace syncro {
+
 using namespace std;
 
 class Database
@@ -84,5 +86,7 @@ private:
 	pthread_mutex_t mutex;
 #endif
 };
+
+}; //namespace syncro
 
 #endif

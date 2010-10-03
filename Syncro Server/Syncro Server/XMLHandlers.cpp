@@ -5,6 +5,8 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 
+namespace syncro {
+
 using std::string;
 
 const unsigned char XML_REQUEST_FIRST_BYTE = 5;
@@ -84,3 +86,6 @@ CXMLSendHandler::~CXMLSendHandler() {
 void CXMLSendHandler::SendDone(int innSent) {
 	m_pConn->StartRecv(0);
 }
+
+
+};	//namespace syncro

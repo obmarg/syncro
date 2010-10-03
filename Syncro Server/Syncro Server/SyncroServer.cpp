@@ -16,6 +16,8 @@
 #include <boost/asio.hpp>
 #include "XMLHandlers.h"
 
+namespace syncro {
+
 using namespace std;
 using std::tr1::shared_ptr;
 
@@ -40,3 +42,5 @@ CSyncroServer::Run() {
 
 	return true;
 }
+
+};		//namespace syncro
