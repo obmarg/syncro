@@ -22,6 +22,10 @@ public class PBSocketInterface {
 		public static final int BINARY_REQUEST = 1;
 		public static final int BINARY_CONTINUE = 2;
 	};
+	
+	public class ResponseTypes {
+		public static final int BINARY_RESPONSE = 3;
+	};
 
 	public PBSocketInterface() {
 		m_aResponseHandlers = new ArrayList<PBResponseHandler>();
@@ -61,10 +65,14 @@ public class PBSocketInterface {
 		if( nFirstByte != PB_RESPONSE_FIRST_BYTE )
 			throw new Exception( "Invalid first byte in PBSocketInterface::GetResponse");
 		int nHeaderSize = oInput.readInt();
-		CodedInputStream oMessageInputStream = CodedInputStream.newInstance(inoStream);
-		oMessageInputStream.setSizeLimit(nHeaderSize);
+		byte aBuffer[] = new byte[nHeaderSize];
+		oInput.read(aBuffer);
+		/*CodedInputStream oMessageInputStream = CodedInputStream.newInstance(inoStream);
+		//oMessageInputStream.setSizeLimit(nHeaderSize); */
 		Header.PacketHeader.Builder oHeaderBuilder = Header.PacketHeader.newBuilder();
-		oMessageInputStream.readMessage(oHeaderBuilder, ExtensionRegistryLite.getEmptyRegistry() );
+		//oHeaderBuilder.mergeFrom(oMessageInputStream);
+		//TODO: Figure out how to use CodedInputStream
+		oHeaderBuilder.mergeFrom(aBuffer);
 		PBResponseHandler oSelectedHandler = null;
 		for( PBResponseHandler oHandler : m_aResponseHandlers ) {
 			if( oHandler.canHandleResponse( oHeaderBuilder.getPacketType() ) ) {

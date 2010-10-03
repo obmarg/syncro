@@ -187,13 +187,16 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 	
 	protected boolean GetFile(Socket inoSock,String insFilename) throws IOException {
-		
 		boolean fOK = false;
 		fOK = StartDownloadingFile(inoSock,insFilename);
 		if( fOK ) {
-			//FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( insFilename ) );
-			//fOK = ReceiveFile(inoSock,oFile);
-			//oFile.close();
+			FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( insFilename ) );
+			try {
+				fOK = ReceiveFile(inoSock,oFile);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			oFile.close();
 		}
 		return fOK;
 	}
@@ -210,47 +213,20 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return true;
 	}
 	
-	private boolean ReceiveFile(Socket inoSock, FileOutputStream inoFile) throws IOException {
-		DataInputStream oInput = new DataInputStream( inoSock.getInputStream() );
-		DataOutputStream oOutput = new DataOutputStream( inoSock.getOutputStream() );
-		
-		//char aInBuffer[];
-		byte nFirstByte;
-		int nSize;
-		int nFileOffset;
-		byte nHashSize;
-		nFirstByte = oInput.readByte();
-		if( (nFirstByte != FILE_SEND_FIRST_BYTE) && (nFirstByte != FILE_LAST_SECTION_FIRST_BYTE) )
-			return false;
-			
-		nSize = oInput.readInt();
-		nFileOffset = oInput.readInt();
-		nHashSize = oInput.readByte();
-		
-		int nLeftToRead = nSize - 10;	//nSize - sizeof(header)
-		byte aData[] = new byte[nLeftToRead];
-		oInput.read(aData);
-		inoFile.write(aData);
-		
-		while( nFirstByte != FILE_LAST_SECTION_FIRST_BYTE ) {
-			oOutput.write( FILE_SECTION_REQUEST_FIRST_BYTE );
-			oOutput.writeInt( 1 + 4 );
-			oOutput.flush();
-			nFirstByte = oInput.readByte();
-			if( (nFirstByte != FILE_SECTION_FIRST_BYTE) || (nFirstByte != FILE_LAST_SECTION_FIRST_BYTE) )
-				return false;
-				
-			nSize = oInput.readInt();
-			nFileOffset = oInput.readInt();
-			nHashSize = oInput.readByte();
-			nLeftToRead = nSize - 10;	//nSize - sizeof(header)
-			
-			if( aData.length < nLeftToRead )
-				aData = new byte[nLeftToRead];
-			oInput.read(aData,0,nLeftToRead);
-			inoFile.write(aData,0,nLeftToRead);
-		}
-		
+	private boolean ReceiveFile(Socket inoSock, OutputStream inoFile) throws Exception {
+		FileResponseHandler oResponseHandler = new FileResponseHandler(inoFile);
+		InputStream oInputStream = inoSock.getInputStream(); 
+		OutputStream oOutputStream = inoSock.getOutputStream();
+		m_oPBInterface.addResponseHandler(oResponseHandler);
+		boolean fDone = false;
+		do {
+			m_oPBInterface.HandleResponse(oInputStream);
+			if( oResponseHandler.canRemove() ) {
+				fDone = true;
+			} else {
+				m_oPBInterface.SendMessage(oOutputStream, PBSocketInterface.RequestTypes.BINARY_CONTINUE );
+			}
+		}while( !fDone );
 		return true;
 	}
 }
