@@ -3,6 +3,6 @@ package syncro.pb;
 option java_package = "uk.me.grambo.syncro.pb";
 
 message PacketHeader {
-	required int32 PacketType = 1;
-	repeated int32 SubpacketSizes = 2;
+	required int32 packet_type = 1;
+	repeated int32 subpacket_sizes = 2;
 }

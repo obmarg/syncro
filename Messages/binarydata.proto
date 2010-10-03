@@ -2,16 +2,20 @@ package syncro.pb;
 
 option java_package = "uk.me.grambo.syncro.pb";
 
+message BinaryDataRequest {
+	optional string file_name;
+}
+
 message BinaryPacketHeader {
-	optional int32 FileSize = 1;
-	optional int32 FileOffset = 2;
-	optional int32 HashSize = 3;
+	optional int32 file_size = 1;
+	optional int32 file_offset = 2;
+	optional int32 hash_size = 3;
 	
 	enum SectionType {
 		START = 0;
 		MIDDLE = 1;
 		END = 2;
 	}
-	optional SectionType BinaryPacketType = 4;
+	optional SectionType binary_packet_type = 4;
 }
 
