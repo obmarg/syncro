@@ -1,6 +1,6 @@
 #include "HandshakeHandlers.h"
 #include "XMLHandlers.h"
-#include "FileRequestHandler.h"
+#include "PBRequestHandler.h"
 
 #include <vector>
 #include <string>
@@ -12,6 +12,8 @@ using std::vector;
 using std::string;
 
 const std::string CHandshakeRecv::m_sRecvString = "Hello Syncro?";
+
+CBasePBResponseFactory::TPointer CHandshakeResponse::ms_pPBResponseFactory;
 
 CHandshakeRecv::CHandshakeRecv(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
 	m_fFoundString = false;
@@ -64,7 +66,8 @@ bool CHandshakeResponse::HandleSend(int innSent) {
 
 void CHandshakeResponse::SendDone(int innSent) {
 	m_pConn->AddRecvHandler( CXMLRequestHandler::Create(m_pConn) , 0 );
-	m_pConn->AddRecvHandler( CFileRequestHandler::Create(m_pConn), 0 );
+	/*m_pConn->AddRecvHandler( CFileRequestHandler::Create(m_pConn), 0 );*/
+	m_pConn->AddRecvHandler( CPBRequestHandler::Create(m_pConn, ms_pPBResponseFactory ), 0 );
 	m_pConn->StartRecv( 0 );
 }
 

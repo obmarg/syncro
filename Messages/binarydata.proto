@@ -3,8 +3,8 @@ package syncro.pb;
 option java_package = "uk.me.grambo.syncro.pb";
 
 message BinaryDataRequest {
-	optional string file_name;
-}
+	optional string file_name = 1;
+};
 
 message BinaryPacketHeader {
 	optional int32 file_size = 1;
@@ -17,5 +17,5 @@ message BinaryPacketHeader {
 		END = 2;
 	}
 	optional SectionType binary_packet_type = 4;
-}
+};
 

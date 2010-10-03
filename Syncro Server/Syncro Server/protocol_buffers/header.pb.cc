@@ -30,8 +30,8 @@ void protobuf_AssignDesc_header_2eproto() {
   GOOGLE_CHECK(file != NULL);
   PacketHeader_descriptor_ = file->message_type(0);
   static const int PacketHeader_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketHeader, packettype_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketHeader, subpacketsizes_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketHeader, packet_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PacketHeader, subpacket_sizes_),
   };
   PacketHeader_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -74,9 +74,9 @@ void protobuf_AddDesc_header_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\014header.proto\022\tsyncro.pb\":\n\014PacketHeade"
-    "r\022\022\n\nPacketType\030\001 \002(\005\022\026\n\016SubpacketSizes\030"
-    "\002 \003(\005B\030\n\026uk.me.grambo.syncro.pb", 111);
+    "\n\014header.proto\022\tsyncro.pb\"<\n\014PacketHeade"
+    "r\022\023\n\013packet_type\030\001 \002(\005\022\027\n\017subpacket_size"
+    "s\030\002 \003(\005B\030\n\026uk.me.grambo.syncro.pb", 113);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "header.proto", &protobuf_RegisterTypes);
   PacketHeader::default_instance_ = new PacketHeader();
@@ -115,7 +115,7 @@ PacketHeader::PacketHeader(const PacketHeader& from)
 
 void PacketHeader::SharedCtor() {
   _cached_size_ = 0;
-  packettype_ = 0;
+  packet_type_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -150,9 +150,9 @@ PacketHeader* PacketHeader::New() const {
 
 void PacketHeader::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    packettype_ = 0;
+    packet_type_ = 0;
   }
-  subpacketsizes_.Clear();
+  subpacket_sizes_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -163,39 +163,39 @@ bool PacketHeader::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 PacketType = 1;
+      // required int32 packet_type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &packettype_)));
+                 input, &packet_type_)));
           _set_bit(0);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_SubpacketSizes;
+        if (input->ExpectTag(16)) goto parse_subpacket_sizes;
         break;
       }
       
-      // repeated int32 SubpacketSizes = 2;
+      // repeated int32 subpacket_sizes = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_SubpacketSizes:
+         parse_subpacket_sizes:
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 1, 16, input, this->mutable_subpacketsizes())));
+                 1, 16, input, this->mutable_subpacket_sizes())));
         } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
                    == ::google::protobuf::internal::WireFormatLite::
                       WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, this->mutable_subpacketsizes())));
+                 input, this->mutable_subpacket_sizes())));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_SubpacketSizes;
+        if (input->ExpectTag(16)) goto parse_subpacket_sizes;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -218,15 +218,15 @@ bool PacketHeader::MergePartialFromCodedStream(
 
 void PacketHeader::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 PacketType = 1;
+  // required int32 packet_type = 1;
   if (_has_bit(0)) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->packettype(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->packet_type(), output);
   }
   
-  // repeated int32 SubpacketSizes = 2;
-  for (int i = 0; i < this->subpacketsizes_size(); i++) {
+  // repeated int32 subpacket_sizes = 2;
+  for (int i = 0; i < this->subpacket_sizes_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(
-      2, this->subpacketsizes(i), output);
+      2, this->subpacket_sizes(i), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -237,15 +237,15 @@ void PacketHeader::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* PacketHeader::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 PacketType = 1;
+  // required int32 packet_type = 1;
   if (_has_bit(0)) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->packettype(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->packet_type(), target);
   }
   
-  // repeated int32 SubpacketSizes = 2;
-  for (int i = 0; i < this->subpacketsizes_size(); i++) {
+  // repeated int32 subpacket_sizes = 2;
+  for (int i = 0; i < this->subpacket_sizes_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteInt32ToArray(2, this->subpacketsizes(i), target);
+      WriteInt32ToArray(2, this->subpacket_sizes(i), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -259,22 +259,22 @@ int PacketHeader::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 PacketType = 1;
-    if (has_packettype()) {
+    // required int32 packet_type = 1;
+    if (has_packet_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->packettype());
+          this->packet_type());
     }
     
   }
-  // repeated int32 SubpacketSizes = 2;
+  // repeated int32 subpacket_sizes = 2;
   {
     int data_size = 0;
-    for (int i = 0; i < this->subpacketsizes_size(); i++) {
+    for (int i = 0; i < this->subpacket_sizes_size(); i++) {
       data_size += ::google::protobuf::internal::WireFormatLite::
-        Int32Size(this->subpacketsizes(i));
+        Int32Size(this->subpacket_sizes(i));
     }
-    total_size += 1 * this->subpacketsizes_size() + data_size;
+    total_size += 1 * this->subpacket_sizes_size() + data_size;
   }
   
   if (!unknown_fields().empty()) {
@@ -302,10 +302,10 @@ void PacketHeader::MergeFrom(const ::google::protobuf::Message& from) {
 
 void PacketHeader::MergeFrom(const PacketHeader& from) {
   GOOGLE_CHECK_NE(&from, this);
-  subpacketsizes_.MergeFrom(from.subpacketsizes_);
+  subpacket_sizes_.MergeFrom(from.subpacket_sizes_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from._has_bit(0)) {
-      set_packettype(from.packettype());
+      set_packet_type(from.packet_type());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -331,8 +331,8 @@ bool PacketHeader::IsInitialized() const {
 
 void PacketHeader::Swap(PacketHeader* other) {
   if (other != this) {
-    std::swap(packettype_, other->packettype_);
-    subpacketsizes_.Swap(&other->subpacketsizes_);
+    std::swap(packet_type_, other->packet_type_);
+    subpacket_sizes_.Swap(&other->subpacket_sizes_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

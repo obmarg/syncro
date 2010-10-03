@@ -10,37 +10,25 @@
 
 namespace syncro {
 
-class CFileSendData {
+class CFileSendData : boost::noncopyable {
 public:
-	typedef boost::shared_ptr<CFileSendData> TPointer;
-
 	CFileSendData(const std::string& insFilename);
-	CFileSendData( const CFileSendData& ) {
-	}
+	CFileSendData( CFileSendData& inoOther );
 	~CFileSendData();
 
-	void operator()(TCharBuffer::TBuff& inoBuffer);
+	void FillBuffer(TCharBuffer::TBuff& inoBuffer);
 
+	unsigned int GetFilePosition();
+	unsigned int GetFileSize() { return m_nFileSize; };
 	bool IsFileFinished();
+	bool IsStartFile();
 
 private:
 
-	struct sHeader {
-	public:
-		sHeader( unsigned char inFirstByte, unsigned int inSize, unsigned int inFileOffset ) {
-			FirstByte = inFirstByte;
-			Size = ToJavaEndian(inSize);
-			FileOffset = ToJavaEndian(inFileOffset);
-			HashSize = 0;
-		};
-		unsigned char FirstByte;
-		unsigned int Size;
-		unsigned int FileOffset;
-		unsigned char HashSize;
-		//insert hash here
-	};
+	void OpenFile();
 
 	std::ifstream m_oFile;
+	const std::string m_sFilename;
 
 	unsigned int	m_nFileSize;
 };

@@ -3,6 +3,7 @@
 
 #include <string>
 #include "protocol_buffers\header.pb.h"
+#include <boost\shared_ptr.hpp>
 
 namespace syncro {
 
@@ -23,9 +24,13 @@ public:
 
 class CBasePBResponseFactory {
 public:
+	virtual ~CBasePBResponseFactory() {};
+
 	typedef boost::shared_ptr<CBasePBResponseFactory> TPointer;
 
 	virtual CBasePBResponse::TPointer CreateResponse(const pb::PacketHeader& inoPacketHeader,const TCharBuffer::TBuff& inoSubpackets)=0;
+protected:
+	CBasePBResponseFactory() {};
 };
 
 };	//namespace syncro

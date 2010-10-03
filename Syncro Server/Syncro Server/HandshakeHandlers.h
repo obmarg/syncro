@@ -2,6 +2,7 @@
 #define _HANDSHAKE_HANDLERS_H_
 
 #include "ServerComms.h"
+#include "BasePBResponse.h"
 
 namespace syncro {
 
@@ -17,6 +18,7 @@ public:
 		CHandshakeRecv* pNew = new CHandshakeRecv(inpConn);
 		return CReceiveHandler::TPointer( static_cast<CReceiveHandler*>(pNew) );
 	}
+
 protected:
 	bool m_fFoundString;
 	const static std::string m_sRecvString;
@@ -41,11 +43,17 @@ public:
 		return TPointer( pNew );
 	}
 
+	static void SetPBResponseFactory( CBasePBResponseFactory::TPointer inpResponseFactory ) {
+		ms_pPBResponseFactory = inpResponseFactory;
+	};
+
 protected:
 
 	CTCPConnection::TPointer m_pConn;
 
 	CHandshakeResponse(CTCPConnection::TPointer inpConn);
+
+	static CBasePBResponseFactory::TPointer ms_pPBResponseFactory;
 
 private:
 };

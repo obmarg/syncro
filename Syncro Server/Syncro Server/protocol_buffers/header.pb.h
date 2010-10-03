@@ -91,32 +91,32 @@ class PacketHeader : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required int32 PacketType = 1;
-  inline bool has_packettype() const;
-  inline void clear_packettype();
+  // required int32 packet_type = 1;
+  inline bool has_packet_type() const;
+  inline void clear_packet_type();
   static const int kPacketTypeFieldNumber = 1;
-  inline ::google::protobuf::int32 packettype() const;
-  inline void set_packettype(::google::protobuf::int32 value);
+  inline ::google::protobuf::int32 packet_type() const;
+  inline void set_packet_type(::google::protobuf::int32 value);
   
-  // repeated int32 SubpacketSizes = 2;
-  inline int subpacketsizes_size() const;
-  inline void clear_subpacketsizes();
+  // repeated int32 subpacket_sizes = 2;
+  inline int subpacket_sizes_size() const;
+  inline void clear_subpacket_sizes();
   static const int kSubpacketSizesFieldNumber = 2;
-  inline ::google::protobuf::int32 subpacketsizes(int index) const;
-  inline void set_subpacketsizes(int index, ::google::protobuf::int32 value);
-  inline void add_subpacketsizes(::google::protobuf::int32 value);
+  inline ::google::protobuf::int32 subpacket_sizes(int index) const;
+  inline void set_subpacket_sizes(int index, ::google::protobuf::int32 value);
+  inline void add_subpacket_sizes(::google::protobuf::int32 value);
   inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-      subpacketsizes() const;
+      subpacket_sizes() const;
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-      mutable_subpacketsizes();
+      mutable_subpacket_sizes();
   
   // @@protoc_insertion_point(class_scope:syncro.pb.PacketHeader)
  private:
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
   
-  ::google::protobuf::int32 packettype_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > subpacketsizes_;
+  ::google::protobuf::int32 packet_type_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > subpacket_sizes_;
   friend void  protobuf_AddDesc_header_2eproto();
   friend void protobuf_AssignDesc_header_2eproto();
   friend void protobuf_ShutdownFile_header_2eproto();
@@ -144,45 +144,45 @@ class PacketHeader : public ::google::protobuf::Message {
 
 // PacketHeader
 
-// required int32 PacketType = 1;
-inline bool PacketHeader::has_packettype() const {
+// required int32 packet_type = 1;
+inline bool PacketHeader::has_packet_type() const {
   return _has_bit(0);
 }
-inline void PacketHeader::clear_packettype() {
-  packettype_ = 0;
+inline void PacketHeader::clear_packet_type() {
+  packet_type_ = 0;
   _clear_bit(0);
 }
-inline ::google::protobuf::int32 PacketHeader::packettype() const {
-  return packettype_;
+inline ::google::protobuf::int32 PacketHeader::packet_type() const {
+  return packet_type_;
 }
-inline void PacketHeader::set_packettype(::google::protobuf::int32 value) {
+inline void PacketHeader::set_packet_type(::google::protobuf::int32 value) {
   _set_bit(0);
-  packettype_ = value;
+  packet_type_ = value;
 }
 
-// repeated int32 SubpacketSizes = 2;
-inline int PacketHeader::subpacketsizes_size() const {
-  return subpacketsizes_.size();
+// repeated int32 subpacket_sizes = 2;
+inline int PacketHeader::subpacket_sizes_size() const {
+  return subpacket_sizes_.size();
 }
-inline void PacketHeader::clear_subpacketsizes() {
-  subpacketsizes_.Clear();
+inline void PacketHeader::clear_subpacket_sizes() {
+  subpacket_sizes_.Clear();
 }
-inline ::google::protobuf::int32 PacketHeader::subpacketsizes(int index) const {
-  return subpacketsizes_.Get(index);
+inline ::google::protobuf::int32 PacketHeader::subpacket_sizes(int index) const {
+  return subpacket_sizes_.Get(index);
 }
-inline void PacketHeader::set_subpacketsizes(int index, ::google::protobuf::int32 value) {
-  subpacketsizes_.Set(index, value);
+inline void PacketHeader::set_subpacket_sizes(int index, ::google::protobuf::int32 value) {
+  subpacket_sizes_.Set(index, value);
 }
-inline void PacketHeader::add_subpacketsizes(::google::protobuf::int32 value) {
-  subpacketsizes_.Add(value);
+inline void PacketHeader::add_subpacket_sizes(::google::protobuf::int32 value) {
+  subpacket_sizes_.Add(value);
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-PacketHeader::subpacketsizes() const {
-  return subpacketsizes_;
+PacketHeader::subpacket_sizes() const {
+  return subpacket_sizes_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-PacketHeader::mutable_subpacketsizes() {
-  return &subpacketsizes_;
+PacketHeader::mutable_subpacket_sizes() {
+  return &subpacket_sizes_;
 }
 
 

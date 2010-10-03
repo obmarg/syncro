@@ -15,6 +15,8 @@
 #include "ServerComms.h"
 #include <boost/asio.hpp>
 #include "XMLHandlers.h"
+#include "HandshakeHandlers.h"
+#include "SyncroPBResponseFactory.h"
 
 namespace syncro {
 
@@ -36,6 +38,7 @@ CSyncroServer::Run() {
 	io_service oIO;
 	
 	CServerComms oComms(oIO);
+	CHandshakeResponse::SetPBResponseFactory( CSyncroPBResponseFactory::Create() );
 	CXMLAcceptHandler* pXMLAH = new CXMLAcceptHandler();
 	oComms.AddAcceptHandler( boost::shared_ptr<CAcceptHandler>( (pXMLAH) ) );
 	oIO.run();

@@ -33,6 +33,7 @@ void  protobuf_AddDesc_binarydata_2eproto();
 void protobuf_AssignDesc_binarydata_2eproto();
 void protobuf_ShutdownFile_binarydata_2eproto();
 
+class BinaryDataRequest;
 class BinaryPacketHeader;
 
 enum BinaryPacketHeader_SectionType {
@@ -56,6 +57,99 @@ inline bool BinaryPacketHeader_SectionType_Parse(
     BinaryPacketHeader_SectionType_descriptor(), name, value);
 }
 // ===================================================================
+
+class BinaryDataRequest : public ::google::protobuf::Message {
+ public:
+  BinaryDataRequest();
+  virtual ~BinaryDataRequest();
+  
+  BinaryDataRequest(const BinaryDataRequest& from);
+  
+  inline BinaryDataRequest& operator=(const BinaryDataRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BinaryDataRequest& default_instance();
+  
+  void Swap(BinaryDataRequest* other);
+  
+  // implements Message ----------------------------------------------
+  
+  BinaryDataRequest* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BinaryDataRequest& from);
+  void MergeFrom(const BinaryDataRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional string file_name = 1;
+  inline bool has_file_name() const;
+  inline void clear_file_name();
+  static const int kFileNameFieldNumber = 1;
+  inline const ::std::string& file_name() const;
+  inline void set_file_name(const ::std::string& value);
+  inline void set_file_name(const char* value);
+  inline void set_file_name(const char* value, size_t size);
+  inline ::std::string* mutable_file_name();
+  
+  // @@protoc_insertion_point(class_scope:syncro.pb.BinaryDataRequest)
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  ::std::string* file_name_;
+  static const ::std::string _default_file_name_;
+  friend void  protobuf_AddDesc_binarydata_2eproto();
+  friend void protobuf_AssignDesc_binarydata_2eproto();
+  friend void protobuf_ShutdownFile_binarydata_2eproto();
+  
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static BinaryDataRequest* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class BinaryPacketHeader : public ::google::protobuf::Message {
  public:
@@ -136,43 +230,43 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional int32 FileSize = 1;
-  inline bool has_filesize() const;
-  inline void clear_filesize();
+  // optional int32 file_size = 1;
+  inline bool has_file_size() const;
+  inline void clear_file_size();
   static const int kFileSizeFieldNumber = 1;
-  inline ::google::protobuf::int32 filesize() const;
-  inline void set_filesize(::google::protobuf::int32 value);
+  inline ::google::protobuf::int32 file_size() const;
+  inline void set_file_size(::google::protobuf::int32 value);
   
-  // optional int32 FileOffset = 2;
-  inline bool has_fileoffset() const;
-  inline void clear_fileoffset();
+  // optional int32 file_offset = 2;
+  inline bool has_file_offset() const;
+  inline void clear_file_offset();
   static const int kFileOffsetFieldNumber = 2;
-  inline ::google::protobuf::int32 fileoffset() const;
-  inline void set_fileoffset(::google::protobuf::int32 value);
+  inline ::google::protobuf::int32 file_offset() const;
+  inline void set_file_offset(::google::protobuf::int32 value);
   
-  // optional int32 HashSize = 3;
-  inline bool has_hashsize() const;
-  inline void clear_hashsize();
+  // optional int32 hash_size = 3;
+  inline bool has_hash_size() const;
+  inline void clear_hash_size();
   static const int kHashSizeFieldNumber = 3;
-  inline ::google::protobuf::int32 hashsize() const;
-  inline void set_hashsize(::google::protobuf::int32 value);
+  inline ::google::protobuf::int32 hash_size() const;
+  inline void set_hash_size(::google::protobuf::int32 value);
   
-  // optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
-  inline bool has_binarypackettype() const;
-  inline void clear_binarypackettype();
+  // optional .syncro.pb.BinaryPacketHeader.SectionType binary_packet_type = 4;
+  inline bool has_binary_packet_type() const;
+  inline void clear_binary_packet_type();
   static const int kBinaryPacketTypeFieldNumber = 4;
-  inline ::syncro::pb::BinaryPacketHeader_SectionType binarypackettype() const;
-  inline void set_binarypackettype(::syncro::pb::BinaryPacketHeader_SectionType value);
+  inline ::syncro::pb::BinaryPacketHeader_SectionType binary_packet_type() const;
+  inline void set_binary_packet_type(::syncro::pb::BinaryPacketHeader_SectionType value);
   
   // @@protoc_insertion_point(class_scope:syncro.pb.BinaryPacketHeader)
  private:
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
   
-  ::google::protobuf::int32 filesize_;
-  ::google::protobuf::int32 fileoffset_;
-  ::google::protobuf::int32 hashsize_;
-  int binarypackettype_;
+  ::google::protobuf::int32 file_size_;
+  ::google::protobuf::int32 file_offset_;
+  ::google::protobuf::int32 hash_size_;
+  int binary_packet_type_;
   friend void  protobuf_AddDesc_binarydata_2eproto();
   friend void protobuf_AssignDesc_binarydata_2eproto();
   friend void protobuf_ShutdownFile_binarydata_2eproto();
@@ -198,71 +292,117 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
 
 // ===================================================================
 
-// BinaryPacketHeader
+// BinaryDataRequest
 
-// optional int32 FileSize = 1;
-inline bool BinaryPacketHeader::has_filesize() const {
+// optional string file_name = 1;
+inline bool BinaryDataRequest::has_file_name() const {
   return _has_bit(0);
 }
-inline void BinaryPacketHeader::clear_filesize() {
-  filesize_ = 0;
+inline void BinaryDataRequest::clear_file_name() {
+  if (file_name_ != &_default_file_name_) {
+    file_name_->clear();
+  }
   _clear_bit(0);
 }
-inline ::google::protobuf::int32 BinaryPacketHeader::filesize() const {
-  return filesize_;
+inline const ::std::string& BinaryDataRequest::file_name() const {
+  return *file_name_;
 }
-inline void BinaryPacketHeader::set_filesize(::google::protobuf::int32 value) {
+inline void BinaryDataRequest::set_file_name(const ::std::string& value) {
   _set_bit(0);
-  filesize_ = value;
+  if (file_name_ == &_default_file_name_) {
+    file_name_ = new ::std::string;
+  }
+  file_name_->assign(value);
+}
+inline void BinaryDataRequest::set_file_name(const char* value) {
+  _set_bit(0);
+  if (file_name_ == &_default_file_name_) {
+    file_name_ = new ::std::string;
+  }
+  file_name_->assign(value);
+}
+inline void BinaryDataRequest::set_file_name(const char* value, size_t size) {
+  _set_bit(0);
+  if (file_name_ == &_default_file_name_) {
+    file_name_ = new ::std::string;
+  }
+  file_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* BinaryDataRequest::mutable_file_name() {
+  _set_bit(0);
+  if (file_name_ == &_default_file_name_) {
+    file_name_ = new ::std::string;
+  }
+  return file_name_;
 }
 
-// optional int32 FileOffset = 2;
-inline bool BinaryPacketHeader::has_fileoffset() const {
+// -------------------------------------------------------------------
+
+// BinaryPacketHeader
+
+// optional int32 file_size = 1;
+inline bool BinaryPacketHeader::has_file_size() const {
+  return _has_bit(0);
+}
+inline void BinaryPacketHeader::clear_file_size() {
+  file_size_ = 0;
+  _clear_bit(0);
+}
+inline ::google::protobuf::int32 BinaryPacketHeader::file_size() const {
+  return file_size_;
+}
+inline void BinaryPacketHeader::set_file_size(::google::protobuf::int32 value) {
+  _set_bit(0);
+  file_size_ = value;
+}
+
+// optional int32 file_offset = 2;
+inline bool BinaryPacketHeader::has_file_offset() const {
   return _has_bit(1);
 }
-inline void BinaryPacketHeader::clear_fileoffset() {
-  fileoffset_ = 0;
+inline void BinaryPacketHeader::clear_file_offset() {
+  file_offset_ = 0;
   _clear_bit(1);
 }
-inline ::google::protobuf::int32 BinaryPacketHeader::fileoffset() const {
-  return fileoffset_;
+inline ::google::protobuf::int32 BinaryPacketHeader::file_offset() const {
+  return file_offset_;
 }
-inline void BinaryPacketHeader::set_fileoffset(::google::protobuf::int32 value) {
+inline void BinaryPacketHeader::set_file_offset(::google::protobuf::int32 value) {
   _set_bit(1);
-  fileoffset_ = value;
+  file_offset_ = value;
 }
 
-// optional int32 HashSize = 3;
-inline bool BinaryPacketHeader::has_hashsize() const {
+// optional int32 hash_size = 3;
+inline bool BinaryPacketHeader::has_hash_size() const {
   return _has_bit(2);
 }
-inline void BinaryPacketHeader::clear_hashsize() {
-  hashsize_ = 0;
+inline void BinaryPacketHeader::clear_hash_size() {
+  hash_size_ = 0;
   _clear_bit(2);
 }
-inline ::google::protobuf::int32 BinaryPacketHeader::hashsize() const {
-  return hashsize_;
+inline ::google::protobuf::int32 BinaryPacketHeader::hash_size() const {
+  return hash_size_;
 }
-inline void BinaryPacketHeader::set_hashsize(::google::protobuf::int32 value) {
+inline void BinaryPacketHeader::set_hash_size(::google::protobuf::int32 value) {
   _set_bit(2);
-  hashsize_ = value;
+  hash_size_ = value;
 }
 
-// optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
-inline bool BinaryPacketHeader::has_binarypackettype() const {
+// optional .syncro.pb.BinaryPacketHeader.SectionType binary_packet_type = 4;
+inline bool BinaryPacketHeader::has_binary_packet_type() const {
   return _has_bit(3);
 }
-inline void BinaryPacketHeader::clear_binarypackettype() {
-  binarypackettype_ = 0;
+inline void BinaryPacketHeader::clear_binary_packet_type() {
+  binary_packet_type_ = 0;
   _clear_bit(3);
 }
-inline ::syncro::pb::BinaryPacketHeader_SectionType BinaryPacketHeader::binarypackettype() const {
-  return static_cast< ::syncro::pb::BinaryPacketHeader_SectionType >(binarypackettype_);
+inline ::syncro::pb::BinaryPacketHeader_SectionType BinaryPacketHeader::binary_packet_type() const {
+  return static_cast< ::syncro::pb::BinaryPacketHeader_SectionType >(binary_packet_type_);
 }
-inline void BinaryPacketHeader::set_binarypackettype(::syncro::pb::BinaryPacketHeader_SectionType value) {
+inline void BinaryPacketHeader::set_binary_packet_type(::syncro::pb::BinaryPacketHeader_SectionType value) {
   GOOGLE_DCHECK(::syncro::pb::BinaryPacketHeader_SectionType_IsValid(value));
   _set_bit(3);
-  binarypackettype_ = value;
+  binary_packet_type_ = value;
 }
 
 

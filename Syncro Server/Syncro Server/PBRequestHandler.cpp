@@ -23,8 +23,8 @@ bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 	if( (m_nBufferReadSoFar > 0) && m_oHeader.IsInitialized() ) {
 		//We have read in a header already, so we're just waiting for the rest of the data
 		int nTotalSubpacketSize = 0;
-		for(int nSubPacket=0; nSubPacket < m_oHeader.subpacketsizes_size(); nSubPacket++ ) {
-			nTotalSubpacketSize += m_oHeader.subpacketsizes(nSubPacket);
+		for(int nSubPacket=0; nSubPacket < m_oHeader.subpacket_sizes_size(); nSubPacket++ ) {
+			nTotalSubpacketSize += m_oHeader.subpacket_sizes(nSubPacket);
 		}
 		if( inoBuffer.nSize > (m_nBufferReadSoFar+nTotalSubpacketSize) )
 			return true;

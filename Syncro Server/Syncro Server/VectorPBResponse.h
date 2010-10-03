@@ -11,8 +11,8 @@ public:
 
 	virtual std::vector<unsigned int> GetSubpacketSizes() {
 		std::vector<unsigned int> oResponse;
-		foreach( const TCharBuffer::TBuff& oSubpacket, m_aSubpackets ) {
-			oResponse.push_back( oSubpacket.size() );
+		foreach( TSubpacketPtr pSubpacket, m_aSubpackets ) {
+			oResponse.push_back( pSubpacket->size() );
 		}
 		return oResponse;
 	};
@@ -21,16 +21,17 @@ public:
 	};
 
 	virtual void WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert) {
-		std::copy( m_aSubpackets[inSubpacketIndex].begin(),m_aSubpackets[inSubpacketIndex].end(), inoInsert );
+		std::copy( m_aSubpackets[inSubpacketIndex]->begin(),m_aSubpackets[inSubpacketIndex]->end(), inoInsert );
 	}
 	
 protected:
 	CVectorPBResponse() {};
 	~CVectorPBResponse() {};
 
-	typedef std::vector<TCharBuffer::TBuff> TSubpacketList;
+	typedef boost::shared_ptr<TCharBuffer::TBuff> TSubpacketPtr;
+	typedef std::vector<TSubpacketPtr> TSubpacketList;
 	TSubpacketList m_aSubpackets;
-}
+};
 
 };		//namespace syncro
 

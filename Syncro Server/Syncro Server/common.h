@@ -2,6 +2,7 @@
 #define _SYNCRO_COMMON_H_
 
 #include <vector>
+#include "utils.h"
 
 namespace syncro {
 

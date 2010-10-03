@@ -19,13 +19,13 @@ bool CPBResponseSendHandler::SendStarting() {
 	unsigned int nHeadSize = sizeof( PB_RESPONSE_FIRST_BYTE ) + sizeof( unsigned int );
 
 	pb::PacketHeader oResponseHeader;
-	oResponseHeader.set_packettype( m_pResponse->GetPacketType() );
+	oResponseHeader.set_packet_type( m_pResponse->GetPacketType() );
 
 	vector<unsigned int> aPacketSizes = m_pResponse->GetSubpacketSizes();
 	unsigned int nTotalPacketSize = 0;
 	foreach( unsigned int nPacketSize, aPacketSizes ) {
 		nTotalPacketSize += nPacketSize;
-		oResponseHeader.add_subpacketsizes( nPacketSize );
+		oResponseHeader.add_subpacket_sizes( nPacketSize );
 	}
 	unsigned int nPBHeaderSize = oResponseHeader.ByteSize();
 	m_aBuffer.reserve( nTotalPacketSize + nPBHeaderSize + nHeadSize );

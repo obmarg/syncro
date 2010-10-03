@@ -3,8 +3,11 @@
 
 #include <string>
 #include <boost\detail\endian.hpp>
+#include <boost\foreach.hpp>
 
 namespace syncro {
+
+#define foreach BOOST_FOREACH
 
 class CStringLessThan {
 public:
