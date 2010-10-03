@@ -1,11 +1,11 @@
 #include "PBRequestHandler.h"
+#include "PBResponseSendHandler.h"
 
 namespace syncro {
 
 using std::string;
 
 const unsigned char PB_REQUEST_FIRST_BYTE = 105;
-const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 
 CPBRequestHandler::CPBRequestHandler(CTCPConnection::TPointer inpConn,CBasePBResponseFactory::TPointer inpResponseFactory) : m_pConn( inpConn ), m_pResponseFactory(inpResponseFactory) {
 	m_fCloseConnection = false;
@@ -44,7 +44,14 @@ bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 }
 
 bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
-	//TODO: Check the type of handler
+
+	TCharBuffer::TBuff aSubpackets( inoBuffer.begin() + m_nBufferReadSoFar, inoBuffer.end() );
+
+	CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader, aSubpackets );
+
+	m_pConn->Send( CPBResponseSendHandler::Create(m_pConn,pResponse) );
+
+	ResetVariables();
 	return true;
 };
 
