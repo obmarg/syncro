@@ -11,6 +11,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace syncro {
+namespace pb {
 
 namespace {
 
@@ -77,13 +78,13 @@ void protobuf_AddDesc_binarydata_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020binarydata.proto\022\006syncro\"\275\001\n\022BinaryPac"
-    "ketHeader\022\020\n\010FileSize\030\001 \001(\005\022\022\n\nFileOffse"
-    "t\030\002 \001(\005\022\020\n\010HashSize\030\003 \001(\005\022@\n\020BinaryPacke"
-    "tType\030\004 \001(\0162&.syncro.BinaryPacketHeader."
-    "SectionType\"-\n\013SectionType\022\t\n\005START\020\000\022\n\n"
-    "\006MIDDLE\020\001\022\007\n\003END\020\002B\025\n\023uk.me.grambo.syncr"
-    "o", 241);
+    "\n\020binarydata.proto\022\tsyncro.pb\"\300\001\n\022Binary"
+    "PacketHeader\022\020\n\010FileSize\030\001 \001(\005\022\022\n\nFileOf"
+    "fset\030\002 \001(\005\022\020\n\010HashSize\030\003 \001(\005\022C\n\020BinaryPa"
+    "cketType\030\004 \001(\0162).syncro.pb.BinaryPacketH"
+    "eader.SectionType\"-\n\013SectionType\022\t\n\005STAR"
+    "T\020\000\022\n\n\006MIDDLE\020\001\022\007\n\003END\020\002B\030\n\026uk.me.grambo"
+    ".syncro.pb", 250);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "binarydata.proto", &protobuf_RegisterTypes);
   BinaryPacketHeader::default_instance_ = new BinaryPacketHeader();
@@ -247,7 +248,7 @@ bool BinaryPacketHeader::MergePartialFromCodedStream(
         break;
       }
       
-      // optional .syncro.BinaryPacketHeader.SectionType BinaryPacketType = 4;
+      // optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -256,8 +257,8 @@ bool BinaryPacketHeader::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::syncro::BinaryPacketHeader_SectionType_IsValid(value)) {
-            set_binarypackettype(static_cast< ::syncro::BinaryPacketHeader_SectionType >(value));
+          if (::syncro::pb::BinaryPacketHeader_SectionType_IsValid(value)) {
+            set_binarypackettype(static_cast< ::syncro::pb::BinaryPacketHeader_SectionType >(value));
           } else {
             mutable_unknown_fields()->AddVarint(4, value);
           }
@@ -301,7 +302,7 @@ void BinaryPacketHeader::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->hashsize(), output);
   }
   
-  // optional .syncro.BinaryPacketHeader.SectionType BinaryPacketType = 4;
+  // optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
   if (_has_bit(3)) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       4, this->binarypackettype(), output);
@@ -330,7 +331,7 @@ void BinaryPacketHeader::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->hashsize(), target);
   }
   
-  // optional .syncro.BinaryPacketHeader.SectionType BinaryPacketType = 4;
+  // optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
   if (_has_bit(3)) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       4, this->binarypackettype(), target);
@@ -368,7 +369,7 @@ int BinaryPacketHeader::ByteSize() const {
           this->hashsize());
     }
     
-    // optional .syncro.BinaryPacketHeader.SectionType BinaryPacketType = 4;
+    // optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
     if (has_binarypackettype()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->binarypackettype());
@@ -457,6 +458,7 @@ void BinaryPacketHeader::Swap(BinaryPacketHeader* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace pb
 }  // namespace syncro
 
 // @@protoc_insertion_point(global_scope)

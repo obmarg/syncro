@@ -1,6 +1,6 @@
-package syncro;
+package syncro.pb;
 
-option java_package = "uk.me.grambo.syncro";
+option java_package = "uk.me.grambo.syncro.pb";
 
 message PacketHeader {
 	required int32 PacketType = 1;

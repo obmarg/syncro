@@ -26,6 +26,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace syncro {
+namespace pb {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_binarydata_2eproto();
@@ -156,14 +157,14 @@ class BinaryPacketHeader : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 hashsize() const;
   inline void set_hashsize(::google::protobuf::int32 value);
   
-  // optional .syncro.BinaryPacketHeader.SectionType BinaryPacketType = 4;
+  // optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
   inline bool has_binarypackettype() const;
   inline void clear_binarypackettype();
   static const int kBinaryPacketTypeFieldNumber = 4;
-  inline ::syncro::BinaryPacketHeader_SectionType binarypackettype() const;
-  inline void set_binarypackettype(::syncro::BinaryPacketHeader_SectionType value);
+  inline ::syncro::pb::BinaryPacketHeader_SectionType binarypackettype() const;
+  inline void set_binarypackettype(::syncro::pb::BinaryPacketHeader_SectionType value);
   
-  // @@protoc_insertion_point(class_scope:syncro.BinaryPacketHeader)
+  // @@protoc_insertion_point(class_scope:syncro.pb.BinaryPacketHeader)
  private:
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
@@ -247,7 +248,7 @@ inline void BinaryPacketHeader::set_hashsize(::google::protobuf::int32 value) {
   hashsize_ = value;
 }
 
-// optional .syncro.BinaryPacketHeader.SectionType BinaryPacketType = 4;
+// optional .syncro.pb.BinaryPacketHeader.SectionType BinaryPacketType = 4;
 inline bool BinaryPacketHeader::has_binarypackettype() const {
   return _has_bit(3);
 }
@@ -255,11 +256,11 @@ inline void BinaryPacketHeader::clear_binarypackettype() {
   binarypackettype_ = 0;
   _clear_bit(3);
 }
-inline ::syncro::BinaryPacketHeader_SectionType BinaryPacketHeader::binarypackettype() const {
-  return static_cast< ::syncro::BinaryPacketHeader_SectionType >(binarypackettype_);
+inline ::syncro::pb::BinaryPacketHeader_SectionType BinaryPacketHeader::binarypackettype() const {
+  return static_cast< ::syncro::pb::BinaryPacketHeader_SectionType >(binarypackettype_);
 }
-inline void BinaryPacketHeader::set_binarypackettype(::syncro::BinaryPacketHeader_SectionType value) {
-  GOOGLE_DCHECK(::syncro::BinaryPacketHeader_SectionType_IsValid(value));
+inline void BinaryPacketHeader::set_binarypackettype(::syncro::pb::BinaryPacketHeader_SectionType value) {
+  GOOGLE_DCHECK(::syncro::pb::BinaryPacketHeader_SectionType_IsValid(value));
   _set_bit(3);
   binarypackettype_ = value;
 }
@@ -267,6 +268,7 @@ inline void BinaryPacketHeader::set_binarypackettype(::syncro::BinaryPacketHeade
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace pb
 }  // namespace syncro
 
 #ifndef SWIG
@@ -274,8 +276,8 @@ namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::syncro::BinaryPacketHeader_SectionType>() {
-  return ::syncro::BinaryPacketHeader_SectionType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::syncro::pb::BinaryPacketHeader_SectionType>() {
+  return ::syncro::pb::BinaryPacketHeader_SectionType_descriptor();
 }
 
 }  // namespace google

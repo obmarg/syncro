@@ -11,6 +11,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace syncro {
+namespace pb {
 
 namespace {
 
@@ -73,9 +74,9 @@ void protobuf_AddDesc_header_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\014header.proto\022\006syncro\":\n\014PacketHeader\022\022"
-    "\n\nPacketType\030\001 \002(\005\022\026\n\016SubpacketSizes\030\002 \003"
-    "(\005B\025\n\023uk.me.grambo.syncro", 105);
+    "\n\014header.proto\022\tsyncro.pb\":\n\014PacketHeade"
+    "r\022\022\n\nPacketType\030\001 \002(\005\022\026\n\016SubpacketSizes\030"
+    "\002 \003(\005B\030\n\026uk.me.grambo.syncro.pb", 111);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "header.proto", &protobuf_RegisterTypes);
   PacketHeader::default_instance_ = new PacketHeader();
@@ -349,6 +350,7 @@ void PacketHeader::Swap(PacketHeader* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace pb
 }  // namespace syncro
 
 // @@protoc_insertion_point(global_scope)

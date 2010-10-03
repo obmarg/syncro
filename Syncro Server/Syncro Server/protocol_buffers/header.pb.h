@@ -26,6 +26,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace syncro {
+namespace pb {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_header_2eproto();
@@ -109,7 +110,7 @@ class PacketHeader : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_subpacketsizes();
   
-  // @@protoc_insertion_point(class_scope:syncro.PacketHeader)
+  // @@protoc_insertion_point(class_scope:syncro.pb.PacketHeader)
  private:
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   mutable int _cached_size_;
@@ -187,6 +188,7 @@ PacketHeader::mutable_subpacketsizes() {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace pb
 }  // namespace syncro
 
 #ifndef SWIG
