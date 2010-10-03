@@ -1,5 +1,6 @@
 #include "PBRequestHandler.h"
 #include "PBResponseSendHandler.h"
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 
 namespace syncro {
 
@@ -37,6 +38,7 @@ bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 				m_oHeader.ParseFromArray( (void*)inoBuffer.aBuffer[ nHeadSize ], nExpectedHeaderSize );
 				if( !m_oHeader.IsInitialized() )
 					throw std::exception( "Received invalid/incomplete PB Request Header" );
+				m_nBufferReadSoFar = nHeadSize+nExpectedHeaderSize;
 			}
 		}
 	}
@@ -44,10 +46,21 @@ bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 }
 
 bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
+	using std::vector;
+	using google::protobuf::io::ArrayInputStream;
+	using boost::shared_ptr;
 
-	TCharBuffer::TBuff aSubpackets( inoBuffer.begin() + m_nBufferReadSoFar, inoBuffer.end() );
+	TInputStreamList aSubpackets;
+	vector< shared_ptr<ArrayInputStream> > aMemoryManSubpackets;
+	int nCurrentPosition = m_nBufferReadSoFar;
+	shared_ptr<ArrayInputStream> pAIS;
+	for( int nSubpacket=0; nSubpacket < m_oHeader.subpacket_sizes_size(); nSubpacket++ ) {
+		pAIS.reset( new ArrayInputStream( &inoBuffer.aBuffer[nCurrentPosition], m_oHeader.subpacket_sizes(nSubpacket) ) );
+		aMemoryManSubpackets.push_back( pAIS );
+		aSubpackets.push_back( pAIS.get() );
+	}
 
-	CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader, aSubpackets );
+	CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
 
 	m_pConn->Send( CPBResponseSendHandler::Create(m_pConn,pResponse) );
 

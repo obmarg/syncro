@@ -32,7 +32,7 @@ public:
 		return CBasePBResponseFactory::TPointer( new CSyncroPBResponseFactory() );
 	};
 
-	virtual CBasePBResponse::TPointer CreateResponse(const pb::PacketHeader& inoPacketHeader,const TCharBuffer::TBuff& inoSubpackets);
+	virtual CBasePBResponse::TPointer CreateResponse(const unsigned int innPacketType,TInputStreamList& inaInputStreams);
 private:
 	CSyncroPBResponseFactory() {};
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;

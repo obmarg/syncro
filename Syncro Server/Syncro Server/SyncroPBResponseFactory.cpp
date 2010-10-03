@@ -4,10 +4,11 @@
 
 namespace syncro {
 
-CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const pb::PacketHeader& inoPacketHeader,const TCharBuffer::TBuff& inoSubpackets) {
-	switch( inoPacketHeader.packet_type() ) {
+CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
+	
+	switch( innPacketType ) {
 	case eSyncroPBPacketTypes_BinaryRequest: {
-		CBinaryDataRequest oRequest(inoPacketHeader.subpacket_sizes_size(), inoSubpackets );
+		CBinaryDataRequest oRequest( inaInputStreams );
 		m_pCurrentSendData.reset( new CFileSendData( oRequest.GetFilename() ) );
 		}
 		//Fall through

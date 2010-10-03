@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "utils.h"
+#include <google/protobuf/io/zero_copy_stream.h>
 
 namespace syncro {
 
@@ -20,6 +21,10 @@ struct TCharBuffer {
 	TBuff& aBuffer;
 	unsigned int nSize;
 };
+
+using google::protobuf::io::ZeroCopyInputStream;
+
+typedef std::vector<ZeroCopyInputStream*> TInputStreamList;
 
 }; //namespace syncro
 

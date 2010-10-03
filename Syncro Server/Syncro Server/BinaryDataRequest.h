@@ -4,14 +4,15 @@
 #include "common.h"
 #include "protocol_buffers\binarydata.pb.h"
 
+
 namespace syncro {
 
 class CBinaryDataRequest {
 public:
-	CBinaryDataRequest(unsigned int inNumSubpackets,const TCharBuffer::TBuff& inoSubpackets) {
+	CBinaryDataRequest(TInputStreamList inaInputStreams) {
 		pb::BinaryDataRequest oRequest;
-		if( inNumSubpackets == 1 ) {
-			if( !oRequest.ParseFromArray( &inoSubpackets[0], inoSubpackets.size() ) )
+		if( inaInputStreams.size() == 1 ) {
+			if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
 				throw std::exception( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
 			m_sFilename = oRequest.file_name();
 		} 
