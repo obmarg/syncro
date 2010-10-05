@@ -13,6 +13,7 @@ public class FolderListXMLHandler extends DefaultHandler {
 	private boolean m_fInFoldersTag;
 	private boolean m_fInFolderTag;
 	private StringBuilder m_oBuilder;
+	private int m_nCurrentFolderID;
 	
 	private SQLiteStatement m_oInsertStatement;
 	
@@ -36,8 +37,9 @@ public class FolderListXMLHandler extends DefaultHandler {
 		if( m_fInFoldersTag ) {
 			if( localName.equalsIgnoreCase(FOLDER_TAG) ) {
 				m_fInFolderTag = false;
-				m_oInsertStatement.bindString(1,m_oBuilder.toString());
+				m_oInsertStatement.bindLong(1,m_nCurrentFolderID);
 				m_oInsertStatement.bindString(2,m_oBuilder.toString());
+				m_oInsertStatement.bindString(3,m_oBuilder.toString());
 				m_oInsertStatement.executeInsert();
 				m_oBuilder.setLength(0);
 			}
@@ -62,6 +64,7 @@ public class FolderListXMLHandler extends DefaultHandler {
 		super.startElement(uri, localName, name, attributes);
 		if( m_fInFoldersTag ) {
 			if( localName.equalsIgnoreCase(FOLDER_TAG) ) {
+				m_nCurrentFolderID = Integer.parseInt(attributes.getValue(0));
 				m_fInFolderTag = true;
 			}
 		}

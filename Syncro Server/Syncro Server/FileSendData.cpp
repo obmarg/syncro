@@ -39,7 +39,8 @@ void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {
 	int nReadAmount = std::min( nBufferSize, nSizeLeft );
 	inoBuffer.resize( nReadAmount );
 
-	m_oFile.read( (char*)&inoBuffer[ 0 ], nReadAmount );
+	if( nReadAmount != 0 )
+		m_oFile.read( (char*)&inoBuffer[ 0 ], nReadAmount );
 }
 
 bool CFileSendData::IsStartFile() {

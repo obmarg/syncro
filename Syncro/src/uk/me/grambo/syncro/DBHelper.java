@@ -5,7 +5,7 @@ import android.content.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME="SyncroDB";
     private static final String SERVERS_TABLE_NAME = "servers";
     private static final String SERVERS_TABLE_CREATE =
@@ -22,13 +22,15 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String FOLDERS_TABLE_NAME = "folders";
     private static final String FOLDERS_TABLE_CREATE = 
     			"CREATE TABLE IF NOT EXISTS " + FOLDERS_TABLE_NAME + " (" +
-    			"ID INTEGER NOT NULL, " +
+    			"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
     			"ServerID INTEGER CONSTRAINT FOLDERS_SERVER_ID_FK REFERENCES " + SERVERS_TABLE_NAME + "(ID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+    			"IDOnServer INTEGER NOT NULL, " +
     			"Name TEXT, " +
     			"ServerPath TEXT, " +
+    			"LocalPath TEXT," +
     			"SyncToPhone INTEGER CONSTRAINT SYNC_TO_PHONE_DEFAULT DEFAULT 0, " + 
     			"SyncFromPhone INTEGER CONSTRAINT SYNC_FROM_PHONE_DEFAULT DEFAULT 0," + 
-    			"CONSTRAINT PK_FOLDERS PRIMARY KEY (ID,ServerID) ON CONFLICT IGNORE);";
+    			"CONSTRAINT PK_FOLDERS UNIQUE (IDOnServer,ServerID) ON CONFLICT IGNORE);";
     			
 
     DBHelper(Context context) {
@@ -47,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
     		inDB.execSQL(SERVERS_TABLE_UPGRADE_V2);
     		inDB.execSQL(SERVERS_TABLE_CREATE);
     	}
-    	if( nOldVer <= 6 ) {
+    	if( nOldVer <= 8 ) {
     		inDB.execSQL("DROP TABLE IF EXISTS " + FOLDERS_TABLE_NAME + ";\n");
     		inDB.execSQL(FOLDERS_TABLE_CREATE);
     	}

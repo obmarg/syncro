@@ -38,6 +38,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	private Vector<RemoteFileHandler.RemoteFileData> m_aFilesToDownload;
 	private PBSocketInterface m_oPBInterface;
+	
+	String m_sCurrentLocalPath;
 
 	public SyncroService() {
 		super("SyncroService");
@@ -74,9 +76,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			if( DoHandshake( oSock ) ) {
 				DBHelper oHelper = new DBHelper( this );
 	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
-	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(ID,ServerID,Name,ServerPath) VALUES(?,1,?,?)");
+	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath) VALUES(?,1,?,?)");
 				GetFolderList(oSock,oInsertStatement);
-				GetFolderContents(oSock,0);
+				GetFolderContents(oSock,1,oDB);
 				GetFiles(oSock);
 				oDB.close();
 				oDB = null;
@@ -127,6 +129,20 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			Log.i("Syncro",new String(aData) );
 			ProcessXML(new ByteArrayInputStream(aData), new FolderListXMLHandler(inoInsertStatement));
 		}
+		return true;
+	}
+	
+	protected boolean GetFolderContents(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException {
+		String[] aArgs = new String[1];
+		aArgs[0] = String.valueOf(innServerID);
+		Cursor oFolders = inoDB.rawQuery("SELECT ID,LocalPath FROM folders WHERE ServerID=? AND SyncToPhone=1", aArgs);
+		oFolders.moveToFirst();
+		while (oFolders.isAfterLast() == false) {
+            int nFolderID = (int)oFolders.getLong(0);
+            m_sCurrentLocalPath = oFolders.getString(1);
+            GetFolderContents(inoSock,nFolderID);
+            oFolders.moveToNext();
+        }
 		return true;
 	}
 	
@@ -199,7 +215,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 	
 	protected String GetDestinationFilename(int innFolderId,String insFilename) throws IOException {
-		String insDestinationFolder = "/mnt/sdcard/Syncro/";
+		if( m_sCurrentLocalPath == null )
+			throw new IOException();		//TODO: Fix this to throw exception, just being really really lazy
+		String insDestinationFolder = m_sCurrentLocalPath;
 		//TODO: add code to get this from the database etc.
 		//TODO: check for ..s or something?
 		File oFile = new File( insDestinationFolder + insFilename );
