@@ -143,6 +143,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
             GetFolderContents(inoSock,nFolderID);
             oFolders.moveToNext();
         }
+		oFolders.close();
 		return true;
 	}
 	
