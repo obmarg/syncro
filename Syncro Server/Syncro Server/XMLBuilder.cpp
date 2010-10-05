@@ -60,16 +60,20 @@ bool CXMLBuilder::GetFolderContentsXML(int innFolderID) {
 	TiXmlElement *pFoldersElement = new TiXmlElement( "RootFolder" );
 	m_oXML.LinkEndChild( pFoldersElement );
 	
-	ProcessFolder( *pFoldersElement, pCurrentFolder );
+	ProcessFolder( *pFoldersElement, pCurrentFolder, true );
 	return true;
 }
 
-void CXMLBuilder::ProcessFolder( TiXmlElement& inoParentElement, boost::shared_ptr<class CFolder> inoFolder ) {
+void CXMLBuilder::ProcessFolder( TiXmlElement& inoParentElement, boost::shared_ptr<class CFolder> inoFolder, bool infIsRoot ) {
 	using boost::shared_ptr;
 
-	TiXmlElement* pThisElement = new TiXmlElement( "Folder" );
-	pThisElement->SetAttribute( " name", inoFolder->GetName().c_str() );
-	inoParentElement.LinkEndChild( pThisElement );
+	TiXmlElement* pThisElement;
+	if( !infIsRoot ) {
+		pThisElement = new TiXmlElement( "Folder" );
+		pThisElement->SetAttribute( " name", inoFolder->GetName().c_str() );
+		inoParentElement.LinkEndChild( pThisElement );
+	} else
+		pThisElement = &inoParentElement;
 	vector< string > oFiles = inoFolder->GetFiles();
 	for( vector< string >::iterator oFile = oFiles.begin(); oFile != oFiles.end(); oFile++ ) {
 		TiXmlElement* pFileElement = new TiXmlElement( "File" );

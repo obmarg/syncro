@@ -28,7 +28,8 @@ void CFileSendData::OpenFile() {
 		m_oFile.seekg( 0, ios::end );
 		m_nFileSize = (unsigned int)m_oFile.tellg();
 		m_oFile.seekg( 0, ios::beg );
-	}
+	} else
+		throw std::exception( "CFileSendData called on non existant file" );
 }
 
 void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {

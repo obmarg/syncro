@@ -5,6 +5,7 @@
 #include "BasePBResponse.h"
 #include "FileSendData.h"
 #include <boost/scoped_ptr.hpp>
+#include "FolderMan.h"
 
 namespace syncro {
 
@@ -23,7 +24,7 @@ struct sSubpackets {
 
 class CSyncroPBResponseFactory : public CBasePBResponseFactory {
 public:
-	CSyncroPBResponseFactory(const CSyncroPBResponseFactory& inoOther) {
+	CSyncroPBResponseFactory(const CSyncroPBResponseFactory& inoOther) : m_oFolderMan( inoOther.m_oFolderMan ){
 		//TODO: Implement copying of stuff
 	}
 	virtual ~CSyncroPBResponseFactory() {};
@@ -34,9 +35,10 @@ public:
 
 	virtual CBasePBResponse::TPointer CreateResponse(const unsigned int innPacketType,TInputStreamList& inaInputStreams);
 private:
-	CSyncroPBResponseFactory() {};
+	CSyncroPBResponseFactory();
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
 	TFileSendDataPtr m_pCurrentSendData;
+	CFolderMan m_oFolderMan;
 };
 
 }; //namespace syncro

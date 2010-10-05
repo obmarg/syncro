@@ -31,4 +31,18 @@ CFolderMan::GetFolder( int nIndex ) {
 	return boost::shared_ptr<CFolder>( new CFolder( m_aFolderInfo[ nIndex ].sFolderName ) );
 }
 
+std::string
+CFolderMan::GetFileName(int nFolderIndex,const std::string& fileName) {
+	if( m_aFolderInfo.empty() )
+		return false;
+	if( ( nFolderIndex < 0 ) || ( nFolderIndex > m_aFolderInfo.size() ) )
+		return false;
+	std::string rv = m_aFolderInfo[ nFolderIndex ].sFolderName;
+	char aLastChar = *( rv.rbegin() ) ;
+	if( (aLastChar != '\\') && (aLastChar != '/') )
+		rv += "/";
+	rv += fileName;
+	return rv;
+}
+
 };		//end namespace syncro

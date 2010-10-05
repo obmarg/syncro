@@ -26,6 +26,8 @@ public:
 	const TFolderInfoList& GetFoldersInfo() { return m_aFolderInfo; };
 
 	boost::shared_ptr<CFolder> GetFolder( int nIndex );
+
+	std::string GetFileName(int nFolderIndex,const std::string& fileName);
 	
 private:
 	std::string m_sRoot;

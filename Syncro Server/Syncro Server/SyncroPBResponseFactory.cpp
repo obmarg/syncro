@@ -4,12 +4,17 @@
 
 namespace syncro {
 
+CSyncroPBResponseFactory::CSyncroPBResponseFactory() : m_oFolderMan( "C:\\SyncFiles\\" ) {
+
+}
+
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
 	
 	switch( innPacketType ) {
 	case eSyncroPBPacketTypes_BinaryRequest: {
 		CBinaryDataRequest oRequest( inaInputStreams );
-		m_pCurrentSendData.reset( new CFileSendData( oRequest.GetFilename() ) );
+		std::string sActualFilename = m_oFolderMan.GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
+		m_pCurrentSendData.reset( new CFileSendData( sActualFilename ) );
 		}
 		//Fall through
 	case eSyncroPBPacketTypes_BinaryContinue:

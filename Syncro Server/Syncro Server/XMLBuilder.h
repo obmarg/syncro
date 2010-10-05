@@ -21,7 +21,7 @@ public:
 private:
 	TiXmlDocument m_oXML;
 
-	void ProcessFolder( TiXmlElement& inoParentElement, boost::shared_ptr<class CFolder> inoFolder );
+	void ProcessFolder( TiXmlElement& inoParentElement, boost::shared_ptr<class CFolder> inoFolder, bool infIsRoot = false );
 
 };
 

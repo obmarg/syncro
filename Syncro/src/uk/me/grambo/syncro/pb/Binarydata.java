@@ -32,9 +32,17 @@ public final class Binarydata {
     public boolean hasFileName() { return hasFileName; }
     public java.lang.String getFileName() { return fileName_; }
     
+    // required int32 folder_id = 2;
+    public static final int FOLDER_ID_FIELD_NUMBER = 2;
+    private boolean hasFolderId;
+    private int folderId_ = 0;
+    public boolean hasFolderId() { return hasFolderId; }
+    public int getFolderId() { return folderId_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
+      if (!hasFolderId) return false;
       return true;
     }
     
@@ -43,6 +51,9 @@ public final class Binarydata {
       getSerializedSize();
       if (hasFileName()) {
         output.writeString(1, getFileName());
+      }
+      if (hasFolderId()) {
+        output.writeInt32(2, getFolderId());
       }
     }
     
@@ -55,6 +66,10 @@ public final class Binarydata {
       if (hasFileName()) {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(1, getFileName());
+      }
+      if (hasFolderId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, getFolderId());
       }
       memoizedSerializedSize = size;
       return size;
@@ -203,6 +218,9 @@ public final class Binarydata {
         if (other.hasFileName()) {
           setFileName(other.getFileName());
         }
+        if (other.hasFolderId()) {
+          setFolderId(other.getFolderId());
+        }
         return this;
       }
       
@@ -223,6 +241,10 @@ public final class Binarydata {
             }
             case 10: {
               setFileName(input.readString());
+              break;
+            }
+            case 16: {
+              setFolderId(input.readInt32());
               break;
             }
           }
@@ -248,6 +270,24 @@ public final class Binarydata {
       public Builder clearFileName() {
         result.hasFileName = false;
         result.fileName_ = getDefaultInstance().getFileName();
+        return this;
+      }
+      
+      // required int32 folder_id = 2;
+      public boolean hasFolderId() {
+        return result.hasFolderId();
+      }
+      public int getFolderId() {
+        return result.getFolderId();
+      }
+      public Builder setFolderId(int value) {
+        result.hasFolderId = true;
+        result.folderId_ = value;
+        return this;
+      }
+      public Builder clearFolderId() {
+        result.hasFolderId = false;
+        result.folderId_ = 0;
         return this;
       }
       

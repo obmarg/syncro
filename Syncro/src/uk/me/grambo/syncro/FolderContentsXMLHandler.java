@@ -16,6 +16,8 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 	
 	private boolean m_fInFileTag;
 	
+	private int m_nCurrentFolderId;
+	
 	private ArrayList<RemoteFileHandler> m_aHandlers;
 	private Stack<String> m_aPath;
 	
@@ -27,6 +29,10 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 	
 	public void AddFileHandler(RemoteFileHandler inHandler) {
 		m_aHandlers.add( inHandler );
+	}
+	
+	public void SetFolderId( int innFolderId ) {
+		m_nCurrentFolderId = innFolderId;
 	}
 	
 	@Override
@@ -52,7 +58,10 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 				oPathBuilder.append("/");
 			}
 			for(int n=0;n < m_aHandlers.size();n++ ) {
-				m_aHandlers.get(n).HandleRemoteFile( m_oFilenameBuilder.toString() );
+				RemoteFileHandler.RemoteFileData oFile = new RemoteFileHandler.RemoteFileData();
+				oFile.Filename = oPathBuilder.toString() + m_oFilenameBuilder.toString();
+				oFile.FolderId = m_nCurrentFolderId;
+				m_aHandlers.get(n).HandleRemoteFile( oFile );
 			}
 		}
 	}
@@ -69,7 +78,7 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, name, attributes);
 		if( localName.equals(FOLDER_TAG) ) {
-			m_aPath.push(attributes.getValue("Name"));
+			m_aPath.push(attributes.getValue(0));//("Name"));
 		} else if( localName.equals(FILE_TAG) ) {
 			m_fInFileTag = true;
 			m_oFilenameBuilder = new StringBuilder();

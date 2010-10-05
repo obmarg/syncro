@@ -6,6 +6,7 @@ option optimize_for = LITE_RUNTIME;
 
 message BinaryDataRequest {
 	optional string file_name = 1;
+	required int32 folder_id = 2;
 };
 
 message BinaryPacketHeader {

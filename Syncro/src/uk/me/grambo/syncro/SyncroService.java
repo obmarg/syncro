@@ -3,6 +3,7 @@ package uk.me.grambo.syncro;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -34,20 +35,14 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	private static final int XML_REQUEST_FIRST_BYTE = 5;
 	private static final int XML_RESPONSE_FIRST_BYTE = 6;
-	private static final int FILE_REQUEST_FIRST_BYTE = 10;
-	private static final int FILE_SECTION_REQUEST_FIRST_BYTE = 15;
 	
-	private static final int FILE_SEND_FIRST_BYTE = 11;
-	private static final int FILE_SECTION_FIRST_BYTE = 16;
-	private static final int FILE_LAST_SECTION_FIRST_BYTE = 20;
-	
-	private Vector<String> m_aFilesToDownload;
+	private Vector<RemoteFileHandler.RemoteFileData> m_aFilesToDownload;
 	private PBSocketInterface m_oPBInterface;
 
 	public SyncroService() {
 		super("SyncroService");
 		// TODO Auto-generated constructor stub
-		m_aFilesToDownload = new Vector<String>();
+		m_aFilesToDownload = new Vector<RemoteFileHandler.RemoteFileData>();
 		m_oPBInterface = new PBSocketInterface();
 	}
 
@@ -161,36 +156,38 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			Log.i("Syncro",new String(aData) );
 			FolderContentsXMLHandler oHandler = new FolderContentsXMLHandler();
 			oHandler.AddFileHandler(this);
+			oHandler.SetFolderId( innFolderID );
 			ProcessXML(new ByteArrayInputStream(aData), oHandler );
 			Log.i("Syncro","Files To Download:");
 			for(int n=0;n < m_aFilesToDownload.size();n++) {
-				Log.i("Syncro",m_aFilesToDownload.elementAt(n) );
+				Log.i("Syncro",m_aFilesToDownload.elementAt(n).Filename );
 			}
 		}
 		return true;
 	}
 	
 	@Override
-	public void HandleRemoteFile(String insFilename) {
-		m_aFilesToDownload.add(insFilename);
+	public void HandleRemoteFile(RemoteFileHandler.RemoteFileData inoFile) {
+		m_aFilesToDownload.add(inoFile);
 	}
 	
 	protected boolean GetFiles(Socket inoSock) throws IOException {
 
-		boolean fOK = false;		
+		boolean fOK = false;
 		for(int nFile = 0;nFile < m_aFilesToDownload.size();nFile++) {
-			fOK = GetFile( inoSock, m_aFilesToDownload.elementAt(nFile) );
+			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
+			fOK = GetFile( inoSock, oFile.FolderId, oFile.Filename );
 			if( !fOK )
 				return false;
 		}
 		return fOK;
 	}
 	
-	protected boolean GetFile(Socket inoSock,String insFilename) throws IOException {
+	protected boolean GetFile(Socket inoSock,int innFolderId, String insFilename) throws IOException {
 		boolean fOK = false;
-		fOK = StartDownloadingFile(inoSock,insFilename);
+		fOK = StartDownloadingFile(inoSock,innFolderId,insFilename);
 		if( fOK ) {
-			FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( insFilename ) );
+			FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( innFolderId,insFilename ) );
 			try {
 				fOK = ReceiveFile(inoSock,oFile);
 			}catch (Exception e) {
@@ -201,13 +198,20 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return fOK;
 	}
 	
-	protected String GetDestinationFilename(String insFilename) {
-		return "/mnt/sdcard/1.txt";
+	protected String GetDestinationFilename(int innFolderId,String insFilename) throws IOException {
+		String insDestinationFolder = "/mnt/sdcard/Syncro/";
+		//TODO: add code to get this from the database etc.
+		//TODO: check for ..s or something?
+		File oFile = new File( insDestinationFolder + insFilename );
+		oFile.getParentFile().mkdirs();
+		String rv = oFile.getCanonicalPath();
+		return rv;
 	}
 
-	private boolean StartDownloadingFile(Socket inoSock,String insFilename) throws IOException {
+	private boolean StartDownloadingFile(Socket inoSock,int innFolderId, String insFilename) throws IOException {
 		Binarydata.BinaryDataRequest oRequest = Binarydata.BinaryDataRequest.newBuilder()
 			.setFileName(insFilename)
+			.setFolderId(innFolderId)
 			.build();
 		m_oPBInterface.SendObject(inoSock.getOutputStream(), PBSocketInterface.RequestTypes.BINARY_REQUEST ,oRequest);
 		return true;

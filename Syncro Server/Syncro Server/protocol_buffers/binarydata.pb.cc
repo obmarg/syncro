@@ -41,6 +41,7 @@ struct StaticDescriptorInitializer_binarydata_2eproto {
 const ::std::string BinaryDataRequest::_default_file_name_;
 #ifndef _MSC_VER
 const int BinaryDataRequest::kFileNameFieldNumber;
+const int BinaryDataRequest::kFolderIdFieldNumber;
 #endif  // !_MSC_VER
 
 BinaryDataRequest::BinaryDataRequest()
@@ -60,6 +61,7 @@ BinaryDataRequest::BinaryDataRequest(const BinaryDataRequest& from)
 void BinaryDataRequest::SharedCtor() {
   _cached_size_ = 0;
   file_name_ = const_cast< ::std::string*>(&_default_file_name_);
+  folder_id_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -97,6 +99,7 @@ void BinaryDataRequest::Clear() {
         file_name_->clear();
       }
     }
+    folder_id_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -113,6 +116,22 @@ bool BinaryDataRequest::MergePartialFromCodedStream(
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_file_name()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_folder_id;
+        break;
+      }
+      
+      // required int32 folder_id = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_folder_id:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &folder_id_)));
+          _set_bit(1);
         } else {
           goto handle_uninterpreted;
         }
@@ -143,6 +162,11 @@ void BinaryDataRequest::SerializeWithCachedSizes(
       1, this->file_name(), output);
   }
   
+  // required int32 folder_id = 2;
+  if (_has_bit(1)) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->folder_id(), output);
+  }
+  
 }
 
 int BinaryDataRequest::ByteSize() const {
@@ -154,6 +178,13 @@ int BinaryDataRequest::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->file_name());
+    }
+    
+    // required int32 folder_id = 2;
+    if (has_folder_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->folder_id());
     }
     
   }
@@ -174,6 +205,9 @@ void BinaryDataRequest::MergeFrom(const BinaryDataRequest& from) {
     if (from._has_bit(0)) {
       set_file_name(from.file_name());
     }
+    if (from._has_bit(1)) {
+      set_folder_id(from.folder_id());
+    }
   }
 }
 
@@ -184,6 +218,7 @@ void BinaryDataRequest::CopyFrom(const BinaryDataRequest& from) {
 }
 
 bool BinaryDataRequest::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000002) != 0x00000002) return false;
   
   return true;
 }
@@ -191,6 +226,7 @@ bool BinaryDataRequest::IsInitialized() const {
 void BinaryDataRequest::Swap(BinaryDataRequest* other) {
   if (other != this) {
     std::swap(file_name_, other->file_name_);
+    std::swap(folder_id_, other->folder_id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }
