@@ -42,7 +42,7 @@ bool CPBResponseSendHandler::SendStarting() {
 }
 
 void CPBResponseSendHandler::SendDone(int innSent) {
-	//TODO: Do we need to do anything here?  don't think so....
+	m_pConn->StartRecv( 0 );
 }
 
 } //namespace syncro
