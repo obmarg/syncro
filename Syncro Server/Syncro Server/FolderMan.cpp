@@ -13,8 +13,8 @@ CFolderMan::CFolderMan( const string& insRoot ) : m_sRoot( insRoot ) {
 	int nCount = 0;
 	for( directory_iterator pItem( oPath ); pItem != directory_iterator(); pItem++ ) { 
 		if( is_directory( pItem->status() ) ) {
-			nCount++;
 			m_aFolderInfo.push_back( sFolderInfo( nCount, pItem->path().native_directory_string() ) );
+			nCount++;
 		}
 	}
 }
