@@ -135,7 +135,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	protected boolean GetFolderContents(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException {
 		String[] aArgs = new String[1];
 		aArgs[0] = String.valueOf(innServerID);
-		Cursor oFolders = inoDB.rawQuery("SELECT ID,LocalPath FROM folders WHERE ServerID=? AND SyncToPhone=1", aArgs);
+		Cursor oFolders = inoDB.rawQuery("SELECT IDOnServer,LocalPath FROM folders WHERE ServerID=? AND SyncToPhone=1", aArgs);
 		oFolders.moveToFirst();
 		while (oFolders.isAfterLast() == false) {
             int nFolderID = (int)oFolders.getLong(0);
