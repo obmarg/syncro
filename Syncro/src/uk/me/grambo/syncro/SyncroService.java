@@ -231,6 +231,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		Binarydata.BinaryDataRequest oRequest = Binarydata.BinaryDataRequest.newBuilder()
 			.setFileName(insFilename)
 			.setFolderId(innFolderId)
+			.setRecvBufferSize( inoSock.getReceiveBufferSize() )
 			.build();
 		m_oPBInterface.SendObject(inoSock.getOutputStream(), PBSocketInterface.RequestTypes.BINARY_REQUEST ,oRequest);
 		return true;
@@ -238,7 +239,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	private boolean ReceiveFile(Socket inoSock, OutputStream inoFile) throws Exception {
 		FileResponseHandler oResponseHandler = new FileResponseHandler(inoFile);
-		InputStream oInputStream = inoSock.getInputStream(); 
+		InputStream oInputStream = inoSock.getInputStream();
 		OutputStream oOutputStream = inoSock.getOutputStream();
 		m_oPBInterface.addResponseHandler(oResponseHandler);
 		boolean fDone = false;

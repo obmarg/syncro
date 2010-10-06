@@ -107,6 +107,13 @@ class BinaryDataRequest : public ::google::protobuf::MessageLite {
   inline ::google::protobuf::int32 folder_id() const;
   inline void set_folder_id(::google::protobuf::int32 value);
   
+  // optional int32 recv_buffer_size = 3;
+  inline bool has_recv_buffer_size() const;
+  inline void clear_recv_buffer_size();
+  static const int kRecvBufferSizeFieldNumber = 3;
+  inline ::google::protobuf::int32 recv_buffer_size() const;
+  inline void set_recv_buffer_size(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:syncro.pb.BinaryDataRequest)
  private:
   mutable int _cached_size_;
@@ -114,11 +121,12 @@ class BinaryDataRequest : public ::google::protobuf::MessageLite {
   ::std::string* file_name_;
   static const ::std::string _default_file_name_;
   ::google::protobuf::int32 folder_id_;
+  ::google::protobuf::int32 recv_buffer_size_;
   friend void  protobuf_AddDesc_binarydata_2eproto();
   friend void protobuf_AssignDesc_binarydata_2eproto();
   friend void protobuf_ShutdownFile_binarydata_2eproto();
   
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
   
   // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
   inline bool _has_bit(int index) const {
@@ -312,6 +320,22 @@ inline ::google::protobuf::int32 BinaryDataRequest::folder_id() const {
 inline void BinaryDataRequest::set_folder_id(::google::protobuf::int32 value) {
   _set_bit(1);
   folder_id_ = value;
+}
+
+// optional int32 recv_buffer_size = 3;
+inline bool BinaryDataRequest::has_recv_buffer_size() const {
+  return _has_bit(2);
+}
+inline void BinaryDataRequest::clear_recv_buffer_size() {
+  recv_buffer_size_ = 0;
+  _clear_bit(2);
+}
+inline ::google::protobuf::int32 BinaryDataRequest::recv_buffer_size() const {
+  return recv_buffer_size_;
+}
+inline void BinaryDataRequest::set_recv_buffer_size(::google::protobuf::int32 value) {
+  _set_bit(2);
+  recv_buffer_size_ = value;
 }
 
 // -------------------------------------------------------------------

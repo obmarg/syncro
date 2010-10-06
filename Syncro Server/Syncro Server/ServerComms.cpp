@@ -67,6 +67,7 @@ void CTCPConnection::StartRecv(int inBytes) {
 bool CTCPConnection::IsRecvFinished(const boost::system::error_code& inoError, std::size_t innBytesSoFar) {
 	if( inoError ) {
 		cout << "Error when checking received:  Received " << innBytesSoFar << " bytes\n";
+		cout << inoError.message() << "\n";
 		return true;
 	}
 	TCharBuffer oBuffer( m_aBuffer, innBytesSoFar );
@@ -85,6 +86,7 @@ bool CTCPConnection::IsRecvFinished(const boost::system::error_code& inoError, s
 void CTCPConnection::FinishedRecv(const boost::system::error_code& inoError, std::size_t innBytes ) {
 	if( inoError ) {
 		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
+		cout << inoError.message() << "\n";
 		return;
 	} else {
 		cout << "Received " << innBytes << "\n";
@@ -125,6 +127,7 @@ bool
 CTCPConnection::IsSendFinished(const boost::system::error_code& inoError, std::size_t innBytesSoFar) {
 	if( inoError ) {
 		cout << "Error when sending: Sent " << innBytesSoFar << " bytes\n";
+		cout << inoError.message() << "\n";
 		return true;
 	}
 	return m_pSendHandler->HandleSend(innBytesSoFar);
@@ -133,7 +136,8 @@ CTCPConnection::IsSendFinished(const boost::system::error_code& inoError, std::s
 void 
 CTCPConnection::FinishedSend(const boost::system::error_code& inoError, std::size_t innBytes) {
 	if( inoError ) {
-		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
+		cout << "Error when sending:  Received " << innBytes << " bytes\n";
+		cout << inoError.message() << "\n";
 		return;
 	}
 	CSendHandler::TPointer pHandler = m_pSendHandler;

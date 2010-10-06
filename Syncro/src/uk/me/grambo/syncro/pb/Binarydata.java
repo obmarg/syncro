@@ -39,6 +39,13 @@ public final class Binarydata {
     public boolean hasFolderId() { return hasFolderId; }
     public int getFolderId() { return folderId_; }
     
+    // optional int32 recv_buffer_size = 3;
+    public static final int RECV_BUFFER_SIZE_FIELD_NUMBER = 3;
+    private boolean hasRecvBufferSize;
+    private int recvBufferSize_ = 0;
+    public boolean hasRecvBufferSize() { return hasRecvBufferSize; }
+    public int getRecvBufferSize() { return recvBufferSize_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -55,6 +62,9 @@ public final class Binarydata {
       if (hasFolderId()) {
         output.writeInt32(2, getFolderId());
       }
+      if (hasRecvBufferSize()) {
+        output.writeInt32(3, getRecvBufferSize());
+      }
     }
     
     private int memoizedSerializedSize = -1;
@@ -70,6 +80,10 @@ public final class Binarydata {
       if (hasFolderId()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, getFolderId());
+      }
+      if (hasRecvBufferSize()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, getRecvBufferSize());
       }
       memoizedSerializedSize = size;
       return size;
@@ -221,6 +235,9 @@ public final class Binarydata {
         if (other.hasFolderId()) {
           setFolderId(other.getFolderId());
         }
+        if (other.hasRecvBufferSize()) {
+          setRecvBufferSize(other.getRecvBufferSize());
+        }
         return this;
       }
       
@@ -245,6 +262,10 @@ public final class Binarydata {
             }
             case 16: {
               setFolderId(input.readInt32());
+              break;
+            }
+            case 24: {
+              setRecvBufferSize(input.readInt32());
               break;
             }
           }
@@ -288,6 +309,24 @@ public final class Binarydata {
       public Builder clearFolderId() {
         result.hasFolderId = false;
         result.folderId_ = 0;
+        return this;
+      }
+      
+      // optional int32 recv_buffer_size = 3;
+      public boolean hasRecvBufferSize() {
+        return result.hasRecvBufferSize();
+      }
+      public int getRecvBufferSize() {
+        return result.getRecvBufferSize();
+      }
+      public Builder setRecvBufferSize(int value) {
+        result.hasRecvBufferSize = true;
+        result.recvBufferSize_ = value;
+        return this;
+      }
+      public Builder clearRecvBufferSize() {
+        result.hasRecvBufferSize = false;
+        result.recvBufferSize_ = 0;
         return this;
       }
       

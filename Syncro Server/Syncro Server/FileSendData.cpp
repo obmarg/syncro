@@ -2,13 +2,14 @@
 
 namespace syncro {
 
-const int DEFAULT_FILE_SEND_BUFFER_SIZE = 1024;
+const int DEFAULT_FILE_SEND_BUFFER_SIZE = 1024 * 1024;
 
 const unsigned char FILE_SEND_FIRST_BYTE = 11;
 const unsigned char FILE_SECTION_FIRST_BYTE = 16;
 const unsigned char FILE_LAST_SECTION_FIRST_BYTE = 20;
 
-CFileSendData::CFileSendData(const std::string& insFilename) : m_sFilename(insFilename) {
+CFileSendData::CFileSendData(const std::string& insFilename,const int innRequestedBufferSize) : m_sFilename(insFilename) {
+	m_nRequestedBufferSize = innRequestedBufferSize;
 	OpenFile();
 }
 
@@ -35,6 +36,11 @@ void CFileSendData::OpenFile() {
 void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {
 
 	int nBufferSize = DEFAULT_FILE_SEND_BUFFER_SIZE;
+	if( m_nRequestedBufferSize != 0 ) {
+		int nRequestedBufferSize = (m_nRequestedBufferSize - 1024);		//Take away 1k just to be safe?
+		nBufferSize = std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
+	}
+	//TODO: maybe stop doing the above -1024, and find a better way of doing it
 	int nSizeLeft = m_nFileSize - (int)m_oFile.tellg();
 	int nReadAmount = std::min( nBufferSize, nSizeLeft );
 	inoBuffer.resize( nReadAmount );

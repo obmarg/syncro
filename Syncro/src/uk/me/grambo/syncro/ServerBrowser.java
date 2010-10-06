@@ -77,7 +77,9 @@ public class ServerBrowser extends Activity
         	public void onItemClick(AdapterView oParent,View oView,int innPosition,long innID) {
         		Intent i = new Intent( ServerBrowser.this, SyncroService.class );
         		i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
-        		i.setData(Uri.parse("syncro://10.0.2.2:9998"));
+        		//TODO: Make this actually pass in an actual address from the db etc.
+        		//i.setData(Uri.parse("syncro://10.0.2.2:9998"));
+        		i.setData(Uri.parse("syncro://192.168.5.5:9998"));
         		ServerBrowser.this.startService( i );
         	};
 		});

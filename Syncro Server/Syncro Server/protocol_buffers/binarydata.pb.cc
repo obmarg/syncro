@@ -42,6 +42,7 @@ const ::std::string BinaryDataRequest::_default_file_name_;
 #ifndef _MSC_VER
 const int BinaryDataRequest::kFileNameFieldNumber;
 const int BinaryDataRequest::kFolderIdFieldNumber;
+const int BinaryDataRequest::kRecvBufferSizeFieldNumber;
 #endif  // !_MSC_VER
 
 BinaryDataRequest::BinaryDataRequest()
@@ -62,6 +63,7 @@ void BinaryDataRequest::SharedCtor() {
   _cached_size_ = 0;
   file_name_ = const_cast< ::std::string*>(&_default_file_name_);
   folder_id_ = 0;
+  recv_buffer_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -100,6 +102,7 @@ void BinaryDataRequest::Clear() {
       }
     }
     folder_id_ = 0;
+    recv_buffer_size_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -135,6 +138,22 @@ bool BinaryDataRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(24)) goto parse_recv_buffer_size;
+        break;
+      }
+      
+      // optional int32 recv_buffer_size = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_recv_buffer_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &recv_buffer_size_)));
+          _set_bit(2);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -167,6 +186,11 @@ void BinaryDataRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->folder_id(), output);
   }
   
+  // optional int32 recv_buffer_size = 3;
+  if (_has_bit(2)) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->recv_buffer_size(), output);
+  }
+  
 }
 
 int BinaryDataRequest::ByteSize() const {
@@ -185,6 +209,13 @@ int BinaryDataRequest::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->folder_id());
+    }
+    
+    // optional int32 recv_buffer_size = 3;
+    if (has_recv_buffer_size()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->recv_buffer_size());
     }
     
   }
@@ -208,6 +239,9 @@ void BinaryDataRequest::MergeFrom(const BinaryDataRequest& from) {
     if (from._has_bit(1)) {
       set_folder_id(from.folder_id());
     }
+    if (from._has_bit(2)) {
+      set_recv_buffer_size(from.recv_buffer_size());
+    }
   }
 }
 
@@ -227,6 +261,7 @@ void BinaryDataRequest::Swap(BinaryDataRequest* other) {
   if (other != this) {
     std::swap(file_name_, other->file_name_);
     std::swap(folder_id_, other->folder_id_);
+    std::swap(recv_buffer_size_, other->recv_buffer_size_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }

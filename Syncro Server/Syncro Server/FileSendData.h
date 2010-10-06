@@ -12,7 +12,7 @@ namespace syncro {
 
 class CFileSendData : boost::noncopyable {
 public:
-	CFileSendData(const std::string& insFilename);
+	CFileSendData(const std::string& insFilename,int innRequestedBufferSize=0);
 	CFileSendData( CFileSendData& inoOther );
 	~CFileSendData();
 
@@ -31,6 +31,8 @@ private:
 	const std::string m_sFilename;
 
 	unsigned int	m_nFileSize;
+
+	unsigned int m_nRequestedBufferSize;
 };
 
 } //end namespace syncro

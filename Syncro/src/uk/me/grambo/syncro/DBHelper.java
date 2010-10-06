@@ -5,7 +5,7 @@ import android.content.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 14;
     private static final String DATABASE_NAME="SyncroDB";
     private static final String SERVERS_TABLE_NAME = "servers";
     private static final String SERVERS_TABLE_CREATE =
@@ -49,11 +49,11 @@ public class DBHelper extends SQLiteOpenHelper {
     		inDB.execSQL(SERVERS_TABLE_UPGRADE_V2);
     		inDB.execSQL(SERVERS_TABLE_CREATE);
     	}
-    	if( nOldVer <= 8 ) {
+    	if( nOldVer <= 12 ) {
     		inDB.execSQL("DROP TABLE IF EXISTS " + FOLDERS_TABLE_NAME + ";\n");
     		inDB.execSQL(FOLDERS_TABLE_CREATE);
     	}
-    	if( nOldVer <= 11 ) {
+    	if( nOldVer <= 13 ) {
     		inDB.execSQL("UPDATE folders SET SyncToPhone=1");
     		inDB.execSQL("UPDATE folders SET LocalPath='/mnt/sdcard/Syncro/'");
     	}

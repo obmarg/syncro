@@ -14,7 +14,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	case eSyncroPBPacketTypes_BinaryRequest: {
 		CBinaryDataRequest oRequest( inaInputStreams );
 		std::string sActualFilename = m_oFolderMan.GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
-		m_pCurrentSendData.reset( new CFileSendData( sActualFilename ) );
+		m_pCurrentSendData.reset( new CFileSendData( sActualFilename, oRequest.GetBufferSize() ) );
 		}
 		//Fall through
 	case eSyncroPBPacketTypes_BinaryContinue:
