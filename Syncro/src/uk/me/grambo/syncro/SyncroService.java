@@ -193,9 +193,13 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		boolean fOK = false;
 		for(int nFile = 0;nFile < m_aFilesToDownload.size();nFile++) {
 			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
-			fOK = GetFile( inoSock, oFile.FolderId, oFile.Filename );
-			if( !fOK )
-				return false;
+			String destFilename = GetDestinationFilename(oFile.FolderId, oFile.Filename);
+			File oDestFile = new File(destFilename);
+			if( oDestFile.length() != oFile.Size ) {
+				fOK = GetFile( inoSock, oFile.FolderId, oFile.Filename );
+				if( !fOK )
+					return false;
+			}
 		}
 		return fOK;
 	}

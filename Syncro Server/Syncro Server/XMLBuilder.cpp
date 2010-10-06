@@ -74,10 +74,11 @@ void CXMLBuilder::ProcessFolder( TiXmlElement& inoParentElement, boost::shared_p
 		inoParentElement.LinkEndChild( pThisElement );
 	} else
 		pThisElement = &inoParentElement;
-	vector< string > oFiles = inoFolder->GetFiles();
-	for( vector< string >::iterator oFile = oFiles.begin(); oFile != oFiles.end(); oFile++ ) {
+	CFolder::TFileList oFiles = inoFolder->GetFiles();
+	for( CFolder::TFileList::iterator oFile = oFiles.begin(); oFile != oFiles.end(); oFile++ ) {
 		TiXmlElement* pFileElement = new TiXmlElement( "File" );
-		TiXmlText *pText = new TiXmlText( oFile->c_str() );
+		pFileElement->SetAttribute("size", oFile->size );
+		TiXmlText *pText = new TiXmlText( oFile->name.c_str() );
 		pFileElement->LinkEndChild( pText );
 		pThisElement->LinkEndChild( pFileElement );
 	}

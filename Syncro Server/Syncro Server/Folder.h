@@ -9,17 +9,29 @@ namespace syncro {
 
 class CFolder {
 public:
+	struct sFileData {
+		sFileData(const std::string insName,const unsigned int innSize) {
+			name = insName;
+			size = innSize;
+		};
+
+		std::string name;
+		unsigned int size;
+	};
+
+	typedef std::vector< sFileData > TFileList;
+
 	CFolder( const std::string& insPath );
 	~CFolder();
 
 	std::string GetName() { return m_sFolderName; }
-	std::vector< std::string >& GetFiles() { return m_oFiles; };
+	const TFileList& GetFiles() { return m_oFiles; };
 	std::vector< boost::shared_ptr<CFolder> >& GetChildren() { return m_oChildren; }
 private:
 	std::string m_sPath;
 	std::string m_sFolderName;
 	std::vector< boost::shared_ptr<CFolder> > m_oChildren;
-	std::vector< std::string > m_oFiles;
+	TFileList m_oFiles;
 };
 
 }

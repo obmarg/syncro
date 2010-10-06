@@ -22,6 +22,7 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 	private Stack<String> m_aPath;
 	
 	private StringBuilder m_oFilenameBuilder;
+	private int m_nFileSize;
 	
 	public FolderContentsXMLHandler() {
 		m_aHandlers = new ArrayList<RemoteFileHandler>();
@@ -61,6 +62,7 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 				RemoteFileHandler.RemoteFileData oFile = new RemoteFileHandler.RemoteFileData();
 				oFile.Filename = oPathBuilder.toString() + m_oFilenameBuilder.toString();
 				oFile.FolderId = m_nCurrentFolderId;
+				oFile.Size = m_nFileSize;
 				m_aHandlers.get(n).HandleRemoteFile( oFile );
 			}
 		}
@@ -82,6 +84,7 @@ public class FolderContentsXMLHandler extends DefaultHandler {
 		} else if( localName.equals(FILE_TAG) ) {
 			m_fInFileTag = true;
 			m_oFilenameBuilder = new StringBuilder();
+			m_nFileSize = Integer.parseInt( attributes.getValue("size") );
 		}
 	}
 }
