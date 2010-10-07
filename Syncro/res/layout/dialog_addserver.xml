@@ -14,12 +14,25 @@
         a:layout_height="wrap_content"
         a:background="@android:drawable/editbox_background"
         a:layout_below="@id/dialog_addserver_servernametext" />
+       <TextView
+		a:id="@+id/dialog_addserver_addresstext"
+		a:layout_width="match_parent"
+		a:layout_height="wrap_content"
+		a:layout_alignParentRight="true"
+		a:text="Address"
+		a:layout_below="@id/dialog_addserver_servername" />
+	<EditText a:id="@+id/dialog_addserver_address"
+		a:inputType="textUri"
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:background="@android:drawable/editbox_background"
+        a:layout_below="@id/dialog_addserver_addresstext" />
     <TextView
 		a:id="@+id/dialog_addserver_porttext"
 		a:layout_width="match_parent"
 		a:layout_height="wrap_content"
 		a:layout_alignParentRight="true"
-		a:layout_below="@id/dialog_addserver_servername"
+		a:layout_below="@id/dialog_addserver_address"
 		a:text="Port" />
 	<EditText a:id="@+id/dialog_addserver_port" 
 		a:inputType="number"

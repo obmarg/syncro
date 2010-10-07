@@ -19,9 +19,6 @@ public class ServerBrowser extends Activity
 	
 	private Dialog m_oAddServerDialog;
 	
-	private SQLiteDatabase m_oDB;
-	private SQLiteStatement m_oAddServerStatement;
-	
     String[] m_aServers;
     String[] m_aServerAddresses;
     int[] m_aServerPorts;
@@ -47,28 +44,7 @@ public class ServerBrowser extends Activity
         try {
         	DBHelper oHelper = new DBHelper( this );
         	SQLiteDatabase oDB = oHelper.getReadableDatabase();
-        	Cursor oResults = oDB.rawQuery("SELECT Name,IP,Port From servers", null);
-	        int nResults = oResults.getCount();
-	        if( nResults > 0 ) {
-	        	m_aServers = new String[nResults];
-	        	m_aServerAddresses = new String[nResults];
-	        	m_aServerPorts = new int[nResults];
-	        	oResults.moveToFirst();
-	        	int n = 0;
-	        	do {
-	        		m_aServers[n] = oResults.getString(0);
-	        		m_aServerAddresses[n] = oResults.getString(1);
-	        		m_aServerPorts[n] = oResults.getInt(2);
-	        		n++;
-	        	} while( oResults.moveToNext() );
-	        	
-	        }
-	        if( nResults == 0 ) {
-	        	oDB.execSQL("INSERT INTO SERVERS(Name,IP,PORT) VALUES ('Ceephax','192.168.5.5',9998);");
-	        } else {
-	        	oListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServers ));
-	        }
-	        oResults.close();
+        	fillServerList(oDB,oListView);
 	        oDB.close();
         }catch(SQLException oException) {
         	oException.printStackTrace();
@@ -91,8 +67,29 @@ public class ServerBrowser extends Activity
         		ServerBrowser.this.showDialog(DIALOG_ADDSERVER);
         	}
         });
-        
-       // m_oAddServerStatement = m_oDB.compileStatement("INSERT INTO servers(Name,IP,Port) VALUES(?,?,?)");
+    }
+    
+    protected void fillServerList(SQLiteDatabase inoDB,ListView inoListview) {
+    	Cursor oResults = inoDB.rawQuery("SELECT Name,IP,Port From servers", null);
+        int nResults = oResults.getCount();
+        if( nResults > 0 ) {
+        	m_aServers = new String[nResults];
+        	m_aServerAddresses = new String[nResults];
+        	m_aServerPorts = new int[nResults];
+        	oResults.moveToFirst();
+        	int n = 0;
+        	do {
+        		m_aServers[n] = oResults.getString(0);
+        		m_aServerAddresses[n] = oResults.getString(1);
+        		m_aServerPorts[n] = oResults.getInt(2);
+        		n++;
+        	} while( oResults.moveToNext() );
+        	
+        }
+        if( nResults != 0 ) {
+        	inoListview.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServers ));
+        }
+        oResults.close();
     }
     
     protected Dialog onCreateDialog(int innID) {
@@ -115,6 +112,12 @@ public class ServerBrowser extends Activity
     					ServerBrowser.this.AddServer();
     				};
     			});
+    			oButton = (Button)oOutDialog.findViewById(R.id.dialog_addserver_cancel);
+    			oButton.setOnClickListener( new View.OnClickListener() {
+    				public void onClick(View v) {
+    					ServerBrowser.this.CloseAddServerDialog();
+    				};
+    			});
     			
     			break;
     		default:
@@ -126,18 +129,35 @@ public class ServerBrowser extends Activity
     
     public void AddServer() {
     	EditText oServerNameEditText = (EditText)m_oAddServerDialog.findViewById(R.id.dialog_addserver_servername);
+    	EditText oAddressEditText = (EditText)m_oAddServerDialog.findViewById(R.id.dialog_addserver_address);
     	EditText oPortEditText = (EditText)m_oAddServerDialog.findViewById(R.id.dialog_addserver_port);
     	
+    	
     	String sServerName = oServerNameEditText.getText().toString();
+    	String sAddress = oAddressEditText.getText().toString();
     	int nPort = Integer.parseInt(oPortEditText.getText().toString());
+    	
+    	//TODO: has to be a better/more efficient way of dealing with databases than this
+    	DBHelper oHelper = new DBHelper( this );
+    	SQLiteDatabase oDB = oHelper.getReadableDatabase();
         
-        m_oAddServerStatement.bindString(1,sServerName);
-        m_oAddServerStatement.bindString(2,sServerName);
-        m_oAddServerStatement.bindLong(3,nPort);
-        int nResult = (int)m_oAddServerStatement.executeInsert();
+    	SQLiteStatement oAddServerStatement = oDB.compileStatement("INSERT INTO servers(Name,IP,Port) VALUES(?,?,?)");
+    	
+        oAddServerStatement.bindString(1,sServerName);
+        oAddServerStatement.bindString(2,sAddress);
+        oAddServerStatement.bindLong(3,nPort);
+        int nResult = (int)oAddServerStatement.executeInsert();
         if( nResult == -1 )
         	Log.e("Syncro", "execute failed");
         else
         	Log.d("Syncro", "execute success");
+        ListView oListView = (ListView)findViewById(R.id.serverlist);
+        fillServerList(oDB,oListView);
+        oDB.close();
+        m_oAddServerDialog.dismiss();
+    }
+    
+    public void CloseAddServerDialog() {
+    	m_oAddServerDialog.cancel();
     }
 }
