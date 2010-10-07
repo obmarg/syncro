@@ -20,8 +20,7 @@ public class ServerBrowser extends Activity
 	private Dialog m_oAddServerDialog;
 	
     String[] m_aServers;
-    String[] m_aServerAddresses;
-    int[] m_aServerPorts;
+    int[] m_aServerIDs;
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -53,9 +52,9 @@ public class ServerBrowser extends Activity
         	public void onItemClick(AdapterView oParent,View oView,int innPosition,long innID) {
         		Intent i = new Intent( ServerBrowser.this, SyncroService.class );
         		i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
-        		//TODO: Make this actually pass in an actual address from the db etc.
         		//i.setData(Uri.parse("syncro://10.0.2.2:9998"));
-        		i.setData(Uri.parse("syncro://192.168.5.5:9998"));
+        		//i.setData(Uri.parse("syncro://192.168.5.5:9998"));
+        		i.setData( Uri.parse( "syncroid://" + m_aServerIDs[innPosition] ) );
         		ServerBrowser.this.startService( i );
         	};
 		});
@@ -70,18 +69,16 @@ public class ServerBrowser extends Activity
     }
     
     protected void fillServerList(SQLiteDatabase inoDB,ListView inoListview) {
-    	Cursor oResults = inoDB.rawQuery("SELECT Name,IP,Port From servers", null);
+    	Cursor oResults = inoDB.rawQuery("SELECT Name,ID From servers", null);
         int nResults = oResults.getCount();
         if( nResults > 0 ) {
         	m_aServers = new String[nResults];
-        	m_aServerAddresses = new String[nResults];
-        	m_aServerPorts = new int[nResults];
+        	m_aServerIDs = new int[nResults];
         	oResults.moveToFirst();
         	int n = 0;
         	do {
         		m_aServers[n] = oResults.getString(0);
-        		m_aServerAddresses[n] = oResults.getString(1);
-        		m_aServerPorts[n] = oResults.getInt(2);
+        		m_aServerIDs[n] = oResults.getInt(1);
         		n++;
         	} while( oResults.moveToNext() );
         	

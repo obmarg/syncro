@@ -24,6 +24,10 @@ import org.xml.sax.helpers.DefaultHandler;
 import uk.me.grambo.syncro.pb.Binarydata;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -53,9 +57,30 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		if( arg0.getAction().equals("uk.me.grambo.syncro.SYNCRO_SYNC") ) {
 			Uri oURI = arg0.getData();
 			if( oURI != null ) {
-				String sHost = oURI.getHost();
-				int nPort = oURI.getPort();
-				RunSync(sHost,nPort);
+				String oScheme = oURI.getScheme();
+				if( oScheme.equals("syncro") ) { 
+					String sHost = oURI.getHost();
+					int nPort = oURI.getPort();
+					//RunSync(0,sHost,nPort);
+				} else if( oScheme.equals("syncroid") ) {
+			    	DBHelper oHelper = new DBHelper( this );
+			    	SQLiteDatabase oDB = oHelper.getReadableDatabase();
+			    	String aSQLArgs[] = new String[1];
+			    	aSQLArgs[0] = oURI.getHost();
+			    	Cursor oResults = oDB.rawQuery("SELECT ID,IP,Port FROM servers WHERE ID=?", aSQLArgs);
+			    	if( oResults.moveToFirst() ) {
+			    		int nID,nPort;
+			    		String sAddress;
+			    		nID = oResults.getInt(0);
+			    		sAddress = oResults.getString(1);
+			    		nPort = oResults.getInt(2);
+			    		oResults.close();
+			    		oDB.close();
+			    		RunSync( nID, sAddress, nPort );
+			    	} else {
+			    		oDB.close();
+			    	}
+				}
 			}
 		}
 	}
@@ -70,20 +95,59 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 	}
 	
-	protected void RunSync(String insHost,int innPort) {
+	protected void RunSync(int innServerID,String insHost,int innPort) {
+		//TODO: probably want to move innServerID into a member variable or something
+		NotificationManager oNM = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		
+		int icon = R.drawable.stat_sys_warning;
+		CharSequence tickerText = "Syncro running";
+		long when = System.currentTimeMillis();
+
+		Notification oNotification = new Notification(icon, tickerText, when);
+		
+		Context context = getApplicationContext();
+		CharSequence contentTitle = "Syncro Is Running!";
+		CharSequence contentText = "Syncro is running!";
+		Intent notificationIntent = new Intent(this, ServerBrowser.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+		oNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		
+		final int NOTIFICATION_STARTED_ID = 1;
+
+		oNM.notify(NOTIFICATION_STARTED_ID, oNotification);
 		try {
 			Socket oSock = new Socket(insHost,innPort);
 			if( DoHandshake( oSock ) ) {
 				DBHelper oHelper = new DBHelper( this );
 	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
-	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath) VALUES(?,1,?,?)");
+	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,SyncToPhone,LocalPath) VALUES(?," + innServerID + ",?,?,1,'/mnt/sdcard/Syncro/')");
 				GetFolderList(oSock,oInsertStatement);
-				GetFolderContents(oSock,1,oDB);
+				GetFolderContents(oSock,innServerID,oDB);
 				GetFiles(oSock);
 				oDB.close();
 				oDB = null;
 			}
 			oSock.close();
+			
+			//TODO: Seperate notification code out into different function
+			icon = R.drawable.stat_sys_warning;
+			tickerText = "Syncro finished";
+			when = System.currentTimeMillis();
+
+			oNotification = new Notification(icon, tickerText, when);
+			
+			context = getApplicationContext();
+			contentTitle = "Syncro Is Finished!";
+			contentText = "Syncro is finished!";
+			notificationIntent = new Intent(this, ServerBrowser.class);
+			contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+			oNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+			
+			final int NOTIFICATION_FINISHED_ID = 1;
+
+			oNM.notify(NOTIFICATION_FINISHED_ID, oNotification);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
