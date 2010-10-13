@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,12 +47,33 @@ public class ServerConfig extends Activity {
         	};
 		});
 		
+		Button oSyncNowButton = (Button)findViewById(R.id.server_config_sync_now);
+		
+		oSyncNowButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        		Intent i = new Intent( ServerConfig.this, SyncroService.class );
+        		i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
+        		i.setData( Uri.parse( "syncroid://" + m_nServerID ) );
+        		ServerConfig.this.startService( i );
+            }
+        });
+		
+		Button oDeleteServerButton = (Button)findViewById(R.id.server_config_delete_server);
+		oDeleteServerButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        		ServerConfig.this.deleteServer();
+        		ServerConfig.this.finish();
+            }
+        });
+		
 		setupUI();
 	}
 	
 	public void onResume() {
 		super.onResume();
-		setupUI();
+		//setupUI();
+		//TODO: setupUI etc.
+		//TODO: find out what method this stuff should be done in.  needs to be done fast + only once ideally
 	}
 	
 	protected void setupUI() {
@@ -107,6 +129,20 @@ public class ServerConfig extends Activity {
         	inoList.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aFolders ));
         }
         oResults.close();
+    }
+    
+    protected void deleteServer() {
+		try {
+	      	DBHelper oHelper = new DBHelper( this );
+	       	SQLiteDatabase oDB = oHelper.getWritableDatabase();
+	       	Integer aArgs[] = { m_nServerID };
+	       	oDB.execSQL("DELETE FROM servers WHERE ID=?", aArgs );
+		    oDB.close();
+	    }catch(SQLException oException) {
+	     	oException.printStackTrace();
+	    }catch(Exception oException) {
+	    	oException.printStackTrace();
+	    }
     }
 
 	

@@ -39,24 +39,10 @@ public class ServerBrowser extends Activity
                   }
         });
         
-        ListView oListView = (ListView)findViewById(R.id.serverlist);
-        try {
-        	DBHelper oHelper = new DBHelper( this );
-        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
-        	fillServerList(oDB,oListView);
-	        oDB.close();
-        }catch(SQLException oException) {
-        	oException.printStackTrace();
-        }
-        oListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListView oServerList = (ListView)findViewById(R.id.serverlist);
+
+        oServerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         	public void onItemClick(AdapterView oParent,View oView,int innPosition,long innID) {
-        		/*Intent i = new Intent( ServerBrowser.this, SyncroService.class );
-        		i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
-        		//i.setData(Uri.parse("syncro://10.0.2.2:9998"));
-        		//i.setData(Uri.parse("syncro://192.168.5.5:9998"));
-        		i.setData( Uri.parse( "syncroid://" + m_aServerIDs[innPosition] ) );
-        		ServerBrowser.this.startService( i );*/
-        		//TODO: Re-implement sync stuff sometime
         		Intent i = new Intent(ServerBrowser.this,ServerConfig.class);
         		i.putExtra( "uk.me.grambo.syncro.server_id", m_aServerIDs[innPosition] );
         		ServerBrowser.this.startActivity(i);
@@ -70,6 +56,25 @@ public class ServerBrowser extends Activity
         		ServerBrowser.this.showDialog(DIALOG_ADDSERVER);
         	}
         });
+        
+        fillData();
+    }
+    
+    public void onRestart() {
+    	super.onRestart();
+    	fillData();
+    }
+    
+    protected void fillData() {
+    	ListView oServerList = (ListView)findViewById(R.id.serverlist);
+        try {
+        	DBHelper oHelper = new DBHelper( this );
+        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
+        	fillServerList(oDB,oServerList);
+	        oDB.close();
+        }catch(SQLException oException) {
+        	oException.printStackTrace();
+        }
     }
     
     protected void fillServerList(SQLiteDatabase inoDB,ListView inoListview) {

@@ -58,10 +58,10 @@
 		a:layout_width="60sp"
 		a:layout_height="wrap_content"
 		a:text="OK"
-		a:layout_below="@id/folder_general_settings_send_sync" /> -->
+		a:layout_below="@id/folder_general_settings_send_sync" /> 
 	<TextView
 		a:id="@+id/folder_last_sync_time"
 		a:layout_width="wrap_content"
 		a:layout_height="wrap_content"
-		a:layout_toRightOf="@id/folder_general_settings_sync_now" />
+		a:layout_toRightOf="@id/folder_general_settings_sync_now" /> -->
 </RelativeLayout>

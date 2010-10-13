@@ -11,11 +11,25 @@
 		a:layout_width="fill_parent"
 		a:layout_height="wrap_content"
 		a:layout_below="@id/server_config_details_text" />
-	<TextView a:id="@+id/server_config_folder_list_text"
-			  a:layout_width="fill_parent"
-			  a:layout_height="wrap_content"
-			  a:text="Folder List"
-			  a:layout_below="@id/server_config_details_list"/>
+	<Button
+		a:id="@+id/server_config_sync_now"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:text="Sync Now"
+		a:layout_below="@id/server_config_details_list" />
+	<Button
+		a:id="@+id/server_config_delete_server"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:text="Delete Server"
+		a:layout_toRightOf="@id/server_config_sync_now"
+		a:layout_centerVertical="true" />
+	<TextView 
+		a:id="@+id/server_config_folder_list_text"
+		a:layout_width="fill_parent"
+		a:layout_height="wrap_content"
+		a:text="Folder List"
+		a:layout_below="@id/server_config_sync_now"/>
 	<ListView
 		a:id="@+id/server_config_folder_list"
 		a:layout_width="fill_parent"
