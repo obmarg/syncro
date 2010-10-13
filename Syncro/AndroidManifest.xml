@@ -21,7 +21,16 @@
         <activity android:name="ServerConfig"
         	android:label="@string/app_name">
         </activity>
-        <activity android:name="ServerConnectionSettings"
+        <activity android:name="FolderGeneralSettings"
+        	android:label="@string/app_name">
+        </activity>
+        <activity android:name="FolderFilterSettings"
+        	android:label="@string/app_name">
+        </activity>
+        <activity android:name="FolderSyncSettings"
+        	android:label="@string/app_name">
+        </activity>
+        <activity android:name="FolderConfig"
         	android:label="@string/app_name">
         </activity>
     <service android:name="SyncroService"><intent-filter android:label="StartServiceIntent"><action android:name="uk.me.grambo.syncro.SYNCRO_SYNC"></action>

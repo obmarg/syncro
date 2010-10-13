@@ -58,6 +58,7 @@ public class ServerBrowser extends Activity
         		ServerBrowser.this.startService( i );*/
         		//TODO: Re-implement sync stuff sometime
         		Intent i = new Intent(ServerBrowser.this,ServerConfig.class);
+        		i.putExtra( "uk.me.grambo.syncro.server_id", m_aServerIDs[innPosition] );
         		ServerBrowser.this.startActivity(i);
         	};
 		});

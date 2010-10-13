@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TabHost xmlns:a="http://schemas.android.com/apk/res/android"
-    a:id="@android:id/tabhost"
-    a:layout_width="fill_parent"
-    a:layout_height="fill_parent">
-    <LinearLayout
-        a:orientation="vertical"
-        a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
-        a:padding="5dp">
-        <TabWidget
-            a:id="@android:id/tabs"
-            a:layout_width="fill_parent"
-            a:layout_height="wrap_content" />
-        <FrameLayout
-            a:id="@android:id/tabcontent"
-            a:layout_width="fill_parent"
-            a:layout_height="fill_parent"
-            a:padding="5dp" />
-    </LinearLayout>
-</TabHost>
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+	a:layout_width="fill_parent"
+	a:layout_height="fill_parent">
+	<TextView a:id="@+id/server_config_details_text"
+			  a:layout_width="fill_parent"
+			  a:layout_height="wrap_content"
+			  a:text="Details"/>
+	<ListView
+		a:id="@+id/server_config_details_list"
+		a:layout_width="fill_parent"
+		a:layout_height="wrap_content"
+		a:layout_below="@id/server_config_details_text" />
+	<TextView a:id="@+id/server_config_folder_list_text"
+			  a:layout_width="fill_parent"
+			  a:layout_height="wrap_content"
+			  a:text="Folder List"
+			  a:layout_below="@id/server_config_details_list"/>
+	<ListView
+		a:id="@+id/server_config_folder_list"
+		a:layout_width="fill_parent"
+		a:layout_height="fill_parent"
+		a:layout_below="@id/server_config_folder_list_text" />
+</RelativeLayout>
+
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+	a:layout_width="fill_parent"
+	a:layout_height="fill_parent">
+	<TextView
+		a:id="@+id/folder_general_settings_name_text"
+		a:layout_width="match_parent"
+		a:layout_height="wrap_content"
+		a:layout_alignParentRight="true"
+		a:text="Folder Name" />
+	<EditText a:id="@+id/folder_general_settings_name"
+		a:inputType="textUri"
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:background="@android:drawable/editbox_background"
+        a:layout_below="@id/folder_general_settings_name_text" />
+    <TextView
+		a:id="@+id/folder_general_settings_dest_folder_text"
+		a:layout_width="match_parent"
+		a:layout_height="wrap_content"
+		a:layout_alignParentRight="true"
+		a:text="Destination Folder"
+		a:layout_below="@id/folder_general_settings_name" />
+	<EditText a:id="@+id/folder_general_settings_dest_folder"
+		a:inputType="textUri"
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:background="@android:drawable/editbox_background"
+        a:layout_below="@id/folder_general_settings_dest_folder_text" />
+    <CheckBox
+		a:id="@+id/folder_general_settings_receive_sync"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:layout_below="@id/folder_general_settings_dest_folder"
+		a:layout_alignParentRight="true" />
+    <TextView
+		a:id="@+id/folder_general_settings_receive_sync_text"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:layout_toLeftOf="@id/folder_general_settings_receive_sync"
+		a:layout_centerVertical="true"
+		a:text="Download To Phone" />
+	<CheckBox
+		a:id="@+id/folder_general_settings_send_sync"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:layout_alignParentRight="true"
+		a:layout_below="@id/folder_general_settings_receive_sync" />
+	 <TextView
+		a:id="@+id/folder_general_settings_send_sync_text"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:layout_toLeftOf="@id/folder_general_settings_send_sync"
+		a:layout_centerVertical="true"
+		a:text="Upload To Server" />
+	<!-- <Button
+		a:id="@+id/folder_general_settings_sync_now"
+		a:layout_width="60sp"
+		a:layout_height="wrap_content"
+		a:text="OK"
+		a:layout_below="@id/folder_general_settings_send_sync" /> -->
+	<TextView
+		a:id="@+id/folder_last_sync_time"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:layout_toRightOf="@id/folder_general_settings_sync_now" />
+</RelativeLayout>
