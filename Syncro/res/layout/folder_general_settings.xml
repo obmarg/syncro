@@ -27,32 +27,26 @@
         a:layout_height="wrap_content"
         a:background="@android:drawable/editbox_background"
         a:layout_below="@id/folder_general_settings_dest_folder_text" />
-    <CheckBox
-		a:id="@+id/folder_general_settings_receive_sync"
-		a:layout_width="wrap_content"
-		a:layout_height="wrap_content"
-		a:layout_below="@id/folder_general_settings_dest_folder"
-		a:layout_alignParentRight="true" />
-    <TextView
-		a:id="@+id/folder_general_settings_receive_sync_text"
-		a:layout_width="wrap_content"
-		a:layout_height="wrap_content"
-		a:layout_toLeftOf="@id/folder_general_settings_receive_sync"
-		a:layout_centerVertical="true"
-		a:text="Download To Phone" />
-	<CheckBox
-		a:id="@+id/folder_general_settings_send_sync"
-		a:layout_width="wrap_content"
-		a:layout_height="wrap_content"
-		a:layout_alignParentRight="true"
-		a:layout_below="@id/folder_general_settings_receive_sync" />
-	 <TextView
-		a:id="@+id/folder_general_settings_send_sync_text"
-		a:layout_width="wrap_content"
-		a:layout_height="wrap_content"
-		a:layout_toLeftOf="@id/folder_general_settings_send_sync"
-		a:layout_centerVertical="true"
-		a:text="Upload To Server" />
+    
+    
+	<LinearLayout 
+		a:id="@+id/LinearLayout01" 
+		a:layout_width="wrap_content" 
+		a:layout_height="wrap_content" 
+		a:layout_below="@id/folder_general_settings_dest_folder" 
+		a:layout_alignParentRight="true" 
+		a:orientation="horizontal">
+		<TextView 
+			a:id="@+id/folder_general_settings_send_sync_text" 
+			a:layout_width="wrap_content" 
+			a:layout_height="wrap_content"  
+			a:text="Upload To Server" />
+			<CheckBox 
+				a:id="@+id/folder_general_settings_send_sync" 
+				a:layout_width="wrap_content" 
+				a:layout_height="wrap_content" />
+	</LinearLayout>
+	 
 	<!-- <Button
 		a:id="@+id/folder_general_settings_sync_now"
 		a:layout_width="60sp"
@@ -64,4 +58,16 @@
 		a:layout_width="wrap_content"
 		a:layout_height="wrap_content"
 		a:layout_toRightOf="@id/folder_general_settings_sync_now" /> -->
+
+	<LinearLayout a:id="@+id/LinearLayout02" a:layout_below="@+id/LinearLayout01" a:layout_width="wrap_content" a:layout_height="wrap_content" a:layout_alignParentRight="true"><TextView
+		a:id="@+id/folder_general_settings_receive_sync_text"
+		a:layout_width="wrap_content"
+		a:layout_height="wrap_content"
+		a:layout_centerVertical="true"
+		a:text="Download To Phone" />
+		<CheckBox 
+			a:id="@+id/folder_general_settings_receive_sync" 
+			a:layout_width="wrap_content" 
+			a:layout_height="wrap_content"/>
+	</LinearLayout>
 </RelativeLayout>

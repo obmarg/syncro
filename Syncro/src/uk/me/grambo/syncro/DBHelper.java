@@ -5,7 +5,7 @@ import android.content.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     private static final String DATABASE_NAME="SyncroDB";
     private static final String SERVERS_TABLE_NAME = "servers";
     private static final String SERVERS_TABLE_CREATE =
@@ -31,7 +31,15 @@ public class DBHelper extends SQLiteOpenHelper {
     			"SyncToPhone INTEGER CONSTRAINT SYNC_TO_PHONE_DEFAULT DEFAULT 0, " + 
     			"SyncFromPhone INTEGER CONSTRAINT SYNC_FROM_PHONE_DEFAULT DEFAULT 0," + 
     			"CONSTRAINT PK_FOLDERS UNIQUE (IDOnServer,ServerID) ON CONFLICT IGNORE);";
-    			
+    
+    private static final String FILTERS_TABLE_NAME = "filters";
+    private static final String FILTERS_TABLE_CREATE =
+    			"CREATE TABLE IF NOT EXISTS " + FILTERS_TABLE_NAME + " (" +
+    			"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    			"FolderID INTEGER CONSTRAINT FILTERS_FOLDER_ID_FK REFERENCES " + FOLDERS_TABLE_NAME + "(ID) ON DELETE CASCADE ON UPDATE CASCADE, " + 
+    			"FilterType INTEGER NOT NULL, " + 
+    			"Name TEXT);";
+    
 
     DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,6 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SERVERS_TABLE_CREATE);
         db.execSQL(FOLDERS_TABLE_CREATE);
+        db.execSQL(FILTERS_TABLE_CREATE);
     }
     
     @Override
@@ -56,6 +65,9 @@ public class DBHelper extends SQLiteOpenHelper {
     	if( nOldVer <= 13 ) {
     		inDB.execSQL("UPDATE folders SET SyncToPhone=1");
     		inDB.execSQL("UPDATE folders SET LocalPath='/mnt/sdcard/Syncro/'");
+    	}
+    	if( nOldVer < 15 ) {
+    		inDB.execSQL(FILTERS_TABLE_CREATE);
     	}
     }
 }
