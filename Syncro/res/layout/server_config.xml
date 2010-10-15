@@ -23,7 +23,7 @@
 		a:layout_height="wrap_content"
 		a:text="Delete Server"
 		a:layout_toRightOf="@id/server_config_sync_now"
-		a:layout_centerVertical="true" />
+		a:layout_centerVertical="true" a:layout_below="@id/server_config_details_list"/>
 	<TextView 
 		a:id="@+id/server_config_folder_list_text"
 		a:layout_width="fill_parent"

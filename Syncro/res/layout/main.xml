@@ -2,23 +2,29 @@
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:layout_width="fill_parent"
 	a:layout_height="fill_parent">
-	<Button 
-		a:id="@+id/findserver"
-		a:layout_width="wrap_content"
-		a:layout_height="wrap_content"
-		a:layout_centerHorizontal="true"
-		a:text="Find Server" />
-	<Button 
-		a:id="@+id/addserverbutton"
-		a:layout_width="wrap_content"
-		a:layout_height="wrap_content"
-		a:layout_toRightOf="@id/findserver"
-		a:layout_centerHorizontal="true"
-		a:text="Add Server Manually" />
+	<LinearLayout 
+		a:id="@+id/LinearLayout01" 
+		a:layout_width="wrap_content" 
+		a:layout_height="wrap_content" 
+		a:layout_centerHorizontal="true">
+		<Button 
+			a:id="@+id/addserverbutton"
+			a:layout_width="wrap_content"
+			a:layout_height="wrap_content"
+			a:layout_centerHorizontal="true"
+			a:text="Add Server" />
+		<Button 
+			a:id="@+id/findserver"
+			a:layout_width="wrap_content"
+			a:layout_height="wrap_content"
+			a:text="Find Server" />
+	</LinearLayout>
+	
 	<ListView
 		a:id="@+id/serverlist"
 		a:layout_width="fill_parent"
 		a:layout_height="fill_parent"
-		a:layout_below="@id/findserver" />
+		a:layout_below="@id/LinearLayout01" />
+
 </RelativeLayout>
 
