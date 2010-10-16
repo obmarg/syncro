@@ -1,11 +1,14 @@
 #include "SyncroPBResponseFactory.h"
 #include "BinaryDataResponse.h"
 #include "BinaryDataRequest.h"
+#include "SyncroDB.h"
 
 namespace syncro {
 
-CSyncroPBResponseFactory::CSyncroPBResponseFactory() : m_oFolderMan( "C:\\SyncFiles\\" ) {
-
+CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
+	//TODO: make this db loading stuff better
+	Database::TPointer oDB = CSyncroDB::OpenDB( "syncro.db" );
+	m_pFolderMan.reset( new CFolderMan( oDB ) );
 }
 
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
@@ -13,7 +16,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	switch( innPacketType ) {
 	case eSyncroPBPacketTypes_BinaryRequest: {
 		CBinaryDataRequest oRequest( inaInputStreams );
-		std::string sActualFilename = m_oFolderMan.GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
+		std::string sActualFilename = m_pFolderMan->GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
 		m_pCurrentSendData.reset( new CFileSendData( sActualFilename, oRequest.GetBufferSize() ) );
 		}
 		//Fall through

@@ -14,6 +14,9 @@
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include "utils.h"
 
 #ifdef USING_PTHREADS
 #include <pthread.h>
@@ -24,7 +27,10 @@ namespace syncro {
 class Database
 {
 public:
-	typedef std::map<std::string,std::string> Row;
+	typedef boost::shared_ptr<Database> TPointer;
+	
+	typedef std::map<std::string,std::string,CStringLessThan> Row;
+
 	class ResultSet
 	{
 		friend class Database;
@@ -32,6 +38,16 @@ public:
 		std::vector<Row> rows;
 		std::vector<std::string> colNames;
 	public:
+		ResultSet() {};
+		ResultSet(ResultSet& inoOther) : rows( inoOther.rows.begin(), inoOther.rows.end() ), colNames( inoOther.colNames.begin(), inoOther.colNames.end() ) { };
+
+		typedef std::vector<Row>::iterator iterator;
+		typedef std::vector<Row>::const_iterator const_iterator;
+		iterator begin() { return rows.begin(); };
+		iterator end() { return rows.end(); };
+		const_iterator begin() const { return rows.begin(); };
+		const_iterator end() const { return rows.end(); };
+
 		Database::Row operator[](int ID){return rows[ID];};
 		Database::Row getRow(int ID) {return rows[ID];};
 		int numRows() {return rows.size();};
@@ -73,16 +89,15 @@ public:
 	
 	friend int callback(void*,int,char**,char**);
 
-	Database(std::string file);
-	virtual ~Database();
-
 	ResultSet run(std::string query);
 
 	template<class tReturnType>
 	tReturnType runScalar(std::string query) {
 		ResultSet oResults = run(query);
-		Row::iterator oData = oResults[0].find( oResults.colNames[0] );
-		if( oData != oResults[0].end() ) {
+		const std::string& sColName = oResults.colNames[0];
+		const Row& oRow = oResults[0];
+		Row::const_iterator oData = oRow.find( sColName );
+		if( oData != oRow.end() ) {
 			return boost::lexical_cast<tReturnType,std::string>( oData->second );
 		} else {
 			throw std::exception("DB::runScalar call produced invalid results");
@@ -112,6 +127,9 @@ private:
 
 protected:
 	void clearResult();
+
+	Database(std::string file);
+	virtual ~Database();
 };
 
 }; //namespace syncro

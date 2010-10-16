@@ -6,16 +6,15 @@ namespace syncro {
 using namespace std;
 using namespace boost::filesystem;
 
-CFolderMan::CFolderMan( const string& insRoot ) : m_sRoot( insRoot ) {
-	path oPath( m_sRoot );
-	if( !is_directory( oPath ) )
-		throw std::exception( "Invalid path" );
-	int nCount = 0;
-	for( directory_iterator pItem( oPath ); pItem != directory_iterator(); pItem++ ) { 
-		if( is_directory( pItem->status() ) ) {
-			m_aFolderInfo.push_back( sFolderInfo( nCount, pItem->path().native_directory_string() ) );
-			nCount++;
-		}
+CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
+	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path FROM Folders" );
+	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
+	foreach( Database::Row& oRow, oRS ) {
+		path oPath( oRow["Path"] );
+		if( !is_directory( oPath ) )
+			throw std::exception( "Invalid path read from DB in CFolderMan constructor" );
+		//TODO: Do something with the name as well
+		m_aFolderInfo.push_back( sFolderInfo( boost::lexical_cast<int>( oRow["ID"] ) , oPath.native_directory_string() ) );
 	}
 }
 
@@ -23,21 +22,25 @@ CFolderMan::~CFolderMan() {
 
 }
 
+const CFolderMan::sFolderInfo& CFolderMan::FindFolder( int nFolderId ) {
+	foreach( const sFolderInfo& oInfo, m_aFolderInfo ) {
+		if( oInfo.nFolderID == nFolderId ) {
+			return oInfo;
+		}
+	}
+	throw std::range_error("Invalid folder ID passed to CFolderMan");
+}
+
 
 boost::shared_ptr<CFolder> 
-CFolderMan::GetFolder( int nIndex ) {
-	if( (nIndex < 0) || (nIndex > (int)m_aFolderInfo.size()) )
-		return boost::shared_ptr<CFolder>();
-	return boost::shared_ptr<CFolder>( new CFolder( m_aFolderInfo[ nIndex ].sFolderName ) );
+CFolderMan::GetFolder( int nFolderID ) {
+	return boost::shared_ptr<CFolder>( new CFolder( FindFolder(nFolderID).sFolderName ) );
+	//TODO: handle exception here or elsewhere?
 }
 
 std::string
-CFolderMan::GetFileName(int nFolderIndex,const std::string& fileName) {
-	if( m_aFolderInfo.empty() )
-		return false;
-	if( ( nFolderIndex < 0 ) || ( nFolderIndex > m_aFolderInfo.size() ) )
-		return false;
-	std::string rv = m_aFolderInfo[ nFolderIndex ].sFolderName;
+CFolderMan::GetFileName(int nFolderId,const std::string& fileName) {
+	std::string rv = FindFolder(nFolderId).sFolderName;
 	char aLastChar = *( rv.rbegin() ) ;
 	if( (aLastChar != '\\') && (aLastChar != '/') )
 		rv += "/";

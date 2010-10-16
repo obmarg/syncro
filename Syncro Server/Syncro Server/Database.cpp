@@ -50,7 +50,11 @@ Database::ResultSet Database::run(std::string query)
 	{
 		//Logger.Log("Sqlite error.  Query not executed",LOG_ERROR);
 		//error
-		std::string error = "SQL Error: " + std::string( errorMsg ) + "\nRunning query: " + query;
+		std::string error = "SQL Error: ";
+		if( errorMsg != NULL ) {
+			error += std::string( errorMsg );
+		}
+		error += "\nRunning query: " + query;
 		throw std::exception( error.c_str() );
 		sqlite3_free(errorMsg);
 	}

@@ -24,8 +24,8 @@ struct sSubpackets {
 
 class CSyncroPBResponseFactory : public CBasePBResponseFactory {
 public:
-	CSyncroPBResponseFactory(const CSyncroPBResponseFactory& inoOther) : m_oFolderMan( inoOther.m_oFolderMan ){
-		//TODO: Implement copying of stuff
+	CSyncroPBResponseFactory(const CSyncroPBResponseFactory& inoOther){
+		//TODO: Implement copying of stuff (or make uncopyable?)
 	}
 	virtual ~CSyncroPBResponseFactory() {};
 
@@ -38,7 +38,7 @@ private:
 	CSyncroPBResponseFactory();
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
 	TFileSendDataPtr m_pCurrentSendData;
-	CFolderMan m_oFolderMan;
+	boost::scoped_ptr<CFolderMan> m_pFolderMan;
 };
 
 }; //namespace syncro

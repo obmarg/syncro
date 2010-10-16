@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+#include "SyncroDB.h"
+
 namespace syncro {
 
 using std::vector;
@@ -26,7 +28,9 @@ void CXMLBuilder::SaveDocAsFile(std::string insFile) {
 
 bool CXMLBuilder::GetFolderXML() {
 
-	CFolderMan oFolderMan("C:\\SyncFiles\\");
+	//TODO: make the database loading better, do it somewhere central probably?
+	Database::TPointer oDB = CSyncroDB::OpenDB( "syncro.db" );
+	CFolderMan oFolderMan( oDB );
 
 	m_oXML = TiXmlDocument();
 	TiXmlDeclaration * oDecl = new TiXmlDeclaration( "1.0", "", "" );
@@ -49,7 +53,8 @@ bool CXMLBuilder::GetFolderXML() {
 bool CXMLBuilder::GetFolderContentsXML(int innFolderID) {
 	using boost::shared_ptr;
 	
-	CFolderMan oFolderMan("C:\\SyncFiles\\");
+	Database::TPointer oDB = CSyncroDB::OpenDB( "syncro.db" );
+	CFolderMan oFolderMan( oDB );
 	
 	m_oXML = TiXmlDocument();
 

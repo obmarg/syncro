@@ -5,15 +5,21 @@
 
 namespace syncro {
 
-class CSyncroDB : public Database {
+class CSyncroDB : public Database, boost::noncopyable {
+public:
+	static Database::TPointer OpenDB(std::string insFilename) {
+		Database::TPointer pDatabase( new CSyncroDB(insFilename) );
+		return pDatabase;
+	}
+
+	virtual ~CSyncroDB();
 private:
 	static const int EXPECTED_DB_VERSION;
 
-	void CreateDatabase();
-	void UpgradeDatabase(int nCurrentVersion);
-public:
 	CSyncroDB(std::string insFile);
-	~CSyncroDB();
+
+	bool CreateDatabase();
+	bool UpgradeDatabase(int nCurrentVersion);
 };
 
 };		//namespace syncro

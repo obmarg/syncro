@@ -6,6 +6,7 @@
 #include "utils.h"
 #include <boost\shared_ptr.hpp>
 #include "Folder.h"
+#include "Database.h"
 
 namespace syncro {
 
@@ -19,19 +20,21 @@ public:
 
 	typedef std::vector<sFolderInfo> TFolderInfoList;
 
-	CFolderMan( const std::string& insRoot );
+	CFolderMan( Database::TPointer inpDB );
 	~CFolderMan();
 
 	
 	const TFolderInfoList& GetFoldersInfo() { return m_aFolderInfo; };
 
-	boost::shared_ptr<CFolder> GetFolder( int nIndex );
+	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
 
-	std::string GetFileName(int nFolderIndex,const std::string& fileName);
+	std::string GetFileName(int nFolderId,const std::string& fileName);
 	
 private:
-	std::string m_sRoot;
 	TFolderInfoList m_aFolderInfo;
+	Database::TPointer m_pDB;
+
+	const sFolderInfo& FindFolder( int nFolderId );
 };
 
 };
