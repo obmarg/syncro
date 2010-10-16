@@ -123,7 +123,7 @@ public:
 		const std::string& sColName = oResults.colNames[0];
 		const Row& oRow = oResults[0];
 		Row::const_iterator oData = oRow.find( sColName );
-		if( oData != oResults[0].end() ) {
+		if( oData != oRow.end() ) {
 			return oData->second;
 		} else {
 			throw std::out_of_range("DB::runScalar call returned nothing");
