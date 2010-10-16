@@ -13,3 +13,4 @@ tinyXmlTestSTL___Win32_Debug/
 ipch/
 enc_temp_folder/
 temp.xml
+*.opensdf
