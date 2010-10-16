@@ -90,6 +90,9 @@
     <ClInclude Include="BinaryDataRequest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SyncroDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BinaryDataResponse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SyncroDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

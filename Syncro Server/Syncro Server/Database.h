@@ -12,23 +12,25 @@
 
 #include <time.h>
 
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
+
 #ifdef USING_PTHREADS
 #include <pthread.h>
 #endif
 
 namespace syncro {
 
-using namespace std;
-
 class Database
 {
 public:
-	typedef map<string,string> Row;
+	typedef std::map<std::string,std::string> Row;
 	class ResultSet
 	{
+		friend class Database;
 	protected:
-		vector<Row> rows;
-		vector<string> colNames;
+		std::vector<Row> rows;
+		std::vector<std::string> colNames;
 	public:
 		Database::Row operator[](int ID){return rows[ID];};
 		Database::Row getRow(int ID) {return rows[ID];};
@@ -39,14 +41,14 @@ public:
 		void defineCols(int num,char **names)
 		{
 			for(int i =0;i<num;i++)
-				colNames.push_back(string(names[i]));
+				colNames.push_back(std::string(names[i]));
 		}
-		Database::Row find(string col,string value)
+		Database::Row find(std::string col,std::string value)
 		{
-			for(unsigned int i=0;i<rows.size();i++)
-			{
-				if(rows[i][col] == value)
-					return rows[i];
+			BOOST_FOREACH( Row& oRow, rows ) {
+				Row::iterator pCol = oRow.find( col );
+				if( ( pCol != oRow.end() ) && ( pCol->second == value ) )
+					return Row(oRow);
 			}
 			return Row();
 		}
@@ -54,13 +56,13 @@ public:
 		{
 			if(numRows() != 0)
 			{
-				string names = "Columns:";
+				std::string names = "Columns:";
 				for(unsigned int i=0;i<colNames.size();i++)
 					names += colNames[i] + "|";
 //				Logger.Log(names,level);
 				for(unsigned int i=0;i<rows.size();i++)
 				{
-					string values = "";
+					std::string values = "";
 					for(unsigned int y=0;y<colNames.size();y++)
 						values += rows[i][colNames[y]] + "|";
 					//Logger.Log(values,level);
@@ -71,20 +73,45 @@ public:
 	
 	friend int callback(void*,int,char**,char**);
 
-	Database(string file);
-	~Database();
+	Database(std::string file);
+	virtual ~Database();
 
-	ResultSet run(string query);
+	ResultSet run(std::string query);
+
+	template<class tReturnType>
+	tReturnType runScalar(std::string query) {
+		ResultSet oResults = run(query);
+		Row::iterator oData = oResults[0].find( oResults.colNames[0] );
+		if( oData != oResults[0].end() ) {
+			return boost::lexical_cast<tReturnType,std::string>( oData->second );
+		} else {
+			throw std::exception("DB::runScalar call produced invalid results");
+		}
+		result.clear();
+	}
+
+	template<>
+	std::string runScalar<std::string>(std::string query) {
+		ResultSet oResults = run(query);
+		Row::iterator oData = oResults[0].find( oResults.colNames[0] );
+		if( oData != oResults[0].end() ) {
+			return oData->second;
+		} else {
+			throw std::exception("DB::runScalar call produced invalid results");
+		}
+		result.clear();
+	}
 
 private:
 	sqlite3 *db;
 	ResultSet result;
 
-	void clearResult();
-
 #ifdef USING_PTHREADS
 	pthread_mutex_t mutex;
 #endif
+
+protected:
+	void clearResult();
 };
 
 }; //namespace syncro

@@ -102,6 +102,7 @@
     <ClInclude Include="protocol_buffers\binarydata.pb.h" />
     <ClInclude Include="protocol_buffers\header.pb.h" />
     <ClInclude Include="ServerComms.h" />
+    <ClInclude Include="SyncroDB.h" />
     <ClInclude Include="SyncroPBResponseFactory.h" />
     <ClInclude Include="SyncroServer.h" />
     <ClInclude Include="utils.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="protocol_buffers\binarydata.pb.cc" />
     <ClCompile Include="protocol_buffers\header.pb.cc" />
     <ClCompile Include="ServerComms.cpp" />
+    <ClCompile Include="SyncroDB.cpp" />
     <ClCompile Include="SyncroPBResponseFactory.cpp" />
     <ClCompile Include="SyncroServer.cpp" />
     <ClCompile Include="XMLBuilder.cpp" />

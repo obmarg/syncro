@@ -4,19 +4,21 @@
 
 namespace syncro {
 
+using std::string;
+
 //extern CLogger Logger;
 //static int callback(void*,int,char**,char**);
 
 void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv);
 
-Database::Database(string file)
+Database::Database(std::string file)
 {
 	int rc = sqlite3_open(file.c_str(),&db);
 	if( rc )
 	{
-		//fail
-		//TODO: Exception?
-		sqlite3_close(db);	
+		sqlite3_close(db);
+		std::string error = "Can't open database: " + file;
+		throw std::exception( error.c_str() );
 	}
 	sqlite3_create_function(db,"strToLower",1,SQLITE_UTF8,0,stringToLower,0,0);
 #ifdef USING_PTHREADS
@@ -32,7 +34,7 @@ Database::~Database()
 	sqlite3_close(db);
 }
 
-Database::ResultSet Database::run(string query)
+Database::ResultSet Database::run(std::string query)
 {
 #ifdef USING_PTHREADS
 	pthread_mutex_lock(&mutex);
@@ -48,7 +50,8 @@ Database::ResultSet Database::run(string query)
 	{
 		//Logger.Log("Sqlite error.  Query not executed",LOG_ERROR);
 		//error
-		//TODO: exception
+		std::string error = "SQL Error: " + std::string( errorMsg ) + "\nRunning query: " + query;
+		throw std::exception( error.c_str() );
 		sqlite3_free(errorMsg);
 	}
 #if USING_PTHREADS
@@ -74,7 +77,7 @@ int callback(void* ptrDB,int numCols, char **colValues,char** colNames)
 	}
 	db->result.add(row);
 	return 0;
-}	
+}
 
 void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv)
 {
