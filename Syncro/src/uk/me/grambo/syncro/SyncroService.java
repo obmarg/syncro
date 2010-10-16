@@ -124,7 +124,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,SyncToPhone,LocalPath) VALUES(?," + innServerID + ",?,?,1,'/mnt/sdcard/Syncro/')");
 				GetFolderList(oSock,oInsertStatement);
 				GetFolderContents(oSock,innServerID,oDB);
-				GetFiles(oSock);
 				oDB.close();
 				oDB = null;
 			}
@@ -205,6 +204,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
             int nFolderID = (int)oFolders.getLong(0);
             m_sCurrentLocalPath = oFolders.getString(1);
             GetFolderContents(inoSock,nFolderID);
+			GetFiles(inoSock);
+			m_aFilesToDownload.clear();
             oFolders.moveToNext();
         }
 		oFolders.close();
@@ -255,8 +256,13 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	protected boolean GetFiles(Socket inoSock) throws IOException {
 
 		boolean fOK = false;
+		int nPrevFolderId = -1;
+		
 		for(int nFile = 0;nFile < m_aFilesToDownload.size();nFile++) {
 			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
+			if( (nPrevFolderId != -1) && (nPrevFolderId != oFile.FolderId) ) {
+				//We have a changed folder id.  want to support both ways of working, so do something here if neccesary
+			}
 			String destFilename = GetDestinationFilename(oFile.FolderId, oFile.Filename);
 			File oDestFile = new File(destFilename);
 			if( oDestFile.length() != oFile.Size ) {
@@ -264,6 +270,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				if( !fOK )
 					return false;
 			}
+			nPrevFolderId = oFile.FolderId;
 		}
 		return fOK;
 	}
