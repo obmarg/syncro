@@ -83,8 +83,12 @@ public class FolderGeneralSettings extends Activity {
 		EditText oLocalPathEditText = (EditText)findViewById(R.id.folder_general_settings_dest_folder);
 		CheckBox oReceiveSyncBox = (CheckBox)findViewById(R.id.folder_general_settings_receive_sync);
 		CheckBox oSendSyncBox = (CheckBox)findViewById(R.id.folder_general_settings_send_sync);
+		
+		String sLocalPath = oLocalPathEditText.getText().toString();
+		if( !sLocalPath.endsWith( "/" ) )
+			sLocalPath = sLocalPath + "/";
 		oStatement.bindString( 1, oFolderNameEditText.getText().toString() );
-		oStatement.bindString( 2, oLocalPathEditText.getText().toString() );
+		oStatement.bindString( 2, sLocalPath );
 		if ( oReceiveSyncBox.isChecked() ) {
 			oStatement.bindLong( 3, 1 );
 		} else {
