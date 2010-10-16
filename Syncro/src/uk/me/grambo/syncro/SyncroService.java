@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.xml.parsers.SAXParser;
@@ -43,6 +44,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	private Vector<RemoteFileHandler.RemoteFileData> m_aFilesToDownload;
 	private PBSocketInterface m_oPBInterface;
 	
+	private FilterFactory m_oFilterFactory;
+	private ArrayList<IncludeFilter> m_aIncludeFilters;
+	private ArrayList<FilenameFilter> m_aFilenameFilters; 
+	
 	String m_sCurrentLocalPath;
 
 	public SyncroService() {
@@ -50,6 +55,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		// TODO Auto-generated constructor stub
 		m_aFilesToDownload = new Vector<RemoteFileHandler.RemoteFileData>();
 		m_oPBInterface = new PBSocketInterface();
+		m_aIncludeFilters = new ArrayList<IncludeFilter>();
+		m_aFilenameFilters = new ArrayList<FilenameFilter>();
+		m_oFilterFactory = new FilterFactory(this);
 	}
 
 	@Override
@@ -195,7 +203,11 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return true;
 	}
 	
-	protected boolean GetFolderContents(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException {
+	protected boolean GetFolderContents(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException,Exception {
+		//TODO: re-order the way things are done.
+		//		should get the actual files immediately after getting the contents, then get the contents of the next folder
+		//		This way, we don't have to build filter lists quite so often.
+		//		might not have any perfomance impact, but makes sense
 		String[] aArgs = new String[1];
 		aArgs[0] = String.valueOf(innServerID);
 		Cursor oFolders = inoDB.rawQuery("SELECT IDOnServer,LocalPath FROM folders WHERE ServerID=? AND SyncToPhone=1", aArgs);
@@ -203,6 +215,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		while (oFolders.isAfterLast() == false) {
             int nFolderID = (int)oFolders.getLong(0);
             m_sCurrentLocalPath = oFolders.getString(1);
+            
+            m_aIncludeFilters.clear();
+            m_oFilterFactory.getIncludeFilters( inoDB, nFolderID, m_aIncludeFilters);
+            
             GetFolderContents(inoSock,nFolderID);
 			GetFiles(inoSock);
 			m_aFilesToDownload.clear();
@@ -250,20 +266,24 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	@Override
 	public void HandleRemoteFile(RemoteFileHandler.RemoteFileData inoFile) {
+		//TODO: Scan include filters and check
 		m_aFilesToDownload.add(inoFile);
 	}
 	
 	protected boolean GetFiles(Socket inoSock) throws IOException {
-
+		
 		boolean fOK = false;
 		int nPrevFolderId = -1;
 		
 		for(int nFile = 0;nFile < m_aFilesToDownload.size();nFile++) {
 			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
+
 			if( (nPrevFolderId != -1) && (nPrevFolderId != oFile.FolderId) ) {
 				//We have a changed folder id.  want to support both ways of working, so do something here if neccesary
 			}
+
 			String destFilename = GetDestinationFilename(oFile.FolderId, oFile.Filename);
+			//TODO: scan include filters requiring filename
 			File oDestFile = new File(destFilename);
 			if( oDestFile.length() != oFile.Size ) {
 				fOK = GetFile( inoSock, oFile.FolderId, oFile.Filename );
@@ -289,18 +309,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 		return fOK;
 	}
-	
-	protected String GetDestinationFilename(int innFolderId,String insFilename) throws IOException {
-		if( m_sCurrentLocalPath == null )
-			throw new IOException();		//TODO: Fix this to throw exception, just being really really lazy
-		String insDestinationFolder = m_sCurrentLocalPath;
-		//TODO: add code to get this from the database etc.
-		//TODO: check for ..s or something?
-		File oFile = new File( insDestinationFolder + insFilename );
-		oFile.getParentFile().mkdirs();
-		String rv = oFile.getCanonicalPath();
-		return rv;
-	}
+
 
 	private boolean StartDownloadingFile(Socket inoSock,int innFolderId, String insFilename) throws IOException {
 		Binarydata.BinaryDataRequest oRequest = Binarydata.BinaryDataRequest.newBuilder()

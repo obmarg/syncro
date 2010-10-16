@@ -5,7 +5,7 @@ import android.content.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
     private static final String DATABASE_NAME="SyncroDB";
     private static final String SERVERS_TABLE_NAME = "servers";
     private static final String SERVERS_TABLE_CREATE =
@@ -38,7 +38,9 @@ public class DBHelper extends SQLiteOpenHelper {
     			"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
     			"FolderID INTEGER CONSTRAINT FILTERS_FOLDER_ID_FK REFERENCES " + FOLDERS_TABLE_NAME + "(ID) ON DELETE CASCADE ON UPDATE CASCADE, " + 
     			"FilterType INTEGER NOT NULL, " + 
-    			"Name TEXT);";
+    			"Name TEXT," +
+    			"IncludeType INTEGER NOT NULL DEFAULT 0," +
+    			"FilenameType INTEGER NOT NULL DEFAULT 0);";
     
 
     DBHelper(Context context) {
@@ -66,7 +68,8 @@ public class DBHelper extends SQLiteOpenHelper {
     		inDB.execSQL("UPDATE folders SET SyncToPhone=1");
     		inDB.execSQL("UPDATE folders SET LocalPath='/mnt/sdcard/Syncro/'");
     	}
-    	if( nOldVer < 15 ) {
+    	if( nOldVer < 16 ) {
+    		inDB.execSQL("DROP TABLE IF EXISTS " + FILTERS_TABLE_NAME + ";\n");
     		inDB.execSQL(FILTERS_TABLE_CREATE);
     	}
     }
