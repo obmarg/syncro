@@ -1,3 +1,5 @@
+#define _SCL_SECURE_NO_WARNINGS
+
 #include "HandshakeHandlers.h"
 #include "XMLHandlers.h"
 #include "PBRequestHandler.h"
@@ -5,6 +7,10 @@
 #include <vector>
 #include <string>
 #include <iterator>
+
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include "SyncroDB.h"
 
 namespace syncro {
 
@@ -52,6 +58,26 @@ CHandshakeResponse::CHandshakeResponse(CTCPConnection::TPointer inpConn) : m_pCo
 	m_aBuffer.push_back(100);
 	m_aBuffer.push_back(118);
 	m_aBuffer.push_back(50);
+	m_aBuffer.push_back(':');
+
+	Database::TPointer oDB = CSyncroDB::OpenDB();
+	vector<unsigned char> aUUID( 16 );
+	try {
+		std::string sUUID = oDB->runScalar<std::string>("SELECT uuid FROM ServerID");
+		if( sUUID.length() != 16 )
+			throw std::exception( "Invalid legnth of UUID returned from database in CHandshakeResponse" );
+		std::copy( sUUID.begin(), sUUID.end(), aUUID.begin() );
+	}catch( const std::out_of_range& ) {
+		boost::uuids::uuid oUUID( ( boost::uuids::random_generator()() ) );
+		if( oUUID.size() != 16 )
+			throw std::exception( "Invalid legnth of UUID generated in CHandshakeResponse" );
+		for( int n=0; n<oUUID.size(); n++ ) {
+			aUUID[n] = oUUID.data[n];
+		}
+		std::string sUUID = std::string( aUUID.begin(), aUUID.end() );
+		oDB->run("INSERT INTO ServerID(uuid) VALUES('" + sUUID + "');");
+	}
+	std::copy( aUUID.begin(), aUUID.end(), back_inserter( m_aBuffer ) );
 }
 
 CHandshakeResponse::~CHandshakeResponse() {

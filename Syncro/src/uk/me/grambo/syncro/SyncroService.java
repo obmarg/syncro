@@ -49,6 +49,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	private ArrayList<FilenameFilter> m_aFilenameFilters; 
 	
 	String m_sCurrentLocalPath;
+	
+	private String m_sServerUUID;
 
 	public SyncroService() {
 		super("SyncroService");
@@ -126,9 +128,11 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		oNM.notify(NOTIFICATION_STARTED_ID, oNotification);
 		try {
 			Socket oSock = new Socket(insHost,innPort);
+			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
+			
 			if( DoHandshake( oSock ) ) {
 				DBHelper oHelper = new DBHelper( this );
-	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();
+	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();	
 	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,SyncToPhone,LocalPath) VALUES(?," + innServerID + ",?,?,1,'/mnt/sdcard/Syncro/')");
 				GetFolderList(oSock,oInsertStatement);
 				GetFolderContents(oSock,innServerID,oDB);
@@ -136,6 +140,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				oDB = null;
 			}
 			oSock.close();
+			
 			
 			//TODO: Seperate notification code out into different function
 			icon = R.drawable.stat_sys_warning;
@@ -171,10 +176,19 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		OutputStreamWriter oWriter = new OutputStreamWriter(oOutput);
 		oWriter.write("Hello Syncro?");
 		oWriter.flush();
-		byte aHandshakeResponse[] = new byte[3];
-		oInput.read(aHandshakeResponse, 0, 3);
+		byte aHandshakeResponse[] = new byte[3 + 1 + 16];
+		oInput.read(aHandshakeResponse, 0, aHandshakeResponse.length);
+		//TODO: If the function above doesn't return the desired legnth, handle it
 		if( (aHandshakeResponse[0] == 100) && (aHandshakeResponse[1] == 118) && (aHandshakeResponse[2] == 50) ) {
-			return true;
+			if( aHandshakeResponse[3] == ':' ) {
+				InputStreamReader oReader = new InputStreamReader( new ByteArrayInputStream( aHandshakeResponse, 4, 16 ) );
+				char aUUID[] = new char[16];
+				oReader.read(aUUID);
+				m_sServerUUID = String.valueOf(aUUID);
+				return true;
+			} else
+				return false;
+			
 		}
 		return false;
 	}

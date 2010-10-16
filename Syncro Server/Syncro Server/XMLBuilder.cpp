@@ -29,7 +29,7 @@ void CXMLBuilder::SaveDocAsFile(std::string insFile) {
 bool CXMLBuilder::GetFolderXML() {
 
 	//TODO: make the database loading better, do it somewhere central probably?
-	Database::TPointer oDB = CSyncroDB::OpenDB( "syncro.db" );
+	Database::TPointer oDB = CSyncroDB::OpenDB( );
 	CFolderMan oFolderMan( oDB );
 
 	m_oXML = TiXmlDocument();
@@ -53,7 +53,7 @@ bool CXMLBuilder::GetFolderXML() {
 bool CXMLBuilder::GetFolderContentsXML(int innFolderID) {
 	using boost::shared_ptr;
 	
-	Database::TPointer oDB = CSyncroDB::OpenDB( "syncro.db" );
+	Database::TPointer oDB = CSyncroDB::OpenDB( );
 	CFolderMan oFolderMan( oDB );
 	
 	m_oXML = TiXmlDocument();

@@ -7,8 +7,8 @@ namespace syncro {
 
 class CSyncroDB : public Database, boost::noncopyable {
 public:
-	static Database::TPointer OpenDB(std::string insFilename) {
-		Database::TPointer pDatabase( new CSyncroDB(insFilename) );
+	static Database::TPointer OpenDB() {
+		Database::TPointer pDatabase( new CSyncroDB("syncro.db") );
 		return pDatabase;
 	}
 

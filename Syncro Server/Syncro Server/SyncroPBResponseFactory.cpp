@@ -7,7 +7,7 @@ namespace syncro {
 
 CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 	//TODO: make this db loading stuff better
-	Database::TPointer oDB = CSyncroDB::OpenDB( "syncro.db" );
+	Database::TPointer oDB = CSyncroDB::OpenDB( );
 	m_pFolderMan.reset( new CFolderMan( oDB ) );
 }
 
