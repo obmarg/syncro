@@ -14,3 +14,4 @@ ipch/
 enc_temp_folder/
 temp.xml
 *.opensdf
+*.suo
