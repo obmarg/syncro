@@ -48,6 +48,13 @@ public:
 		const_iterator begin() const { return rows.begin(); };
 		const_iterator end() const { return rows.end(); };
 
+		bool empty() const { 
+			if( rows.empty() )
+				return true; 
+			else 
+				return colNames.empty();
+		}
+
 		Database::Row operator[](int ID){return rows[ID];};
 		Database::Row getRow(int ID) {return rows[ID];};
 		int numRows() {return rows.size();};
@@ -94,13 +101,15 @@ public:
 	template<class tReturnType>
 	tReturnType runScalar(std::string query) {
 		ResultSet oResults = run(query);
+		if( oResults.empty() )
+			throw std::out_of_range("DB::runScalar call returned nothing");
 		const std::string& sColName = oResults.colNames[0];
 		const Row& oRow = oResults[0];
 		Row::const_iterator oData = oRow.find( sColName );
 		if( oData != oRow.end() ) {
 			return boost::lexical_cast<tReturnType,std::string>( oData->second );
 		} else {
-			throw std::exception("DB::runScalar call produced invalid results");
+			throw std::out_of_range("DB::runScalar call returned nothing");
 		}
 		result.clear();
 	}
@@ -108,11 +117,16 @@ public:
 	template<>
 	std::string runScalar<std::string>(std::string query) {
 		ResultSet oResults = run(query);
-		Row::iterator oData = oResults[0].find( oResults.colNames[0] );
+		if( oResults.empty() ) {
+			throw std::out_of_range("DB::runScalar call returned nothing");
+		}
+		const std::string& sColName = oResults.colNames[0];
+		const Row& oRow = oResults[0];
+		Row::const_iterator oData = oRow.find( sColName );
 		if( oData != oResults[0].end() ) {
 			return oData->second;
 		} else {
-			throw std::exception("DB::runScalar call produced invalid results");
+			throw std::out_of_range("DB::runScalar call returned nothing");
 		}
 		result.clear();
 	}
