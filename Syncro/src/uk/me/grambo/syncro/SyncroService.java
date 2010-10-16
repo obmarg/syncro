@@ -133,7 +133,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			if( DoHandshake( oSock ) ) {
 				DBHelper oHelper = new DBHelper( this );
 	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();	
-	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,SyncToPhone,LocalPath) VALUES(?," + innServerID + ",?,?,1,'/mnt/sdcard/Syncro/')");
+	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,LocalPath) VALUES(?," + innServerID + ",?,?,'/mnt/sdcard/Syncro/')");
 				GetFolderList(oSock,oInsertStatement);
 				GetFolderContents(oSock,innServerID,oDB);
 				oDB.close();
