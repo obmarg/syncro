@@ -158,6 +158,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			//TODO: update notification or something here?
+		} catch( Exception e ) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -204,10 +208,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 	
 	protected boolean GetFolderContents(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException,Exception {
-		//TODO: re-order the way things are done.
-		//		should get the actual files immediately after getting the contents, then get the contents of the next folder
-		//		This way, we don't have to build filter lists quite so often.
-		//		might not have any perfomance impact, but makes sense
 		String[] aArgs = new String[1];
 		aArgs[0] = String.valueOf(innServerID);
 		Cursor oFolders = inoDB.rawQuery("SELECT IDOnServer,LocalPath FROM folders WHERE ServerID=? AND SyncToPhone=1", aArgs);
@@ -220,8 +220,18 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
             m_oFilterFactory.getIncludeFilters( inoDB, nFolderID, m_aIncludeFilters);
             
             GetFolderContents(inoSock,nFolderID);
-			GetFiles(inoSock);
+            
+            if( m_aFilesToDownload.size() > 0 ) {
+            	m_aFilenameFilters.clear();
+            	m_oFilterFactory.getFilenameFilters(inoDB, nFolderID, m_aFilenameFilters);
+            	GetFiles(inoSock);
+            }
+			
+			//TODO: Tidy up excess clears sometime?
 			m_aFilesToDownload.clear();
+			m_aIncludeFilters.clear();
+			m_aFilenameFilters.clear();
+			
             oFolders.moveToNext();
         }
 		oFolders.close();
@@ -266,11 +276,41 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	@Override
 	public void HandleRemoteFile(RemoteFileHandler.RemoteFileData inoFile) {
-		//TODO: Scan include filters and check
-		m_aFilesToDownload.add(inoFile);
+		if( CheckIncludeFilters(inoFile) )
+			m_aFilesToDownload.add(inoFile);
 	}
 	
-	protected boolean GetFiles(Socket inoSock) throws IOException {
+	protected boolean CheckIncludeFilters(RemoteFileHandler.RemoteFileData inoFile) {
+		for( int n=0; n < m_aIncludeFilters.size(); n++ ) {
+			IncludeFilter oFilter = m_aIncludeFilters.get( n );
+			if( !oFilter.needsFilename() ) {
+				if( oFilter.shouldInclude(inoFile) ) {
+					return true;
+				} 
+				//TODO: probably a better way to handle this should end list stuff...
+				if( oFilter.shouldEndList() )
+					return false;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean CheckIncludeFilters(RemoteFileHandler.RemoteFileData inoFile,String insDestFilename) {
+		for( int n=0; n < m_aIncludeFilters.size(); n++ ) {
+			IncludeFilter oFilter = m_aIncludeFilters.get( n );
+			if( oFilter.needsFilename() ) {
+				if( oFilter.shouldInclude(inoFile,insDestFilename) ) {
+					return true;
+				} 
+				//TODO: probably a better way to handle this should end list stuff...
+				if( oFilter.shouldEndList() )
+					return false;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean GetFiles(Socket inoSock) throws Exception,IOException {
 		
 		boolean fOK = false;
 		int nPrevFolderId = -1;
@@ -279,27 +319,43 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
 
 			if( (nPrevFolderId != -1) && (nPrevFolderId != oFile.FolderId) ) {
-				//We have a changed folder id.  want to support both ways of working, so do something here if neccesary
+				throw new Exception("GetFiles called with contents of different folders");
 			}
-
-			String destFilename = GetDestinationFilename(oFile.FolderId, oFile.Filename);
-			//TODO: scan include filters requiring filename
-			File oDestFile = new File(destFilename);
-			if( oDestFile.length() != oFile.Size ) {
-				fOK = GetFile( inoSock, oFile.FolderId, oFile.Filename );
+			
+			String destFilename;
+			try {
+				destFilename = GetDestinationFilename(oFile);
+			}catch(Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+			if( CheckIncludeFilters(oFile,destFilename) ) {
+				fOK = GetFile( inoSock, oFile, destFilename );
 				if( !fOK )
 					return false;
 			}
+			
 			nPrevFolderId = oFile.FolderId;
 		}
 		return fOK;
 	}
 	
-	protected boolean GetFile(Socket inoSock,int innFolderId, String insFilename) throws IOException {
+	protected String GetDestinationFilename(RemoteFileHandler.RemoteFileData inoFile) throws Exception {
+		for( int n=0; n < m_aFilenameFilters.size(); n++ ) {
+			FilenameFilter oFilter = m_aFilenameFilters.get(n);
+			if( oFilter.canHandle(inoFile) ) {
+				return oFilter.getDestinationFilename(inoFile);
+			}
+		}
+		throw new Exception("Could not find suitable Filename filter for " + inoFile.Filename + " (FolderID: " + inoFile.FolderId + ")");
+	}
+	
+	protected boolean GetFile(Socket inoSock,RemoteFileHandler.RemoteFileData inoFileData, String insDestFilename) throws IOException {
 		boolean fOK = false;
-		fOK = StartDownloadingFile(inoSock,innFolderId,insFilename);
+		fOK = StartDownloadingFile(inoSock,inoFileData.FolderId,inoFileData.Filename);
 		if( fOK ) {
-			FileOutputStream oFile = new FileOutputStream( GetDestinationFilename( innFolderId,insFilename ) );
+			FileOutputStream oFile = new FileOutputStream( insDestFilename );
 			try {
 				fOK = ReceiveFile(inoSock,oFile);
 			}catch (Exception e) {
