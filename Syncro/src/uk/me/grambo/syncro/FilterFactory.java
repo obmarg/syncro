@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import uk.me.grambo.syncro.filters.filename.*;
 import uk.me.grambo.syncro.filters.include.AlwaysIncludeFilter;
+import uk.me.grambo.syncro.filters.include.FileTimeFilter;
 
 public class FilterFactory {
 
@@ -17,8 +18,9 @@ public class FilterFactory {
 		m_oContext = inoContext;
 	}
 	
-	private static final int FileTimeIncludeFilter = 1;
-	private static final int CloneFilenameFilter = 2;
+	private static final int FileTimeIncludeFilterId = 1;
+	private static final int CloneFilenameFilterId = 2;
+	private static final int AlwaysIncludeFilterId = 3;
 	
 	public void getIncludeFilters( SQLiteDatabase inoDB, int innFolderID, ArrayList<IncludeFilter> inoList ) throws Exception {
 		String aArgs[] = { Integer.toString(innFolderID), Integer.toString(1), Integer.toString(2) };
@@ -30,7 +32,8 @@ public class FilterFactory {
 			}while( oResults.moveToNext() );
 		} else {
 			//TODO: Remove this after the GUI filter management is finished
-			inoList.add( getIncludeFilter( FileTimeIncludeFilter, 0 ) );
+			inoList.add( getIncludeFilter( FileTimeIncludeFilterId, 0 ) );
+			inoList.add( getIncludeFilter( AlwaysIncludeFilterId, 0 ) );
 		}
 		oResults.close();
 	}
@@ -40,38 +43,47 @@ public class FilterFactory {
 		Cursor oResults = inoDB.rawQuery("SELECT FilterType,ID FROM filters WHERE FolderId=? AND FilenameType=?", aArgs);
 		if( oResults.moveToFirst() ) {
 			do {
-				FilenameFilter oItem = getFilenameFilter( oResults.getInt( 0 ), oResults.getInt( 1 ) ); 
+				FilenameFilter oItem = getFilenameFilter( oResults.getInt( 0 ), oResults.getInt( 1 ), inoDB ); 
 				inoList.add( oItem );
 			}while( oResults.moveToNext() );
 		} else {
 			//TODO: Remove this after the GUI filter management is finished
-			inoList.add( getFilenameFilter( CloneFilenameFilter, 0 ) );
+			String aArgs2[] = { Integer.toString(innFolderID) };
+			Cursor oPathResults = inoDB.rawQuery("SELECT LocalPath FROM folders WHERE ID=?", aArgs2 );
+			if( oPathResults.moveToFirst() ) {
+				inoList.add( new CloneFilenameFilter( oPathResults.getString(0) ) );
+			} else {
+				throw new Exception("could not find local path for folder in getFilenameFilters");
+			}
+			oPathResults.close();
 		}
 		oResults.close();
 	}
 
 	public IncludeFilter getIncludeFilter( int nFilterType, int nFilterId ) throws Exception {
-		if( nFilterType == FileTimeIncludeFilter )
+		if( nFilterType == FileTimeIncludeFilterId )
+			return new FileTimeFilter();
+		else if( nFilterType == AlwaysIncludeFilterId )
 			return new AlwaysIncludeFilter();
 		throw new Exception( "Invalid Include Filter Type Selected");
 	}
 	
 	
-	public FilenameFilter getFilenameFilter( int innFilterType, int innFilterId ) throws Exception {
-		try {
-    		DBHelper oHelper = new DBHelper( m_oContext );
-    		SQLiteDatabase oDB = oHelper.getReadableDatabase();
-    		if( innFilterType == CloneFilenameFilter ) {
-    			String aArgs[] = { Integer.toString( innFilterId ), Integer.toString( innFilterType ) };
-    			Cursor oResults = oDB.rawQuery("SELECT folder.LocalPath FROM filters LEFT JOIN folders ON filters.FolderID=folders.ID WHERE filters.ID=? AND filters.FilterType=?", aArgs );
-    			if( !oResults.moveToFirst() )
-    				throw new Exception("Invalid filter ID passed to getFilenameFilter");
-    			
-    			return new CloneFilenameFilter( oResults.getString( 0 ) );
+	public FilenameFilter getFilenameFilter( int innFilterType, int innFilterId, SQLiteDatabase inoDB ) throws Exception {
+		FilenameFilter oRV;
+		if( innFilterType == CloneFilenameFilterId ) {
+			String aArgs[] = { Integer.toString( innFilterId ), Integer.toString( innFilterType ) };
+    		Cursor oResults = inoDB.rawQuery("SELECT folders.LocalPath FROM filters LEFT JOIN folders ON filters.FolderID=folders.ID WHERE filters.ID=? AND filters.FilterType=?", aArgs );
+    		if( !oResults.moveToFirst() ) {
+    			throw new Exception("Invalid filter ID passed to getFilenameFilter");
     		}
-    	}catch(SQLException e) {
-    		e.printStackTrace();
-    	}
-		throw new Exception( "Invalid Filename Filter Type Selected");
+    		
+    		String sLocalPath = oResults.getString( 0 );
+    		oResults.close();
+    		
+    		oRV = new CloneFilenameFilter( sLocalPath );
+    	} else
+    		throw new Exception( "Invalid Filename Filter Type Selected");
+		return oRV;
 	}
 }
