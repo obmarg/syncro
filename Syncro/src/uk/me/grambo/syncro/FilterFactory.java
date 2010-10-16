@@ -8,7 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import uk.me.grambo.syncro.filters.filename.*;
 import uk.me.grambo.syncro.filters.include.AlwaysIncludeFilter;
-import uk.me.grambo.syncro.filters.include.FileTimeFilter;
+import uk.me.grambo.syncro.filters.include.FileSizeFilter;
 
 public class FilterFactory {
 
@@ -62,7 +62,7 @@ public class FilterFactory {
 
 	public IncludeFilter getIncludeFilter( int nFilterType, int nFilterId ) throws Exception {
 		if( nFilterType == FileTimeIncludeFilterId )
-			return new FileTimeFilter();
+			return new FileSizeFilter();
 		else if( nFilterType == AlwaysIncludeFilterId )
 			return new AlwaysIncludeFilter();
 		throw new Exception( "Invalid Include Filter Type Selected");
