@@ -28,6 +28,9 @@ public class FilterFactory {
 				IncludeFilter oItem = getIncludeFilter( oResults.getInt( 0 ), oResults.getInt( 1 ) ); 
 				inoList.add( oItem );
 			}while( oResults.moveToNext() );
+		} else {
+			//TODO: Remove this after the GUI filter management is finished
+			inoList.add( getIncludeFilter( FileTimeIncludeFilter, 0 ) );
 		}
 		oResults.close();
 	}
@@ -40,6 +43,9 @@ public class FilterFactory {
 				FilenameFilter oItem = getFilenameFilter( oResults.getInt( 0 ), oResults.getInt( 1 ) ); 
 				inoList.add( oItem );
 			}while( oResults.moveToNext() );
+		} else {
+			//TODO: Remove this after the GUI filter management is finished
+			inoList.add( getFilenameFilter( CloneFilenameFilter, 0 ) );
 		}
 		oResults.close();
 	}
