@@ -19,13 +19,20 @@ public class ProgressNotification {
 	private int m_nTotalFiles;
 	private int m_nFileNum;
 	
+	private boolean m_fShowRate;
+	private long m_nLastProgressUpdate;
+	private float m_flCurrentRate;
+	
 	protected ProgressNotification(Context inoContext) {
 		m_oContext = inoContext;
 		m_fHaveFile = false;
 		m_nFilename = "";
 		m_nCurrentTotalSize = 0;
+		m_nFileNum = 0;
 		m_nTotalFiles = 0;
 		m_nProgress = 0;
+		m_fShowRate = false;
+		m_nLastProgressUpdate = 0;
 	}
 	
 	public void create(CharSequence tickerText) {
@@ -39,6 +46,7 @@ public class ProgressNotification {
 		m_nCurrentTotalSize = inoFile.Size;
 		m_fHaveFile = true;
 		m_nFileNum = innFileNum;
+		m_nLastProgressUpdate = 0;
 	}
 	
 	public void clearFileDetails() {
@@ -50,7 +58,26 @@ public class ProgressNotification {
 	}
 	
 	public void setProgress( int innProgress ) {
+		if( m_fShowRate ) {
+			long nCurrentTime = System.currentTimeMillis(); 
+			if( m_nLastProgressUpdate != 0 ) {
+				float flDuration = (nCurrentTime - m_nLastProgressUpdate) / 1000;
+				if( flDuration == 0 ) {
+					//Stop divide from 0 from happening
+					m_nProgress = innProgress;
+					return;
+				}
+				//TODO: support scaling from bytes > kb > mb depending on size
+				float flProgressChange = (innProgress - m_nProgress);
+				m_flCurrentRate = ( (flProgressChange / flDuration) / 1024 );
+			}
+			m_nLastProgressUpdate = nCurrentTime;
+		}
 		m_nProgress = innProgress;
+	}
+	
+	public void setShowRate( boolean innShowRate ) {
+		m_fShowRate = innShowRate;
 	}
 	
 	public void update() {
@@ -67,7 +94,11 @@ public class ProgressNotification {
 		if( !m_fHaveFile ) {
 			contentView.setTextViewText(R.id.progress_notification_text, "Syncro: Getting File Data");
 		} else {
-			contentView.setTextViewText(R.id.progress_notification_text, "Syncro: Syncing File " + m_nFileNum + " of " + m_nTotalFiles + " : " + m_nFilename);
+			String sRate = "";
+			if( m_fShowRate ) {
+				sRate = "(" + Integer.toString( new Float(m_flCurrentRate).intValue() ) + " kb/s)";
+			}
+			contentView.setTextViewText(R.id.progress_notification_text, "Syncro: Syncing File " + m_nFileNum + " of " + m_nTotalFiles + sRate);
 		}
 		contentView.setProgressBar(R.id.progress_notification_progress, m_nCurrentTotalSize, m_nProgress, !m_fHaveFile);
 		m_oNotification.contentView = contentView;

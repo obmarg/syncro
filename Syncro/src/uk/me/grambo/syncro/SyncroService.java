@@ -111,6 +111,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	protected void RunSync(int innServerID,String insHost,int innPort) {
 		//TODO: probably want to move innServerID into a member variable or something
 		m_oProgressNotification = new ProgressNotification(this);
+		m_oProgressNotification.setShowRate(true);
 		m_oProgressNotification.update();
 		try {
 			Socket oSock = new Socket(insHost,innPort);
