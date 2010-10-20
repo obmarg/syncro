@@ -15,10 +15,12 @@ public class FileResponseHandler implements PBResponseHandler {
 	private OutputStream m_oDest;
 	private boolean m_fDone;
 	private byte[] m_aRecvBuffer;
+	private int m_nRecievedBytes;
 
 	public FileResponseHandler(OutputStream inoDestination) {
 		m_oDest = inoDestination;
 		m_fDone = false;
+		m_nRecievedBytes = 0;
 	}
 
 	@Override
@@ -62,6 +64,7 @@ public class FileResponseHandler implements PBResponseHandler {
 		}while( (nSizeRead < nSubpacketSizes[1]) );
 		Log.d("Syncro", "Finished reading: " + nSizeRead + " bytes.  Expected: " +nSubpacketSizes[1] + "\n");
 		m_oDest.write(m_aRecvBuffer,0, nSubpacketSizes[1]);
+		m_nRecievedBytes += nSubpacketSizes[1];
 		
 		return true;
 	}
@@ -69,6 +72,10 @@ public class FileResponseHandler implements PBResponseHandler {
 	@Override
 	public boolean canRemove() {
 		return m_fDone;
+	}
+	
+	public int getRecievedSize() {
+		return m_nRecievedBytes;
 	}
 
 }

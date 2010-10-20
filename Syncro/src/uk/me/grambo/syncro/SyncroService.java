@@ -35,6 +35,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 public class SyncroService extends IntentService implements RemoteFileHandler{
 	
@@ -46,7 +47,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	private FilterFactory m_oFilterFactory;
 	private ArrayList<IncludeFilter> m_aIncludeFilters;
-	private ArrayList<FilenameFilter> m_aFilenameFilters; 
+	private ArrayList<FilenameFilter> m_aFilenameFilters;
+	
+	private Notification m_oProgressNotification;
+	private int m_nCurrentTotalSize;
 	
 	String m_sCurrentLocalPath;
 	
@@ -95,6 +99,34 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 	}
 	
+	protected void createNotification() {
+		int icon = R.drawable.stat_sys_warning;
+		CharSequence tickerText = "Syncro running";
+		long when = System.currentTimeMillis();
+		m_oProgressNotification = new Notification(icon, tickerText, when);
+	}
+	
+	protected void updateNotification(int nProgress,boolean fIndeterminate) {
+		if( m_oProgressNotification == null )
+			createNotification();
+		Intent notificationIntent = new Intent(this, ServerBrowser.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		m_oProgressNotification.contentIntent = contentIntent;
+
+		//m_oProgressNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+		
+		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.progress_notification);
+		contentView.setImageViewResource(R.id.progress_notification_icon, R.drawable.stat_sys_warning);
+		contentView.setTextViewText(R.id.progress_notification_text, "Syncro syncing...");
+		contentView.setProgressBar(R.id.progress_notification_progress, m_nCurrentTotalSize, nProgress, fIndeterminate);
+		m_oProgressNotification.contentView = contentView;
+		
+		final int PROGRESS_NOTIFICATION_ID = 1;
+
+		NotificationManager oNM = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		oNM.notify(PROGRESS_NOTIFICATION_ID, m_oProgressNotification);
+	}
+	
 	protected void ProcessXML(InputStream inoData,DefaultHandler inoHandler) {
 		SAXParserFactory oFactory = SAXParserFactory.newInstance();
 		try {
@@ -107,25 +139,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	protected void RunSync(int innServerID,String insHost,int innPort) {
 		//TODO: probably want to move innServerID into a member variable or something
-		NotificationManager oNM = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		
-		int icon = R.drawable.stat_sys_warning;
-		CharSequence tickerText = "Syncro running";
-		long when = System.currentTimeMillis();
-
-		Notification oNotification = new Notification(icon, tickerText, when);
-		
-		Context context = getApplicationContext();
-		CharSequence contentTitle = "Syncro Is Running!";
-		CharSequence contentText = "Syncro is running!";
-		Intent notificationIntent = new Intent(this, ServerBrowser.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-		oNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		
-		final int NOTIFICATION_STARTED_ID = 1;
-
-		oNM.notify(NOTIFICATION_STARTED_ID, oNotification);
+		updateNotification( 0, true );
 		try {
 			Socket oSock = new Socket(insHost,innPort);
 			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
@@ -141,25 +155,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			}
 			oSock.close();
 			
-			
-			//TODO: Seperate notification code out into different function
-			icon = R.drawable.stat_sys_warning;
-			tickerText = "Syncro finished";
-			when = System.currentTimeMillis();
-
-			oNotification = new Notification(icon, tickerText, when);
-			
-			context = getApplicationContext();
-			contentTitle = "Syncro Is Finished!";
-			contentText = "Syncro is finished!";
-			notificationIntent = new Intent(this, ServerBrowser.class);
-			contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-			oNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-			
-			final int NOTIFICATION_FINISHED_ID = 1;
-
-			oNM.notify(NOTIFICATION_FINISHED_ID, oNotification);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -369,6 +364,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		boolean fOK = false;
 		fOK = StartDownloadingFile(inoSock,inoFileData.FolderId,inoFileData.Filename);
 		if( fOK ) {
+			m_nCurrentTotalSize = inoFileData.Size;
 			FileOutputStream oFile = new FileOutputStream( insDestFilename );
 			try {
 				fOK = ReceiveFile(inoSock,oFile);
@@ -399,6 +395,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		boolean fDone = false;
 		do {
 			m_oPBInterface.HandleResponse(oInputStream);
+			updateNotification( oResponseHandler.getRecievedSize(), false );
 			if( oResponseHandler.canRemove() ) {
 				fDone = true;
 			} else {
