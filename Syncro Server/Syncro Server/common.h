@@ -22,6 +22,11 @@ struct TCharBuffer {
 	unsigned int nSize;
 };
 
+class authentication_exception : public std::exception {
+public:
+	authentication_exception(const char* inpError) : exception(inpError) {};
+};
+
 using google::protobuf::io::ZeroCopyInputStream;
 
 typedef std::vector<ZeroCopyInputStream*> TInputStreamList;

@@ -38,7 +38,7 @@ CSyncroServer::Run() {
 	io_service oIO;
 	
 	CServerComms oComms(oIO);
-	CHandshakeResponse::SetPBResponseFactory( CSyncroPBResponseFactory::Create() );
+	//TODO: Rename CXMLAcceptHandler (it's not really an xml accepter anymore is it?)
 	CXMLAcceptHandler* pXMLAH = new CXMLAcceptHandler();
 	oComms.AddAcceptHandler( boost::shared_ptr<CAcceptHandler>( (pXMLAH) ) );
 	oIO.run();

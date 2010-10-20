@@ -1,6 +1,7 @@
 #include "SyncroPBResponseFactory.h"
 #include "BinaryDataResponse.h"
 #include "BinaryDataRequest.h"
+#include "HandshakeHandlers.h"
 #include "SyncroDB.h"
 
 namespace syncro {
@@ -9,10 +10,13 @@ CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 	//TODO: make this db loading stuff better
 	Database::TPointer oDB = CSyncroDB::OpenDB( );
 	m_pFolderMan.reset( new CFolderMan( oDB ) );
+	m_fAuthenticated = false;
 }
 
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
-	
+	if( (!m_fAuthenticated) && (innPacketType != eSyncroPBPacketTypes_HandshakeRequest) ) {
+		throw authentication_exception("Not authenticated");
+	}
 	switch( innPacketType ) {
 	case eSyncroPBPacketTypes_BinaryRequest: {
 		CBinaryDataRequest oRequest( inaInputStreams );
@@ -22,8 +26,12 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 		//Fall through
 	case eSyncroPBPacketTypes_BinaryContinue:
 		return CBasePBResponse::TPointer( new CBinaryDataResponse( (*m_pCurrentSendData) ) );
+	case eSyncroPBPacketTypes_HandshakeRequest: {
+		CPBHandshakeRequest oRequest( inaInputStreams );
+		return oRequest.GetResponse();
+		}
 	}
-	return CBasePBResponse::TPointer();
+	throw std::exception("Invalid pb request passed to response factory");
 }
 
 

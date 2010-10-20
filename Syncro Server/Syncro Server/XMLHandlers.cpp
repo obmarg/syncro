@@ -1,6 +1,7 @@
 #include "XMLHandlers.h"
 #include "XMLBuilder.h"
-#include "HandshakeHandlers.h"
+#include "PBRequestHandler.h"
+#include "SyncroPBResponseFactory.h"
 #include "ServerComms.h"
 #include <string>
 #include <boost/lexical_cast.hpp>
@@ -12,6 +13,8 @@ using std::string;
 const unsigned char XML_REQUEST_FIRST_BYTE = 5;
 const unsigned char XML_RESPONSE_FIRST_BYTE = 6;
 
+//TODO: Rename CXMLAcceptHandler (it's not really an xml accepter anymore is it?)
+
 CXMLAcceptHandler::CXMLAcceptHandler() : CAcceptHandler( 1 ) {
 
 }
@@ -21,7 +24,11 @@ CXMLAcceptHandler::~CXMLAcceptHandler() {
 }
 
 bool CXMLAcceptHandler::HandleAccept(CTCPConnection::TPointer inpNewConnection) {
-	inpNewConnection->AddRecvHandler( CHandshakeRecv::Create(inpNewConnection), 1 );
+	CReceiveHandler::TPointer oPointer = CPBRequestHandler::Create(inpNewConnection, CSyncroPBResponseFactory::Create() );
+	inpNewConnection->AddRecvHandler( oPointer, 1 );
+	//TODO: This is a fairly large bug: the xml request handler could easily intercept stuff before handshake.
+	//		Not a priority, but fix this sometime (possibly just by replacing xml with protocol buffers)
+	inpNewConnection->AddRecvHandler( CXMLRequestHandler::Create(inpNewConnection) , 2 ); 
 	inpNewConnection->StartRecv( 0 );
 	return true;
 }

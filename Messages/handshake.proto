@@ -1,0 +1,15 @@
+package syncro.pb;
+
+option java_package = "uk.me.grambo.syncro.pb";
+option optimize_for = LITE_RUNTIME;
+
+message HandshakeRequest {
+	required string magic = 1;
+	optional int32 client_ver_major = 2;
+	optional int32 client_ver_minor = 3;
+};
+
+message HandshakeResponse {
+	required string magic = 1;
+	optional string uuid = 2;
+};

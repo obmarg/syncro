@@ -13,6 +13,8 @@ enum eSyncroPBPacketTypes {
 	eSyncroPBPacketTypes_BinaryRequest = 1,
 	eSyncroPBPacketTypes_BinaryContinue,
 	eSyncroPBPacketTypes_BinaryResponse,
+	eSyncroPBPacketTypes_HandshakeRequest,
+	eSyncroPBPacketTypes_HandshakeResponse,
 };
 
 struct sSubpackets {
@@ -39,6 +41,7 @@ private:
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
 	TFileSendDataPtr m_pCurrentSendData;
 	boost::scoped_ptr<CFolderMan> m_pFolderMan;
+	bool m_fAuthenticated;
 };
 
 }; //namespace syncro

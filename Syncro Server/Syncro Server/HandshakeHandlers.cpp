@@ -1,8 +1,10 @@
+//This define is needed due to some of the uuid stuff before.  doesn't seem to like it for some reason
 #define _SCL_SECURE_NO_WARNINGS
 
 #include "HandshakeHandlers.h"
 #include "XMLHandlers.h"
 #include "PBRequestHandler.h"
+#include "SyncroPBResponseFactory.h"
 
 #include <vector>
 #include <string>
@@ -17,84 +19,72 @@ namespace syncro {
 using std::vector;
 using std::string;
 
-const std::string CHandshakeRecv::m_sRecvString = "Hello Syncro?";
+const std::string CPBHandshakeRequest::m_sRecvString = "Hello Syncro?";
 
-CBasePBResponseFactory::TPointer CHandshakeResponse::ms_pPBResponseFactory;
-
-CHandshakeRecv::CHandshakeRecv(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
-	m_fFoundString = false;
-}
-
-CHandshakeRecv::~CHandshakeRecv() {
-}
-
-
-bool CHandshakeRecv::CanHandleReceive(const TCharBuffer& inoBuffer) {
-	if( inoBuffer.nSize >= m_sRecvString.length() ) {
-		vector<char> oRecv( m_sRecvString.begin(),m_sRecvString.end() );
-		if( std::equal(m_sRecvString.begin(),m_sRecvString.end(),inoBuffer.aBuffer.begin(), std::equal_to<char>() ) )
-			return true;
+CPBHandshakeRequest::CPBHandshakeRequest(TInputStreamList& inaInputStreams) {
+	pb::HandshakeRequest oRequest;
+	if( inaInputStreams.size() == 1 ) {
+		if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
+			throw authentication_exception( "invalid andshakeRequest packet" );
+		if( oRequest.magic().compare( m_sRecvString ) != 0 )
+			throw authentication_exception( "invalid magic" );
+		if( oRequest.has_client_ver_major() )
+			m_nMajorVersion = oRequest.client_ver_major();
+		else 
+			m_nMajorVersion = -1;
+		if( oRequest.has_client_ver_minor() )
+			m_nMinorVersion = oRequest.client_ver_minor();
+		else
+			m_nMinorVersion = 0;
+	} else {
+		throw authentication_exception("Invalid number of protocol buffers passed to handshake");
 	}
-	return false;
 }
 
-bool CHandshakeRecv::HandleReceive(const TCharBuffer& inoBuffer) {
-	if( inoBuffer.nSize >= m_sRecvString.length() ) {
-		vector<char> oRecv( m_sRecvString.begin(),m_sRecvString.end() );
-		if( std::equal(m_sRecvString.begin(),m_sRecvString.end(),inoBuffer.aBuffer.begin(), std::equal_to<char>() ) ) {
-			m_fFoundString = true;
-			m_pConn->Send( CHandshakeResponse::Create(m_pConn) );
-			return true;
-		}
-	}
-	return false;
+CBasePBResponse::TPointer CPBHandshakeRequest::GetResponse() {
+	CBasePBResponse::TPointer pResponse( new CPBHandshakeResponse() );
+	return pResponse;
 }
 
-bool CHandshakeRecv::CanRemove() {
-	return m_fFoundString;
-}
-
-CHandshakeResponse::CHandshakeResponse(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
-	m_aBuffer.push_back(100);
-	m_aBuffer.push_back(118);
-	m_aBuffer.push_back(50);
-	m_aBuffer.push_back(':');
+CPBHandshakeResponse::CPBHandshakeResponse() {
+	m_oMessage.Clear();
+	//TODO: move this string to a static const or something
+	m_oMessage.set_magic( "Hey bitch!" );
 
 	Database::TPointer oDB = CSyncroDB::OpenDB();
+	std::string sUUID;
 	vector<unsigned char> aUUID( 16 );
 	try {
-		std::string sUUID = oDB->runScalar<std::string>("SELECT uuid FROM ServerID");
+		sUUID = oDB->runScalar<std::string>("SELECT uuid FROM ServerID");
 		if( sUUID.length() != 16 )
 			throw std::exception( "Invalid legnth of UUID returned from database in CHandshakeResponse" );
-		std::copy( sUUID.begin(), sUUID.end(), aUUID.begin() );
 	}catch( const std::out_of_range& ) {
+		//This probably means that the database call returned nothing (probably can happen for copying as well)
 		boost::uuids::uuid oUUID( ( boost::uuids::random_generator()() ) );
 		if( oUUID.size() != 16 )
 			throw std::exception( "Invalid legnth of UUID generated in CHandshakeResponse" );
 		for( int n=0; n<oUUID.size(); n++ ) {
 			aUUID[n] = oUUID.data[n];
 		}
-		std::string sUUID = std::string( aUUID.begin(), aUUID.end() );
+		sUUID = std::string( aUUID.begin(), aUUID.end() );
 		oDB->run("INSERT INTO ServerID(uuid) VALUES('" + sUUID + "');");
 	}
-	std::copy( aUUID.begin(), aUUID.end(), back_inserter( m_aBuffer ) );
+	m_oMessage.set_uuid( sUUID );
 }
 
-CHandshakeResponse::~CHandshakeResponse() {
-
+std::vector<unsigned int> CPBHandshakeResponse::GetSubpacketSizes() {
+	std::vector<unsigned int> aSizes(1);
+	aSizes[0] = m_oMessage.ByteSize();
+	return aSizes;
 }
 
-bool CHandshakeResponse::HandleSend(int innSent) {
-	if( innSent >= (int)m_aBuffer.size() )
-		return true;
-	return false;
+unsigned int CPBHandshakeResponse::GetPacketType() {
+	return eSyncroPBPacketTypes_HandshakeResponse;
 }
 
-void CHandshakeResponse::SendDone(int innSent) {
-	m_pConn->AddRecvHandler( CXMLRequestHandler::Create(m_pConn) , 0 );
-	/*m_pConn->AddRecvHandler( CFileRequestHandler::Create(m_pConn), 0 );*/
-	m_pConn->AddRecvHandler( CPBRequestHandler::Create(m_pConn, ms_pPBResponseFactory ), 0 );
-	m_pConn->StartRecv( 0 );
+void CPBHandshakeResponse::WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert) {
+	WriteMessage( inoInsert, m_oMessage );
 }
+
 
 };		//namespace syncro

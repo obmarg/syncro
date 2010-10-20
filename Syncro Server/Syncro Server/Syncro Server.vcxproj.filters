@@ -93,6 +93,9 @@
     <ClInclude Include="SyncroDB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="protocol_buffers\handshake.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -152,12 +155,18 @@
     <ClCompile Include="SyncroDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="protocol_buffers\handshake.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Messages\binarydata.proto">
       <Filter>Message Files</Filter>
     </None>
     <None Include="..\..\Messages\header.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\handshake.proto">
       <Filter>Message Files</Filter>
     </None>
   </ItemGroup>

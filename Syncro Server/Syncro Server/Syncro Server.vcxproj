@@ -100,6 +100,7 @@
     <ClInclude Include="PBRequestHandler.h" />
     <ClInclude Include="PBResponseSendHandler.h" />
     <ClInclude Include="protocol_buffers\binarydata.pb.h" />
+    <ClInclude Include="protocol_buffers\handshake.pb.h" />
     <ClInclude Include="protocol_buffers\header.pb.h" />
     <ClInclude Include="ServerComms.h" />
     <ClInclude Include="SyncroDB.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="PBRequestHandler.cpp" />
     <ClCompile Include="PBResponseSendHandler.cpp" />
     <ClCompile Include="protocol_buffers\binarydata.pb.cc" />
+    <ClCompile Include="protocol_buffers\handshake.pb.cc" />
     <ClCompile Include="protocol_buffers\header.pb.cc" />
     <ClCompile Include="ServerComms.cpp" />
     <ClCompile Include="SyncroDB.cpp" />
@@ -133,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Messages\binarydata.proto" />
+    <None Include="..\..\Messages\handshake.proto" />
     <None Include="..\..\Messages\header.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

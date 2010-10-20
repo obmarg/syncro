@@ -67,9 +67,13 @@ bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 		aSubpackets.push_back( pAIS.get() );
 	}
 
-	CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
+	try {
+		CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
 
-	m_pConn->Send( CPBResponseSendHandler::Create(m_pConn,pResponse) );
+		m_pConn->Send( CPBResponseSendHandler::Create(m_pConn,pResponse) );
+	}catch( const authentication_exception& error ) {
+		//TODO: do we want to return false here?
+	}
 
 	ResetVariables();
 	return true;

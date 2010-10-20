@@ -3,59 +3,37 @@
 
 #include "ServerComms.h"
 #include "BasePBResponse.h"
+#include "common.h"
+#include "protocol_buffers/handshake.pb.h"
 
 namespace syncro {
 
-class CHandshakeRecv : public CReceiveHandler {
+class CPBHandshakeRequest {
 public:
-	virtual ~CHandshakeRecv();
+	CPBHandshakeRequest(TInputStreamList& inaInputStreams);
+	const int GetMajorVersion() const { return m_nMajorVersion; };
+	const int GetMinorVersion() const { return m_nMinorVersion; };
 
-	virtual bool CanHandleReceive(const TCharBuffer& inoBuffer);
-	virtual bool HandleReceive(const TCharBuffer& inoBuffer);
-	virtual bool CanRemove();
+	CBasePBResponse::TPointer GetResponse();
+private:
+	int m_nMajorVersion;
+	int m_nMinorVersion;
 
-	static CReceiveHandler::TPointer Create(CTCPConnection::TPointer inpConn) {
-		CHandshakeRecv* pNew = new CHandshakeRecv(inpConn);
-		return CReceiveHandler::TPointer( static_cast<CReceiveHandler*>(pNew) );
-	}
-
-protected:
-	bool m_fFoundString;
 	const static std::string m_sRecvString;
-
-	CTCPConnection::TPointer m_pConn;
-
-	CHandshakeRecv(CTCPConnection::TPointer inpConn);
 };
 
-class CHandshakeResponse : public CSendHandler {
-private:
+class CPBHandshakeResponse : public CBasePBResponse {
 public:
-	typedef boost::shared_ptr<CHandshakeResponse> TPointer;
+	CPBHandshakeResponse();
 
-	virtual ~CHandshakeResponse();
+	virtual std::vector<unsigned int> GetSubpacketSizes();
+	virtual unsigned int GetSubpacketCount() { return 1; };
 
-	virtual bool HandleSend(int innSent);
-	virtual void SendDone(int innSent);
+	virtual unsigned int GetPacketType();
 
-	static TPointer Create(CTCPConnection::TPointer inpConn) {
-		CHandshakeResponse* pNew = new CHandshakeResponse(inpConn);
-		return TPointer( pNew );
-	}
-
-	static void SetPBResponseFactory( CBasePBResponseFactory::TPointer inpResponseFactory ) {
-		ms_pPBResponseFactory = inpResponseFactory;
-	};
-
-protected:
-
-	CTCPConnection::TPointer m_pConn;
-
-	CHandshakeResponse(CTCPConnection::TPointer inpConn);
-
-	static CBasePBResponseFactory::TPointer ms_pPBResponseFactory;
-
+	virtual void WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert);
 private:
+	pb::HandshakeResponse m_oMessage;
 };
 
 };	//namespace syncro
