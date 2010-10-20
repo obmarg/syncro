@@ -23,10 +23,12 @@ public class PBSocketInterface {
 	public class RequestTypes {
 		public static final int BINARY_REQUEST = 1;
 		public static final int BINARY_CONTINUE = 2;
+		public static final int HANDSHAKE_REQUEST = 4;
 	};
 	
 	public class ResponseTypes {
 		public static final int BINARY_RESPONSE = 3;
+		public static final int HANDSHAKE_RESPONSE = 5;
 	};
 
 	public PBSocketInterface() {

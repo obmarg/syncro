@@ -141,23 +141,20 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	protected boolean DoHandshake(Socket inoSock) throws IOException {
 		InputStream oInput = inoSock.getInputStream();
 		OutputStream oOutput = inoSock.getOutputStream();
-		OutputStreamWriter oWriter = new OutputStreamWriter(oOutput);
-		oWriter.write("Hello Syncro?");
-		oWriter.flush();
-		byte aHandshakeResponse[] = new byte[3 + 1 + 16];
-		oInput.read(aHandshakeResponse, 0, aHandshakeResponse.length);
-		//TODO: If the function above doesn't return the desired legnth, handle it
-		if( (aHandshakeResponse[0] == 100) && (aHandshakeResponse[1] == 118) && (aHandshakeResponse[2] == 50) ) {
-			if( aHandshakeResponse[3] == ':' ) {
-				InputStreamReader oReader = new InputStreamReader( new ByteArrayInputStream( aHandshakeResponse, 4, 16 ) );
-				char aUUID[] = new char[16];
-				oReader.read(aUUID);
-				m_sServerUUID = String.valueOf(aUUID);
-				return true;
-			} else
-				return false;
-			
+		//TODO: maybe just extract all this code into the handshake handler?
+		HandshakeHandler oHandshaker = new HandshakeHandler();
+		oHandshaker.writeRequest(m_oPBInterface, oOutput);
+		m_oPBInterface.addResponseHandler(oHandshaker);
+		//TODO: add some sort of timeout to this stuff perhaps?
+		try {
+			m_oPBInterface.HandleResponse(oInput);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		if( oHandshaker.getHandshakeDone() )
+			return true;
+		//TODO: get the servers uuid from the response
 		return false;
 	}
 	
@@ -301,7 +298,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
 
 			if( (nPrevFolderId != -1) && (nPrevFolderId != oFile.FolderId) ) {
-				throw new Exception("GetFiles called with contents of different folders");
+				throw new Exception("GetFiles called with contents of different) folders");
 			}
 			
 			String destFilename;
