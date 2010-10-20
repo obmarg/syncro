@@ -49,8 +49,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	private ArrayList<IncludeFilter> m_aIncludeFilters;
 	private ArrayList<FilenameFilter> m_aFilenameFilters;
 	
-	private Notification m_oProgressNotification;
-	private int m_nCurrentTotalSize;
+	private ProgressNotification m_oProgressNotification;
 	
 	String m_sCurrentLocalPath;
 	
@@ -99,34 +98,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 	}
 	
-	protected void createNotification() {
-		int icon = R.drawable.stat_sys_warning;
-		CharSequence tickerText = "Syncro running";
-		long when = System.currentTimeMillis();
-		m_oProgressNotification = new Notification(icon, tickerText, when);
-	}
-	
-	protected void updateNotification(int nProgress,boolean fIndeterminate) {
-		if( m_oProgressNotification == null )
-			createNotification();
-		Intent notificationIntent = new Intent(this, ServerBrowser.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		m_oProgressNotification.contentIntent = contentIntent;
-
-		//m_oProgressNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		
-		RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.progress_notification);
-		contentView.setImageViewResource(R.id.progress_notification_icon, R.drawable.stat_sys_warning);
-		contentView.setTextViewText(R.id.progress_notification_text, "Syncro syncing...");
-		contentView.setProgressBar(R.id.progress_notification_progress, m_nCurrentTotalSize, nProgress, fIndeterminate);
-		m_oProgressNotification.contentView = contentView;
-		
-		final int PROGRESS_NOTIFICATION_ID = 1;
-
-		NotificationManager oNM = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		oNM.notify(PROGRESS_NOTIFICATION_ID, m_oProgressNotification);
-	}
-	
 	protected void ProcessXML(InputStream inoData,DefaultHandler inoHandler) {
 		SAXParserFactory oFactory = SAXParserFactory.newInstance();
 		try {
@@ -139,7 +110,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	
 	protected void RunSync(int innServerID,String insHost,int innPort) {
 		//TODO: probably want to move innServerID into a member variable or something
-		updateNotification( 0, true );
+		m_oProgressNotification = new ProgressNotification(this);
+		m_oProgressNotification.update();
 		try {
 			Socket oSock = new Socket(insHost,innPort);
 			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
@@ -323,7 +295,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		
 		boolean fOK = false;
 		int nPrevFolderId = -1;
-		
+		m_oProgressNotification.setTotalNumFiles( m_aFilesToDownload.size() );
 		for(int nFile = 0;nFile < m_aFilesToDownload.size();nFile++) {
 			RemoteFileHandler.RemoteFileData oFile = m_aFilesToDownload.elementAt(nFile);
 
@@ -340,6 +312,11 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			}
 			
 			if( CheckIncludeFilters(oFile,destFilename) ) {
+				//TODO: To get accurate total file numbers, need to run include filters etc. before this loop
+				//			but never mind for now...
+				m_oProgressNotification.setCurrentFileDetails( oFile, nFile );
+				m_oProgressNotification.setProgress( 0 );
+				m_oProgressNotification.update();
 				fOK = GetFile( inoSock, oFile, destFilename );
 				if( !fOK )
 					return false;
@@ -364,7 +341,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		boolean fOK = false;
 		fOK = StartDownloadingFile(inoSock,inoFileData.FolderId,inoFileData.Filename);
 		if( fOK ) {
-			m_nCurrentTotalSize = inoFileData.Size;
 			FileOutputStream oFile = new FileOutputStream( insDestFilename );
 			try {
 				fOK = ReceiveFile(inoSock,oFile);
@@ -395,7 +371,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		boolean fDone = false;
 		do {
 			m_oPBInterface.HandleResponse(oInputStream);
-			updateNotification( oResponseHandler.getRecievedSize(), false );
+			m_oProgressNotification.setProgress( oResponseHandler.getRecievedSize() );
+			m_oProgressNotification.update();
 			if( oResponseHandler.canRemove() ) {
 				fDone = true;
 			} else {
