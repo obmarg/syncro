@@ -19,16 +19,19 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	}
 	switch( innPacketType ) {
 	case eSyncroPBPacketTypes_BinaryRequest: {
-		CBinaryDataRequest oRequest( inaInputStreams );
-		std::string sActualFilename = m_pFolderMan->GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
-		m_pCurrentSendData.reset( new CFileSendData( sActualFilename, oRequest.GetBufferSize() ) );
+			CBinaryDataRequest oRequest( inaInputStreams );
+			std::string sActualFilename = m_pFolderMan->GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
+			m_pCurrentSendData.reset( new CFileSendData( sActualFilename, oRequest.GetBufferSize() ) );
 		}
 		//Fall through
 	case eSyncroPBPacketTypes_BinaryContinue:
 		return CBasePBResponse::TPointer( new CBinaryDataResponse( (*m_pCurrentSendData) ) );
 	case eSyncroPBPacketTypes_HandshakeRequest: {
-		CPBHandshakeRequest oRequest( inaInputStreams );
-		return oRequest.GetResponse();
+			CPBHandshakeRequest oRequest( inaInputStreams );
+			CBasePBResponse::TPointer pResponse = oRequest.GetResponse();
+			//if we've got this far and haven't thrown, we're authed
+			m_fAuthenticated = true;
+			return pResponse;
 		}
 	}
 	throw std::exception("Invalid pb request passed to response factory");
