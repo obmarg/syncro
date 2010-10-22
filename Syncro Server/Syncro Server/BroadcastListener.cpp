@@ -20,12 +20,12 @@ CBroadcastListener::~CBroadcastListener() {
 
 void
 CBroadcastListener::HandleReceive(const boost::system::error_code& error, std::size_t innSize ) {
-	BOOL fOK = FALSE;
+	bool fOK = false;
 	if( innSize >= RESPOND_MESSAGE.length() ) {
-		fOK = TRUE;
+		fOK = true;
 		for(int nChar=0; nChar < RESPOND_MESSAGE.length();nChar++ ) {
 			if( RESPOND_MESSAGE[nChar] != m_aRecvBuff[nChar] ) 
-				fOK = FALSE;
+				fOK = false;
 		}
 	}
 	if( fOK ) {
