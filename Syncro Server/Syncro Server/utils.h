@@ -2,8 +2,8 @@
 #define _UTILS_H_
 
 #include <string>
-#include <boost\detail\endian.hpp>
-#include <boost\foreach.hpp>
+#include <boost/detail/endian.hpp>
+#include <boost/foreach.hpp>
 
 namespace syncro {
 

@@ -2,7 +2,7 @@
 #define _BINARY_DATA_REQUEST_H_
 
 #include "common.h"
-#include "protocol_buffers\binarydata.pb.h"
+#include "protocol_buffers/binarydata.pb.h"
 
 
 namespace syncro {

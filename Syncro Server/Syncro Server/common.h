@@ -22,7 +22,7 @@ struct TCharBuffer {
 	unsigned int nSize;
 };
 
-class authentication_exception : public std::exception {
+class authentication_exception : public std::runtime_error {
 public:
 	authentication_exception(const char* inpError) : exception(inpError) {};
 };

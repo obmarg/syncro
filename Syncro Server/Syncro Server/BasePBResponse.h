@@ -2,8 +2,8 @@
 #define _BASE_PB_RESPONSE_H_
 
 #include <string>
-#include "protocol_buffers\header.pb.h"
-#include <boost\shared_ptr.hpp>
+#include "protocol_buffers/header.pb.h"
+#include <boost/shared_ptr.hpp>
 
 namespace syncro {
 

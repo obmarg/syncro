@@ -1,5 +1,5 @@
 #include "BinaryDataResponse.h"
-#include "protocol_buffers\binarydata.pb.h"
+#include "protocol_buffers/binarydata.pb.h"
 
 namespace syncro {
 
