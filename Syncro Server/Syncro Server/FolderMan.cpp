@@ -12,7 +12,7 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
 	foreach( Database::Row& oRow, oRS ) {
 		path oPath( oRow["Path"] );
 		if( !is_directory( oPath ) )
-			throw std::exception( "Invalid path read from DB in CFolderMan constructor" );
+			throw std::runtime_error( "Invalid path read from DB in CFolderMan constructor" );
 		//TODO: Do something with the name as well
 		m_aFolderInfo.push_back( sFolderInfo( boost::lexical_cast<int>( oRow["ID"] ) , oPath.native_directory_string() ) );
 	}

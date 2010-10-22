@@ -34,7 +34,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			return pResponse;
 		}
 	}
-	throw std::exception("Invalid pb request passed to response factory");
+	throw std::runtime_error("Invalid pb request passed to response factory");
 }
 
 

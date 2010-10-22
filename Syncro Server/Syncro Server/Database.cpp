@@ -7,7 +7,7 @@ namespace syncro {
 using std::string;
 
 //extern CLogger Logger;
-//static int callback(void*,int,char**,char**);
+int callback(void*,int,char**,char**);
 
 void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv);
 
@@ -18,7 +18,7 @@ Database::Database(std::string file)
 	{
 		sqlite3_close(db);
 		std::string error = "Can't open database: " + file;
-		throw std::exception( error.c_str() );
+		throw std::runtime_error( error.c_str() );
 	}
 	sqlite3_create_function(db,"strToLower",1,SQLITE_UTF8,0,stringToLower,0,0);
 #ifdef USING_PTHREADS
@@ -55,7 +55,7 @@ Database::ResultSet Database::run(std::string query)
 			error += std::string( errorMsg );
 		}
 		error += "\nRunning query: " + query;
-		throw std::exception( error.c_str() );
+		throw std::runtime_error( error.c_str() );
 		sqlite3_free(errorMsg);
 	}
 #if USING_PTHREADS

@@ -64,7 +64,7 @@ bool CXMLRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 			pSender->CreateXML( CXMLOutput( m_oXMLBuilder ) );
 			m_pConn->Send( pSender );
 		} else
-			throw std::exception("Failed to get folder xml\n");
+			throw std::runtime_error("Failed to get folder xml\n");
 	} 
 	else if( sBuffer.substr( 0, sGetFolderContents.length() ).compare( sGetFolderContents ) == 0 )
 	{

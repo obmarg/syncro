@@ -21,7 +21,7 @@
 namespace syncro {
 
 using namespace std;
-using std::tr1::shared_ptr;
+using boost::shared_ptr;
 
 CSyncroServer::CSyncroServer() :
 	m_oBroadcastThread( CBroadcastThread() ){

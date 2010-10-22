@@ -13,7 +13,7 @@ public:
 		pb::BinaryDataRequest oRequest;
 		if( inaInputStreams.size() == 1 ) {
 			if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
-				throw std::exception( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
+				throw std::runtime_error( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
 			m_sFilename = oRequest.file_name();
 			m_nFolderId = oRequest.folder_id();
 			m_nBufferSize = 0;
