@@ -73,6 +73,7 @@ bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 		m_pConn->Send( CPBResponseSendHandler::Create(m_pConn,pResponse) );
 	}catch( const authentication_exception& error ) {
 		//TODO: do we want to return false here?
+		m_fCloseConnection = true;
 	}
 
 	ResetVariables();
