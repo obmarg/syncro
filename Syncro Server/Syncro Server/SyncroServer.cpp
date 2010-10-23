@@ -17,6 +17,7 @@
 #include "XMLHandlers.h"
 #include "HandshakeHandlers.h"
 #include "SyncroPBResponseFactory.h"
+#include "SyncroDB.h"
 
 namespace syncro {
 
@@ -25,7 +26,9 @@ using std::tr1::shared_ptr;
 
 CSyncroServer::CSyncroServer() :
 	m_oBroadcastThread( CBroadcastThread() ){
-
+	//Create a DB object.  to ensure the db file is created 
+	//if it doesn't already exist
+	CSyncroDB::OpenDB();
 }
 
 CSyncroServer::~CSyncroServer() {
