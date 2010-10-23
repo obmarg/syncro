@@ -21,6 +21,7 @@ public:
 				m_nBufferSize = oRequest.recv_buffer_size();
 		} 
 	}
+	~CBinaryDataRequest() {};
 	const std::string& GetFilename() const { return m_sFilename; };
 	const int GetFolderId() const { return m_nFolderId; };
 	const int GetBufferSize() const { return m_nBufferSize; };

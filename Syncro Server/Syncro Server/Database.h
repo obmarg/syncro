@@ -125,6 +125,10 @@ public:
 		return tReturnType();
 	}
 
+#ifdef _WIN32
+	template<>
+	std::string runScalar<std::string>(std::string query);
+#endif
 
 private:
 	sqlite3 *db;
@@ -141,7 +145,8 @@ protected:
 	virtual ~Database();
 };
 
-
+#ifdef _WIN32
+//TODO: figure out how the fuck you do specialization like this in gcc
 template<>
 std::string Database::runScalar<std::string>(std::string query) {
 	ResultSet oResults( run(query) );
@@ -162,6 +167,7 @@ std::string Database::runScalar<std::string>(std::string query) {
 	//Control should never reach this point
 	return "";
 }
+#endif
 
 }; //namespace syncro
 
