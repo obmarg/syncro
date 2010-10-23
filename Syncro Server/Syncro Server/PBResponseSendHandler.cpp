@@ -6,7 +6,7 @@ namespace syncro {
 
 const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 
-CPBResponseSendHandler::CPBResponseSendHandler(CTCPConnection::TPointer inpConn,CBasePBResponse::TPointer inpResponse) : m_pConn(inpConn), m_pResponse(inpResponse){
+CPBResponseSendHandler::CPBResponseSendHandler(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
 
 };
 
@@ -16,6 +16,9 @@ CPBResponseSendHandler::~CPBResponseSendHandler() {
 
 bool CPBResponseSendHandler::SendStarting() {
 	using std::vector;
+
+	if( !m_pResponse )
+		throw std::logic_error( "PB Send Starting, but PBResponseSendHandler has not been assigned any data" );
 
 	unsigned int nHeadSize = sizeof( PB_RESPONSE_FIRST_BYTE ) + sizeof( unsigned int );
 
@@ -46,6 +49,8 @@ bool CPBResponseSendHandler::SendStarting() {
 }
 
 void CPBResponseSendHandler::SendDone(int innSent) {
+	m_pResponse.reset( );
+	//TODO: maybe don't start recv if there are no current recv handlers.  add checks for this
 	m_pConn->StartRecv( 0 );
 }
 

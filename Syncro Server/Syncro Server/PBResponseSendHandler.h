@@ -12,8 +12,12 @@ public:
 	virtual ~CPBResponseSendHandler();
 	virtual bool SendStarting();	//Want to override this definetly (i think)
 
-	static CSendHandler::TPointer Create(CTCPConnection::TPointer inpConn,CBasePBResponse::TPointer inpResponse) {
-		return CSendHandler::TPointer( new CPBResponseSendHandler(inpConn,inpResponse) );
+	static CSendHandler::TPointer Create(CTCPConnection::TPointer inpConn) {
+		return CSendHandler::TPointer( new CPBResponseSendHandler(inpConn) );
+	}
+
+	void SetPBResponse( CBasePBResponse::TPointer inpResponse ) {
+		m_pResponse = inpResponse;
 	}
 
 	virtual void SendDone(int innSent);
@@ -23,7 +27,7 @@ protected:
 	
 	CBasePBResponse::TPointer m_pResponse;
 
-	CPBResponseSendHandler(CTCPConnection::TPointer inpConn,CBasePBResponse::TPointer inpResponse);
+	CPBResponseSendHandler(CTCPConnection::TPointer inpConn);
 };
 
 } //namespace syncro;

@@ -10,6 +10,7 @@ const unsigned char PB_REQUEST_FIRST_BYTE = 105;
 
 CPBRequestHandler::CPBRequestHandler(CTCPConnection::TPointer inpConn,CBasePBResponseFactory::TPointer inpResponseFactory) : m_pConn( inpConn ), m_pResponseFactory(inpResponseFactory) {
 	m_fCloseConnection = false;
+	m_pSendHandler = CPBResponseSendHandler::Create(m_pConn);
 	ResetVariables();		//don't know if this is needed, but can't hurt much
 }
 
@@ -69,8 +70,8 @@ bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 
 	try {
 		CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
-
-		m_pConn->Send( CPBResponseSendHandler::Create(m_pConn,pResponse) );
+		dynamic_cast<CPBResponseSendHandler&>(*m_pSendHandler).SetPBResponse( pResponse );
+		m_pConn->Send( m_pSendHandler );
 	}catch( const authentication_exception& error ) {
 		//TODO: do we want to return false here?
 		m_fCloseConnection = true;

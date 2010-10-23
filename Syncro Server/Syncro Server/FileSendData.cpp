@@ -42,6 +42,7 @@ void CFileSendData::FillBuffer(google::protobuf::io::ZeroCopyOutputStream& strea
 		if( !stream.Next( &pData, &nSize ) )
 			throw std::runtime_error( "ZeroCopyOutputStream returned false in CFileSendData::FillBuffer" );
 		char* pChars = reinterpret_cast< char* >( pData );
+		//TODO: Maybe start using google's fileinputstream to read data?
 		m_oFile.read( pChars, nSize );
 		nReadAmount -= nSize;
 	}

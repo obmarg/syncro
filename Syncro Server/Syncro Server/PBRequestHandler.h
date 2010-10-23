@@ -25,6 +25,8 @@ protected:
 
 	CTCPConnection::TPointer m_pConn;
 	CBasePBResponseFactory::TPointer m_pResponseFactory;
+
+	CSendHandler::TPointer m_pSendHandler;
 	
 	pb::PacketHeader m_oHeader;
 	unsigned int m_nBufferReadSoFar;
