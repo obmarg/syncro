@@ -41,7 +41,7 @@ bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 				if( inoBuffer.nSize >= nExpectedHeaderSize+nHeadSize ) {
 					m_oHeader.ParseFromArray( &inoBuffer.aBuffer[ nHeadSize ], nExpectedHeaderSize );
 					if( !m_oHeader.IsInitialized() )
-						throw std::exception( "Received invalid/incomplete PB Request Header" );
+						throw std::runtime_error( "Received invalid/incomplete PB Request Header" );
 					m_nBufferReadSoFar = nHeadSize+nExpectedHeaderSize;
 					fContinue = true;  //Run another pass, in case we have all the data we need already
 				}

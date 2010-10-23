@@ -1,7 +1,7 @@
 #include <string>
-#include "folder.h"
+#include "Folder.h"
 #include <tinyxml.h>
-#include <boost\filesystem.hpp>
+#include <boost/filesystem.hpp>
 
 namespace syncro {
 
