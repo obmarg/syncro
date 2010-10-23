@@ -9,6 +9,9 @@ import android.os.SystemClock;
 import android.widget.RemoteViews;
 
 public class ProgressNotification {
+	
+	final static int PROGRESS_NOTIFICATION_ID = 1;
+	
 	private Notification m_oNotification;
 	private Context m_oContext;
 	
@@ -41,6 +44,9 @@ public class ProgressNotification {
 		int icon = R.drawable.stat_sys_warning;
 		long when = System.currentTimeMillis();
 		m_oNotification = new Notification(icon, tickerText, when);
+		m_oNotification.flags = Notification.FLAG_ONGOING_EVENT;
+		//TODO: could possibly make the notification a foreground event notification, but that's api level 5 >
+		//		check it out etc.
 	}
 	
 	public void setCurrentFileDetails(RemoteFileHandler.RemoteFileData inoFile, int innFileNum) {
@@ -83,8 +89,9 @@ public class ProgressNotification {
 	}
 	
 	public void update() {
-		if( m_oNotification == null )
+		if( m_oNotification == null ) {
 			create("Syncro Syncing!");
+		}
 		Intent notificationIntent = new Intent(m_oContext, ServerBrowser.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(m_oContext, 0, notificationIntent, 0);
 		m_oNotification.contentIntent = contentIntent;
@@ -104,11 +111,14 @@ public class ProgressNotification {
 		}
 		contentView.setProgressBar(R.id.progress_notification_progress, m_nCurrentTotalSize, m_nProgress, !m_fHaveFile);
 		m_oNotification.contentView = contentView;
-		
-		final int PROGRESS_NOTIFICATION_ID = 1;
 
 		NotificationManager oNM = (NotificationManager)m_oContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		//TODO: do we need to notify, or can we just update the existing notification?
 		oNM.notify(PROGRESS_NOTIFICATION_ID, m_oNotification);
+	}
+	
+	public void stop() {
+		NotificationManager oNM = (NotificationManager)m_oContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		oNM.cancel(PROGRESS_NOTIFICATION_ID);
+		m_oNotification = null;
 	}
 }

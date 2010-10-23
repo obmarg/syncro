@@ -136,6 +136,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
+		m_oProgressNotification.stop();
 	}
 	
 	protected boolean DoHandshake(Socket inoSock) throws IOException {
