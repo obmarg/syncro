@@ -46,7 +46,7 @@ public class PBSocketInterface {
 		Header.PacketHeader oHeader = Header.PacketHeader.newBuilder()
 				.setPacketType(inType)
 				.build();
-		Log.d("Syncro","Sending Message.  Header:\n" + oHeader.toString() );
+		//Log.d("Syncro","Sending Message.  Header:\n" + oHeader.toString() );
 		WriteInitialHeader(inoStream,oHeader.getSerializedSize());
 		oHeader.writeTo(inoStream);
 		inoStream.flush();
@@ -58,9 +58,9 @@ public class PBSocketInterface {
 				.setPacketType(inType)
 				.addSubpacketSizes( inoMessage.getSerializedSize() )
 				.build();
-		Log.d("Syncro","Sending Object.  Type: " + inType);
-		Log.d("Syncro","Header:\n" + oHeader.toString() );
-		Log.d("Syncro","Object:\n" + inoMessage.toString() );
+		//Log.d("Syncro","Sending Object.  Type: " + inType);
+		//Log.d("Syncro","Header:\n" + oHeader.toString() );
+		//Log.d("Syncro","Object:\n" + inoMessage.toString() );
 		WriteInitialHeader(inoStream,oHeader.getSerializedSize());
 		oHeader.writeTo(inoStream);
 		inoMessage.writeTo(inoStream);
@@ -73,7 +73,7 @@ public class PBSocketInterface {
 		if( nFirstByte != PB_RESPONSE_FIRST_BYTE )
 			throw new Exception( "Invalid first byte in PBSocketInterface::GetResponse - " + nFirstByte);
 		int nHeaderSize = oInput.readInt();
-		Log.d("Syncro","Reading Header Size: " + nHeaderSize+"\n");
+		//Log.d("Syncro","Reading Header Size: " + nHeaderSize+"\n");
 		byte aBuffer[] = new byte[nHeaderSize];
 		oInput.read(aBuffer);
 		/*CodedInputStream oMessageInputStream = CodedInputStream.newInstance(inoStream);
@@ -82,7 +82,7 @@ public class PBSocketInterface {
 		//oHeaderBuilder.mergeFrom(oMessageInputStream);
 		//TODO: Figure out how to use CodedInputStream
 		oHeaderBuilder.mergeFrom(aBuffer);
-		Log.d("Syncro","Recieved Header:\n" + oHeaderBuilder.toString() );
+		//Log.d("Syncro","Recieved Header:\n" + oHeaderBuilder.toString() );
 		PBResponseHandler oSelectedHandler = null;
 		for( PBResponseHandler oHandler : m_aResponseHandlers ) {
 			if( oHandler.canHandleResponse( oHeaderBuilder.getPacketType() ) ) {
