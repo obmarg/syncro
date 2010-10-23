@@ -19,12 +19,10 @@ public:
 
 	virtual unsigned int GetPacketType()=0;
 
-	virtual void WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert)=0;
+	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream)=0;
 
-	virtual void WriteMessage(std::back_insert_iterator<TCharBuffer::TBuff> inoInsert, const google::protobuf::MessageLite& inoMessage ) {
-		//TODO: start using array outputstreams for this shit
-		std::string sOutput = inoMessage.SerializeAsString();
-		std::copy( sOutput.begin(), sOutput.end(), inoInsert );
+	virtual void WriteMessage(const google::protobuf::MessageLite& inoMessage, google::protobuf::io::ZeroCopyOutputStream& stream ) {
+		inoMessage.SerializeToZeroCopyStream( &stream );
 	}
 };
 

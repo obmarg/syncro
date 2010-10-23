@@ -1,5 +1,6 @@
 #include "PBResponseSendHandler.h"
 #include <vector>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 
 namespace syncro {
 
@@ -28,14 +29,17 @@ bool CPBResponseSendHandler::SendStarting() {
 		oResponseHeader.add_subpacket_sizes( nPacketSize );
 	}
 	unsigned int nPBHeaderSize = oResponseHeader.ByteSize();
-	m_aBuffer.reserve( nTotalPacketSize + nPBHeaderSize + nHeadSize );
-	m_aBuffer.resize( nPBHeaderSize + nHeadSize );
+	m_aBuffer.resize( nTotalPacketSize + nPBHeaderSize + nHeadSize );
 	
 	m_aBuffer[0] = PB_RESPONSE_FIRST_BYTE;
 	*((int*)(&m_aBuffer[1])) = ToJavaEndian( nPBHeaderSize );
 	oResponseHeader.SerializeToArray(&m_aBuffer[nHeadSize], nPBHeaderSize );
+	unsigned int nWrittenSoFar = nPBHeaderSize + nHeadSize;
+
 	for( int nSubpacket =0; nSubpacket < m_pResponse->GetSubpacketCount(); nSubpacket++ ) {
-		m_pResponse->WriteSubpacket( nSubpacket, std::back_inserter( m_aBuffer ) );
+		google::protobuf::io::ArrayOutputStream oStream( &m_aBuffer[ nWrittenSoFar ], aPacketSizes[ nSubpacket ], aPacketSizes[ nSubpacket ] );
+		m_pResponse->WriteSubpacket( nSubpacket, oStream );
+		nWrittenSoFar += aPacketSizes[ nSubpacket ];
 	}
 
 	return true;

@@ -21,8 +21,30 @@ public:
 	};
 
 	//TODO: Write all this stuff to use ArrayOutputStreams?
-	virtual void WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert) {
-		std::copy( m_aSubpackets[inSubpacketIndex]->begin(),m_aSubpackets[inSubpacketIndex]->end(), inoInsert );
+	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
+		//std::copy( m_aSubpackets[inSubpacketIndex]->begin(),m_aSubpackets[inSubpacketIndex]->end(), inoInsert );
+		int nToCopy = m_aSubpackets[inSubpacketIndex]->size();
+		void* pData;
+		int nCurrentBufferSize = 0;
+		TCharBuffer::TBuff::iterator pEnd = m_aSubpackets[inSubpacketIndex]->end();
+		TCharBuffer::TBuff::iterator pCurr = m_aSubpackets[inSubpacketIndex]->begin();
+		while( (pCurr != pEnd) ) {
+			if( !stream.Next(&pData, &nCurrentBufferSize ) ) {
+				throw std::runtime_error( "ZeroCopyOutputStream::Next returned false in VectorPBResponse::WriteSubpacket" );
+			}
+			TCharBuffer::TChar* pCurrBuffer = reinterpret_cast< TCharBuffer::TChar* >( pData );
+			if( nCurrentBufferSize != 0 ) {
+				if( nCurrentBufferSize > nToCopy )
+					nCurrentBufferSize = nToCopy;
+				TCharBuffer::TBuff::iterator pNextBlock = pCurr + nCurrentBufferSize;
+				//TODO: memcpy or something might be faster than std::copy here
+				//		also might not output a call parameters may be unsafe error
+				std::copy( pCurr, pNextBlock, pCurrBuffer );
+				pCurr = pNextBlock;
+				nToCopy -= nCurrentBufferSize;
+			}
+		}
+		//TODO: Handle errors?
 	}
 	
 protected:

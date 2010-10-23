@@ -83,8 +83,8 @@ unsigned int CPBHandshakeResponse::GetPacketType() {
 	return eSyncroPBPacketTypes_HandshakeResponse;
 }
 
-void CPBHandshakeResponse::WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert) {
-	WriteMessage( inoInsert, m_oMessage );
+void CPBHandshakeResponse::WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
+	WriteMessage( m_oMessage, stream);
 }
 
 

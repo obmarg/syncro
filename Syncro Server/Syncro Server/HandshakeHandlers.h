@@ -31,7 +31,7 @@ public:
 
 	virtual unsigned int GetPacketType();
 
-	virtual void WriteSubpacket(int inSubpacketIndex,std::back_insert_iterator<TCharBuffer::TBuff> inoInsert);
+	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream);
 private:
 	pb::HandshakeResponse m_oMessage;
 };
