@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.widget.RemoteViews;
 
 public class ProgressNotification {
@@ -22,6 +23,7 @@ public class ProgressNotification {
 	private boolean m_fShowRate;
 	private long m_nLastProgressUpdate;
 	private float m_flCurrentRate;
+	private float m_nDataSinceLast;
 	
 	protected ProgressNotification(Context inoContext) {
 		m_oContext = inoContext;
@@ -59,19 +61,19 @@ public class ProgressNotification {
 	
 	public void setProgress( int innProgress ) {
 		if( m_fShowRate ) {
-			long nCurrentTime = System.currentTimeMillis(); 
-			if( m_nLastProgressUpdate != 0 ) {
-				float flDuration = (nCurrentTime - m_nLastProgressUpdate) / 1000;
-				if( flDuration == 0 ) {
+			m_nDataSinceLast += (innProgress - m_nProgress);
+			long nCurrentTime = SystemClock.uptimeMillis(); 
+			if( (m_nLastProgressUpdate == 0) || ( nCurrentTime > (m_nLastProgressUpdate+4000) ) ) {
+				float flDuration = (nCurrentTime - m_nLastProgressUpdate);
+				if( flDuration != 0 ) {
 					//Stop divide from 0 from happening
-					m_nProgress = innProgress;
-					return;
+					//TODO: support scaling from bytes > kb > mb depending on size
+					float flDataSinceLast = m_nDataSinceLast / 1024;
+					m_flCurrentRate = (flDataSinceLast / (flDuration/1000) );
 				}
-				//TODO: support scaling from bytes > kb > mb depending on size
-				float flProgressChange = (innProgress - m_nProgress);
-				m_flCurrentRate = ( (flProgressChange / flDuration) / 1024 );
+				m_nDataSinceLast = 0;
+				m_nLastProgressUpdate = nCurrentTime;
 			}
-			m_nLastProgressUpdate = nCurrentTime;
 		}
 		m_nProgress = innProgress;
 	}
