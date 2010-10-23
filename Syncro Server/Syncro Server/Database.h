@@ -16,6 +16,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <stdexcept>
+
 #include "utils.h"
 
 #ifdef USING_PTHREADS
@@ -39,7 +41,12 @@ public:
 		std::vector<std::string> colNames;
 	public:
 		ResultSet() {};
-		ResultSet(ResultSet& inoOther) : rows( inoOther.rows.begin(), inoOther.rows.end() ), colNames( inoOther.colNames.begin(), inoOther.colNames.end() ) { };
+		ResultSet(const ResultSet& inoOther) : rows( inoOther.rows.begin(), inoOther.rows.end() ), colNames( inoOther.colNames.begin(), inoOther.colNames.end() ) { };
+		
+		/*ResultSet& operator=(const syncro::Database::ResultsSet& inoRHS) {
+			rows = inoRHS.rows;
+			colNames = inoRHS.colNames;
+		}*/
 
 		typedef std::vector<Row>::iterator iterator;
 		typedef std::vector<Row>::const_iterator const_iterator;
@@ -107,29 +114,21 @@ public:
 		const Row& oRow = oResults[0];
 		Row::const_iterator oData = oRow.find( sColName );
 		if( oData != oRow.end() ) {
-			return boost::lexical_cast<tReturnType,std::string>( oData->second );
+			tReturnType rv = boost::lexical_cast<tReturnType,std::string>( oData->second );
+			result.clear();
+			return rv;
 		} else {
+			result.clear();
 			throw std::out_of_range("DB::runScalar call returned nothing");
 		}
-		result.clear();
+		//Control should never reach this point
+		return tReturnType();
 	}
 
+#ifdef _WIN32
 	template<>
-	std::string runScalar<std::string>(std::string query) {
-		ResultSet oResults = run(query);
-		if( oResults.empty() ) {
-			throw std::out_of_range("DB::runScalar call returned nothing");
-		}
-		const std::string& sColName = oResults.colNames[0];
-		const Row& oRow = oResults[0];
-		Row::const_iterator oData = oRow.find( sColName );
-		if( oData != oRow.end() ) {
-			return oData->second;
-		} else {
-			throw std::out_of_range("DB::runScalar call returned nothing");
-		}
-		result.clear();
-	}
+	std::string runScalar<std::string>(std::string query);
+#endif
 
 private:
 	sqlite3 *db;
@@ -145,6 +144,30 @@ protected:
 	Database(std::string file);
 	virtual ~Database();
 };
+
+#ifdef _WIN32
+//TODO: figure out how the fuck you do specialization like this in gcc
+template<>
+std::string Database::runScalar<std::string>(std::string query) {
+	ResultSet oResults( run(query) );
+	if( oResults.empty() ) {
+		throw std::out_of_range("DB::runScalar call returned nothing");
+	}
+	const std::string& sColName = oResults.colNames[0];
+	const Row& oRow = oResults[0];
+	Row::const_iterator oData = oRow.find( sColName );
+	if( oData != oRow.end() ) {
+		std::string sRV = oData->second;
+		result.clear();
+		return sRV;
+	} else {
+		result.clear();
+		throw std::out_of_range("DB::runScalar call returned nothing");
+	}
+	//Control should never reach this point
+	return "";
+}
+#endif
 
 }; //namespace syncro
 

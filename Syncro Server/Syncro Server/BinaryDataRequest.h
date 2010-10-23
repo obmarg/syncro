@@ -2,7 +2,7 @@
 #define _BINARY_DATA_REQUEST_H_
 
 #include "common.h"
-#include "protocol_buffers\binarydata.pb.h"
+#include "protocol_buffers/binarydata.pb.h"
 
 
 namespace syncro {
@@ -13,7 +13,7 @@ public:
 		pb::BinaryDataRequest oRequest;
 		if( inaInputStreams.size() == 1 ) {
 			if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
-				throw std::exception( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
+				throw std::runtime_error( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
 			m_sFilename = oRequest.file_name();
 			m_nFolderId = oRequest.folder_id();
 			m_nBufferSize = 0;
@@ -21,6 +21,7 @@ public:
 				m_nBufferSize = oRequest.recv_buffer_size();
 		} 
 	}
+	~CBinaryDataRequest() {};
 	const std::string& GetFilename() const { return m_sFilename; };
 	const int GetFolderId() const { return m_nFolderId; };
 	const int GetBufferSize() const { return m_nBufferSize; };

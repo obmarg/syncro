@@ -96,9 +96,11 @@ void CXMLBuilder::ProcessFolder( TiXmlElement& inoParentElement, boost::shared_p
 void CXMLOutput::operator()(TCharBuffer::TBuff& inoBuffer) {
 	using namespace std;
 
-	m_oBuilder.SaveDocAsFile("temp.xml");
+	const char* pFilename = "temp.xml";
 	
-	ifstream oStream( "temp.xml", ios::in || ios::binary );
+	m_oBuilder.SaveDocAsFile(pFilename);
+
+	ifstream oStream( pFilename, ios::in | ios::binary );
 	if( oStream.is_open() ) {
 		oStream.seekg( 0, ios::end );
 		size_t nSize = (size_t)oStream.tellg();

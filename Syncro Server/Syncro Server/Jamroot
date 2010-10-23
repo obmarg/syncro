@@ -1,0 +1,19 @@
+alias sqlite : ../../Dependencies/sqlite//<link>shared ;
+alias tinyxml : ../../Dependencies/tinyxml//<link>static ;
+alias pthreads : /usr/lib/libpthread.so ;
+alias stdcpp : /usr/lib/libstdc++.so.6 ;
+alias libc : /usr/lib/libc.so ;
+alias libdl : /usr/lib/libdl.so ;
+alias libboost : /usr/lib/libboost_system-mt.a /usr/lib/libboost_thread.a /usr/lib/libboost_filesystem-mt.a ;
+alias protocol_buffers : protocol_buffers/binarydata.pb.cc protocol_buffers/handshake.pb.cc protocol_buffers/header.pb.cc ;
+alias libprotobuf-lite : ../../../protobuf-2.3.0/src/.libs/libprotobuf-lite.a ;
+exe syncro 
+	: BinaryDataResponse.cpp BroadcastListener.cpp BroadcastThread.cpp Database.cpp FileSendData.cpp Folder.cpp FolderMan.cpp HandshakeHandlers.cpp main.cpp PBRequestHandler.cpp PBResponseSendHandler.cpp ServerComms.cpp SyncroDB.cpp SyncroPBResponseFactory.cpp SyncroServer.cpp XMLBuilder.cpp XMLHandlers.cpp protocol_buffers 
+	sqlite tinyxml pthreads stdcpp libc libdl libboost libprotobuf-lite
+	: <include>/usr/include/
+	  <include>/usr/include/c++/4.4/
+	 <include>../../Dependencies/protobuf-2.3.0/include/
+	 <include>../../Dependencies/sqlite/
+	 <include>../../Dependencies/tinyxml/
+	<debug-symbols>on
+	;

@@ -1,9 +1,10 @@
 #ifndef _SYNCRO_COMMON_H_
 #define _SYNCRO_COMMON_H_
 
-#include <vector>
 #include "utils.h"
 #include <google/protobuf/io/zero_copy_stream.h>
+#include <vector>
+#include <stdexcept>
 
 namespace syncro {
 
@@ -22,9 +23,9 @@ struct TCharBuffer {
 	unsigned int nSize;
 };
 
-class authentication_exception : public std::exception {
+class authentication_exception : public std::runtime_error {
 public:
-	authentication_exception(const char* inpError) : exception(inpError) {};
+	authentication_exception(const char* inpError) : runtime_error(inpError) {};
 };
 
 using google::protobuf::io::ZeroCopyInputStream;

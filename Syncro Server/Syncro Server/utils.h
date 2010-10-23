@@ -2,8 +2,8 @@
 #define _UTILS_H_
 
 #include <string>
-#include <boost\detail\endian.hpp>
-#include <boost\foreach.hpp>
+#include <boost/detail/endian.hpp>
+#include <boost/foreach.hpp>
 
 namespace syncro {
 
@@ -11,7 +11,7 @@ namespace syncro {
 
 class CStringLessThan {
 public:
-	bool operator()(const std::string& inoLHS, const std::string& inoRHS) {
+	bool operator() (const std::string& inoLHS, const std::string& inoRHS) const {
 		return ( inoLHS.compare( inoRHS ) < 0 );
 	}
 };
@@ -19,7 +19,7 @@ public:
 class CPointerLessThan {
 public:
 	template<class tPointerType>
-	bool operator()(const tPointerType& inoLHS, const tPointerType& inoRHS) {
+	bool operator() (const tPointerType& inoLHS, const tPointerType& inoRHS) const {
 		return ( (*inoLHS) < (*inoRHS) );
 	}
 };

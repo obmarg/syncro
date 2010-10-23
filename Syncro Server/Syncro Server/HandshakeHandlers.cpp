@@ -11,7 +11,7 @@
 #include <iterator>
 
 #include <boost/uuid/uuid.hpp>
-#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 #include "SyncroDB.h"
 
 namespace syncro {
@@ -57,12 +57,13 @@ CPBHandshakeResponse::CPBHandshakeResponse() {
 	try {
 		sUUID = oDB->runScalar<std::string>("SELECT uuid FROM ServerID");
 		if( sUUID.length() != 16 )
-			throw std::exception( "Invalid legnth of UUID returned from database in CHandshakeResponse" );
+			throw std::runtime_error( "Invalid legnth of UUID returned from database in CHandshakeResponse" );
 	}catch( const std::out_of_range& ) {
 		//This probably means that the database call returned nothing (probably can happen for copying as well)
-		boost::uuids::uuid oUUID( ( boost::uuids::random_generator()() ) );
+		boost::uuids::random_generator oGenerator;
+		boost::uuids::uuid oUUID( oGenerator() );
 		if( oUUID.size() != 16 )
-			throw std::exception( "Invalid legnth of UUID generated in CHandshakeResponse" );
+			throw std::runtime_error( "Invalid legnth of UUID generated in CHandshakeResponse" );
 		for( int n=0; n<oUUID.size(); n++ ) {
 			aUUID[n] = oUUID.data[n];
 		}

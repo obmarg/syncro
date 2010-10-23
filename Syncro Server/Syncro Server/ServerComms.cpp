@@ -112,7 +112,7 @@ void CTCPConnection::Send(CSendHandler::TPointer inpSendHandler) {
 	using boost::bind;
 
 	if( m_pSendHandler.get() != NULL )
-		throw std::exception("Attempted 2 send operations on 1 TCP socket at once!");
+		throw std::logic_error("Attempted 2 send operations on 1 TCP socket at once!");
 
 	if( inpSendHandler->SendStarting() ) {
 		m_pSendHandler = inpSendHandler;
