@@ -26,9 +26,9 @@ unsigned int CBinaryDataResponse::GetSubpacketCount() {
 }
 
 std::vector<unsigned int> CBinaryDataResponse::GetSubpacketSizes() {
-	std::vector<unsigned int> rv;
-	rv.push_back( m_oPacketHeader.ByteSize() );
-	rv.push_back( m_oFileData.GetChunkSize() );
+	std::vector<unsigned int> rv(2);
+	rv[0] = m_oPacketHeader.ByteSize() ;
+	rv[1] = m_oFileData.GetChunkSize();
 	return rv;
 }
 
