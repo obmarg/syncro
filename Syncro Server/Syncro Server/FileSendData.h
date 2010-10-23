@@ -8,6 +8,8 @@
 
 #include <boost/noncopyable.hpp>
 
+#include <google/protobuf/io/zero_copy_stream.h>
+
 namespace syncro {
 
 class CFileSendData : boost::noncopyable {
@@ -16,12 +18,14 @@ public:
 	CFileSendData( CFileSendData& inoOther );
 	~CFileSendData();
 
-	void FillBuffer(TCharBuffer::TBuff& inoBuffer);
+	void FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream );
+	unsigned int GetChunkSize();
 
 	unsigned int GetFilePosition();
 	unsigned int GetFileSize() { return m_nFileSize; };
 	bool IsFileFinished();
 	bool IsStartFile();
+	bool IsFileFinishedAfterChunk( unsigned int inNextChunkSize );
 
 private:
 

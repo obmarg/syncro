@@ -20,7 +20,6 @@ public:
 		return m_aSubpackets.size();
 	};
 
-	//TODO: Write all this stuff to use ArrayOutputStreams?
 	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
 		//std::copy( m_aSubpackets[inSubpacketIndex]->begin(),m_aSubpackets[inSubpacketIndex]->end(), inoInsert );
 		int nToCopy = m_aSubpackets[inSubpacketIndex]->size();

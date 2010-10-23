@@ -5,17 +5,26 @@
 #include "VectorPBResponse.h"
 #include "SyncroPBResponseFactory.h"
 #include "FileSendData.h"
+#include "protocol_buffers/binarydata.pb.h"
 
 namespace syncro {
 
-class CBinaryDataResponse : public CVectorPBResponse {
+class CBinaryDataResponse : public CBasePBResponse {
 public:
 	CBinaryDataResponse(CFileSendData& inoFileData);
 	virtual ~CBinaryDataResponse();
 
+	virtual std::vector<unsigned int> GetSubpacketSizes();
+	virtual unsigned int GetSubpacketCount();
+
+	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream);
+
 	virtual unsigned int GetPacketType() { 
 		return eSyncroPBPacketTypes_BinaryResponse;
 	};
+protected:
+	pb::BinaryPacketHeader m_oPacketHeader;
+	CFileSendData& m_oFileData;
 };
 
 };		//namespace syncro

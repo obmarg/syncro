@@ -33,8 +33,21 @@ void CFileSendData::OpenFile() {
 		throw std::runtime_error( "CFileSendData called on non existant file" );
 }
 
-void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {
+void CFileSendData::FillBuffer(google::protobuf::io::ZeroCopyOutputStream& stream) {
+	int nReadAmount = GetChunkSize();
 
+	void *pData;
+	int nSize;
+	while( nReadAmount > 0 ) {
+		if( !stream.Next( &pData, &nSize ) )
+			throw std::runtime_error( "ZeroCopyOutputStream returned false in CFileSendData::FillBuffer" );
+		char* pChars = reinterpret_cast< char* >( pData );
+		m_oFile.read( pChars, nSize );
+		nReadAmount -= nSize;
+	}
+}
+
+unsigned int CFileSendData::GetChunkSize() {
 	int nBufferSize = DEFAULT_FILE_SEND_BUFFER_SIZE;
 	if( m_nRequestedBufferSize != 0 ) {
 		int nRequestedBufferSize = (m_nRequestedBufferSize - 1024);		//Take away 1k just to be safe?
@@ -42,11 +55,7 @@ void CFileSendData::FillBuffer(TCharBuffer::TBuff& inoBuffer) {
 	}
 	//TODO: maybe stop doing the above -1024, and find a better way of doing it
 	int nSizeLeft = m_nFileSize - (int)m_oFile.tellg();
-	int nReadAmount = std::min( nBufferSize, nSizeLeft );
-	inoBuffer.resize( nReadAmount );
-
-	if( nReadAmount != 0 )
-		m_oFile.read( (char*)&inoBuffer[ 0 ], nReadAmount );
+	return std::min( nBufferSize, nSizeLeft );
 }
 
 bool CFileSendData::IsStartFile() {
@@ -63,6 +72,13 @@ bool CFileSendData::IsFileFinished() {
 
 unsigned int CFileSendData::GetFilePosition() {
 	return (unsigned int)m_oFile.tellg();
+}
+
+bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize ) {
+	std::streamoff nNextTell = m_oFile.tellg() + (std::streamoff)inNextChunkSize;
+	if( nNextTell == (std::streamoff)m_nFileSize )
+		return true;
+	return false;
 }
 
 };		//namespace syncro

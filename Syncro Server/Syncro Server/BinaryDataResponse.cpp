@@ -1,34 +1,45 @@
 #include "BinaryDataResponse.h"
-#include "protocol_buffers/binarydata.pb.h"
 
 namespace syncro {
 
-CBinaryDataResponse::CBinaryDataResponse(CFileSendData& inoFileData) {
-	CVectorPBResponse::TSubpacketPtr pHeader( new TCharBuffer::TBuff() );
-	pb::BinaryPacketHeader oPacketHeader;
-	oPacketHeader.set_file_offset( inoFileData.GetFilePosition() );
-	oPacketHeader.set_file_size( inoFileData.GetFileSize() );
-	oPacketHeader.set_hash_size( 0 );
+CBinaryDataResponse::CBinaryDataResponse(CFileSendData& inoFileData) 
+	: m_oFileData(inoFileData) 
+{
+	m_oPacketHeader.set_file_offset( m_oFileData.GetFilePosition() );
+	m_oPacketHeader.set_file_size( m_oFileData.GetFileSize() );
+	m_oPacketHeader.set_hash_size( 0 );
 	if( inoFileData.IsStartFile() )
-		oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_START );
+		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_START );
 	else
-		oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_MIDDLE );
+		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_MIDDLE );
 	
-	CVectorPBResponse::TSubpacketPtr pFileChunk( new TCharBuffer::TBuff() );
-	inoFileData.FillBuffer( (*pFileChunk) );
-	if( inoFileData.IsFileFinished() )
-		oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
-	
-	pHeader->resize( oPacketHeader.ByteSize() );
-	oPacketHeader.SerializeToArray( &(*pHeader)[0], pHeader->size() );
-	
-	m_aSubpackets.push_back( pHeader );
-	m_aSubpackets.push_back( pFileChunk );
-
+	if( m_oFileData.IsFileFinishedAfterChunk( m_oFileData.GetChunkSize() )  )
+		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
 }
 
 CBinaryDataResponse::~CBinaryDataResponse() {
 
 }
 
+unsigned int CBinaryDataResponse::GetSubpacketCount() {
+	return 2;
+}
+
+std::vector<unsigned int> CBinaryDataResponse::GetSubpacketSizes() {
+	std::vector<unsigned int> rv;
+	rv.push_back( m_oPacketHeader.ByteSize() );
+	rv.push_back( m_oFileData.GetChunkSize() );
+	return rv;
+}
+
+
+
+void CBinaryDataResponse::WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
+	if( inSubpacketIndex == 0 )
+		WriteMessage( m_oPacketHeader, stream );
+	else {
+		m_oFileData.FillBuffer( stream );
+	}
+}
+	
 };		//namespace syncro
