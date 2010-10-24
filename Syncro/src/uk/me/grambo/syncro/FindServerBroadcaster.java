@@ -61,6 +61,7 @@ public class FindServerBroadcaster extends AsyncTask<Void, Void, DatagramPacket>
 	        Log.d("Syncro", "From: " + oAddress.toString() );
 	        oSocket.close();
 	        return oInPacket;
+	        //TODO: Improve this stuff somehow, think it'll really only find one server at the moment
         }catch(IOException e) {
         	Log.e("Syncro", "IOException in FindServer::SendBroadcast:" );
         	Log.e("Syncro", e.toString() );
@@ -68,13 +69,13 @@ public class FindServerBroadcaster extends AsyncTask<Void, Void, DatagramPacket>
         }
 	}
 	
-	/*protected void onPostExecute(DatagramPacket inoResult) {
+	protected void onPostExecute(DatagramPacket inoResult) {
 		if( inoResult == null )
 			return;
 		Log.d("Syncro", "In post executte");
 		String s = new String(inoResult.getData(), 0, inoResult.getLength());
 		String[] asSections = s.split(": "); 
 		m_oParent.AddServer( asSections[1],inoResult.getAddress() );
-	}*/
+	}
         
 }

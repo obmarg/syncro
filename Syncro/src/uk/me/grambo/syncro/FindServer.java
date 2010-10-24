@@ -20,8 +20,8 @@ public class FindServer extends Activity
 		public String Name;
 		public InetAddress Address;
 	}
-	ServerEntry[] m_aServers;
-	String[] m_aServerNames;
+	private ServerEntry[] m_aServers;
+	private String[] m_aServerNames;
 	
 	FindServerBroadcaster m_oBroadcaster;
 	/** Called when the activity is first created. */
@@ -39,6 +39,26 @@ public class FindServer extends Activity
                   }
         });
         
+        ListView oListView = (ListView)findViewById(R.id.findserverlist);
+        oListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        	public void onItemClick(AdapterView oParent,View oView,int innPosition,long innID) {
+        	    try {
+        	       	DBHelper oHelper = new DBHelper( oParent.getContext() );
+        	      	SQLiteDatabase oDB = oHelper.getReadableDatabase();
+        	      	//TODO: update this stuff to supply an actual port
+        	      	String aArgs[] = new String[3];
+        	      	aArgs[0] = FindServer.this.m_aServers[innPosition].Name;
+        	      	//TODO: possibly replace the below with gethostaddress?
+        	      	aArgs[1] = FindServer.this.m_aServers[innPosition].Address.getHostName();
+        	      	aArgs[2] = Integer.toString( 9998 );
+        	     	oDB.execSQL( "INSERT INTO servers(Name,Ip,Port) VALUES(?,?,?);", aArgs );
+        		    oDB.close();
+        	    }catch(SQLException oException) {
+        	     	oException.printStackTrace();
+        	    }
+        	};
+		});
+        
         SendBroadcast();
     }
     
@@ -51,6 +71,8 @@ public class FindServer extends Activity
     }
     
     public void AddServer(String insName,InetAddress inoAddress) {
+    	//TODO: add duplicate detection or something
+    	//TODO: also check that entries aren't in the database already.
     	Log.d("Syncro", "Adding server: " + insName + " : " + inoAddress.toString() );
     	ServerEntry[] aNewArray;
     	int nInsertIndex = 0;
@@ -61,6 +83,7 @@ public class FindServer extends Activity
     	} else {
     		aNewArray = new ServerEntry[ 1 ];
     	}
+    	aNewArray[ nInsertIndex ] = new ServerEntry();
     	aNewArray[ nInsertIndex ].Name = insName;
 		aNewArray[ nInsertIndex ].Address = inoAddress;
     	m_aServers = aNewArray;
