@@ -2,7 +2,7 @@
 
 namespace syncro {
 
-const int CSyncroDB::EXPECTED_DB_VERSION = 2;
+const int CSyncroDB::EXPECTED_DB_VERSION = 3;
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE = 
@@ -16,7 +16,8 @@ const std::string FOLDERS_TABLE_CREATE =
 const std::string SERVER_ID_TABLE_NAME = "ServerID";
 const std::string SERVER_ID_TABLE_CREATE = 
 				"CREATE TABLE IF NOT EXISTS " + SERVER_ID_TABLE_NAME + " (" + 
-				"uuid TEXT NOT NULL);";
+				"uuid TEXT NOT NULL," +
+				"servername TEXT NOT NULL);";
 
 CSyncroDB::CSyncroDB(std::string insFilename) : Database( insFilename ) {
 	int nCurrentVersion = runScalar<int>("PRAGMA user_version;");
@@ -48,6 +49,10 @@ bool CSyncroDB::CreateDatabase() {
 bool CSyncroDB::UpgradeDatabase(int nCurrentVersion) {
 	if( nCurrentVersion == 1 )
 		run(SERVER_ID_TABLE_CREATE);
+	if( nCurrentVersion == 2 ) {
+		run("DROP TABLE " + SERVER_ID_TABLE_NAME + ";");
+		run(SERVER_ID_TABLE_CREATE);
+	}
 	return true;
 }
 

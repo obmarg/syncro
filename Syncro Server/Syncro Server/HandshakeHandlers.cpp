@@ -68,7 +68,9 @@ CPBHandshakeResponse::CPBHandshakeResponse() {
 			aUUID[n] = oUUID.data[n];
 		}
 		sUUID = std::string( aUUID.begin(), aUUID.end() );
-		oDB->run("INSERT INTO ServerID(uuid) VALUES('" + sUUID + "');");
+		//TODO: Make the hostname customisable perhaps?
+		std::string sHostname = boost::asio::ip::host_name();
+		oDB->run("INSERT INTO ServerID(uuid,servername) VALUES('" + sUUID + "','" + sHostname + "');");
 	}
 	m_oMessage.set_uuid( sUUID );
 }
