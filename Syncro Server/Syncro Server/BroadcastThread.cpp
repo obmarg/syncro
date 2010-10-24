@@ -15,10 +15,7 @@ void
 CBroadcastThread::operator()() {
 	boost::asio::io_service oIOService;
 	CBroadcastListener oListener(oIOService,"Server");
-	while(true) {
-		oIOService.run();
-		//TODO: sleep the thread or some shite here?
-	}
+	oIOService.run();
 }
 
 };
