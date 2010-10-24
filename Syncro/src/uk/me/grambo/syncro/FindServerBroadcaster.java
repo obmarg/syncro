@@ -8,17 +8,26 @@ import android.database.sqlite.*;
 import android.content.*;
 import android.view.*;
 import android.net.DhcpInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 import java.net.*;
+import java.util.ArrayList;
 import java.io.*;
 import android.os.*;
 
-public class FindServerBroadcaster extends AsyncTask<Void, Void, DatagramPacket> {
+public class FindServerBroadcaster extends AsyncTask< Void, Void, ArrayList<FindServerBroadcaster.ServerInfo> > {
 	private static final int DISCOVERY_PORT = 9995;
 	private static final int PORT = 9996;
 	private static final String DISCOVERY_STRING = "SyncroHELLO";
-	private static final int SOCKET_TIMEOUT_MS = 30 * 1000;
+	private static final int SOCKET_TIMEOUT_MS = 500;
+	private static final int SEARCH_TIME = 2 * 1000;
+	
+	public class ServerInfo {
+		public String Name;
+		public InetAddress Address;
+		public int Port;
+	}
 	
 	private WifiManager m_oWifiMan;
 	private FindServer m_oParent;
@@ -40,9 +49,11 @@ public class FindServerBroadcaster extends AsyncTask<Void, Void, DatagramPacket>
         return InetAddress.getByAddress(quads);
     }
 	
-	protected DatagramPacket doInBackground(Void... urls) {
+	protected ArrayList<ServerInfo> doInBackground(Void... urls) {
+		//TODO: Add some sort of "in progress" stuff to this
+        ArrayList<ServerInfo> aRV = new ArrayList<ServerInfo>();
+		DatagramSocket oSocket = null;
 		try {
-			DatagramSocket oSocket;
 			oSocket = new DatagramSocket(PORT);
 			oSocket.setBroadcast(true);
 			oSocket.setSoTimeout(SOCKET_TIMEOUT_MS);
@@ -50,32 +61,59 @@ public class FindServerBroadcaster extends AsyncTask<Void, Void, DatagramPacket>
 	            getBroadcastAddress(), DISCOVERY_PORT);
 	        oSocket.send(oOutPacket);
 	        
-	        byte[] aRecvBuf = new byte[50];
-	        DatagramPacket oInPacket = new DatagramPacket(aRecvBuf, aRecvBuf.length);
-	        Log.d("Syncro", "Waiting for response");
-	        oSocket.receive(oInPacket);
-	        Log.d("Syncro", "Response recieved: ");
-	        String s = new String(oInPacket.getData(), 0, oInPacket.getLength());
-	        InetAddress oAddress = oInPacket.getAddress();
-	        Log.d("Syncro", "Received response " + s);
-	        Log.d("Syncro", "From: " + oAddress.toString() );
-	        oSocket.close();
-	        return oInPacket;
-	        //TODO: Improve this stuff somehow, think it'll really only find one server at the moment
+	        long nEndTime = SystemClock.uptimeMillis() + SEARCH_TIME;
+	        while( !oSocket.isClosed() && (SystemClock.uptimeMillis() < nEndTime) ) {
+		        byte[] aRecvBuf = new byte[50];
+		        DatagramPacket oInPacket = new DatagramPacket(aRecvBuf, aRecvBuf.length);
+		        Log.d("Syncro", "Waiting for response");
+		        try {
+		        	oSocket.receive(oInPacket);
+		        }catch(SocketTimeoutException e) {
+		        	//Socket timed out, doesn't really matter
+		        	continue;
+		        }
+		        String s = new String(oInPacket.getData(), 0, oInPacket.getLength());
+		        
+		        Log.d("Syncro", "Received response: " + s);
+		        Log.d("Syncro", "From: " + oInPacket.getAddress().getHostName() );
+		        
+				String[] asSections = s.split(": ");
+				if( asSections.length == 2 ) {
+					ServerInfo oInfo = new ServerInfo();
+					oInfo.Address = oInPacket.getAddress();
+					oInfo.Name = asSections[1];
+					//TODO: Update this to be read from the data
+					//		after updating to use protocol buffers probably
+					oInfo.Port = 9998;
+					
+					aRV.add( oInfo );
+				} else {
+					Log.d("Syncro","Invalid packet received in FindServerBroadcaster");
+				}
+	        }
         }catch(IOException e) {
         	Log.e("Syncro", "IOException in FindServer::SendBroadcast:" );
         	Log.e("Syncro", e.toString() );
         	return null;
         }
+        finally {
+        	if( (oSocket != null) && !oSocket.isClosed() ) {
+        		oSocket.close();
+        	}
+        }
+        return aRV;
 	}
 	
-	protected void onPostExecute(DatagramPacket inoResult) {
+	protected void onPostExecute(ArrayList<ServerInfo> inoResult) {
 		if( inoResult == null )
 			return;
 		Log.d("Syncro", "In post executte");
-		String s = new String(inoResult.getData(), 0, inoResult.getLength());
-		String[] asSections = s.split(": "); 
-		m_oParent.AddServer( asSections[1],inoResult.getAddress() );
+		
+		for( int n=0; n < inoResult.size(); n++ ) {
+			//TODO: pass in port as well
+			m_oParent.AddServer( inoResult.get(n).Name, inoResult.get(n).Address );
+		}
+		
 	}
         
 }

@@ -71,12 +71,17 @@ public class FindServer extends Activity
     }
     
     public void AddServer(String insName,InetAddress inoAddress) {
-    	//TODO: add duplicate detection or something
-    	//TODO: also check that entries aren't in the database already.
+    	//TODO: check that entries aren't in the database already.
     	Log.d("Syncro", "Adding server: " + insName + " : " + inoAddress.toString() );
     	ServerEntry[] aNewArray;
     	int nInsertIndex = 0;
     	if( m_aServers != null ) {
+    		for(int n=0;n < m_aServers.length; n++ ) {
+    			if( ( m_aServers[n].Name.equals(insName) ) && ( m_aServers[n].Address.equals(inoAddress) ) ) {
+    				//Server already exists
+    				return;
+    			}
+    		}
     		nInsertIndex = m_aServers.length;
     		aNewArray = new ServerEntry[ m_aServers.length + 1 ];
     		System.arraycopy(m_aServers, 0, aNewArray, 0, m_aServers.length );
