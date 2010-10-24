@@ -12,6 +12,8 @@ public class ProgressNotification {
 	
 	final static int PROGRESS_NOTIFICATION_ID = 1;
 	
+	final static int UPDATE_RATE = 250;
+	
 	private Notification m_oNotification;
 	private Context m_oContext;
 	
@@ -28,6 +30,8 @@ public class ProgressNotification {
 	private float m_flCurrentRate;
 	private float m_nDataSinceLast;
 	
+	private long m_nLastUpdateTime;
+	
 	protected ProgressNotification(Context inoContext) {
 		m_oContext = inoContext;
 		m_fHaveFile = false;
@@ -38,6 +42,7 @@ public class ProgressNotification {
 		m_nProgress = 0;
 		m_fShowRate = false;
 		m_nLastProgressUpdate = 0;
+		m_nLastUpdateTime = 0;
 	}
 	
 	public void create(CharSequence tickerText) {
@@ -66,9 +71,9 @@ public class ProgressNotification {
 	}
 	
 	public void setProgress( int innProgress ) {
+		long nCurrentTime = SystemClock.uptimeMillis();
 		if( m_fShowRate ) {
 			m_nDataSinceLast += (innProgress - m_nProgress);
-			long nCurrentTime = SystemClock.uptimeMillis(); 
 			if( (m_nLastProgressUpdate == 0) || ( nCurrentTime > (m_nLastProgressUpdate+4000) ) ) {
 				float flDuration = (nCurrentTime - m_nLastProgressUpdate);
 				if( flDuration != 0 ) {
@@ -80,8 +85,14 @@ public class ProgressNotification {
 				m_nDataSinceLast = 0;
 				m_nLastProgressUpdate = nCurrentTime;
 			}
+			if( m_flCurrentRate == 0 ) {
+				//TODO: We've probably just started, but don't want it sitting at 0kb/s for 4 seconds, so do something here
+			}
 		}
 		m_nProgress = innProgress;
+		if( nCurrentTime > (m_nLastUpdateTime + UPDATE_RATE) ) {
+			update();
+		}
 	}
 	
 	public void setShowRate( boolean innShowRate ) {
@@ -89,6 +100,7 @@ public class ProgressNotification {
 	}
 	
 	public void update() {
+		//TODO: remove most calls to update, and just call setprogress instead 
 		if( m_oNotification == null ) {
 			create("Syncro Syncing!");
 		}
@@ -114,6 +126,7 @@ public class ProgressNotification {
 
 		NotificationManager oNM = (NotificationManager)m_oContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		oNM.notify(PROGRESS_NOTIFICATION_ID, m_oNotification);
+		m_nLastUpdateTime = SystemClock.uptimeMillis(); 
 	}
 	
 	public void stop() {

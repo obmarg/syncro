@@ -291,7 +291,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 	
 	protected boolean GetFiles(Socket inoSock) throws Exception,IOException {
-		
+		//android.os.Debug.startMethodTracing("syncro");
 		boolean fOK = false;
 		int nPrevFolderId = -1;
 		m_oProgressNotification.setTotalNumFiles( m_aFilesToDownload.size() );
@@ -315,7 +315,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				//			but never mind for now...
 				m_oProgressNotification.setCurrentFileDetails( oFile, nFile );
 				m_oProgressNotification.setProgress( 0 );
-				m_oProgressNotification.update();
 				fOK = GetFile( inoSock, oFile, destFilename );
 				if( !fOK )
 					return false;
@@ -323,6 +322,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			
 			nPrevFolderId = oFile.FolderId;
 		}
+		//android.os.Debug.stopMethodTracing();
 		return fOK;
 	}
 	
@@ -371,7 +371,6 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		do {
 			m_oPBInterface.HandleResponse(oInputStream);
 			m_oProgressNotification.setProgress( oResponseHandler.getRecievedSize() );
-			m_oProgressNotification.update();
 			if( oResponseHandler.canRemove() ) {
 				fDone = true;
 			} else {
