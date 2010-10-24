@@ -32,6 +32,8 @@ CBroadcastListener::HandleReceive(const boost::system::error_code& error, std::s
 		string oResponse = "HELLO: " + m_sServerName;
 		m_oSocket.send_to( boost::asio::buffer(oResponse), m_oEndpoint );
 	}
+	//TODO: Figure out if we need to call startrecieve again.  we probably do....
+	StartRecieve();
 }
 
 void 
