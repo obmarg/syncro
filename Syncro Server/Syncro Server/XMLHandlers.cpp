@@ -5,7 +5,7 @@
 #include "ServerComms.h"
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include <cstdint>
+#include <stdint.h>
 
 namespace syncro {
 
