@@ -5,6 +5,7 @@
 #include "ServerComms.h"
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <cstdint>
 
 namespace syncro {
 
@@ -92,6 +93,16 @@ CXMLSendHandler::~CXMLSendHandler() {
 
 void CXMLSendHandler::SendDone(int innSent) {
 	m_pConn->StartRecv(0);
+}
+
+bool CXMLSendHandler::SendStarting() 
+{
+	//Fill out the size in the buffer
+	size_t nBufferSize = m_aBuffer.size();
+	if( nBufferSize < 5 ) 
+		return false;
+	*((int32_t*)&m_aBuffer[1]) = ToJavaEndian<int32_t>((int32_t)nBufferSize);
+	return true;
 }
 
 

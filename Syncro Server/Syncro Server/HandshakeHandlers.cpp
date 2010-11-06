@@ -70,6 +70,7 @@ CPBHandshakeResponse::CPBHandshakeResponse() {
 		sUUID = std::string( aUUID.begin(), aUUID.end() );
 		//TODO: Make the hostname customisable perhaps?
 		std::string sHostname = boost::asio::ip::host_name();
+		//TODO: this can exception if the uuid contains the wrong characters.  fix it (presumably by adding statements & binding)
 		oDB->run("INSERT INTO ServerID(uuid,servername) VALUES('" + sUUID + "','" + sHostname + "');");
 	}
 	m_oMessage.set_uuid( sUUID );
