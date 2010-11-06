@@ -3,7 +3,7 @@
 
 namespace syncro {
 
-CBinaryIncomingData::CBinaryIncomingData( const std::string insFilename ) : m_oFile(insFilename, std::ios::out | std::ios::binary ) {
+CBinaryIncomingData::CBinaryIncomingData( const std::string insFilename ) : m_oFile(insFilename.c_str(), std::ios::out | std::ios::binary ) {
 
 }
 

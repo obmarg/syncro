@@ -8,7 +8,7 @@ alias libboost : /usr/lib/libboost_system-mt.a /usr/lib/libboost_thread.a /usr/l
 alias protocol_buffers : protocol_buffers/binarydata.pb.cc protocol_buffers/handshake.pb.cc protocol_buffers/header.pb.cc ;
 alias libprotobuf-lite : /usr/lib/libprotobuf.so.6 ;
 exe syncro 
-	: BinaryDataResponse.cpp BroadcastListener.cpp BroadcastThread.cpp Database.cpp FileSendData.cpp Folder.cpp FolderMan.cpp HandshakeHandlers.cpp main.cpp PBRequestHandler.cpp PBResponseSendHandler.cpp ServerComms.cpp SyncroDB.cpp SyncroPBResponseFactory.cpp SyncroServer.cpp XMLBuilder.cpp XMLHandlers.cpp protocol_buffers 
+	: BinaryDataResponse.cpp BroadcastListener.cpp BroadcastThread.cpp Database.cpp FileSendData.cpp Folder.cpp FolderMan.cpp HandshakeHandlers.cpp main.cpp PBRequestHandler.cpp PBResponseSendHandler.cpp ServerComms.cpp SyncroDB.cpp SyncroPBResponseFactory.cpp SyncroServer.cpp XMLBuilder.cpp XMLHandlers.cpp BinaryIncomingData.cpp protocol_buffers 
 	sqlite tinyxml pthreads stdcpp libc libdl libboost libprotobuf-lite
 	: <include>/usr/include/
 	  <include>/usr/include/c++/4.4/
