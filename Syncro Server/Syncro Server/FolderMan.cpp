@@ -1,4 +1,5 @@
 #include "FolderMan.h"
+#include "BinaryDataRequest.h"
 #include <boost/filesystem.hpp>
 
 namespace syncro {
@@ -48,4 +49,21 @@ CFolderMan::GetFileName(int nFolderId,const std::string& fileName) {
 	return rv;
 }
 
+std::string 
+CFolderMan::IncomingFile( const CBinaryDataRequest& fileData )
+{
+	const sFolderInfo& folderInfo = FindFolder( fileData.GetFolderId() );
+	std::string destFileName = folderInfo.sFolderName + fileData.GetFilename();
+	path destFile( destFileName );
+	if( !exists( destFile ) )
+		return destFile.native_file_string();
+	int nFileSize = fileData.GetFileSize();
+	if( nFileSize != -1 ) 
+	{
+		if( file_size( destFile ) != nFileSize )
+			return destFile.native_file_string();
+	}
+	//TODO: SHould i just throw an exception here?
+	return std::string();
+}
 };		//end namespace syncro

@@ -96,6 +96,12 @@
     <ClInclude Include="protocol_buffers\handshake.pb.h">
       <Filter>Header Files\Protocol Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="BinaryIncomingResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryIncomingData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -157,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="protocol_buffers\handshake.pb.cc">
       <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryIncomingData.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

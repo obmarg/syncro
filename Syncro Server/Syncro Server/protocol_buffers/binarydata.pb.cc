@@ -13,6 +13,8 @@ namespace pb {
 void protobuf_ShutdownFile_binarydata_2eproto() {
   delete BinaryDataRequest::default_instance_;
   delete BinaryPacketHeader::default_instance_;
+  delete BinaryIncomingResponse::default_instance_;
+  delete BinaryIncomingAck::default_instance_;
 }
 
 void protobuf_AddDesc_binarydata_2eproto() {
@@ -23,8 +25,12 @@ void protobuf_AddDesc_binarydata_2eproto() {
 
   BinaryDataRequest::default_instance_ = new BinaryDataRequest();
   BinaryPacketHeader::default_instance_ = new BinaryPacketHeader();
+  BinaryIncomingResponse::default_instance_ = new BinaryIncomingResponse();
+  BinaryIncomingAck::default_instance_ = new BinaryIncomingAck();
   BinaryDataRequest::default_instance_->InitAsDefaultInstance();
   BinaryPacketHeader::default_instance_->InitAsDefaultInstance();
+  BinaryIncomingResponse::default_instance_->InitAsDefaultInstance();
+  BinaryIncomingAck::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_binarydata_2eproto);
 }
 
@@ -43,6 +49,7 @@ const ::std::string BinaryDataRequest::_default_file_name_;
 const int BinaryDataRequest::kFileNameFieldNumber;
 const int BinaryDataRequest::kFolderIdFieldNumber;
 const int BinaryDataRequest::kRecvBufferSizeFieldNumber;
+const int BinaryDataRequest::kFileSizeFieldNumber;
 #endif  // !_MSC_VER
 
 BinaryDataRequest::BinaryDataRequest()
@@ -64,6 +71,7 @@ void BinaryDataRequest::SharedCtor() {
   file_name_ = const_cast< ::std::string*>(&_default_file_name_);
   folder_id_ = 0;
   recv_buffer_size_ = 0;
+  file_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -103,6 +111,7 @@ void BinaryDataRequest::Clear() {
     }
     folder_id_ = 0;
     recv_buffer_size_ = 0;
+    file_size_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -154,6 +163,22 @@ bool BinaryDataRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(32)) goto parse_file_size;
+        break;
+      }
+      
+      // optional int32 file_size = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_file_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &file_size_)));
+          _set_bit(3);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -191,6 +216,11 @@ void BinaryDataRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->recv_buffer_size(), output);
   }
   
+  // optional int32 file_size = 4;
+  if (_has_bit(3)) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->file_size(), output);
+  }
+  
 }
 
 int BinaryDataRequest::ByteSize() const {
@@ -218,6 +248,13 @@ int BinaryDataRequest::ByteSize() const {
           this->recv_buffer_size());
     }
     
+    // optional int32 file_size = 4;
+    if (has_file_size()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->file_size());
+    }
+    
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -242,6 +279,9 @@ void BinaryDataRequest::MergeFrom(const BinaryDataRequest& from) {
     if (from._has_bit(2)) {
       set_recv_buffer_size(from.recv_buffer_size());
     }
+    if (from._has_bit(3)) {
+      set_file_size(from.file_size());
+    }
   }
 }
 
@@ -262,6 +302,7 @@ void BinaryDataRequest::Swap(BinaryDataRequest* other) {
     std::swap(file_name_, other->file_name_);
     std::swap(folder_id_, other->folder_id_);
     std::swap(recv_buffer_size_, other->recv_buffer_size_);
+    std::swap(file_size_, other->file_size_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }
@@ -554,6 +595,318 @@ void BinaryPacketHeader::Swap(BinaryPacketHeader* other) {
 
 ::std::string BinaryPacketHeader::GetTypeName() const {
   return "syncro.pb.BinaryPacketHeader";
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int BinaryIncomingResponse::kAcceptedFieldNumber;
+#endif  // !_MSC_VER
+
+BinaryIncomingResponse::BinaryIncomingResponse()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void BinaryIncomingResponse::InitAsDefaultInstance() {
+}
+
+BinaryIncomingResponse::BinaryIncomingResponse(const BinaryIncomingResponse& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void BinaryIncomingResponse::SharedCtor() {
+  _cached_size_ = 0;
+  accepted_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+BinaryIncomingResponse::~BinaryIncomingResponse() {
+  SharedDtor();
+}
+
+void BinaryIncomingResponse::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void BinaryIncomingResponse::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const BinaryIncomingResponse& BinaryIncomingResponse::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_binarydata_2eproto();  return *default_instance_;
+}
+
+BinaryIncomingResponse* BinaryIncomingResponse::default_instance_ = NULL;
+
+BinaryIncomingResponse* BinaryIncomingResponse::New() const {
+  return new BinaryIncomingResponse;
+}
+
+void BinaryIncomingResponse::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    accepted_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool BinaryIncomingResponse::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool accepted = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &accepted_)));
+          _set_bit(0);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void BinaryIncomingResponse::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional bool accepted = 1;
+  if (_has_bit(0)) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->accepted(), output);
+  }
+  
+}
+
+int BinaryIncomingResponse::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional bool accepted = 1;
+    if (has_accepted()) {
+      total_size += 1 + 1;
+    }
+    
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void BinaryIncomingResponse::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const BinaryIncomingResponse*>(&from));
+}
+
+void BinaryIncomingResponse::MergeFrom(const BinaryIncomingResponse& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from._has_bit(0)) {
+      set_accepted(from.accepted());
+    }
+  }
+}
+
+void BinaryIncomingResponse::CopyFrom(const BinaryIncomingResponse& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool BinaryIncomingResponse::IsInitialized() const {
+  
+  return true;
+}
+
+void BinaryIncomingResponse::Swap(BinaryIncomingResponse* other) {
+  if (other != this) {
+    std::swap(accepted_, other->accepted_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string BinaryIncomingResponse::GetTypeName() const {
+  return "syncro.pb.BinaryIncomingResponse";
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int BinaryIncomingAck::kOkFieldNumber;
+#endif  // !_MSC_VER
+
+BinaryIncomingAck::BinaryIncomingAck()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void BinaryIncomingAck::InitAsDefaultInstance() {
+}
+
+BinaryIncomingAck::BinaryIncomingAck(const BinaryIncomingAck& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void BinaryIncomingAck::SharedCtor() {
+  _cached_size_ = 0;
+  ok_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+BinaryIncomingAck::~BinaryIncomingAck() {
+  SharedDtor();
+}
+
+void BinaryIncomingAck::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void BinaryIncomingAck::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const BinaryIncomingAck& BinaryIncomingAck::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_binarydata_2eproto();  return *default_instance_;
+}
+
+BinaryIncomingAck* BinaryIncomingAck::default_instance_ = NULL;
+
+BinaryIncomingAck* BinaryIncomingAck::New() const {
+  return new BinaryIncomingAck;
+}
+
+void BinaryIncomingAck::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    ok_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool BinaryIncomingAck::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool ok = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &ok_)));
+          _set_bit(0);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void BinaryIncomingAck::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional bool ok = 1;
+  if (_has_bit(0)) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->ok(), output);
+  }
+  
+}
+
+int BinaryIncomingAck::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional bool ok = 1;
+    if (has_ok()) {
+      total_size += 1 + 1;
+    }
+    
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void BinaryIncomingAck::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const BinaryIncomingAck*>(&from));
+}
+
+void BinaryIncomingAck::MergeFrom(const BinaryIncomingAck& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from._has_bit(0)) {
+      set_ok(from.ok());
+    }
+  }
+}
+
+void BinaryIncomingAck::CopyFrom(const BinaryIncomingAck& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool BinaryIncomingAck::IsInitialized() const {
+  
+  return true;
+}
+
+void BinaryIncomingAck::Swap(BinaryIncomingAck* other) {
+  if (other != this) {
+    std::swap(ok_, other->ok_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string BinaryIncomingAck::GetTypeName() const {
+  return "syncro.pb.BinaryIncomingAck";
 }
 
 

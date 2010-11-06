@@ -46,6 +46,13 @@ public final class Binarydata {
     public boolean hasRecvBufferSize() { return hasRecvBufferSize; }
     public int getRecvBufferSize() { return recvBufferSize_; }
     
+    // optional int32 file_size = 4;
+    public static final int FILE_SIZE_FIELD_NUMBER = 4;
+    private boolean hasFileSize;
+    private int fileSize_ = 0;
+    public boolean hasFileSize() { return hasFileSize; }
+    public int getFileSize() { return fileSize_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -64,6 +71,9 @@ public final class Binarydata {
       }
       if (hasRecvBufferSize()) {
         output.writeInt32(3, getRecvBufferSize());
+      }
+      if (hasFileSize()) {
+        output.writeInt32(4, getFileSize());
       }
     }
     
@@ -84,6 +94,10 @@ public final class Binarydata {
       if (hasRecvBufferSize()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, getRecvBufferSize());
+      }
+      if (hasFileSize()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, getFileSize());
       }
       memoizedSerializedSize = size;
       return size;
@@ -238,6 +252,9 @@ public final class Binarydata {
         if (other.hasRecvBufferSize()) {
           setRecvBufferSize(other.getRecvBufferSize());
         }
+        if (other.hasFileSize()) {
+          setFileSize(other.getFileSize());
+        }
         return this;
       }
       
@@ -266,6 +283,10 @@ public final class Binarydata {
             }
             case 24: {
               setRecvBufferSize(input.readInt32());
+              break;
+            }
+            case 32: {
+              setFileSize(input.readInt32());
               break;
             }
           }
@@ -327,6 +348,24 @@ public final class Binarydata {
       public Builder clearRecvBufferSize() {
         result.hasRecvBufferSize = false;
         result.recvBufferSize_ = 0;
+        return this;
+      }
+      
+      // optional int32 file_size = 4;
+      public boolean hasFileSize() {
+        return result.hasFileSize();
+      }
+      public int getFileSize() {
+        return result.getFileSize();
+      }
+      public Builder setFileSize(int value) {
+        result.hasFileSize = true;
+        result.fileSize_ = value;
+        return this;
+      }
+      public Builder clearFileSize() {
+        result.hasFileSize = false;
+        result.fileSize_ = 0;
         return this;
       }
       
@@ -758,6 +797,510 @@ public final class Binarydata {
     }
     
     // @@protoc_insertion_point(class_scope:syncro.pb.BinaryPacketHeader)
+  }
+  
+  public static final class BinaryIncomingResponse extends
+      com.google.protobuf.GeneratedMessageLite {
+    // Use BinaryIncomingResponse.newBuilder() to construct.
+    private BinaryIncomingResponse() {
+      initFields();
+    }
+    private BinaryIncomingResponse(boolean noInit) {}
+    
+    private static final BinaryIncomingResponse defaultInstance;
+    public static BinaryIncomingResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public BinaryIncomingResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    // optional bool accepted = 1;
+    public static final int ACCEPTED_FIELD_NUMBER = 1;
+    private boolean hasAccepted;
+    private boolean accepted_ = false;
+    public boolean hasAccepted() { return hasAccepted; }
+    public boolean getAccepted() { return accepted_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasAccepted()) {
+        output.writeBool(1, getAccepted());
+      }
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasAccepted()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, getAccepted());
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse, Builder> {
+      private uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse result;
+      
+      // Construct using uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse();
+        return builder;
+      }
+      
+      protected uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse getDefaultInstanceForType() {
+        return uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse other) {
+        if (other == uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingResponse.getDefaultInstance()) return this;
+        if (other.hasAccepted()) {
+          setAccepted(other.getAccepted());
+        }
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              return this;
+            default: {
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setAccepted(input.readBool());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional bool accepted = 1;
+      public boolean hasAccepted() {
+        return result.hasAccepted();
+      }
+      public boolean getAccepted() {
+        return result.getAccepted();
+      }
+      public Builder setAccepted(boolean value) {
+        result.hasAccepted = true;
+        result.accepted_ = value;
+        return this;
+      }
+      public Builder clearAccepted() {
+        result.hasAccepted = false;
+        result.accepted_ = false;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:syncro.pb.BinaryIncomingResponse)
+    }
+    
+    static {
+      defaultInstance = new BinaryIncomingResponse(true);
+      uk.me.grambo.syncro.pb.Binarydata.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:syncro.pb.BinaryIncomingResponse)
+  }
+  
+  public static final class BinaryIncomingAck extends
+      com.google.protobuf.GeneratedMessageLite {
+    // Use BinaryIncomingAck.newBuilder() to construct.
+    private BinaryIncomingAck() {
+      initFields();
+    }
+    private BinaryIncomingAck(boolean noInit) {}
+    
+    private static final BinaryIncomingAck defaultInstance;
+    public static BinaryIncomingAck getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public BinaryIncomingAck getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    // optional bool ok = 1;
+    public static final int OK_FIELD_NUMBER = 1;
+    private boolean hasOk;
+    private boolean ok_ = false;
+    public boolean hasOk() { return hasOk; }
+    public boolean getOk() { return ok_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasOk()) {
+        output.writeBool(1, getOk());
+      }
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasOk()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, getOk());
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck, Builder> {
+      private uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck result;
+      
+      // Construct using uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck();
+        return builder;
+      }
+      
+      protected uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck getDefaultInstanceForType() {
+        return uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck other) {
+        if (other == uk.me.grambo.syncro.pb.Binarydata.BinaryIncomingAck.getDefaultInstance()) return this;
+        if (other.hasOk()) {
+          setOk(other.getOk());
+        }
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              return this;
+            default: {
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setOk(input.readBool());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional bool ok = 1;
+      public boolean hasOk() {
+        return result.hasOk();
+      }
+      public boolean getOk() {
+        return result.getOk();
+      }
+      public Builder setOk(boolean value) {
+        result.hasOk = true;
+        result.ok_ = value;
+        return this;
+      }
+      public Builder clearOk() {
+        result.hasOk = false;
+        result.ok_ = false;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:syncro.pb.BinaryIncomingAck)
+    }
+    
+    static {
+      defaultInstance = new BinaryIncomingAck(true);
+      uk.me.grambo.syncro.pb.Binarydata.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:syncro.pb.BinaryIncomingAck)
   }
   
   

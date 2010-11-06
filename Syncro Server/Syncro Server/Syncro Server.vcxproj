@@ -89,6 +89,8 @@
     <ClInclude Include="BasePBResponse.h" />
     <ClInclude Include="BinaryDataRequest.h" />
     <ClInclude Include="BinaryDataResponse.h" />
+    <ClInclude Include="BinaryIncomingData.h" />
+    <ClInclude Include="BinaryIncomingResponse.h" />
     <ClInclude Include="BroadcastListener.h" />
     <ClInclude Include="BroadcastThread.h" />
     <ClInclude Include="common.h" />
@@ -113,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BinaryDataResponse.cpp" />
+    <ClCompile Include="BinaryIncomingData.cpp" />
     <ClCompile Include="BroadcastListener.cpp" />
     <ClCompile Include="BroadcastThread.cpp" />
     <ClCompile Include="Database.cpp" />

@@ -8,6 +8,7 @@ message BinaryDataRequest {
 	optional string file_name = 1;
 	required int32 folder_id = 2;
 	optional int32 recv_buffer_size = 3;
+	optional int32 file_size = 4;
 };
 
 message BinaryPacketHeader {
@@ -23,3 +24,11 @@ message BinaryPacketHeader {
 	optional SectionType binary_packet_type = 4;
 };
 
+message BinaryIncomingResponse {
+	optional bool accepted = 1;
+};
+
+message BinaryIncomingAck {
+	optional bool ok = 1;
+};
+	

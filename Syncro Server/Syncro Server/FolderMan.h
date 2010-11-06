@@ -10,6 +10,8 @@
 
 namespace syncro {
 
+class CBinaryDataRequest;
+
 class CFolderMan {
 public:
 	struct sFolderInfo {
@@ -29,6 +31,8 @@ public:
 	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
 
 	std::string GetFileName(int nFolderId,const std::string& fileName);
+
+	std::string IncomingFile( const CBinaryDataRequest& fileData );
 	
 private:
 	TFolderInfoList m_aFolderInfo;

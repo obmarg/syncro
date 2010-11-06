@@ -1,6 +1,8 @@
 #include "SyncroPBResponseFactory.h"
 #include "BinaryDataResponse.h"
 #include "BinaryDataRequest.h"
+#include "BinaryIncomingResponse.h"
+#include "BinaryIncomingData.h"
 #include "HandshakeHandlers.h"
 #include "SyncroDB.h"
 
@@ -33,7 +35,25 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			m_fAuthenticated = true;
 			return pResponse;
 		}
-	}
+	case eSyncroPBPacketTypes_BinaryIncomingRequest: {
+			CBinaryDataRequest oRequest( inaInputStreams );
+			std::string sFilename = m_pFolderMan->IncomingFile( oRequest );
+			bool fAccept = !sFilename.empty();
+			m_pCurrentRecvData.reset( new CBinaryIncomingData( sFilename ) );
+			return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Response, fAccept );
+		}
+	case eSyncroPBPacketTypes_BinaryIncomingData: {
+			bool fOK = true;
+			try {
+				m_pCurrentRecvData->HandlePacket( inaInputStreams );
+			}
+			catch( const std::exception& ex ) 
+			{
+				fOK = false;
+			}
+			return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Ack, fOK );
+		}
+	};
 	throw std::runtime_error("Invalid pb request passed to response factory");
 }
 

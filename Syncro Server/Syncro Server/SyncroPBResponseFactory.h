@@ -6,6 +6,7 @@
 #include "FileSendData.h"
 #include <boost/scoped_ptr.hpp>
 #include "FolderMan.h"
+#include "BinaryIncomingData.h"
 
 namespace syncro {
 
@@ -15,6 +16,10 @@ enum eSyncroPBPacketTypes {
 	eSyncroPBPacketTypes_BinaryResponse,
 	eSyncroPBPacketTypes_HandshakeRequest,
 	eSyncroPBPacketTypes_HandshakeResponse,
+	eSyncroPBPacketTypes_BinaryIncomingRequest,
+	eSyncroPBPacketTypes_BinaryIncomingResponse,
+	eSyncroPBPacketTypes_BinaryIncomingData,
+	eSyncroPBPacketTypes_BinaryIncomingDataAck,
 };
 
 struct sSubpackets {
@@ -41,6 +46,8 @@ private:
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
 	TFileSendDataPtr m_pCurrentSendData;
 	boost::scoped_ptr<CFolderMan> m_pFolderMan;
+	typedef boost::scoped_ptr<CBinaryIncomingData> TFileRecvDataPtr;
+	TFileRecvDataPtr m_pCurrentRecvData;
 	bool m_fAuthenticated;
 };
 

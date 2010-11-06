@@ -19,16 +19,22 @@ public:
 			m_nBufferSize = 0;
 			if( oRequest.has_recv_buffer_size() )
 				m_nBufferSize = oRequest.recv_buffer_size();
+			if( oRequest.has_file_size() )
+				m_nFileSize = oRequest.file_size();
+			else
+				m_nFileSize = -1;
 		} 
 	}
 	~CBinaryDataRequest() {};
 	const std::string& GetFilename() const { return m_sFilename; };
 	const int GetFolderId() const { return m_nFolderId; };
 	const int GetBufferSize() const { return m_nBufferSize; };
+	const int GetFileSize() const { return m_nFileSize; };
 private:
 	std::string m_sFilename;
 	int m_nFolderId;
 	int m_nBufferSize;
+	int m_nFileSize;
 };
 
 };	//namespace syncro
