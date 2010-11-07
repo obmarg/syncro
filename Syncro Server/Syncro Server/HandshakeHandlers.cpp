@@ -51,7 +51,7 @@ CPBHandshakeResponse::CPBHandshakeResponse() {
 	//TODO: move this string to a static const or something
 	m_oMessage.set_magic( "Hey bitch!" );
 
-	Database::TPointer oDB = CSyncroDB::OpenDB();
+	db::Database::TPointer oDB = CSyncroDB::OpenDB();
 	std::string sUUID;
 	vector<unsigned char> aUUID( 16 );
 	try {

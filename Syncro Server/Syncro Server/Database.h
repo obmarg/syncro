@@ -25,12 +25,28 @@
 #endif
 
 namespace syncro {
+namespace db {
+
+class SqlException : std::runtime_error {
+public:
+	SqlException( std::string sMessage, int nErrorCode ) : runtime_error( sMessage.c_str() ) {
+		m_nErrorCode = nErrorCode;
+	}
+private:
+	int m_nErrorCode;
+};
+
+class Database;
+class Statement;
+typedef boost::shared_ptr<Database> DatabasePtr;
+typedef boost::shared_ptr<Statement> StatementPtr;
+
 
 class Database
 {
 public:
-	typedef boost::shared_ptr<Database> TPointer;
-	
+	typedef boost::shared_ptr<Database> TPointer;	
+
 	typedef std::map<std::string,std::string,CStringLessThan> Row;
 
 	class ResultSet
@@ -125,6 +141,8 @@ public:
 		return tReturnType();
 	}
 
+	StatementPtr prepare(std::string insSql);
+
 #ifdef _WIN32
 	template<>
 	std::string runScalar<std::string>(std::string query);
@@ -169,6 +187,152 @@ std::string Database::runScalar<std::string>(std::string query) {
 }
 #endif
 
+class Statement
+{
+	//TODO: Make statement support pthreads stuff?
+	friend class Database;
+protected:
+	Statement(sqlite3_stmt* handle) : m_handle(handle), m_fFetchedNames(false) {};
+	
+public:
+	//TODO: THis could all be done better with template meta programming type stuff
+	virtual ~Statement() {
+		sqlite3_finalize( m_handle );
+	}
+
+	bool GetNextRow() {
+		int nErrorCode = sqlite3_step( m_handle );
+		switch( nErrorCode ) {
+			case SQLITE_BUSY: 
+				throw SqlException( "Could not get next row - database busy", nErrorCode );
+			case SQLITE_ROW:
+				return true;
+			case SQLITE_DONE:
+				return false;
+			default:
+				throw SqlException( "Error in Statement::GetNextRow", nErrorCode );
+		}
+	}
+
+	void Reset() {
+		sqlite3_reset( m_handle );
+	}
+
+	void FetchColumnNames() {
+		int nCount = sqlite3_column_count( m_handle );
+		m_columnNames.reserve( nCount );
+		for( int iNum = 0; iNum < nCount; ++iNum ) {
+			m_columnNames.push_back( std::string( sqlite3_column_name( m_handle, iNum ) ) );
+		}
+		m_fFetchedNames = true;
+	}
+
+	int FindColumn(std::string colName) {
+		int nIndex = 0;
+		BOOST_FOREACH( const std::string& current, m_columnNames ) {
+			if( current.compare( colName ) == 0 )
+				return nIndex;
+			++nIndex;
+		}
+		return -1;
+	}
+
+	template<class tData>
+	void Bind(int innIndex, tData data) {
+		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, boost::lexical_cast<std::string>(data).c_str(), -1, SQLITE_TRANSIENT );
+		if( nErrorCode != SQLITE_OK )
+			throw SqlException( "Statement::Bind failed", nErrorCode );
+	}
+
+	template<class tData>
+	void Bind(std::string parameter, tData data) {
+		int nIndex = sqlite3_bind_parameter_index( m_handle, parameter.c_str() );
+		Bind( nIndex, data );
+	}
+#ifdef _WIN32
+	template<>
+	void Bind<std::string>(int innIndex, std::string data) {
+		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, data.c_str(), -1, SQLITE_TRANSIENT );
+		if( nErrorCode != SQLITE_OK )
+			throw SqlException( "Statement::Bind failed", nErrorCode );
+	}
+	
+	template<>
+	void Bind<int>(int innIndex, int innData) {
+		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, innData );
+		if( nErrorCode != SQLITE_OK )
+			throw SqlException( "Statement::Bind failed", nErrorCode );
+	}
+
+	template<>
+	void Bind<bool>(int innIndex, bool infData) {
+		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, ( infData ? 1 : 0 ) );
+		if( nErrorCode != SQLITE_OK )
+			throw SqlException( "Statement::Bind failed", nErrorCode );
+	}
+	
+	template<>
+	void Bind<unsigned int>(int innIndex, unsigned int innData) {
+		int nErrorCode = sqlite3_bind_int64( m_handle, innIndex, innData );
+		if( nErrorCode != SQLITE_OK )
+			throw SqlException( "Statement::Bind failed", nErrorCode );
+	}
+
+#endif
+
+	template<class tData>
+	tData GetColumn(int innIndex) {
+		std::string sData = std::string( sqlite3_column_text( m_handle, innIndex ) );
+		return boost::lexical_cast<tData,std::string>( sData );
+	}
+
+	template<class tData>
+	tData GetColumn(std::string parameter) {
+		if( !m_fFetchedNames )
+			FetchColumnNames();
+
+		int nIndex = FindColumn( parameter );
+		if( nIndex == -1 )
+			throw SqlException( "Invalid column passed to Statement::GetColumn: " + parameter, 0 );
+		return GetColumn( nIndex, data );
+	}
+
+#ifdef _WIN32
+	template<>
+	std::string GetColumn<std::string>( int innIndex) {
+		return std::string( reinterpret_cast<const char*>( sqlite3_column_text( m_handle, innIndex ) ) );
+	}
+
+	template<>
+	int GetColumn<int>(int innIndex) {
+		return sqlite3_column_int( m_handle, innIndex );
+	}
+	template<>
+	bool GetColumn<bool>( int innIndex ) {
+		return (sqlite3_column_int( m_handle, innIndex ) == 1);
+	}
+	template<>
+	unsigned int GetColumn<unsigned int>( int innIndex ) {
+		return static_cast<unsigned int>( sqlite3_column_int64( m_handle, innIndex ) );
+	}
+#endif
+
+	sqlite3_stmt* m_handle;
+	std::vector<std::string> m_columnNames;
+	bool m_fFetchedNames;
+};
+
+class AutoReset {
+public:
+	AutoReset( const StatementPtr statement ) : m_statement( statement ) {};
+	~AutoReset() {
+		m_statement->Reset();
+	};
+private:
+	const StatementPtr m_statement;
+};
+
+}; //namespace db
 }; //namespace syncro
 
 #endif

@@ -6,8 +6,9 @@ namespace syncro {
 
 using namespace std;
 using namespace boost::filesystem;
+using namespace db;
 
-CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
+CFolderMan::CFolderMan( db::Database::TPointer inpDB ) : m_pDB(inpDB) {
 	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path FROM Folders" );
 	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
 	foreach( Database::Row& oRow, oRS ) {

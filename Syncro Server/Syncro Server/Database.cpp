@@ -3,6 +3,7 @@
 #include <ctype.h>
 
 namespace syncro {
+namespace db {
 
 using std::string;
 
@@ -69,6 +70,26 @@ void Database::clearResult()
 	result.clear();
 }
 
+StatementPtr Database::prepare(std::string insSql)
+{
+	sqlite3_stmt *handle = NULL;
+	StatementPtr rv;
+	try {
+		int nErrorCode = sqlite3_prepare_v2( this->db, insSql.c_str(), insSql.size(), &handle, NULL );
+		if( nErrorCode != SQLITE_OK ) {
+			throw new SqlException( "Could not create statement: " + insSql, nErrorCode );
+		}
+		rv.reset( new Statement( handle ) );
+	}
+	catch( const std::exception& ex )
+	{
+		//TODO: do something
+		if( handle != NULL && !rv )
+			sqlite3_finalize( handle );
+		throw ex;
+	}
+}
+
 int callback(void* ptrDB,int numCols, char **colValues,char** colNames)
 {
 	Database *db = static_cast<Database*>(ptrDB);
@@ -95,4 +116,5 @@ void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv)
 	//TODO: find out if i need to delete the text here.
 }
 
+}	//namespace db
 };	//namespace syncro
