@@ -5,6 +5,7 @@
 #include "BinaryIncomingData.h"
 #include "HandshakeHandlers.h"
 #include "SyncroDB.h"
+#include "AuthManager.h"
 
 namespace syncro {
 
@@ -16,6 +17,7 @@ CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 }
 
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
+	//TODO: Add in admin mode control messages etc.
 	if( (!m_fAuthenticated) && (innPacketType != eSyncroPBPacketTypes_HandshakeRequest) ) {
 		throw authentication_exception("Not authenticated");
 	}
@@ -31,6 +33,12 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	case eSyncroPBPacketTypes_HandshakeRequest: {
 			CPBHandshakeRequest oRequest( inaInputStreams );
 			CBasePBResponse::TPointer pResponse = oRequest.GetResponse();
+			CAuthManager oAuthMan;
+			if( !oRequest.HasAuthDetails() && oAuthMan.NeedsAuth() )
+				throw authentication_exception("Authentication required but no details provided");
+			else if( oRequest.HasAuthDetails() ) {
+				oAuthMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword() );
+			}
 			//if we've got this far and haven't thrown, we're authed
 			m_fAuthenticated = true;
 			return pResponse;

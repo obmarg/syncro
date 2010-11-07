@@ -36,6 +36,13 @@ CPBHandshakeRequest::CPBHandshakeRequest(TInputStreamList& inaInputStreams) {
 			m_nMinorVersion = oRequest.client_ver_minor();
 		else
 			m_nMinorVersion = 0;
+		if( oRequest.has_username() && oRequest.has_password() )
+		{
+			m_fHasAuth = true;
+			m_UserName = oRequest.username();
+			m_Password = oRequest.password();
+		} else
+			m_fHasAuth = false;
 	} else {
 		throw authentication_exception("Invalid number of protocol buffers passed to handshake");
 	}

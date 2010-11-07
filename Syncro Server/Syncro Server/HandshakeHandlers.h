@@ -13,11 +13,17 @@ public:
 	CPBHandshakeRequest(TInputStreamList& inaInputStreams);
 	const int GetMajorVersion() const { return m_nMajorVersion; };
 	const int GetMinorVersion() const { return m_nMinorVersion; };
+	bool HasAuthDetails() const { return m_fHasAuth; };
+	const std::string GetUsername() const { return m_UserName; };
+	const std::string GetPassword() const { return m_Password; };
 
 	CBasePBResponse::TPointer GetResponse();
 private:
 	int m_nMajorVersion;
 	int m_nMinorVersion;
+	bool m_fHasAuth;
+	std::string m_UserName;
+	std::string m_Password;
 
 	const static std::string m_sRecvString;
 };

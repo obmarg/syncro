@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AuthManager.h" />
     <ClInclude Include="BasePBResponse.h" />
     <ClInclude Include="BinaryDataRequest.h" />
     <ClInclude Include="BinaryDataResponse.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="XMLHandlers.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AuthManager.cpp" />
     <ClCompile Include="BinaryDataResponse.cpp" />
     <ClCompile Include="BinaryIncomingData.cpp" />
     <ClCompile Include="BroadcastListener.cpp" />

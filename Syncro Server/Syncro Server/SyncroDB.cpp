@@ -2,7 +2,7 @@
 
 namespace syncro {
 
-const int CSyncroDB::EXPECTED_DB_VERSION = 3;
+const int CSyncroDB::EXPECTED_DB_VERSION = 4;
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE = 
@@ -18,6 +18,13 @@ const std::string SERVER_ID_TABLE_CREATE =
 				"CREATE TABLE IF NOT EXISTS " + SERVER_ID_TABLE_NAME + " (" + 
 				"uuid TEXT NOT NULL," +
 				"servername TEXT NOT NULL);";
+
+const std::string USERS_TABLE_NAME = "Users";
+const std::string USERS_TABLE_CREATE = 
+				"CREATE TABLE IF NOT EXISTS " + USERS_TABLE_NAME + " (" +
+				"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				"Username TEXT NOT NULL, " +
+				"Password TEXT NOT NULL, ";
 
 CSyncroDB::CSyncroDB(std::string insFilename) : Database( insFilename ) {
 	int nCurrentVersion = runScalar<int>("PRAGMA user_version;");
@@ -42,6 +49,7 @@ bool CSyncroDB::CreateDatabase() {
 	//TODO: possibly add a new function to database that doesn' return a result set
 	run(FOLDERS_TABLE_CREATE);
 	run(SERVER_ID_TABLE_CREATE);
+	run(USERS_TABLE_CREATE);
 	clearResult();
 	return true;
 }
@@ -53,6 +61,9 @@ bool CSyncroDB::UpgradeDatabase(int nCurrentVersion) {
 		run("DROP TABLE " + SERVER_ID_TABLE_NAME + ";");
 		run(SERVER_ID_TABLE_CREATE);
 	}
+	if( nCurrentVersion < 4 )
+		run( USERS_TABLE_CREATE );
+	clearResult();
 	return true;
 }
 

@@ -102,6 +102,9 @@
     <ClInclude Include="BinaryIncomingData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AuthManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -165,6 +168,9 @@
       <Filter>Source Files\Protocol Buffers</Filter>
     </ClCompile>
     <ClCompile Include="BinaryIncomingData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

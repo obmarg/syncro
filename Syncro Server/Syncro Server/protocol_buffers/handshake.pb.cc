@@ -39,10 +39,14 @@ struct StaticDescriptorInitializer_handshake_2eproto {
 // ===================================================================
 
 const ::std::string HandshakeRequest::_default_magic_;
+const ::std::string HandshakeRequest::_default_username_;
+const ::std::string HandshakeRequest::_default_password_;
 #ifndef _MSC_VER
 const int HandshakeRequest::kMagicFieldNumber;
 const int HandshakeRequest::kClientVerMajorFieldNumber;
 const int HandshakeRequest::kClientVerMinorFieldNumber;
+const int HandshakeRequest::kUsernameFieldNumber;
+const int HandshakeRequest::kPasswordFieldNumber;
 #endif  // !_MSC_VER
 
 HandshakeRequest::HandshakeRequest()
@@ -64,6 +68,8 @@ void HandshakeRequest::SharedCtor() {
   magic_ = const_cast< ::std::string*>(&_default_magic_);
   client_ver_major_ = 0;
   client_ver_minor_ = 0;
+  username_ = const_cast< ::std::string*>(&_default_username_);
+  password_ = const_cast< ::std::string*>(&_default_password_);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -74,6 +80,12 @@ HandshakeRequest::~HandshakeRequest() {
 void HandshakeRequest::SharedDtor() {
   if (magic_ != &_default_magic_) {
     delete magic_;
+  }
+  if (username_ != &_default_username_) {
+    delete username_;
+  }
+  if (password_ != &_default_password_) {
+    delete password_;
   }
   if (this != default_instance_) {
   }
@@ -103,6 +115,16 @@ void HandshakeRequest::Clear() {
     }
     client_ver_major_ = 0;
     client_ver_minor_ = 0;
+    if (_has_bit(3)) {
+      if (username_ != &_default_username_) {
+        username_->clear();
+      }
+    }
+    if (_has_bit(4)) {
+      if (password_ != &_default_password_) {
+        password_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -154,6 +176,34 @@ bool HandshakeRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(34)) goto parse_username;
+        break;
+      }
+      
+      // optional string username = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_username:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_username()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_password;
+        break;
+      }
+      
+      // optional string password = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_password:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_password()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -191,6 +241,18 @@ void HandshakeRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->client_ver_minor(), output);
   }
   
+  // optional string username = 4;
+  if (_has_bit(3)) {
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->username(), output);
+  }
+  
+  // optional string password = 5;
+  if (_has_bit(4)) {
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      5, this->password(), output);
+  }
+  
 }
 
 int HandshakeRequest::ByteSize() const {
@@ -218,6 +280,20 @@ int HandshakeRequest::ByteSize() const {
           this->client_ver_minor());
     }
     
+    // optional string username = 4;
+    if (has_username()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->username());
+    }
+    
+    // optional string password = 5;
+    if (has_password()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->password());
+    }
+    
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -242,6 +318,12 @@ void HandshakeRequest::MergeFrom(const HandshakeRequest& from) {
     if (from._has_bit(2)) {
       set_client_ver_minor(from.client_ver_minor());
     }
+    if (from._has_bit(3)) {
+      set_username(from.username());
+    }
+    if (from._has_bit(4)) {
+      set_password(from.password());
+    }
   }
 }
 
@@ -262,6 +344,8 @@ void HandshakeRequest::Swap(HandshakeRequest* other) {
     std::swap(magic_, other->magic_);
     std::swap(client_ver_major_, other->client_ver_major_);
     std::swap(client_ver_minor_, other->client_ver_minor_);
+    std::swap(username_, other->username_);
+    std::swap(password_, other->password_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }

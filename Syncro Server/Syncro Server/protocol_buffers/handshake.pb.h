@@ -104,6 +104,26 @@ class HandshakeRequest : public ::google::protobuf::MessageLite {
   inline ::google::protobuf::int32 client_ver_minor() const;
   inline void set_client_ver_minor(::google::protobuf::int32 value);
   
+  // optional string username = 4;
+  inline bool has_username() const;
+  inline void clear_username();
+  static const int kUsernameFieldNumber = 4;
+  inline const ::std::string& username() const;
+  inline void set_username(const ::std::string& value);
+  inline void set_username(const char* value);
+  inline void set_username(const char* value, size_t size);
+  inline ::std::string* mutable_username();
+  
+  // optional string password = 5;
+  inline bool has_password() const;
+  inline void clear_password();
+  static const int kPasswordFieldNumber = 5;
+  inline const ::std::string& password() const;
+  inline void set_password(const ::std::string& value);
+  inline void set_password(const char* value);
+  inline void set_password(const char* value, size_t size);
+  inline ::std::string* mutable_password();
+  
   // @@protoc_insertion_point(class_scope:syncro.pb.HandshakeRequest)
  private:
   mutable int _cached_size_;
@@ -112,11 +132,15 @@ class HandshakeRequest : public ::google::protobuf::MessageLite {
   static const ::std::string _default_magic_;
   ::google::protobuf::int32 client_ver_major_;
   ::google::protobuf::int32 client_ver_minor_;
+  ::std::string* username_;
+  static const ::std::string _default_username_;
+  ::std::string* password_;
+  static const ::std::string _default_password_;
   friend void  protobuf_AddDesc_handshake_2eproto();
   friend void protobuf_AssignDesc_handshake_2eproto();
   friend void protobuf_ShutdownFile_handshake_2eproto();
   
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
   
   // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
   inline bool _has_bit(int index) const {
@@ -304,6 +328,90 @@ inline ::google::protobuf::int32 HandshakeRequest::client_ver_minor() const {
 inline void HandshakeRequest::set_client_ver_minor(::google::protobuf::int32 value) {
   _set_bit(2);
   client_ver_minor_ = value;
+}
+
+// optional string username = 4;
+inline bool HandshakeRequest::has_username() const {
+  return _has_bit(3);
+}
+inline void HandshakeRequest::clear_username() {
+  if (username_ != &_default_username_) {
+    username_->clear();
+  }
+  _clear_bit(3);
+}
+inline const ::std::string& HandshakeRequest::username() const {
+  return *username_;
+}
+inline void HandshakeRequest::set_username(const ::std::string& value) {
+  _set_bit(3);
+  if (username_ == &_default_username_) {
+    username_ = new ::std::string;
+  }
+  username_->assign(value);
+}
+inline void HandshakeRequest::set_username(const char* value) {
+  _set_bit(3);
+  if (username_ == &_default_username_) {
+    username_ = new ::std::string;
+  }
+  username_->assign(value);
+}
+inline void HandshakeRequest::set_username(const char* value, size_t size) {
+  _set_bit(3);
+  if (username_ == &_default_username_) {
+    username_ = new ::std::string;
+  }
+  username_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* HandshakeRequest::mutable_username() {
+  _set_bit(3);
+  if (username_ == &_default_username_) {
+    username_ = new ::std::string;
+  }
+  return username_;
+}
+
+// optional string password = 5;
+inline bool HandshakeRequest::has_password() const {
+  return _has_bit(4);
+}
+inline void HandshakeRequest::clear_password() {
+  if (password_ != &_default_password_) {
+    password_->clear();
+  }
+  _clear_bit(4);
+}
+inline const ::std::string& HandshakeRequest::password() const {
+  return *password_;
+}
+inline void HandshakeRequest::set_password(const ::std::string& value) {
+  _set_bit(4);
+  if (password_ == &_default_password_) {
+    password_ = new ::std::string;
+  }
+  password_->assign(value);
+}
+inline void HandshakeRequest::set_password(const char* value) {
+  _set_bit(4);
+  if (password_ == &_default_password_) {
+    password_ = new ::std::string;
+  }
+  password_->assign(value);
+}
+inline void HandshakeRequest::set_password(const char* value, size_t size) {
+  _set_bit(4);
+  if (password_ == &_default_password_) {
+    password_ = new ::std::string;
+  }
+  password_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* HandshakeRequest::mutable_password() {
+  _set_bit(4);
+  if (password_ == &_default_password_) {
+    password_ = new ::std::string;
+  }
+  return password_;
 }
 
 // -------------------------------------------------------------------

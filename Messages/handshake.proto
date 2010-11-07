@@ -7,6 +7,8 @@ message HandshakeRequest {
 	required string magic = 1;
 	optional int32 client_ver_major = 2;
 	optional int32 client_ver_minor = 3;
+	optional string username = 4;
+	optional string password = 5;
 };
 
 message HandshakeResponse {

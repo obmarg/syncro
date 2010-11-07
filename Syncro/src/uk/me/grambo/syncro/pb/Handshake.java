@@ -46,6 +46,20 @@ public final class Handshake {
     public boolean hasClientVerMinor() { return hasClientVerMinor; }
     public int getClientVerMinor() { return clientVerMinor_; }
     
+    // optional string username = 4;
+    public static final int USERNAME_FIELD_NUMBER = 4;
+    private boolean hasUsername;
+    private java.lang.String username_ = "";
+    public boolean hasUsername() { return hasUsername; }
+    public java.lang.String getUsername() { return username_; }
+    
+    // optional string password = 5;
+    public static final int PASSWORD_FIELD_NUMBER = 5;
+    private boolean hasPassword;
+    private java.lang.String password_ = "";
+    public boolean hasPassword() { return hasPassword; }
+    public java.lang.String getPassword() { return password_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -64,6 +78,12 @@ public final class Handshake {
       }
       if (hasClientVerMinor()) {
         output.writeInt32(3, getClientVerMinor());
+      }
+      if (hasUsername()) {
+        output.writeString(4, getUsername());
+      }
+      if (hasPassword()) {
+        output.writeString(5, getPassword());
       }
     }
     
@@ -84,6 +104,14 @@ public final class Handshake {
       if (hasClientVerMinor()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, getClientVerMinor());
+      }
+      if (hasUsername()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(4, getUsername());
+      }
+      if (hasPassword()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(5, getPassword());
       }
       memoizedSerializedSize = size;
       return size;
@@ -238,6 +266,12 @@ public final class Handshake {
         if (other.hasClientVerMinor()) {
           setClientVerMinor(other.getClientVerMinor());
         }
+        if (other.hasUsername()) {
+          setUsername(other.getUsername());
+        }
+        if (other.hasPassword()) {
+          setPassword(other.getPassword());
+        }
         return this;
       }
       
@@ -266,6 +300,14 @@ public final class Handshake {
             }
             case 24: {
               setClientVerMinor(input.readInt32());
+              break;
+            }
+            case 34: {
+              setUsername(input.readString());
+              break;
+            }
+            case 42: {
+              setPassword(input.readString());
               break;
             }
           }
@@ -327,6 +369,48 @@ public final class Handshake {
       public Builder clearClientVerMinor() {
         result.hasClientVerMinor = false;
         result.clientVerMinor_ = 0;
+        return this;
+      }
+      
+      // optional string username = 4;
+      public boolean hasUsername() {
+        return result.hasUsername();
+      }
+      public java.lang.String getUsername() {
+        return result.getUsername();
+      }
+      public Builder setUsername(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasUsername = true;
+        result.username_ = value;
+        return this;
+      }
+      public Builder clearUsername() {
+        result.hasUsername = false;
+        result.username_ = getDefaultInstance().getUsername();
+        return this;
+      }
+      
+      // optional string password = 5;
+      public boolean hasPassword() {
+        return result.hasPassword();
+      }
+      public java.lang.String getPassword() {
+        return result.getPassword();
+      }
+      public Builder setPassword(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasPassword = true;
+        result.password_ = value;
+        return this;
+      }
+      public Builder clearPassword() {
+        result.hasPassword = false;
+        result.password_ = getDefaultInstance().getPassword();
         return this;
       }
       
