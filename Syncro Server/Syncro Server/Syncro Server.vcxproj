@@ -86,6 +86,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AdminCommandHandler.h" />
+    <ClInclude Include="AdminCommandManager.h" />
     <ClInclude Include="AuthManager.h" />
     <ClInclude Include="BasePBResponse.h" />
     <ClInclude Include="BinaryDataRequest.h" />
@@ -102,6 +104,7 @@
     <ClInclude Include="HandshakeHandlers.h" />
     <ClInclude Include="PBRequestHandler.h" />
     <ClInclude Include="PBResponseSendHandler.h" />
+    <ClInclude Include="protocol_buffers\admin.pb.h" />
     <ClInclude Include="protocol_buffers\binarydata.pb.h" />
     <ClInclude Include="protocol_buffers\handshake.pb.h" />
     <ClInclude Include="protocol_buffers\header.pb.h" />
@@ -115,6 +118,8 @@
     <ClInclude Include="XMLHandlers.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdminCommandHandler.cpp" />
+    <ClCompile Include="AdminCommandManager.cpp" />
     <ClCompile Include="AuthManager.cpp" />
     <ClCompile Include="BinaryDataResponse.cpp" />
     <ClCompile Include="BinaryIncomingData.cpp" />
@@ -128,6 +133,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PBRequestHandler.cpp" />
     <ClCompile Include="PBResponseSendHandler.cpp" />
+    <ClCompile Include="protocol_buffers\admin.pb.cc" />
     <ClCompile Include="protocol_buffers\binarydata.pb.cc" />
     <ClCompile Include="protocol_buffers\handshake.pb.cc" />
     <ClCompile Include="protocol_buffers\header.pb.cc" />
@@ -139,7 +145,9 @@
     <ClCompile Include="XMLHandlers.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Messages\admin.proto" />
     <None Include="..\..\Messages\binarydata.proto" />
+    <None Include="..\..\Messages\build.bat" />
     <None Include="..\..\Messages\handshake.proto" />
     <None Include="..\..\Messages\header.proto" />
   </ItemGroup>

@@ -6,6 +6,8 @@
 #include "HandshakeHandlers.h"
 #include "SyncroDB.h"
 #include "AuthManager.h"
+#include "AdminCommandManager.h"
+#include "AdminCommandHandler.h"
 
 namespace syncro {
 
@@ -14,6 +16,7 @@ CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 	db::Database::TPointer oDB = CSyncroDB::OpenDB( );
 	m_pFolderMan.reset( new CFolderMan( oDB ) );
 	m_fAuthenticated = false;
+	m_pAdminCommandMan.reset( new CAdminCommandManager() );
 }
 
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
@@ -37,7 +40,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			if( !oRequest.HasAuthDetails() && oAuthMan.NeedsAuth() )
 				throw authentication_exception("Authentication required but no details provided");
 			else if( oRequest.HasAuthDetails() ) {
-				oAuthMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword() );
+				m_oAuthToken = oAuthMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword() );
 			}
 			//if we've got this far and haven't thrown, we're authed
 			m_fAuthenticated = true;
@@ -60,6 +63,10 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 				fOK = false;
 			}
 			return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Ack, fOK );
+		}
+	case eSyncroPBPacketTypes_AdminGenericCommand: {
+			CAdminCommandHandler oHandler( inaInputStreams, m_oAuthToken, (*m_pAdminCommandMan) );
+			return oHandler.GetResponse();
 		}
 	};
 	throw std::runtime_error("Invalid pb request passed to response factory");

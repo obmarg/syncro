@@ -1,0 +1,14 @@
+package syncro.pb;
+
+option java_package = "uk.me.grambo.syncro.pb";
+option optimize_for = LITE_RUNTIME;
+
+message GenericAdminCommand {
+	optional string command = 1;
+	optional string param = 2;
+};
+
+message AdminAck {
+	optional bool ok = 1;
+	optional int32 error_code = 2;
+};

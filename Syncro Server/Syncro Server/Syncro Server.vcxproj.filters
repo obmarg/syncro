@@ -105,6 +105,15 @@
     <ClInclude Include="AuthManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="protocol_buffers\admin.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="AdminCommandHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AdminCommandManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -173,6 +182,15 @@
     <ClCompile Include="AuthManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="protocol_buffers\admin.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="AdminCommandHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AdminCommandManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Messages\binarydata.proto">
@@ -182,6 +200,12 @@
       <Filter>Message Files</Filter>
     </None>
     <None Include="..\..\Messages\handshake.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\admin.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\build.bat">
       <Filter>Message Files</Filter>
     </None>
   </ItemGroup>

@@ -7,19 +7,22 @@
 #include <boost/scoped_ptr.hpp>
 #include "FolderMan.h"
 #include "BinaryIncomingData.h"
+#include "AdminCommandManager.h"
 
 namespace syncro {
 
 enum eSyncroPBPacketTypes {
-	eSyncroPBPacketTypes_BinaryRequest = 1,
-	eSyncroPBPacketTypes_BinaryContinue,
-	eSyncroPBPacketTypes_BinaryResponse,
-	eSyncroPBPacketTypes_HandshakeRequest,
-	eSyncroPBPacketTypes_HandshakeResponse,
-	eSyncroPBPacketTypes_BinaryIncomingRequest,
-	eSyncroPBPacketTypes_BinaryIncomingResponse,
-	eSyncroPBPacketTypes_BinaryIncomingData,
-	eSyncroPBPacketTypes_BinaryIncomingDataAck,
+	eSyncroPBPacketTypes_BinaryRequest = 1,			// 1
+	eSyncroPBPacketTypes_BinaryContinue,			// 2
+	eSyncroPBPacketTypes_BinaryResponse,			// 3
+	eSyncroPBPacketTypes_HandshakeRequest,			// 4
+	eSyncroPBPacketTypes_HandshakeResponse,			// 5
+	eSyncroPBPacketTypes_BinaryIncomingRequest,		// 6
+	eSyncroPBPacketTypes_BinaryIncomingResponse,	// 7
+	eSyncroPBPacketTypes_BinaryIncomingData,		// 8
+	eSyncroPBPacketTypes_BinaryIncomingDataAck,		// 9
+	eSyncroPBPacketTypes_AdminGenericCommand,		// 10
+	eSyncroPBPacketTypes_AdminAck,					// 11
 };
 
 struct sSubpackets {
@@ -48,7 +51,10 @@ private:
 	boost::scoped_ptr<CFolderMan> m_pFolderMan;
 	typedef boost::scoped_ptr<CBinaryIncomingData> TFileRecvDataPtr;
 	TFileRecvDataPtr m_pCurrentRecvData;
+	boost::scoped_ptr<CAdminCommandManager> m_pAdminCommandMan;
+
 	bool m_fAuthenticated;
+	CAuthToken m_oAuthToken;
 };
 
 }; //namespace syncro

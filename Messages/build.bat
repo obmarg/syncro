@@ -4,3 +4,5 @@ protoc -I=. --cpp_out "..\Syncro Server\Syncro Server\protocol_buffers" header.p
 protoc -I=. --java_out "..\Syncro\src" header.proto
 protoc -I=. --cpp_out "..\Syncro Server\Syncro Server\protocol_buffers" handshake.proto
 protoc -I=. --java_out "..\Syncro\src" handshake.proto
+protoc -I=. --cpp_out "..\Syncro Server\Syncro Server\protocol_buffers" admin.proto
+protoc -I=. --java_out "..\Syncro\src" admin.proto

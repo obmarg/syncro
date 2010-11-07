@@ -28,6 +28,47 @@ public:
 	authentication_exception(const char* inpError) : runtime_error(inpError) {};
 };
 
+class CAuthToken {
+public:
+	enum AccessLevel {
+		AccessLevel_Admin,
+		AccessLevel_Normal
+	};
+
+	CAuthToken() :
+		m_fInitialised( false )
+		{};
+
+	CAuthToken(const std::string sUsername, const int innID, const AccessLevel innAccessLevel) : 
+		m_sUsername( sUsername ), 
+		m_nUserID( innID ),
+		m_eAccessLevel( innAccessLevel ),
+		m_fInitialised( true )
+		{};
+
+	const std::string GetUsername() const {
+		return m_sUsername;
+	}
+
+	const int GetUserID() const {
+		return m_nUserID;
+	}
+	
+	const AccessLevel GetAccessLevel() const {
+		return m_eAccessLevel;
+	}
+
+	const bool IsInitialised() const {
+		return m_fInitialised;
+	}
+
+private:
+	std::string m_sUsername;
+	int m_nUserID;
+	AccessLevel m_eAccessLevel;
+	bool m_fInitialised;
+};
+
 using google::protobuf::io::ZeroCopyInputStream;
 
 typedef std::vector<ZeroCopyInputStream*> TInputStreamList;
