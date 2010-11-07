@@ -41,6 +41,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

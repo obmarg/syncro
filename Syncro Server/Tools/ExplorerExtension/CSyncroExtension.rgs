@@ -1,0 +1,16 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {0FFB91E6-B881-4733-B21C-906751336A80} = s 'CSyncroExtension Class'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			TypeLib = s '{70A5E558-9F52-4C9A-B820-D8EE63D322FC}'
+			Version = s '1.0'
+		}
+	}
+}

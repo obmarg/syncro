@@ -1,0 +1,18 @@
+// ExplorerExtension.idl : IDL source for ExplorerExtension
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (ExplorerExtension.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(70A5E558-9F52-4C9A-B820-D8EE63D322FC),
+	version(1.0),
+]
+library ExplorerExtensionLib
+{
+	importlib("stdole2.tlb");
+};
+
