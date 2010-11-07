@@ -8,11 +8,27 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
+	object,
+	uuid(06D9F755-D891-40AB-B9A7-5575C94E20BB),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface ISyncroExtension : IDispatch{
+};
+[
 	uuid(70A5E558-9F52-4C9A-B820-D8EE63D322FC),
 	version(1.0),
 ]
 library ExplorerExtensionLib
 {
 	importlib("stdole2.tlb");
+	[		
+		uuid(0FFB91E6-B881-4733-B21C-906751336A80)		
+	]
+	coclass CSyncroExtension
+	{
+		[default] interface ISyncroExtension;
+	};
 };
 

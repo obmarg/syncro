@@ -4,6 +4,7 @@
 #include "ExplorerExtension_i.h"
 #include "resource.h"       // main symbols
 #include <comsvcs.h>
+#include <ShlObj.h>
 
 using namespace ATL;
 
@@ -14,7 +15,8 @@ using namespace ATL;
 class ATL_NO_VTABLE CCSyncroExtension :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CCSyncroExtension, &CLSID_CSyncroExtension>,
-	public IDispatchImpl<ISyncroExtension, &IID_ISyncroExtension, &LIBID_ExplorerExtensionLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
+	public IShellExtInit,
+	public IContextMenu
 {
 public:
 	CCSyncroExtension()
@@ -32,13 +34,18 @@ public:
 	{
 	}
 
+	STDMETHODIMP Initialize(LPCITEMIDLIST, LPDATAOBJECT, HKEY);
+	STDMETHODIMP GetCommandString(UINT, UINT, UINT*, LPSTR, UINT);
+	STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO);
+	STDMETHODIMP QueryContextMenu(HMENU, UINT, UINT, UINT, UINT);
+
 DECLARE_REGISTRY_RESOURCEID(IDR_CSYNCROEXTENSION)
 
 DECLARE_NOT_AGGREGATABLE(CCSyncroExtension)
 
 BEGIN_COM_MAP(CCSyncroExtension)
-	COM_INTERFACE_ENTRY(ISyncroExtension)
-	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY(IShellExtInit)
+	COM_INTERFACE_ENTRY(IContextMenu)
 END_COM_MAP()
 
 

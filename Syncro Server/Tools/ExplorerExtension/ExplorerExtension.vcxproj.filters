@@ -31,6 +31,9 @@
     <ClCompile Include="ExplorerExtension_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="CSyncroExtension.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="ExplorerExtension_i.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="CSyncroExtension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ExplorerExtension.rc">
@@ -61,6 +67,9 @@
     </None>
     <None Include="ExplorerExtension.def">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="CSyncroExtension.rgs">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
