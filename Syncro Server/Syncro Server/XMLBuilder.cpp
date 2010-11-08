@@ -14,7 +14,7 @@ namespace syncro {
 using std::vector;
 using std::string;
 
-using namespace db;
+using namespace kode::db;
 
 CXMLBuilder::CXMLBuilder() {
 

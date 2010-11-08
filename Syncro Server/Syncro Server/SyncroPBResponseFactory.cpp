@@ -13,7 +13,7 @@ namespace syncro {
 
 CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 	//TODO: make this db loading stuff better
-	db::Database::TPointer oDB = CSyncroDB::OpenDB( );
+	kode::db::Database::TPointer oDB = CSyncroDB::OpenDB( );
 	m_pFolderMan.reset( new CFolderMan( oDB ) );
 	m_fAuthenticated = false;
 	m_pAdminCommandMan.reset( new CAdminCommandManager() );

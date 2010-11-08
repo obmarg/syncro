@@ -17,7 +17,7 @@ bool CAuthManager::NeedsAuth() {
 }
 
 const CAuthToken CAuthManager::Authenticate(std::string username, std::string password) {
-	db::AutoReset autoReset( m_pCheckLoginStatement );
+	kode::db::AutoReset autoReset( m_pCheckLoginStatement );
 	m_pCheckLoginStatement->Bind( "@Username", username );
 	m_pCheckLoginStatement->Bind( "@Password", password );
 	if( m_pCheckLoginStatement->GetNextRow() ) {

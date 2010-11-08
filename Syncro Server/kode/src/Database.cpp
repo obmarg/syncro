@@ -2,7 +2,7 @@
 //#include "Logger.h"
 #include <ctype.h>
 
-namespace syncro {
+namespace kode {
 namespace db {
 
 using std::string;
@@ -88,6 +88,7 @@ StatementPtr Database::prepare(std::string insSql)
 			sqlite3_finalize( handle );
 		throw ex;
 	}
+	return StatementPtr();
 }
 
 int callback(void* ptrDB,int numCols, char **colValues,char** colNames)
@@ -117,4 +118,4 @@ void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv)
 }
 
 }	//namespace db
-};	//namespace syncro
+};	//namespace kode

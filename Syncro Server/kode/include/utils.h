@@ -5,7 +5,8 @@
 #include <boost/detail/endian.hpp>
 #include <boost/foreach.hpp>
 
-namespace syncro {
+namespace kode {
+namespace utils {
 
 #define foreach BOOST_FOREACH
 
@@ -56,6 +57,7 @@ T FromJavaEndian(const T& source) {
 #endif
 }
 
-};	//namespace syncro
+}	// namespace utils
+};	// namespace syncro
 
 #endif

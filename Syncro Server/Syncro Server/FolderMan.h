@@ -22,7 +22,7 @@ public:
 
 	typedef std::vector<sFolderInfo> TFolderInfoList;
 
-	CFolderMan( db::Database::TPointer inpDB );
+	CFolderMan( kode::db::Database::TPointer inpDB );
 	~CFolderMan();
 
 	
@@ -36,7 +36,7 @@ public:
 	
 private:
 	TFolderInfoList m_aFolderInfo;
-	db::Database::TPointer m_pDB;
+	kode::db::Database::TPointer m_pDB;
 
 	const sFolderInfo& FindFolder( int nFolderId );
 };

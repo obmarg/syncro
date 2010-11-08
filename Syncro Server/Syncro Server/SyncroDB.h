@@ -5,7 +5,7 @@
 
 namespace syncro {
 
-class CSyncroDB : public db::Database, boost::noncopyable {
+class CSyncroDB : public kode::db::Database, boost::noncopyable {
 public:
 	static Database::TPointer OpenDB() {
 		Database::TPointer pDatabase( new CSyncroDB("syncro.db") );

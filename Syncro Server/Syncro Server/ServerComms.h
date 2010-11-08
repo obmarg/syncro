@@ -101,7 +101,7 @@ private:
 	CServerComms(const CServerComms& inoServerComms);
 	boost::asio::ip::tcp::acceptor m_oAcceptor;
 
-	typedef std::multiset<CAcceptHandler::TPointer,CPointerLessThan> TAcceptHandlerMap;
+	typedef std::multiset<CAcceptHandler::TPointer,kode::utils::CPointerLessThan> TAcceptHandlerMap;
 	TAcceptHandlerMap m_oAcceptHandlers;
 
 	void StartAccept();

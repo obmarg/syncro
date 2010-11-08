@@ -5,6 +5,7 @@
 namespace syncro {
 
 using std::string;
+using kode::utils::FromJavaEndian;
 
 const unsigned char PB_REQUEST_FIRST_BYTE = 105;
 

@@ -24,7 +24,7 @@
 #include <pthread.h>
 #endif
 
-namespace syncro {
+namespace kode {
 namespace db {
 
 class SqlException : std::runtime_error {
@@ -47,7 +47,7 @@ class Database
 public:
 	typedef boost::shared_ptr<Database> TPointer;	
 
-	typedef std::map<std::string,std::string,CStringLessThan> Row;
+	typedef std::map<std::string,std::string,utils::CStringLessThan> Row;
 
 	class ResultSet
 	{
@@ -333,6 +333,6 @@ private:
 };
 
 }; //namespace db
-}; //namespace syncro
+}; //namespace kode
 
 #endif

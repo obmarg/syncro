@@ -43,7 +43,7 @@ bool CXMLRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 		if( inoBuffer.aBuffer[0] == XML_REQUEST_FIRST_BYTE  ) {
 			//TODO: Convert endianness
 			unsigned int nExpectedSize = ( *(int*)(&inoBuffer.aBuffer[1]) );
-			nExpectedSize = FromJavaEndian(nExpectedSize);
+			nExpectedSize = kode::utils::FromJavaEndian(nExpectedSize);
 			if( inoBuffer.nSize >= nExpectedSize )
 				return true;
 		}
@@ -101,7 +101,7 @@ bool CXMLSendHandler::SendStarting()
 	size_t nBufferSize = m_aBuffer.size();
 	if( nBufferSize < 5 ) 
 		return false;
-	*((int32_t*)&m_aBuffer[1]) = ToJavaEndian<int32_t>((int32_t)nBufferSize);
+	*((int32_t*)&m_aBuffer[1]) = kode::utils::ToJavaEndian<int32_t>((int32_t)nBufferSize);
 	return true;
 }
 

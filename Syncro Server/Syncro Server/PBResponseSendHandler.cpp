@@ -35,7 +35,7 @@ bool CPBResponseSendHandler::SendStarting() {
 	m_aBuffer.resize( nTotalPacketSize + nPBHeaderSize + nHeadSize );
 	
 	m_aBuffer[0] = PB_RESPONSE_FIRST_BYTE;
-	*((int*)(&m_aBuffer[1])) = ToJavaEndian( nPBHeaderSize );
+	*((int*)(&m_aBuffer[1])) = kode::utils::ToJavaEndian( nPBHeaderSize );
 	oResponseHeader.SerializeToArray(&m_aBuffer[nHeadSize], nPBHeaderSize );
 	unsigned int nWrittenSoFar = nPBHeaderSize + nHeadSize;
 

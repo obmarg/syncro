@@ -16,8 +16,8 @@ public:
 	const CAuthToken Authenticate(std::string username, std::string password);
 
 private:
-	db::DatabasePtr m_pDB;
-	db::StatementPtr m_pCheckLoginStatement;
+	kode::db::DatabasePtr m_pDB;
+	kode::db::StatementPtr m_pCheckLoginStatement;
 };
 
 }

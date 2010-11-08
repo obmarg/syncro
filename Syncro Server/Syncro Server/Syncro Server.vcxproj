@@ -54,13 +54,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include\</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Debug;..\..\Dependencies\sqlite\Debug;..\..\Dependencies\protobuf-2.3.0\lib\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Debug;..\..\Dependencies\sqlite\Debug;..\..\Dependencies\protobuf-2.3.0\lib\Debug;..\Debug\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxmld.lib;kode.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -73,15 +74,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Release\;..\..\Dependencies\sqlite\Release;..\..\Dependencies\protobuf-2.3.0\lib\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Release\;..\..\Dependencies\sqlite\Release;..\..\Dependencies\protobuf-2.3.0\lib\Release;..\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxml.lib;kode.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -97,7 +98,6 @@
     <ClInclude Include="BroadcastListener.h" />
     <ClInclude Include="BroadcastThread.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="Database.h" />
     <ClInclude Include="FileSendData.h" />
     <ClInclude Include="Folder.h" />
     <ClInclude Include="FolderMan.h" />
@@ -112,7 +112,6 @@
     <ClInclude Include="SyncroDB.h" />
     <ClInclude Include="SyncroPBResponseFactory.h" />
     <ClInclude Include="SyncroServer.h" />
-    <ClInclude Include="utils.h" />
     <ClInclude Include="VectorPBResponse.h" />
     <ClInclude Include="XMLBuilder.h" />
     <ClInclude Include="XMLHandlers.h" />
@@ -125,7 +124,6 @@
     <ClCompile Include="BinaryIncomingData.cpp" />
     <ClCompile Include="BroadcastListener.cpp" />
     <ClCompile Include="BroadcastThread.cpp" />
-    <ClCompile Include="Database.cpp" />
     <ClCompile Include="FileSendData.cpp" />
     <ClCompile Include="Folder.cpp" />
     <ClCompile Include="FolderMan.cpp" />
