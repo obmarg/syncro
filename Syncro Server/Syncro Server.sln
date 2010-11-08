@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExplorerExtension", "Tools\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kode", "kode\kode.vcxproj", "{DBE52E2B-7915-4645-9017-32596A46EC9F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsyncro", "libsyncro\libsyncro.vcxproj", "{2635E2D6-2097-46B8-8237-46A4450C4019}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DBE52E2B-7915-4645-9017-32596A46EC9F} = {DBE52E2B-7915-4645-9017-32596A46EC9F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -24,6 +29,10 @@ Global
 		{DBE52E2B-7915-4645-9017-32596A46EC9F}.Debug|Win32.Build.0 = Debug|Win32
 		{DBE52E2B-7915-4645-9017-32596A46EC9F}.Release|Win32.ActiveCfg = Release|Win32
 		{DBE52E2B-7915-4645-9017-32596A46EC9F}.Release|Win32.Build.0 = Release|Win32
+		{2635E2D6-2097-46B8-8237-46A4450C4019}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2635E2D6-2097-46B8-8237-46A4450C4019}.Debug|Win32.Build.0 = Debug|Win32
+		{2635E2D6-2097-46B8-8237-46A4450C4019}.Release|Win32.ActiveCfg = Release|Win32
+		{2635E2D6-2097-46B8-8237-46A4450C4019}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
