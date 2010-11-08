@@ -3,7 +3,7 @@
 
 #include "common.h"
 #include <boost/shared_ptr.hpp>
-#include "Database.h"
+#include <kode/Database.h>
 
 namespace syncro {
 

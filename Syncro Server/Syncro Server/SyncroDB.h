@@ -1,7 +1,7 @@
 #ifndef __SYNCRO_DB_H_
 #define __SYNCRO_DB_H_
 
-#include "Database.h"
+#include <kode/Database.h>
 
 namespace syncro {
 

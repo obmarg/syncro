@@ -1,7 +1,7 @@
 #ifndef _SYNCRO_COMMON_H_
 #define _SYNCRO_COMMON_H_
 
-#include "utils.h"
+#include <kode/utils.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <vector>
 #include <stdexcept>

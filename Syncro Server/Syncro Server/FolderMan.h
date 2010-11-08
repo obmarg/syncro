@@ -1,12 +1,13 @@
 #ifndef _FOLDER_MAN_H_
 #define _FOLDER_MAN_H_
 
+#include <kode/utils.h>
+#include <kode/Database.h>
+#include "Folder.h"
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
-#include "utils.h"
-#include <boost/shared_ptr.hpp>
-#include "Folder.h"
-#include "Database.h"
+
 
 namespace syncro {
 
