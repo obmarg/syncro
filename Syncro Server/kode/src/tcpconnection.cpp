@@ -34,5 +34,26 @@ TCPConnection::~TCPConnection() {
 
 }
 
+void TCPConnection::DoSend( const boost::asio::const_buffers_1& buffer ) {
+	boost::system::error_code error;
+	boost::asio::write( m_socket, buffer, boost::asio::transfer_all(), error );
+	if( error )
+		throw boost::system::system_error( error );
+}
+
+void TCPConnection::DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvSize ) {
+	//TODO: Add a way to make sure we don't read too much stuff here
+	//		internal buffering perhaps?
+	boost::system::error_code error;
+	size_t totalLen = 0;
+	do {
+		size_t len = m_socket.read_some( buffer, error );
+		totalLen += len;
+	}while( totalLen < recvSize );
+
+	if( error )
+		throw boost::system::system_error( error );
+}
+
 }	// namespace net
 }	// namespace kode

@@ -9,12 +9,38 @@ namespace kode {
 namespace net{
 
 class TCPConnection : boost::noncopyable {
+public:
 	TCPConnection( std::string hostname, int nPort );
-	~TCPConnection();
+	virtual ~TCPConnection();
+
+	template< class tBuffer >
+	void Send( const tBuffer& buffer ) {
+		DoSend( boost::asio::buffer( buffer ) );
+	}
+
+	template< class tBuffer >
+	void Send( const tBuffer& buffer, size_t size ) {
+		DoSend( boost::asio::buffer( buffer, size ) )
+	}
+
+	template< class tBuffer >
+	void Recv( tBuffer& buffer, size_t recvSize ) {
+		DoRecv( boost::asio::buffer( buffer ), recvSize );
+	}
+	
+	template< class tBuffer >
+	void Recv( tBuffer& buffer, size_t recvSize, size_t bufferSize ) {
+		DoRecv( boost::asio::buffer( buffer, size ), recvSize );
+	}
+
 
 protected:
 	boost::asio::io_service			m_service;
 	boost::asio::ip::tcp::socket	m_socket;
+
+private:
+	void DoSend( const boost::asio::const_buffers_1& buffer );
+	void DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvSize );
 };
 
 }	// namespace net
