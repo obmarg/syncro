@@ -4,7 +4,7 @@
 #include "ServerComms.h"
 #include "BasePBResponse.h"
 #include "common.h"
-#include "protocol_buffers/handshake.pb.h"
+#include <libsyncro/protocol_buffers/handshake.pb.h>
 
 namespace syncro {
 

@@ -13,15 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Protocol Buffers">
+      <UniqueIdentifier>{695743c6-20be-4150-b31f-7ba7e63c8f96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Protocol Buffers">
+      <UniqueIdentifier>{0af10237-09fc-4177-a7bf-639b1a6f9669}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\protocol_buffers\admin.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\protocol_buffers\binarydata.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\protocol_buffers\handshake.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\protocol_buffers\header.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libsyncro\protocol_buffers\admin.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libsyncro\protocol_buffers\binarydata.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libsyncro\protocol_buffers\handshake.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libsyncro\protocol_buffers\header.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

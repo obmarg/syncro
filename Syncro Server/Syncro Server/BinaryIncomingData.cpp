@@ -1,5 +1,5 @@
 #include "BinaryIncomingData.h"
-#include "protocol_buffers/binarydata.pb.h"
+#include <libsyncro/protocol_buffers/binarydata.pb.h>
 
 namespace syncro {
 

@@ -12,9 +12,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\connection.cpp" />
+    <ClCompile Include="src\protocol_buffers\admin.pb.cc" />
+    <ClCompile Include="src\protocol_buffers\binarydata.pb.cc" />
+    <ClCompile Include="src\protocol_buffers\handshake.pb.cc" />
+    <ClCompile Include="src\protocol_buffers\header.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h" />
+    <ClInclude Include="include\libsyncro\protocol_buffers\admin.pb.h" />
+    <ClInclude Include="include\libsyncro\protocol_buffers\binarydata.pb.h" />
+    <ClInclude Include="include\libsyncro\protocol_buffers\handshake.pb.h" />
+    <ClInclude Include="include\libsyncro\protocol_buffers\header.pb.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2635E2D6-2097-46B8-8237-46A4450C4019}</ProjectGuid>
@@ -50,7 +58,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\libsyncro;..\kode\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\libsyncro;..\kode\include\;include\libsyncro\protocol_buffers\;..\..\Dependencies\protobuf-2.3.0\include\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_WIN32;_WIN32_WINNT=0x0501;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -63,7 +71,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\libsyncro;..\kode\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\libsyncro;..\kode\include\;include\libsyncro\protocol_buffers\;..\..\Dependencies\protobuf-2.3.0\include\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;_WIN32_WINNT=0x0501;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

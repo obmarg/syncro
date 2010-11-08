@@ -1,9 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Syncro Server", "Syncro Server\Syncro Server.vcxproj", "{1F0A68D5-E093-4806-9E7D-F0CD8BF86BA3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DBE52E2B-7915-4645-9017-32596A46EC9F} = {DBE52E2B-7915-4645-9017-32596A46EC9F}
+		{2635E2D6-2097-46B8-8237-46A4450C4019} = {2635E2D6-2097-46B8-8237-46A4450C4019}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExplorerExtension", "Tools\ExplorerExtension\ExplorerExtension.vcxproj", "{67B6E3D3-614F-4268-864A-3E6359BC9988}"

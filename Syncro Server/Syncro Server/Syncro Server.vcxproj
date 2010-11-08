@@ -54,14 +54,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include\;..\libsyncro\include\</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Debug;..\..\Dependencies\sqlite\Debug;..\..\Dependencies\protobuf-2.3.0\lib\Debug;..\Debug\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxmld.lib;kode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxmld.lib;kode.lib;libsyncro.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -74,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include;..\libsyncro\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,10 +104,6 @@
     <ClInclude Include="HandshakeHandlers.h" />
     <ClInclude Include="PBRequestHandler.h" />
     <ClInclude Include="PBResponseSendHandler.h" />
-    <ClInclude Include="protocol_buffers\admin.pb.h" />
-    <ClInclude Include="protocol_buffers\binarydata.pb.h" />
-    <ClInclude Include="protocol_buffers\handshake.pb.h" />
-    <ClInclude Include="protocol_buffers\header.pb.h" />
     <ClInclude Include="ServerComms.h" />
     <ClInclude Include="SyncroDB.h" />
     <ClInclude Include="SyncroPBResponseFactory.h" />
@@ -131,10 +127,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PBRequestHandler.cpp" />
     <ClCompile Include="PBResponseSendHandler.cpp" />
-    <ClCompile Include="protocol_buffers\admin.pb.cc" />
-    <ClCompile Include="protocol_buffers\binarydata.pb.cc" />
-    <ClCompile Include="protocol_buffers\handshake.pb.cc" />
-    <ClCompile Include="protocol_buffers\header.pb.cc" />
     <ClCompile Include="ServerComms.cpp" />
     <ClCompile Include="SyncroDB.cpp" />
     <ClCompile Include="SyncroPBResponseFactory.cpp" />

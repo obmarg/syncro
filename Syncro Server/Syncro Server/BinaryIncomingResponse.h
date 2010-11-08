@@ -5,7 +5,7 @@
 #include "VectorPBResponse.h"
 #include "SyncroPBResponseFactory.h"
 #include "FileSendData.h"
-#include "protocol_buffers/binarydata.pb.h"
+#include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 #include <vector>
