@@ -1,13 +1,12 @@
 #include "PBRequestHandler.h"
 #include "PBResponseSendHandler.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <libsyncro/comms.h>
 
 namespace syncro {
 
 using std::string;
 using kode::utils::FromJavaEndian;
-
-const unsigned char PB_REQUEST_FIRST_BYTE = 105;
 
 CPBRequestHandler::CPBRequestHandler(CTCPConnection::TPointer inpConn,CBasePBResponseFactory::TPointer inpResponseFactory) : m_pConn( inpConn ), m_pResponseFactory(inpResponseFactory) {
 	m_fCloseConnection = false;
@@ -21,7 +20,8 @@ void CPBRequestHandler::ResetVariables() {
 }
 
 bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
-	unsigned int nHeadSize = sizeof( PB_REQUEST_FIRST_BYTE ) + sizeof( unsigned int );
+	unsigned int nHeadSize = comms::PacketHeader::BYTE_SIZE;
+	//TODO: Make this stuff use libsyncro's PacketHeader stuff at some point
 
 	//TODO: add stuff in here in case we've read more than we need to
 	bool fContinue;
@@ -37,7 +37,7 @@ bool CPBRequestHandler::CanHandleReceive(const TCharBuffer& inoBuffer) {
 				return true;
 		}
 		else if( (m_nBufferReadSoFar == 0) && (inoBuffer.nSize > nHeadSize) ) {
-			if( inoBuffer.aBuffer[0] == PB_REQUEST_FIRST_BYTE  ) {
+			if( inoBuffer.aBuffer[0] == comms::PB_REQUEST_FIRST_BYTE  ) {
 				unsigned int nExpectedHeaderSize = ( *(int*)(&inoBuffer.aBuffer[1]) );
 				nExpectedHeaderSize = FromJavaEndian(nExpectedHeaderSize);
 				if( inoBuffer.nSize >= nExpectedHeaderSize+nHeadSize ) {

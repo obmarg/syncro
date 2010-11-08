@@ -53,5 +53,8 @@
     <ClInclude Include="include\libsyncro\protocol_buffers\header.pb.h">
       <Filter>Header Files\Protocol Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="include\libsyncro\comms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

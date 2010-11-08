@@ -1,10 +1,9 @@
 #include "PBResponseSendHandler.h"
 #include <vector>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <libsyncro/comms.h>
 
 namespace syncro {
-
-const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 
 CPBResponseSendHandler::CPBResponseSendHandler(CTCPConnection::TPointer inpConn) : m_pConn(inpConn) {
 
@@ -20,7 +19,8 @@ bool CPBResponseSendHandler::SendStarting() {
 	if( !m_pResponse )
 		throw std::logic_error( "PB Send Starting, but PBResponseSendHandler has not been assigned any data" );
 
-	unsigned int nHeadSize = sizeof( PB_RESPONSE_FIRST_BYTE ) + sizeof( unsigned int );
+	//TODO: Make this stuff use libsyncro's PacketHeader stuff at some point
+	unsigned int nHeadSize = comms::PacketHeader::BYTE_SIZE;
 
 	pb::PacketHeader oResponseHeader;
 	oResponseHeader.set_packet_type( m_pResponse->GetPacketType() );
@@ -34,7 +34,7 @@ bool CPBResponseSendHandler::SendStarting() {
 	unsigned int nPBHeaderSize = oResponseHeader.ByteSize();
 	m_aBuffer.resize( nTotalPacketSize + nPBHeaderSize + nHeadSize );
 	
-	m_aBuffer[0] = PB_RESPONSE_FIRST_BYTE;
+	m_aBuffer[0] = comms::PB_RESPONSE_FIRST_BYTE;
 	*((int*)(&m_aBuffer[1])) = kode::utils::ToJavaEndian( nPBHeaderSize );
 	oResponseHeader.SerializeToArray(&m_aBuffer[nHeadSize], nPBHeaderSize );
 	unsigned int nWrittenSoFar = nPBHeaderSize + nHeadSize;

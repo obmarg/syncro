@@ -23,6 +23,7 @@
     <ClInclude Include="include\libsyncro\protocol_buffers\binarydata.pb.h" />
     <ClInclude Include="include\libsyncro\protocol_buffers\handshake.pb.h" />
     <ClInclude Include="include\libsyncro\protocol_buffers\header.pb.h" />
+    <ClInclude Include="include\libsyncro\comms.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2635E2D6-2097-46B8-8237-46A4450C4019}</ProjectGuid>
