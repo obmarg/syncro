@@ -9,6 +9,9 @@ namespace comms {
 const unsigned char PB_REQUEST_FIRST_BYTE = 105;
 const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 
+const std::string HANDSHAKE_REQUEST_MAGIC =		"Hello Syncro?";
+const std::string HANDSHAKE_RESPONSE_MAGIC =	"Hey bitch!";
+
 class PacketHeader {
 public:
 	PacketHeader();

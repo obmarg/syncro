@@ -14,19 +14,19 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include "SyncroDB.h"
 
+#include <libsyncro/comms.h>
+
 namespace syncro {
 
 using std::vector;
 using std::string;
-
-const std::string CPBHandshakeRequest::m_sRecvString = "Hello Syncro?";
 
 CPBHandshakeRequest::CPBHandshakeRequest(TInputStreamList& inaInputStreams) {
 	pb::HandshakeRequest oRequest;
 	if( inaInputStreams.size() == 1 ) {
 		if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
 			throw authentication_exception( "invalid andshakeRequest packet" );
-		if( oRequest.magic().compare( m_sRecvString ) != 0 )
+		if( oRequest.magic().compare( comms::HANDSHAKE_REQUEST_MAGIC ) != 0 )
 			throw authentication_exception( "invalid magic" );
 		if( oRequest.has_client_ver_major() )
 			m_nMajorVersion = oRequest.client_ver_major();
@@ -56,7 +56,7 @@ CBasePBResponse::TPointer CPBHandshakeRequest::GetResponse() {
 CPBHandshakeResponse::CPBHandshakeResponse() {
 	m_oMessage.Clear();
 	//TODO: move this string to a static const or something
-	m_oMessage.set_magic( "Hey bitch!" );
+	m_oMessage.set_magic( comms::HANDSHAKE_RESPONSE_MAGIC );
 
 	kode::db::Database::TPointer oDB = CSyncroDB::OpenDB();
 	std::string sUUID;
