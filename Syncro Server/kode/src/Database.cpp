@@ -88,7 +88,7 @@ StatementPtr Database::prepare(std::string insSql)
 			sqlite3_finalize( handle );
 		throw ex;
 	}
-	return StatementPtr();
+	return rv;
 }
 
 int callback(void* ptrDB,int numCols, char **colValues,char** colNames)

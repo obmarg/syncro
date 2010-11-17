@@ -26,7 +26,8 @@ TCPConnection::TCPConnection( std::string hostname, int nPort ) :
 		++iter;
 	}
 	if( error ) {
-		throw boost::system::system_error( error );
+		//TODO: probably want to reimplement this sometime soon
+		//throw boost::system::system_error( error );
 	}
 }
 
