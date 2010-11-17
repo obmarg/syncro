@@ -28,14 +28,14 @@ public:
 	enum { BYTE_SIZE = sizeof( PB_REQUEST_FIRST_BYTE ) + sizeof( unsigned int ) };
 
 	template<class tByteArray>
-	void Read(tByteArray input) {
+	void Read(const tByteArray& input) {
 		m_firstByte = input[0];
 		m_packetSize = ( *(unsigned int*)(&input[1]) );
 		m_packetSize = kode::utils::FromJavaEndian(m_packetSize);
 	}
 
 	template<class tByteArray>
-	void Write(tByteArray output) {
+	void Write(tByteArray& output) {
 		output[0] = m_firstByte;
 		*((unsigned int*)(&output[1])) = kode::utils::ToJavaEndian( m_packetSize );
 	}

@@ -1,8 +1,8 @@
 #include "ServerComms.h"
-
+#include "HandshakeHandlers.h"
+#include <libsyncro/comms.h>
 #include <boost/bind.hpp>
 #include <iostream>
-#include "HandshakeHandlers.h"
 
 namespace syncro {
 
@@ -12,8 +12,9 @@ using std::cout;
 
 const int DEFAULT_RECV_BUFFER = 1000;
 
-CServerComms::CServerComms(io_service& inoIOService) : m_oAcceptor( inoIOService, tcp::endpoint(tcp::v4(), SERVER_PORT) ) {
-	
+CServerComms::CServerComms(io_service& inoIOService) : 
+	m_oAcceptor( inoIOService, tcp::endpoint(tcp::v4(), comms::SERVER_PORT) )
+{
 	StartAccept();
 }
 
