@@ -24,13 +24,33 @@ public:
 	}
 
 	template< class tBuffer >
+	void SendByVal( const tBuffer buffer ) {
+		DoSend( boost::asio::buffer( buffer ) );
+	}
+
+	template< class tBuffer >
+	void SendByVal( const tBuffer buffer, size_t size ) {
+		DoSend( boost::asio::buffer( buffer, size ) )
+	}
+
+	template< class tBuffer >
 	void Recv( tBuffer& buffer, size_t recvSize ) {
 		DoRecv( boost::asio::buffer( buffer ), recvSize );
 	}
 	
 	template< class tBuffer >
 	void Recv( tBuffer& buffer, size_t recvSize, size_t bufferSize ) {
-		DoRecv( boost::asio::buffer( buffer, size ), recvSize );
+		DoRecv( boost::asio::buffer( buffer, bufferSize ), recvSize );
+	}
+
+	template< class tBuffer >
+	void RecvByVal( tBuffer buffer, size_t recvSize ) {
+		DoRecv( boost::asio::buffer( buffer ), recvSize );
+	}
+
+	template< class tBuffer >
+	void RecvByVal( tBuffer buffer, size_t recvSize, size_t bufferSize ) {
+		DoRecv( boost::asio::buffer( buffer, bufferSize ), recvSize );
 	}
 
 
