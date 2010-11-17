@@ -3,6 +3,7 @@
 #include "SyncroPBResponseFactory.h"
 #include "AuthManager.h"
 #include <libsyncro\protocol_buffers\admin.pb.h>
+#include <libsyncro\packet_types.h>
 
 namespace syncro {
 
@@ -62,7 +63,7 @@ CAdminCommandResponse::CAdminCommandResponse(bool fOK,int nErrorCode) {
 }
 
 unsigned int CAdminCommandResponse::GetPacketType() {
-	return eSyncroPBPacketTypes_AdminAck;
+	return comms::packet_types::AdminAck;
 }
 
 }

@@ -90,7 +90,7 @@ std::vector<unsigned int> CPBHandshakeResponse::GetSubpacketSizes() {
 }
 
 unsigned int CPBHandshakeResponse::GetPacketType() {
-	return eSyncroPBPacketTypes_HandshakeResponse;
+	return comms::packet_types::HandshakeResponse;
 }
 
 void CPBHandshakeResponse::WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {

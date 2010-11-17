@@ -44,9 +44,9 @@ public:
 
 	virtual unsigned int GetPacketType() {
 		if( m_eType == eResponseType_Response ) {
-			return eSyncroPBPacketTypes_BinaryIncomingResponse;
+			return comms::packet_types::BinaryIncomingResponse;
 		} else {
-			return eSyncroPBPacketTypes_BinaryIncomingDataAck;
+			return comms::packet_types::BinaryIncomingDataAck;
 		}
 	};
 protected:

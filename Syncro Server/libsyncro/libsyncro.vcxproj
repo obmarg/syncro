@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h" />
+    <ClInclude Include="include\libsyncro\packet_types.h" />
     <ClInclude Include="include\libsyncro\protocol_buffers\admin.pb.h" />
     <ClInclude Include="include\libsyncro\protocol_buffers\binarydata.pb.h" />
     <ClInclude Include="include\libsyncro\protocol_buffers\handshake.pb.h" />

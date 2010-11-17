@@ -8,22 +8,9 @@
 #include "FolderMan.h"
 #include "BinaryIncomingData.h"
 #include "AdminCommandManager.h"
+#include <libsyncro/packet_types.h>
 
 namespace syncro {
-
-enum eSyncroPBPacketTypes {
-	eSyncroPBPacketTypes_BinaryRequest = 1,			// 1
-	eSyncroPBPacketTypes_BinaryContinue,			// 2
-	eSyncroPBPacketTypes_BinaryResponse,			// 3
-	eSyncroPBPacketTypes_HandshakeRequest,			// 4
-	eSyncroPBPacketTypes_HandshakeResponse,			// 5
-	eSyncroPBPacketTypes_BinaryIncomingRequest,		// 6
-	eSyncroPBPacketTypes_BinaryIncomingResponse,	// 7
-	eSyncroPBPacketTypes_BinaryIncomingData,		// 8
-	eSyncroPBPacketTypes_BinaryIncomingDataAck,		// 9
-	eSyncroPBPacketTypes_AdminGenericCommand,		// 10
-	eSyncroPBPacketTypes_AdminAck,					// 11
-};
 
 struct sSubpackets {
 	typedef std::vector<unsigned int> TSizeList;

@@ -6,6 +6,7 @@
 #include "SyncroPBResponseFactory.h"
 #include "FileSendData.h"
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
+#include <libsyncro/packet_types.h>
 
 namespace syncro {
 
@@ -20,7 +21,7 @@ public:
 	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream);
 
 	virtual unsigned int GetPacketType() { 
-		return eSyncroPBPacketTypes_BinaryResponse;
+		return comms::packet_types::BinaryResponse;
 	};
 protected:
 	pb::BinaryPacketHeader m_oPacketHeader;

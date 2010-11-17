@@ -20,20 +20,22 @@ CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 }
 
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
+	using namespace comms;
+
 	//TODO: Add in admin mode control messages etc.
-	if( (!m_fAuthenticated) && (innPacketType != eSyncroPBPacketTypes_HandshakeRequest) ) {
+	if( (!m_fAuthenticated) && (innPacketType != packet_types::HandshakeRequest) ) {
 		throw authentication_exception("Not authenticated");
 	}
 	switch( innPacketType ) {
-	case eSyncroPBPacketTypes_BinaryRequest: {
+	case packet_types::BinaryRequest: {
 			CBinaryDataRequest oRequest( inaInputStreams );
 			std::string sActualFilename = m_pFolderMan->GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
 			m_pCurrentSendData.reset( new CFileSendData( sActualFilename, oRequest.GetBufferSize() ) );
 		}
 		//Fall through
-	case eSyncroPBPacketTypes_BinaryContinue:
+	case packet_types::BinaryContinue:
 		return CBasePBResponse::TPointer( new CBinaryDataResponse( (*m_pCurrentSendData) ) );
-	case eSyncroPBPacketTypes_HandshakeRequest: {
+	case packet_types::HandshakeRequest: {
 			CPBHandshakeRequest oRequest( inaInputStreams );
 			CBasePBResponse::TPointer pResponse = oRequest.GetResponse();
 			CAuthManager oAuthMan;
@@ -46,14 +48,14 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			m_fAuthenticated = true;
 			return pResponse;
 		}
-	case eSyncroPBPacketTypes_BinaryIncomingRequest: {
+	case packet_types::BinaryIncomingRequest: {
 			CBinaryDataRequest oRequest( inaInputStreams );
 			std::string sFilename = m_pFolderMan->IncomingFile( oRequest );
 			bool fAccept = !sFilename.empty();
 			m_pCurrentRecvData.reset( new CBinaryIncomingData( sFilename ) );
 			return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Response, fAccept );
 		}
-	case eSyncroPBPacketTypes_BinaryIncomingData: {
+	case packet_types::BinaryIncomingData: {
 			bool fOK = true;
 			try {
 				m_pCurrentRecvData->HandlePacket( inaInputStreams );
@@ -64,7 +66,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			}
 			return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Ack, fOK );
 		}
-	case eSyncroPBPacketTypes_AdminGenericCommand: {
+	case packet_types::AdminGenericCommand: {
 			CAdminCommandHandler oHandler( inaInputStreams, m_oAuthToken, (*m_pAdminCommandMan) );
 			return oHandler.GetResponse();
 		}
