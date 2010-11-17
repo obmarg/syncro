@@ -8,6 +8,8 @@
 #define STRICT
 #endif
 
+#include <boost/asio.hpp>
+
 #include "targetver.h"
 
 #define _ATL_APARTMENT_THREADED

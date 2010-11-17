@@ -19,9 +19,7 @@ class ATL_NO_VTABLE CCSyncroExtension :
 	public IContextMenu
 {
 public:
-	CCSyncroExtension()
-	{
-	}
+	CCSyncroExtension();
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 

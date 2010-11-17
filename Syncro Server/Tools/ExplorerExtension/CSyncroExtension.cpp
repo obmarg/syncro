@@ -3,6 +3,19 @@
 #include "stdafx.h"
 #include "CSyncroExtension.h"
 #include <atlconv.h>  // for ATL string conversion macros
+#include <libsyncro/connection.h>
+#include <ShellAPI.h>
+
+CCSyncroExtension::CCSyncroExtension()
+{
+	syncro::client::Connection conn(
+		syncro::client::ConnectionDetails()
+			.SetHostname("localhost")
+			.SetUsername("grambo")
+			.SetPassword("password")
+		);
+	//If we got here, we're sorted.
+}
 
 STDMETHODIMP CCSyncroExtension::Initialize ( 
 	LPCITEMIDLIST pidlFolder,
