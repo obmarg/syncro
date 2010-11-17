@@ -63,7 +63,7 @@ bool CSyncroDB::UpgradeDatabase(int nCurrentVersion) {
 		run("DROP TABLE " + SERVER_ID_TABLE_NAME + ";");
 		run(SERVER_ID_TABLE_CREATE);
 	}
-	if( nCurrentVersion < 4 ) {
+	if( nCurrentVersion < 5 ) {
 		run( USERS_TABLE_CREATE );
 	}
 	clearResult();

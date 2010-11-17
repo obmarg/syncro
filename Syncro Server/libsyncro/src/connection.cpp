@@ -58,11 +58,16 @@ Connection::Connection( const ConnectionDetails& details ) :
 	DoHandshake();
 }
 
+Connection::~Connection() 
+{
+
+}
+
 void 
 Connection::SendProtocolBuffer( uint32_t packetType, const google::protobuf::MessageLite& message ) {
 	pb::PacketHeader pbHeader;
 	pbHeader.set_packet_type(packetType);
-	pbHeader.set_subpacket_sizes( 0, message.ByteSize() );
+	pbHeader.add_subpacket_sizes( message.ByteSize() );
 	
 	std::vector<unsigned char> buffer(
 		message.ByteSize() + comms::PacketHeader::BYTE_SIZE + pbHeader.ByteSize() 

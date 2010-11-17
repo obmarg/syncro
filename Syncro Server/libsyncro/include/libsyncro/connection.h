@@ -1,11 +1,21 @@
 #ifndef _SYNCRO_CLIENT_CONNECTION_H_
 #define _SYNCRO_CLIENT_CONNECTION_H_
 
+#include <libsyncro/comms.h>
 #include <kode/tcpconnection.h>
 #include <boost/noncopyable.hpp>
 #include <boost/asio.hpp>
-#include <google/protobuf/message_lite.h>
-#include <google/protobuf/io/zero_copy_stream.h>
+
+namespace google {
+	namespace protobuf{
+		class MessageLite;
+		namespace io {
+			class ZeroCopyInputStream;
+			class ZeroCopyOutputStream;
+		}
+	}
+}
+
 
 namespace syncro {
 namespace client {
@@ -15,7 +25,7 @@ class Connection;
 class ConnectionDetails {
 	friend class Connection;
 public:
-	ConnectionDetails();
+	ConnectionDetails() : m_port( comms::SERVER_PORT ){};	//TODO: Set some defaults?
 	ConnectionDetails& SetHostname( const std::string& host ) {
 		m_host = host;
 		return (*this);

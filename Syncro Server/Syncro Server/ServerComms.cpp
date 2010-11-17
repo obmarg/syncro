@@ -10,7 +10,6 @@ using namespace boost::asio::ip;
 using boost::asio::io_service;
 using std::cout;
 
-const int SERVER_PORT = 9998;
 const int DEFAULT_RECV_BUFFER = 1000;
 
 CServerComms::CServerComms(io_service& inoIOService) : m_oAcceptor( inoIOService, tcp::endpoint(tcp::v4(), SERVER_PORT) ) {

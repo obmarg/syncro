@@ -6,6 +6,8 @@
 namespace syncro {
 namespace comms {
 
+const int SERVER_PORT = 9998;
+
 const unsigned char PB_REQUEST_FIRST_BYTE = 105;
 const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 
@@ -14,8 +16,14 @@ const std::string HANDSHAKE_RESPONSE_MAGIC =	"Hey bitch!";
 
 class PacketHeader {
 public:
-	PacketHeader();
-	~PacketHeader();
+	PacketHeader()
+	{
+
+	}
+	~PacketHeader()
+	{
+
+	}
 
 	enum { BYTE_SIZE = sizeof( PB_REQUEST_FIRST_BYTE ) + sizeof( unsigned int ) };
 
