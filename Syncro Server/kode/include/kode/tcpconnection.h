@@ -35,24 +35,13 @@ public:
 
 	template< class tBuffer >
 	void Recv( tBuffer& buffer, size_t recvSize ) {
-		DoRecv( boost::asio::buffer( buffer ), recvSize );
+		DoRecv( boost::asio::buffer( buffer, recvSize ), recvSize );
 	}
 	
 	template< class tBuffer >
-	void Recv( tBuffer& buffer, size_t recvSize, size_t bufferSize ) {
-		DoRecv( boost::asio::buffer( buffer, bufferSize ), recvSize );
-	}
-
-	template< class tBuffer >
 	void RecvByVal( tBuffer buffer, size_t recvSize ) {
-		DoRecv( boost::asio::buffer( buffer ), recvSize );
+		DoRecv( boost::asio::buffer( buffer, recvSize ), recvSize );
 	}
-
-	template< class tBuffer >
-	void RecvByVal( tBuffer buffer, size_t recvSize, size_t bufferSize ) {
-		DoRecv( boost::asio::buffer( buffer, bufferSize ), recvSize );
-	}
-
 
 protected:
 	boost::asio::io_service			m_service;

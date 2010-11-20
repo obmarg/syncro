@@ -127,7 +127,8 @@ Connection::RecvProtocolBuffer(  ) {
 		void *currentBlock = NULL;
 		int currentBlockSize = 0;
 		while( (done < subpacketSize) && stream->Next( &currentBlock, &currentBlockSize ) ) {
-			RecvByVal( reinterpret_cast<char*>(currentBlock), currentBlockSize, currentBlockSize );
+			RecvByVal( reinterpret_cast<char*>(currentBlock), currentBlockSize );
+			done += currentBlockSize;
 		}
 		if( done < subpacketSize )
 			throw std::runtime_error( "stream->Next failed in syncro::client::Connection::RecvProtocolBuffer");
