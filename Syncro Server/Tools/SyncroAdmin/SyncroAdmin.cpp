@@ -18,6 +18,8 @@ int main(int argc, char* argv[])
 
 	conn.GetFolderList( list );
 
+	conn.SendAdminCommand("AddFolder","C:\\temp\\");
+
 	int i = 0;
 	i += 1;
 

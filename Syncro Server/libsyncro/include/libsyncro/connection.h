@@ -75,6 +75,8 @@ public:
 	}
 
 	void GetFolderList(FolderList& list);
+	
+	void SendAdminCommand( const std::string& command, const std::string& param );
 protected:
 
 	void DoHandshake();

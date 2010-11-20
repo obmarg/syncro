@@ -3,6 +3,7 @@
 #include "protocol_buffers/handshake.pb.h"
 #include "protocol_buffers/header.pb.h"
 #include "protocol_buffers/folders.pb.h"
+#include "protocol_buffers/admin.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <stdexcept>
 #include <boost/shared_array.hpp>
@@ -193,6 +194,31 @@ void Connection::GetFolderList(FolderList& list) {
 		if( folder.has_can_write() ) {};	
 	}
 	//return const_cast<const FolderList>(rv);
+}
+
+void Connection::SendAdminCommand( const std::string& command, const std::string& param ) {
+	pb::GenericAdminCommand request;
+	request.set_command( command );
+	request.set_param( param );
+
+	SendProtocolBuffer( comms::packet_types::AdminGenericCommand, request );
+
+	TRecvPacketPtr responsePacket = RecvProtocolBuffer();
+	//TODO: Could maybe pass the packet type & num subpackets to the recv function
+	//		rather than duplicate error checking all over the place
+	if( responsePacket->GetPacketType() != comms::packet_types::AdminAck )
+		throw std::runtime_error( "Admin command request not replied to" );
+	if( responsePacket->GetNumSubpackets() != 1 ) {
+		throw std::runtime_error( "Invalid number of subpackets in admin command ack" );
+	}
+	pb::AdminAck ack;
+	ack.ParseFromZeroCopyStream( responsePacket->ReadSubpacket(0).get() );
+	if( ack.has_ok() ) {
+		if( !ack.ok() ) {
+			//TODO: Add better error reporting etc.  maybe by return value rather than exception?
+			throw std::runtime_error( "Admin command failed" );
+		}
+	}
 }
 
 
