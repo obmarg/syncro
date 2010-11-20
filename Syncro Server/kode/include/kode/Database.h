@@ -193,6 +193,25 @@ class Statement
 	friend class Database;
 protected:
 	Statement(sqlite3_stmt* handle) : m_handle(handle), m_fFetchedNames(false) {};
+
+	void FetchColumnNames() {
+		int nCount = sqlite3_column_count( m_handle );
+		m_columnNames.reserve( nCount );
+		for( int iNum = 0; iNum < nCount; ++iNum ) {
+			m_columnNames.push_back( std::string( sqlite3_column_name( m_handle, iNum ) ) );
+		}
+		m_fFetchedNames = true;
+	}
+
+	int FindColumn(std::string colName) {
+		int nIndex = 0;
+		BOOST_FOREACH( const std::string& current, m_columnNames ) {
+			if( current.compare( colName ) == 0 )
+				return nIndex;
+			++nIndex;
+		}
+		return -1;
+	}
 	
 public:
 	//TODO: THis could all be done better with template meta programming type stuff
@@ -216,25 +235,6 @@ public:
 
 	void Reset() {
 		sqlite3_reset( m_handle );
-	}
-
-	void FetchColumnNames() {
-		int nCount = sqlite3_column_count( m_handle );
-		m_columnNames.reserve( nCount );
-		for( int iNum = 0; iNum < nCount; ++iNum ) {
-			m_columnNames.push_back( std::string( sqlite3_column_name( m_handle, iNum ) ) );
-		}
-		m_fFetchedNames = true;
-	}
-
-	int FindColumn(std::string colName) {
-		int nIndex = 0;
-		BOOST_FOREACH( const std::string& current, m_columnNames ) {
-			if( current.compare( colName ) == 0 )
-				return nIndex;
-			++nIndex;
-		}
-		return -1;
 	}
 
 	template<class tData>
@@ -317,12 +317,13 @@ public:
 	}
 #endif
 
+private:
 	sqlite3_stmt* m_handle;
 	std::vector<std::string> m_columnNames;
 	bool m_fFetchedNames;
 };
 
-class AutoReset {
+class AutoReset : boost::noncopyable {
 public:
 	AutoReset( const StatementPtr statement ) : m_statement( statement ) {};
 	~AutoReset() {
