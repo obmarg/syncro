@@ -33,7 +33,7 @@ protected:
 };
 
 
-CAdminCommandHandler::CAdminCommandHandler(TInputStreamList& inaInputStreams,  const CAuthToken& inUserAuth, const CAdminCommandManager& commandManager ) {
+CAdminCommandHandler::CAdminCommandHandler(TInputStreamList& inaInputStreams,  const CAuthToken& inUserAuth, CAdminCommandManager& commandManager ) {
 	pb::GenericAdminCommand oCommand;
 	oCommand.ParseFromZeroCopyStream( inaInputStreams[0] );
 	if( !oCommand.has_command() )

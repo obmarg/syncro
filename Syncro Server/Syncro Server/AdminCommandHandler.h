@@ -14,7 +14,7 @@ class CAdminCommandManager;
 
 class CAdminCommandHandler {
 public:
-	CAdminCommandHandler(TInputStreamList& inaInputStreams, const CAuthToken& inUserAuth, const CAdminCommandManager& commandManager );
+	CAdminCommandHandler(TInputStreamList& inaInputStreams, const CAuthToken& inUserAuth, CAdminCommandManager& commandManager );
 	~CAdminCommandHandler();
 
 	CBasePBResponse::TPointer GetResponse() {

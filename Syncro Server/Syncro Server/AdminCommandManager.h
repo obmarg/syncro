@@ -2,6 +2,7 @@
 #define _ADMIN_COMMAND_MANAGER_H_
 
 #include "common.h"
+#include <kode/Database.h>
 #include <boost/noncopyable.hpp>
 #include <stdexcept>
 #include <vector>
@@ -28,7 +29,7 @@ class CAdminCommandManager : boost::noncopyable {
 public:
 	CAdminCommandManager();
 
-	void HandleCommand( const std::string& sName, const std::string& sParam, const CAuthToken& insAuth ) const;
+	void HandleCommand( const std::string& sName, const std::string& sParam, const CAuthToken& insAuth );
 
 private:
 	struct sAdminCommand {
@@ -43,6 +44,15 @@ private:
 	std::vector<sAdminCommand> m_aCommands;
 
 	eAdminCommand FindCommand( const std::string& sName ) const;
+
+	void AddFolder(const std::string& path);
+	void DelFolder(unsigned int Id);
+	void AddLocalFile( const std::string& path);
+
+	kode::db::DatabasePtr m_db;
+	kode::db::StatementPtr m_addFolder;
+	kode::db::StatementPtr m_delFolder;
+	kode::db::StatementPtr m_addLocalFile;
 };
 
 };
