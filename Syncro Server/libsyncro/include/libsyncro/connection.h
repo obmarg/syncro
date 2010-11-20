@@ -2,6 +2,7 @@
 #define _SYNCRO_CLIENT_CONNECTION_H_
 
 #include <libsyncro/comms.h>
+#include <libsyncro/folderlist.h>
 #include <kode/tcpconnection.h>
 #include <boost/noncopyable.hpp>
 #include <boost/asio.hpp>
@@ -66,7 +67,14 @@ public:
 	Connection( const ConnectionDetails& details );
 	~Connection();
 	
-	
+	const std::string GetUuid() const {
+		return m_uuid;
+	}
+	const std::string GetServerName() const {
+		return m_serverName;
+	}
+
+	void GetFolderList(FolderList& list);
 protected:
 
 	void DoHandshake();
@@ -75,6 +83,10 @@ protected:
 	TRecvPacketPtr RecvProtocolBuffer();
 
 	const ConnectionDetails m_serverDetails;
+
+private:
+	std::string m_uuid;
+	std::string m_serverName;
 };
 
 }	// namespace client

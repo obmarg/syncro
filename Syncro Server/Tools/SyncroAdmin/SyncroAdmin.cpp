@@ -14,6 +14,13 @@ int main(int argc, char* argv[])
 			.SetHostname( "localhost" )
 		);
 
+	syncro::FolderList list;
+
+	conn.GetFolderList( list );
+
+	int i = 0;
+	i += 1;
+
 	return 0;
 }
 

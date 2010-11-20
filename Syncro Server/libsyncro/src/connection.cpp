@@ -2,6 +2,7 @@
 #include "comms.h"
 #include "protocol_buffers/handshake.pb.h"
 #include "protocol_buffers/header.pb.h"
+#include "protocol_buffers/folders.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <stdexcept>
 #include <boost/shared_array.hpp>
@@ -159,7 +160,39 @@ void Connection::DoHandshake() {
 	if( !response.has_magic() || response.magic().compare( comms::HANDSHAKE_RESPONSE_MAGIC ) != 0 ) {
 		throw std::runtime_error( "Handshake response magic incorrect");
 	}
+	if( response.has_uuid() ) {
+		m_uuid = response.uuid();
+	}
 	//TODO: Check for authentication success/failure, and save the uuid?
+}
+
+void Connection::GetFolderList(FolderList& list) {
+	pb::FolderListRequest request;
+	request.set_search_string("blah");
+
+	SendProtocolBuffer( comms::packet_types::FolderListRequest, request );
+
+	TRecvPacketPtr responsePacket = RecvProtocolBuffer();
+	if( responsePacket->GetPacketType() != comms::packet_types::FolderListResponse ) {
+		throw std::runtime_error( "Folder list request not replied to");
+	}
+	if( responsePacket->GetNumSubpackets() != 1 ) {
+		throw std::runtime_error( "Invalid number of folder list response subpackets" );
+	}
+	pb::FolderList response;
+	response.ParseFromZeroCopyStream( responsePacket->ReadSubpacket( 0 ).get() );
+	list.resize( response.folders_size() );
+	for( int folderNum = 0; folderNum < response.folders_size(); folderNum++ ) {
+		const pb::FolderInfo& folder = response.folders( folderNum );
+		if( folder.has_folder_id() )
+			list[ folderNum ].Id = folder.folder_id();
+		if( folder.has_folder_name() )
+			list[ folderNum ].Name = folder.folder_name();
+		//TODO: Fill these 2 in at some point...
+		if( folder.has_can_read() ) {};
+		if( folder.has_can_write() ) {};	
+	}
+	//return const_cast<const FolderList>(rv);
 }
 
 
