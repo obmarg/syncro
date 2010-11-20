@@ -17,6 +17,8 @@ enum ePBPacketTypes {
 	BinaryIncomingDataAck,		// 9
 	AdminGenericCommand,		// 10
 	AdminAck,					// 11
+	FolderListRequest,			// 12
+	FolderListResponse,			// 13
 };
 
 }	// namespace packet_types

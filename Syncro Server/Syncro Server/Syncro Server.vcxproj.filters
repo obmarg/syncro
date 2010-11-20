@@ -90,6 +90,9 @@
     <ClInclude Include="AdminCommandManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FolderListHandlers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyncroServer.cpp">
@@ -152,6 +155,9 @@
     <ClCompile Include="AdminCommandManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FolderListHandlers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Messages\binarydata.proto">
@@ -167,6 +173,9 @@
       <Filter>Message Files</Filter>
     </None>
     <None Include="..\..\Messages\build.bat">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\folders.proto">
       <Filter>Message Files</Filter>
     </None>
   </ItemGroup>

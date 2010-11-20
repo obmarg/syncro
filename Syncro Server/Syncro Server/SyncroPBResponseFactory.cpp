@@ -8,6 +8,7 @@
 #include "AuthManager.h"
 #include "AdminCommandManager.h"
 #include "AdminCommandHandler.h"
+#include "FolderListHandlers.h"
 
 namespace syncro {
 
@@ -70,7 +71,12 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			CAdminCommandHandler oHandler( inaInputStreams, m_oAuthToken, (*m_pAdminCommandMan) );
 			return oHandler.GetResponse();
 		}
+	case packet_types::FolderListRequest: {
+			FolderListRequestHandler request( inaInputStreams );
+			return request.GetResponse();
+		}
 	};
+	
 	throw std::runtime_error("Invalid pb request passed to response factory");
 }
 
