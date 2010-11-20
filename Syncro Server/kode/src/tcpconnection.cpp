@@ -51,6 +51,8 @@ void TCPConnection::DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvS
 		//TODO: Make sure that this doesn't overwrite the current contents each time it's called
 		size_t len = m_socket.read_some( buffer, error );
 		totalLen += len;
+		if( error )
+			break;
 	}while( totalLen < recvSize );
 
 	if( error )
