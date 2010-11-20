@@ -40,12 +40,12 @@ bool CXMLBuilder::GetFolderXML() {
 	TiXmlElement *pFoldersElement = new TiXmlElement( "Folders" );
 	m_oXML.LinkEndChild( pFoldersElement );
 
-	const CFolderMan::TFolderInfoList& oFolders = oFolderMan.GetFoldersInfo();
+	const FolderList& oFolders = oFolderMan.GetFoldersInfo();
 	TiXmlElement *pFolder;
-	for( CFolderMan::TFolderInfoList::const_iterator oFolder = oFolders.begin(); oFolder != oFolders.end(); oFolder++ ) {
+	for( FolderList::const_iterator oFolder = oFolders.begin(); oFolder != oFolders.end(); oFolder++ ) {
 		pFolder = new TiXmlElement( "Folder" );
-		pFolder->SetAttribute("ID", oFolder->nFolderID );
-		TiXmlText* pText = new TiXmlText( TiXmlText( oFolder->sFolderName.c_str() ) );
+		pFolder->SetAttribute("ID", oFolder->Id );
+		TiXmlText* pText = new TiXmlText( TiXmlText( oFolder->Name.c_str() ) );
 		pFolder->LinkEndChild( pText );
 		pFoldersElement->LinkEndChild( pFolder );
 	}

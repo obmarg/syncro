@@ -16,7 +16,7 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
 		if( !is_directory( oPath ) )
 			throw std::runtime_error( "Invalid path read from DB in CFolderMan constructor" );
 		//TODO: Do something with the name as well
-		m_aFolderInfo.push_back( sFolderInfo( boost::lexical_cast<int>( oRow["ID"] ) , oPath.native_directory_string() ) );
+		m_folders.push_back( FolderInfo( boost::lexical_cast<int>( oRow["ID"] ) , oPath.native_directory_string() ) );
 	}
 }
 
@@ -24,9 +24,9 @@ CFolderMan::~CFolderMan() {
 
 }
 
-const CFolderMan::sFolderInfo& CFolderMan::FindFolder( int nFolderId ) {
-	foreach( const sFolderInfo& oInfo, m_aFolderInfo ) {
-		if( oInfo.nFolderID == nFolderId ) {
+const FolderInfo& CFolderMan::FindFolder( int nFolderId ) {
+	foreach( const FolderInfo& oInfo, m_folders ) {
+		if( oInfo.Id == nFolderId ) {
 			return oInfo;
 		}
 	}
@@ -36,13 +36,13 @@ const CFolderMan::sFolderInfo& CFolderMan::FindFolder( int nFolderId ) {
 
 boost::shared_ptr<CFolder> 
 CFolderMan::GetFolder( int nFolderID ) {
-	return boost::shared_ptr<CFolder>( new CFolder( FindFolder(nFolderID).sFolderName ) );
+	return boost::shared_ptr<CFolder>( new CFolder( FindFolder(nFolderID).Name ) );
 	//TODO: handle exception here or elsewhere?
 }
 
 std::string
 CFolderMan::GetFileName(int nFolderId,const std::string& fileName) {
-	std::string rv = FindFolder(nFolderId).sFolderName;
+	std::string rv = FindFolder(nFolderId).Name;
 	char aLastChar = *( rv.rbegin() ) ;
 	if( (aLastChar != '\\') && (aLastChar != '/') )
 		rv += "/";
@@ -53,8 +53,8 @@ CFolderMan::GetFileName(int nFolderId,const std::string& fileName) {
 std::string 
 CFolderMan::IncomingFile( const CBinaryDataRequest& fileData )
 {
-	const sFolderInfo& folderInfo = FindFolder( fileData.GetFolderId() );
-	std::string destFileName = folderInfo.sFolderName + fileData.GetFilename();
+	const FolderInfo& folderInfo = FindFolder( fileData.GetFolderId() );
+	std::string destFileName = folderInfo.Name + fileData.GetFilename();
 	path destFile( destFileName );
 	if( !exists( destFile ) )
 		return destFile.native_file_string();

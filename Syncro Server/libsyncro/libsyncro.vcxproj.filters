@@ -36,6 +36,9 @@
     <ClCompile Include="src\protocol_buffers\header.pb.cc">
       <Filter>Source Files\Protocol Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="src\protocol_buffers\folders.pb.cc">
+      <Filter>Source Files\Protocol Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h">
@@ -57,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\libsyncro\packet_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libsyncro\protocol_buffers\folders.pb.h">
+      <Filter>Header Files\Protocol Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libsyncro\folderlist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

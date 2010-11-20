@@ -1,9 +1,10 @@
 #ifndef _FOLDER_MAN_H_
 #define _FOLDER_MAN_H_
 
+#include "Folder.h"
+#include <libsyncro/folderlist.h>
 #include <kode/utils.h>
 #include <kode/Database.h>
-#include "Folder.h"
 #include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
@@ -15,19 +16,10 @@ class CBinaryDataRequest;
 
 class CFolderMan {
 public:
-	struct sFolderInfo {
-		sFolderInfo( int innID, const std::string& insName ) : nFolderID( innID ), sFolderName( insName ) {};
-		int nFolderID;
-		std::string sFolderName;
-	};
-
-	typedef std::vector<sFolderInfo> TFolderInfoList;
-
 	CFolderMan( kode::db::Database::TPointer inpDB );
 	~CFolderMan();
 
-	
-	const TFolderInfoList& GetFoldersInfo() { return m_aFolderInfo; };
+	const FolderList& GetFoldersInfo() const { return m_folders; };
 
 	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
 
@@ -36,10 +28,10 @@ public:
 	std::string IncomingFile( const CBinaryDataRequest& fileData );
 	
 private:
-	TFolderInfoList m_aFolderInfo;
+	FolderList m_folders;
 	kode::db::Database::TPointer m_pDB;
 
-	const sFolderInfo& FindFolder( int nFolderId );
+	const FolderInfo& FindFolder( int nFolderId );
 };
 
 };
