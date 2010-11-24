@@ -58,6 +58,6 @@ T FromJavaEndian(const T& source) {
 }
 
 }	// namespace utils
-};	// namespace syncro
+};	// namespace kode
 
 #endif
