@@ -2,8 +2,9 @@
 #define _AUTH_MANAGER_H_
 
 #include "common.h"
-#include <boost/shared_ptr.hpp>
 #include <kode/Database.h>
+#include <boost/shared_ptr.hpp>
+#include <stdint.h>
 
 namespace syncro {
 
@@ -13,7 +14,7 @@ public:
 	~CAuthManager();
 
 	bool NeedsAuth();
-	const CAuthToken Authenticate(std::string username, std::string password);
+	const CAuthToken Authenticate(const std::string& username, const std::string& password, const std::string& ip);
 
 private:
 	kode::db::DatabasePtr m_pDB;

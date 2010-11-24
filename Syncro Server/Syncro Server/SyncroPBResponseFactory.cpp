@@ -43,7 +43,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			if( !oRequest.HasAuthDetails() && oAuthMan.NeedsAuth() )
 				throw authentication_exception("Authentication required but no details provided");
 			else if( oRequest.HasAuthDetails() ) {
-				m_oAuthToken = oAuthMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword() );
+				m_oAuthToken = oAuthMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword(), "" );
 			}
 			//if we've got this far and haven't thrown, we're authed
 			m_fAuthenticated = true;

@@ -2,7 +2,7 @@
 
 namespace syncro {
 
-const int CSyncroDB::EXPECTED_DB_VERSION = 5;
+const int CSyncroDB::EXPECTED_DB_VERSION = 6;
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE = 
@@ -24,7 +24,8 @@ const std::string USERS_TABLE_CREATE =
 				"CREATE TABLE IF NOT EXISTS " + USERS_TABLE_NAME + " (" +
 				"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				"Username TEXT NOT NULL, " +
-				"Password TEXT NOT NULL);";
+				"Password TEXT NOT NULL, " +
+				"IP TEXT NOT NULL);";
 
 //TODO: Move the database versioning stuff out into kode probably, then subclass that here.
 
@@ -64,6 +65,10 @@ bool CSyncroDB::UpgradeDatabase(int nCurrentVersion) {
 		run(SERVER_ID_TABLE_CREATE);
 	}
 	if( nCurrentVersion < 5 ) {
+		run( USERS_TABLE_CREATE );
+	}
+	if( nCurrentVersion < 6 ) {
+		run( "DROP TABLE " + USERS_TABLE_NAME + ";");
 		run( USERS_TABLE_CREATE );
 	}
 	clearResult();
