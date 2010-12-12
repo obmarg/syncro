@@ -238,44 +238,50 @@ public:
 	}
 
 	template<class tData>
-	void Bind(int innIndex, tData data) {
+	Statement& Bind(int innIndex, tData data) {
 		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, boost::lexical_cast<std::string>(data).c_str(), -1, SQLITE_TRANSIENT );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
+		return (*this);
 	}
 
 	template<class tData>
-	void Bind(std::string parameter, tData data) {
+	Statement& Bind(std::string parameter, tData data) {
 		int nIndex = sqlite3_bind_parameter_index( m_handle, parameter.c_str() );
 		Bind( nIndex, data );
+		return (*this);
 	}
 #ifdef _WIN32
 	template<>
-	void Bind<std::string>(int innIndex, std::string data) {
+	Statement& Bind<std::string>(int innIndex, std::string data) {
 		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, data.c_str(), -1, SQLITE_TRANSIENT );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
+		return (*this);
 	}
 	
 	template<>
-	void Bind<int>(int innIndex, int innData) {
+	Statement& Bind<int>(int innIndex, int innData) {
 		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, innData );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
+		return (*this);
 	}
 
 	template<>
-	void Bind<bool>(int innIndex, bool infData) {
+	Statement& Bind<bool>(int innIndex, bool infData) {
 		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, ( infData ? 1 : 0 ) );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
+		return (*this);
 	}
 	
 	template<>
-	void Bind<unsigned int>(int innIndex, unsigned int innData) {
+	Statement& Bind<unsigned int>(int innIndex, unsigned int innData) {
 		int nErrorCode = sqlite3_bind_int64( m_handle, innIndex, innData );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
+		return (*this);
 	}
 
 #endif

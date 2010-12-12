@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClCompile Include="src\Database.cpp" />
     <ClCompile Include="src\tcpconnection.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\kode\Database.h" />

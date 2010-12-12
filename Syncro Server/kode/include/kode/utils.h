@@ -57,6 +57,8 @@ T FromJavaEndian(const T& source) {
 #endif
 }
 
+extern std::string GenerateUUID();
+
 }	// namespace utils
 };	// namespace kode
 
