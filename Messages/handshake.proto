@@ -3,6 +3,14 @@ package syncro.pb;
 option java_package = "uk.me.grambo.syncro.pb";
 option optimize_for = LITE_RUNTIME;
 
+message SaltRequest {
+	optional int32 size = 1;
+};
+
+message SaltResponse {
+	optional string salt = 1;
+};
+
 message HandshakeRequest {
 	required string magic = 1;
 	optional int32 client_ver_major = 2;

@@ -19,6 +19,8 @@ enum ePBPacketTypes {
 	AdminAck,					// 11
 	FolderListRequest,			// 12
 	FolderListResponse,			// 13
+	SaltRequest,				// 14
+	SaltResponse,				// 15
 };
 
 }	// namespace packet_types
