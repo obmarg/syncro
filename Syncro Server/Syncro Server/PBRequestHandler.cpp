@@ -2,6 +2,7 @@
 #include "PBResponseSendHandler.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <libsyncro/comms.h>
+#include <iostream>
 
 namespace syncro {
 
@@ -76,6 +77,8 @@ bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	}catch( const authentication_exception& error ) {
 		//TODO: do we want to return false here?
 		m_fCloseConnection = true;
+		m_fatalError = true;
+		std::cout << "Authentication failed for " + m_pConn->ClientIP() + "\n";
 	}
 
 	ResetVariables();

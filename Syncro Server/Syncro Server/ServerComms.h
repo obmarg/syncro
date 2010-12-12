@@ -15,9 +15,15 @@ class CReceiveHandler {
 public:
 	typedef boost::shared_ptr<CReceiveHandler> TPointer;
 
+	CReceiveHandler() : m_fatalError( false ) {};
+	virtual ~CReceiveHandler() {};
+
 	virtual bool CanHandleReceive(const TCharBuffer& inoBuffer) = 0;
 	virtual bool HandleReceive(const TCharBuffer& inoBuffer) = 0;
 	virtual bool CanRemove() = 0;
+	virtual bool FatalError() { return m_fatalError; };
+protected:
+	bool m_fatalError;
 };
 
 class CSendHandler {
@@ -59,6 +65,8 @@ public:
 	void FinishedSend(const boost::system::error_code& inoError, std::size_t innBytes);
 
 	boost::asio::ip::tcp::socket& GetSocket() { return m_oSocket; };
+	
+	std::string ClientIP();
 
 private:
 	CTCPConnection(boost::asio::io_service& inoIOService);

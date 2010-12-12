@@ -84,6 +84,7 @@ bool CTCPConnection::IsRecvFinished(const boost::system::error_code& inoError, s
 }
 
 void CTCPConnection::FinishedRecv(const boost::system::error_code& inoError, std::size_t innBytes ) {
+	bool fatalError = false;
 	if( inoError ) {
 		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
 		cout << inoError.message() << "\n";
@@ -94,16 +95,22 @@ void CTCPConnection::FinishedRecv(const boost::system::error_code& inoError, std
 		TCharBuffer oBuffer( m_aBuffer, innBytes );
 
 		m_pSelectedRecvHandler->HandleReceive(oBuffer);
+		if( m_pSelectedRecvHandler->FatalError() )
+			fatalError = true;
 		m_pSelectedRecvHandler.reset();
 	}
 	TRecvHandlerMap::iterator pRecv;
 	for(pRecv = m_oRecvHandlers.begin(); pRecv != m_oRecvHandlers.end(); pRecv++ ) {
-		if( pRecv->second->CanRemove() ) {
+		if( fatalError || pRecv->second->CanRemove() ) {
 			m_oRecvHandlers.erase( pRecv );
 			pRecv = m_oRecvHandlers.begin();
 			if( pRecv == m_oRecvHandlers.end() )
 				break;
 		}
+	}
+	if( fatalError )
+	{
+		m_oSocket.close();
 	}
 }
 
@@ -145,6 +152,17 @@ CTCPConnection::FinishedSend(const boost::system::error_code& inoError, std::siz
 	pHandler->SendDone(innBytes);
 	
 	cout << "Sent " << innBytes << " OK!";
+}
+
+std::string
+CTCPConnection::ClientIP()
+{
+	boost::system::error_code error;
+	std::string rv(	m_oSocket.remote_endpoint().address().to_string(error) );
+	if( error )
+		return "";
+	else
+		return rv;
 }
 
 const TCharBuffer CSendHandler::GetBuffer() {
