@@ -24,7 +24,11 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	using namespace comms;
 
 	//TODO: Add in admin mode control messages etc.
-	if( (!m_fAuthenticated) && (innPacketType != packet_types::HandshakeRequest) ) {
+	if( !m_fAuthenticated ) {
+		if( 
+			(innPacketType != packet_types::HandshakeRequest) ||
+			(innPacketType != packet_types::SaltRequest)
+			)
 		throw authentication_exception("Not authenticated");
 	}
 	switch( innPacketType ) {
@@ -74,6 +78,9 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	case packet_types::FolderListRequest: {
 			FolderListRequestHandler request( inaInputStreams );
 			return request.GetResponse();
+		}
+	case packet_types::SaltRequest: {
+			return CSaltResponse::Create( m_authMan.Salt() );
 		}
 	};
 	

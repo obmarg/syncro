@@ -4,6 +4,7 @@
 #include "ServerComms.h"
 #include "BasePBResponse.h"
 #include "common.h"
+#include "VectorPBResponse.h"
 #include <libsyncro/protocol_buffers/handshake.pb.h>
 
 namespace syncro {
@@ -40,6 +41,18 @@ public:
 	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream);
 private:
 	pb::HandshakeResponse m_oMessage;
+};
+
+class CSaltResponse : public CVectorPBResponse {
+public:
+	static CBasePBResponse::TPointer Create(std::string salt) {
+		CBasePBResponse::TPointer pointer( new CSaltResponse( salt ) );
+		return pointer;
+	}
+	unsigned int GetPacketType();
+
+private:
+	CSaltResponse(std::string salt);
 };
 
 };	//namespace syncro

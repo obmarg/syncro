@@ -8,6 +8,513 @@ public final class Handshake {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
+  public static final class SaltRequest extends
+      com.google.protobuf.GeneratedMessageLite {
+    // Use SaltRequest.newBuilder() to construct.
+    private SaltRequest() {
+      initFields();
+    }
+    private SaltRequest(boolean noInit) {}
+    
+    private static final SaltRequest defaultInstance;
+    public static SaltRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public SaltRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    // optional int32 size = 1;
+    public static final int SIZE_FIELD_NUMBER = 1;
+    private boolean hasSize;
+    private int size_ = 0;
+    public boolean hasSize() { return hasSize; }
+    public int getSize() { return size_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasSize()) {
+        output.writeInt32(1, getSize());
+      }
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasSize()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, getSize());
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(uk.me.grambo.syncro.pb.Handshake.SaltRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Handshake.SaltRequest, Builder> {
+      private uk.me.grambo.syncro.pb.Handshake.SaltRequest result;
+      
+      // Construct using uk.me.grambo.syncro.pb.Handshake.SaltRequest.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new uk.me.grambo.syncro.pb.Handshake.SaltRequest();
+        return builder;
+      }
+      
+      protected uk.me.grambo.syncro.pb.Handshake.SaltRequest internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new uk.me.grambo.syncro.pb.Handshake.SaltRequest();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public uk.me.grambo.syncro.pb.Handshake.SaltRequest getDefaultInstanceForType() {
+        return uk.me.grambo.syncro.pb.Handshake.SaltRequest.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public uk.me.grambo.syncro.pb.Handshake.SaltRequest build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private uk.me.grambo.syncro.pb.Handshake.SaltRequest buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public uk.me.grambo.syncro.pb.Handshake.SaltRequest buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        uk.me.grambo.syncro.pb.Handshake.SaltRequest returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(uk.me.grambo.syncro.pb.Handshake.SaltRequest other) {
+        if (other == uk.me.grambo.syncro.pb.Handshake.SaltRequest.getDefaultInstance()) return this;
+        if (other.hasSize()) {
+          setSize(other.getSize());
+        }
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              return this;
+            default: {
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setSize(input.readInt32());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int32 size = 1;
+      public boolean hasSize() {
+        return result.hasSize();
+      }
+      public int getSize() {
+        return result.getSize();
+      }
+      public Builder setSize(int value) {
+        result.hasSize = true;
+        result.size_ = value;
+        return this;
+      }
+      public Builder clearSize() {
+        result.hasSize = false;
+        result.size_ = 0;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:syncro.pb.SaltRequest)
+    }
+    
+    static {
+      defaultInstance = new SaltRequest(true);
+      uk.me.grambo.syncro.pb.Handshake.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:syncro.pb.SaltRequest)
+  }
+  
+  public static final class SaltResponse extends
+      com.google.protobuf.GeneratedMessageLite {
+    // Use SaltResponse.newBuilder() to construct.
+    private SaltResponse() {
+      initFields();
+    }
+    private SaltResponse(boolean noInit) {}
+    
+    private static final SaltResponse defaultInstance;
+    public static SaltResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public SaltResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    // optional string salt = 1;
+    public static final int SALT_FIELD_NUMBER = 1;
+    private boolean hasSalt;
+    private java.lang.String salt_ = "";
+    public boolean hasSalt() { return hasSalt; }
+    public java.lang.String getSalt() { return salt_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasSalt()) {
+        output.writeString(1, getSalt());
+      }
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasSalt()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(1, getSalt());
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static uk.me.grambo.syncro.pb.Handshake.SaltResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(uk.me.grambo.syncro.pb.Handshake.SaltResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          uk.me.grambo.syncro.pb.Handshake.SaltResponse, Builder> {
+      private uk.me.grambo.syncro.pb.Handshake.SaltResponse result;
+      
+      // Construct using uk.me.grambo.syncro.pb.Handshake.SaltResponse.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new uk.me.grambo.syncro.pb.Handshake.SaltResponse();
+        return builder;
+      }
+      
+      protected uk.me.grambo.syncro.pb.Handshake.SaltResponse internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new uk.me.grambo.syncro.pb.Handshake.SaltResponse();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public uk.me.grambo.syncro.pb.Handshake.SaltResponse getDefaultInstanceForType() {
+        return uk.me.grambo.syncro.pb.Handshake.SaltResponse.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public uk.me.grambo.syncro.pb.Handshake.SaltResponse build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private uk.me.grambo.syncro.pb.Handshake.SaltResponse buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public uk.me.grambo.syncro.pb.Handshake.SaltResponse buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        uk.me.grambo.syncro.pb.Handshake.SaltResponse returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(uk.me.grambo.syncro.pb.Handshake.SaltResponse other) {
+        if (other == uk.me.grambo.syncro.pb.Handshake.SaltResponse.getDefaultInstance()) return this;
+        if (other.hasSalt()) {
+          setSalt(other.getSalt());
+        }
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              return this;
+            default: {
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              setSalt(input.readString());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional string salt = 1;
+      public boolean hasSalt() {
+        return result.hasSalt();
+      }
+      public java.lang.String getSalt() {
+        return result.getSalt();
+      }
+      public Builder setSalt(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasSalt = true;
+        result.salt_ = value;
+        return this;
+      }
+      public Builder clearSalt() {
+        result.hasSalt = false;
+        result.salt_ = getDefaultInstance().getSalt();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:syncro.pb.SaltResponse)
+    }
+    
+    static {
+      defaultInstance = new SaltResponse(true);
+      uk.me.grambo.syncro.pb.Handshake.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:syncro.pb.SaltResponse)
+  }
+  
   public static final class HandshakeRequest extends
       com.google.protobuf.GeneratedMessageLite {
     // Use HandshakeRequest.newBuilder() to construct.

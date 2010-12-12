@@ -15,10 +15,12 @@ public:
 
 	bool NeedsAuth();
 	const CAuthToken Authenticate(const std::string& username, const std::string& password, const std::string& ip);
+	const std::string Salt() const { return m_salt; };
 
 private:
 	kode::db::DatabasePtr m_pDB;
 	kode::db::StatementPtr m_pCheckLoginStatement;
+	std::string m_salt;
 };
 
 }

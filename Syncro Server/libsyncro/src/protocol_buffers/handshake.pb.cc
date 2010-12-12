@@ -11,6 +11,8 @@ namespace syncro {
 namespace pb {
 
 void protobuf_ShutdownFile_handshake_2eproto() {
+  delete SaltRequest::default_instance_;
+  delete SaltResponse::default_instance_;
   delete HandshakeRequest::default_instance_;
   delete HandshakeResponse::default_instance_;
 }
@@ -21,8 +23,12 @@ void protobuf_AddDesc_handshake_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  SaltRequest::default_instance_ = new SaltRequest();
+  SaltResponse::default_instance_ = new SaltResponse();
   HandshakeRequest::default_instance_ = new HandshakeRequest();
   HandshakeResponse::default_instance_ = new HandshakeResponse();
+  SaltRequest::default_instance_->InitAsDefaultInstance();
+  SaltResponse::default_instance_->InitAsDefaultInstance();
   HandshakeRequest::default_instance_->InitAsDefaultInstance();
   HandshakeResponse::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_handshake_2eproto);
@@ -34,6 +40,329 @@ struct StaticDescriptorInitializer_handshake_2eproto {
     protobuf_AddDesc_handshake_2eproto();
   }
 } static_descriptor_initializer_handshake_2eproto_;
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SaltRequest::kSizeFieldNumber;
+#endif  // !_MSC_VER
+
+SaltRequest::SaltRequest()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void SaltRequest::InitAsDefaultInstance() {
+}
+
+SaltRequest::SaltRequest(const SaltRequest& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SaltRequest::SharedCtor() {
+  _cached_size_ = 0;
+  size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SaltRequest::~SaltRequest() {
+  SharedDtor();
+}
+
+void SaltRequest::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SaltRequest::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const SaltRequest& SaltRequest::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_handshake_2eproto();  return *default_instance_;
+}
+
+SaltRequest* SaltRequest::default_instance_ = NULL;
+
+SaltRequest* SaltRequest::New() const {
+  return new SaltRequest;
+}
+
+void SaltRequest::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    size_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool SaltRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 size = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &size_)));
+          _set_bit(0);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SaltRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional int32 size = 1;
+  if (_has_bit(0)) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->size(), output);
+  }
+  
+}
+
+int SaltRequest::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 size = 1;
+    if (has_size()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->size());
+    }
+    
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SaltRequest::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const SaltRequest*>(&from));
+}
+
+void SaltRequest::MergeFrom(const SaltRequest& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from._has_bit(0)) {
+      set_size(from.size());
+    }
+  }
+}
+
+void SaltRequest::CopyFrom(const SaltRequest& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SaltRequest::IsInitialized() const {
+  
+  return true;
+}
+
+void SaltRequest::Swap(SaltRequest* other) {
+  if (other != this) {
+    std::swap(size_, other->size_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string SaltRequest::GetTypeName() const {
+  return "syncro.pb.SaltRequest";
+}
+
+
+// ===================================================================
+
+const ::std::string SaltResponse::_default_salt_;
+#ifndef _MSC_VER
+const int SaltResponse::kSaltFieldNumber;
+#endif  // !_MSC_VER
+
+SaltResponse::SaltResponse()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void SaltResponse::InitAsDefaultInstance() {
+}
+
+SaltResponse::SaltResponse(const SaltResponse& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SaltResponse::SharedCtor() {
+  _cached_size_ = 0;
+  salt_ = const_cast< ::std::string*>(&_default_salt_);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SaltResponse::~SaltResponse() {
+  SharedDtor();
+}
+
+void SaltResponse::SharedDtor() {
+  if (salt_ != &_default_salt_) {
+    delete salt_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void SaltResponse::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const SaltResponse& SaltResponse::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_handshake_2eproto();  return *default_instance_;
+}
+
+SaltResponse* SaltResponse::default_instance_ = NULL;
+
+SaltResponse* SaltResponse::New() const {
+  return new SaltResponse;
+}
+
+void SaltResponse::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (_has_bit(0)) {
+      if (salt_ != &_default_salt_) {
+        salt_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool SaltResponse::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string salt = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_salt()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SaltResponse::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string salt = 1;
+  if (_has_bit(0)) {
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->salt(), output);
+  }
+  
+}
+
+int SaltResponse::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string salt = 1;
+    if (has_salt()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->salt());
+    }
+    
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SaltResponse::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const SaltResponse*>(&from));
+}
+
+void SaltResponse::MergeFrom(const SaltResponse& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from._has_bit(0)) {
+      set_salt(from.salt());
+    }
+  }
+}
+
+void SaltResponse::CopyFrom(const SaltResponse& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SaltResponse::IsInitialized() const {
+  
+  return true;
+}
+
+void SaltResponse::Swap(SaltResponse* other) {
+  if (other != this) {
+    std::swap(salt_, other->salt_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string SaltResponse::GetTypeName() const {
+  return "syncro.pb.SaltResponse";
+}
 
 
 // ===================================================================

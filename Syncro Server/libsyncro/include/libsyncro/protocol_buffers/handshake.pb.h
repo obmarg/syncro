@@ -32,10 +32,170 @@ void  protobuf_AddDesc_handshake_2eproto();
 void protobuf_AssignDesc_handshake_2eproto();
 void protobuf_ShutdownFile_handshake_2eproto();
 
+class SaltRequest;
+class SaltResponse;
 class HandshakeRequest;
 class HandshakeResponse;
 
 // ===================================================================
+
+class SaltRequest : public ::google::protobuf::MessageLite {
+ public:
+  SaltRequest();
+  virtual ~SaltRequest();
+  
+  SaltRequest(const SaltRequest& from);
+  
+  inline SaltRequest& operator=(const SaltRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  static const SaltRequest& default_instance();
+  
+  void Swap(SaltRequest* other);
+  
+  // implements Message ----------------------------------------------
+  
+  SaltRequest* New() const;
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const SaltRequest& from);
+  void MergeFrom(const SaltRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::std::string GetTypeName() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional int32 size = 1;
+  inline bool has_size() const;
+  inline void clear_size();
+  static const int kSizeFieldNumber = 1;
+  inline ::google::protobuf::int32 size() const;
+  inline void set_size(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:syncro.pb.SaltRequest)
+ private:
+  mutable int _cached_size_;
+  
+  ::google::protobuf::int32 size_;
+  friend void  protobuf_AddDesc_handshake_2eproto();
+  friend void protobuf_AssignDesc_handshake_2eproto();
+  friend void protobuf_ShutdownFile_handshake_2eproto();
+  
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static SaltRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SaltResponse : public ::google::protobuf::MessageLite {
+ public:
+  SaltResponse();
+  virtual ~SaltResponse();
+  
+  SaltResponse(const SaltResponse& from);
+  
+  inline SaltResponse& operator=(const SaltResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  static const SaltResponse& default_instance();
+  
+  void Swap(SaltResponse* other);
+  
+  // implements Message ----------------------------------------------
+  
+  SaltResponse* New() const;
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const SaltResponse& from);
+  void MergeFrom(const SaltResponse& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::std::string GetTypeName() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional string salt = 1;
+  inline bool has_salt() const;
+  inline void clear_salt();
+  static const int kSaltFieldNumber = 1;
+  inline const ::std::string& salt() const;
+  inline void set_salt(const ::std::string& value);
+  inline void set_salt(const char* value);
+  inline void set_salt(const char* value, size_t size);
+  inline ::std::string* mutable_salt();
+  
+  // @@protoc_insertion_point(class_scope:syncro.pb.SaltResponse)
+ private:
+  mutable int _cached_size_;
+  
+  ::std::string* salt_;
+  static const ::std::string _default_salt_;
+  friend void  protobuf_AddDesc_handshake_2eproto();
+  friend void protobuf_AssignDesc_handshake_2eproto();
+  friend void protobuf_ShutdownFile_handshake_2eproto();
+  
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static SaltResponse* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class HandshakeRequest : public ::google::protobuf::MessageLite {
  public:
@@ -253,6 +413,72 @@ class HandshakeResponse : public ::google::protobuf::MessageLite {
 
 
 // ===================================================================
+
+// SaltRequest
+
+// optional int32 size = 1;
+inline bool SaltRequest::has_size() const {
+  return _has_bit(0);
+}
+inline void SaltRequest::clear_size() {
+  size_ = 0;
+  _clear_bit(0);
+}
+inline ::google::protobuf::int32 SaltRequest::size() const {
+  return size_;
+}
+inline void SaltRequest::set_size(::google::protobuf::int32 value) {
+  _set_bit(0);
+  size_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SaltResponse
+
+// optional string salt = 1;
+inline bool SaltResponse::has_salt() const {
+  return _has_bit(0);
+}
+inline void SaltResponse::clear_salt() {
+  if (salt_ != &_default_salt_) {
+    salt_->clear();
+  }
+  _clear_bit(0);
+}
+inline const ::std::string& SaltResponse::salt() const {
+  return *salt_;
+}
+inline void SaltResponse::set_salt(const ::std::string& value) {
+  _set_bit(0);
+  if (salt_ == &_default_salt_) {
+    salt_ = new ::std::string;
+  }
+  salt_->assign(value);
+}
+inline void SaltResponse::set_salt(const char* value) {
+  _set_bit(0);
+  if (salt_ == &_default_salt_) {
+    salt_ = new ::std::string;
+  }
+  salt_->assign(value);
+}
+inline void SaltResponse::set_salt(const char* value, size_t size) {
+  _set_bit(0);
+  if (salt_ == &_default_salt_) {
+    salt_ = new ::std::string;
+  }
+  salt_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SaltResponse::mutable_salt() {
+  _set_bit(0);
+  if (salt_ == &_default_salt_) {
+    salt_ = new ::std::string;
+  }
+  return salt_;
+}
+
+// -------------------------------------------------------------------
 
 // HandshakeRequest
 

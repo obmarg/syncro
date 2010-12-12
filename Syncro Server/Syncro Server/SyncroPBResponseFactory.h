@@ -8,6 +8,7 @@
 #include "FolderMan.h"
 #include "BinaryIncomingData.h"
 #include "AdminCommandManager.h"
+#include "AuthManager.h"
 #include <libsyncro/packet_types.h>
 
 namespace syncro {
@@ -42,6 +43,7 @@ private:
 
 	bool m_fAuthenticated;
 	CAuthToken m_oAuthToken;
+	CAuthManager m_authMan;
 };
 
 }; //namespace syncro

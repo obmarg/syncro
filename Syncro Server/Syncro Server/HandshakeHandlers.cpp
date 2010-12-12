@@ -15,6 +15,7 @@
 #include "SyncroDB.h"
 
 #include <libsyncro/comms.h>
+#include <kode/utils.h>
 
 namespace syncro {
 
@@ -67,18 +68,17 @@ CPBHandshakeResponse::CPBHandshakeResponse() {
 			throw std::runtime_error( "Invalid legnth of UUID returned from database in CHandshakeResponse" );
 	}catch( const std::out_of_range& ) {
 		//This probably means that the database call returned nothing (probably can happen for copying as well)
-		boost::uuids::random_generator oGenerator;
-		boost::uuids::uuid oUUID( oGenerator() );
-		if( oUUID.size() != 16 )
-			throw std::runtime_error( "Invalid legnth of UUID generated in CHandshakeResponse" );
-		for( int n=0; n<oUUID.size(); n++ ) {
-			aUUID[n] = oUUID.data[n];
-		}
-		sUUID = std::string( aUUID.begin(), aUUID.end() );
+		sUUID = kode::utils::GenerateUUID();
 		//TODO: Make the hostname customisable perhaps?
 		std::string sHostname = boost::asio::ip::host_name();
 		//TODO: this can exception if the uuid contains the wrong characters.  fix it (presumably by adding statements & binding)
-		oDB->run("INSERT INTO ServerID(uuid,servername) VALUES('" + sUUID + "','" + sHostname + "');");
+		//oDB->run("INSERT INTO ServerID(uuid,servername) VALUES('" + sUUID + "','" + sHostname + "');");
+		//TODO: Make sure this works
+		oDB->prepare("INSERT INTO ServerID(uuid,servername) VALUES(?,?);")->
+			Bind(1,sUUID)
+			.Bind(2,sHostname)
+			.GetNextRow();
+		
 	}
 	m_oMessage.set_uuid( sUUID );
 }
@@ -97,5 +97,19 @@ void CPBHandshakeResponse::WriteSubpacket(int inSubpacketIndex,google::protobuf:
 	WriteMessage( m_oMessage, stream);
 }
 
+CSaltResponse::CSaltResponse(std::string salt)
+{
+	m_aSubpackets.resize( 1 );
+	pb::SaltResponse response;
+	response.set_salt( salt );
+	std::size_t size = response.ByteSize();
+	m_aSubpackets[0]->resize( size );
+	response.SerializeToArray( &m_aSubpackets[0]->at(0), size );
+}
+
+unsigned int CSaltResponse::GetPacketType()
+{
+	return comms::packet_types::SaltResponse;
+}
 
 };		//namespace syncro
