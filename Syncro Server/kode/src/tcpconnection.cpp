@@ -1,4 +1,5 @@
 #include "tcpconnection.h"
+#include "net.h"
 #include <boost/lexical_cast.hpp>
 
 namespace kode {
@@ -39,7 +40,7 @@ void TCPConnection::DoSend( const boost::asio::const_buffers_1& buffer ) {
 	boost::system::error_code error;
 	boost::asio::write( m_socket, buffer, boost::asio::transfer_all(), error );
 	if( error )
-		throw boost::system::system_error( error );
+		throw NetworkException( error );
 }
 
 void TCPConnection::DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvSize ) {
@@ -56,7 +57,7 @@ void TCPConnection::DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvS
 	}while( totalLen < recvSize );
 
 	if( error )
-		throw boost::system::system_error( error );
+		throw NetworkException( error );
 }
 
 }	// namespace net

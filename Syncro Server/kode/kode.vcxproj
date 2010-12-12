@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\kode\Database.h" />
+    <ClInclude Include="include\kode\net.h" />
     <ClInclude Include="include\kode\tcpconnection.h" />
     <ClInclude Include="include\kode\utils.h" />
   </ItemGroup>
