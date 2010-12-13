@@ -12,7 +12,7 @@ CBinaryIncomingData::~CBinaryIncomingData() {
 
 void
 CBinaryIncomingData::HandlePacket(TInputStreamList& inaInputStreams) {
-	if( m_oFile.is_open() ) {
+	if( !m_oFile.is_open() ) {
 		throw std::runtime_error( "CBinaryIncomingData::HandlePacket called, but destination file is not open" );
 	}
 	pb::BinaryPacketHeader oPacket;

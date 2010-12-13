@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\connection.cpp" />
+    <ClCompile Include="src\packet_types.cpp" />
     <ClCompile Include="src\protocol_buffers\admin.pb.cc" />
     <ClCompile Include="src\protocol_buffers\binarydata.pb.cc" />
     <ClCompile Include="src\protocol_buffers\folders.pb.cc" />

@@ -50,6 +50,28 @@ private:
 	unsigned int	m_port;
 };
 
+class UploadFileDetails {
+	friend class Connection;
+public:
+	UploadFileDetails() {};
+	UploadFileDetails& SetFolderId(int folderId) { 
+		m_folderId = folderId;
+		return (*this);
+	}
+	UploadFileDetails& SetRemotePath(std::string remotePath) { 
+		m_remotePath = remotePath;
+		return (*this);
+	}
+	UploadFileDetails& SetLocalPath(std::string localPath) { 
+		m_localPath = localPath;
+		return (*this);
+	}
+private:
+	int				m_folderId;
+	std::string		m_localPath;
+	std::string		m_remotePath;
+};
+
 typedef boost::shared_ptr< google::protobuf::io::ZeroCopyInputStream > TRecvStream;
 typedef boost::shared_ptr< google::protobuf::io::ZeroCopyOutputStream > TWriteStream;
 
@@ -62,6 +84,16 @@ public:
 		virtual unsigned int GetPacketType()=0;
 	};
 	typedef boost::shared_ptr<RecvPacket> TRecvPacketPtr;
+	class SendPacket : boost::noncopyable {
+	public:
+		virtual ~SendPacket() {};
+		virtual unsigned int GetSize() const =0 ;
+		virtual void Write( 
+			google::protobuf::io::ZeroCopyOutputStream& stream 
+			) const =0 ;
+	};
+	typedef boost::shared_ptr<SendPacket> TSendPacketPtr;
+	typedef std::vector<TSendPacketPtr> TSendPacketList;
 	
 public:
 	Connection( const ConnectionDetails& details );
@@ -75,6 +107,8 @@ public:
 	}
 
 	void GetFolderList(FolderList& list);
+
+	void UploadFile(const UploadFileDetails& details); 
 	
 	void SendAdminCommand( const std::string& command, const std::string& param );
 protected:
@@ -82,6 +116,8 @@ protected:
 	void DoHandshake();
 
 	void SendProtocolBuffer( uint32_t packetType, const google::protobuf::MessageLite& message );
+	void SendProtocolBuffer( uint32_t packetType, const TSendPacketList& subpackets );
+	TRecvPacketPtr RecvProtocolBuffer(uint32_t expectedPacketType, unsigned int expectedNumSubpackets);
 	TRecvPacketPtr RecvProtocolBuffer();
 
 	const ConnectionDetails m_serverDetails;

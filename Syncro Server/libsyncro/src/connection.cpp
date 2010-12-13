@@ -4,10 +4,12 @@
 #include "protocol_buffers/header.pb.h"
 #include "protocol_buffers/folders.pb.h"
 #include "protocol_buffers/admin.pb.h"
+#include "protocol_buffers/binarydata.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <stdexcept>
 #include <boost/shared_array.hpp>
 #include <boost/scoped_array.hpp>
+#include <boost/filesystem.hpp>
 #include "packet_types.h"
 
 
@@ -51,7 +53,81 @@ private:
 	TBufferList m_buffers;
 };
 
-const size_t RECV_BUFFER_SIZE=512;
+const size_t RECV_BUFFER_SIZE = 512;
+const size_t SEND_BUFFER_SIZE = 1024 * 1024;
+
+class ProtocolBufferPacket : public Connection::SendPacket
+{
+public:
+	virtual ~ProtocolBufferPacket() {};
+	virtual unsigned int GetSize() const
+	{
+		return m_message.ByteSize();
+	};
+	virtual void Write( 
+		google::protobuf::io::ZeroCopyOutputStream& stream 
+		) const
+	{
+		m_message.SerializeToZeroCopyStream( &stream );
+	};
+	static Connection::TSendPacketPtr Create(const google::protobuf::MessageLite& message)
+	{
+		return Connection::TSendPacketPtr(
+			new ProtocolBufferPacket( message )
+			);
+	}
+private:
+	ProtocolBufferPacket(const google::protobuf::MessageLite& message)
+		: m_message( message ) 
+	{};
+
+	const google::protobuf::MessageLite& m_message;
+};
+
+class FileStreamPacket : public Connection::SendPacket
+{
+public:
+	virtual ~FileStreamPacket() {};
+	virtual unsigned int GetSize() const
+	{
+		return m_size;
+	}
+	virtual void Write(
+		google::protobuf::io::ZeroCopyOutputStream& stream
+		) const
+	{
+		void *buffer;
+		int size;
+		int sizeWritten = 0;
+		while( stream.Next( &buffer, &size ) && !m_file.eof() )
+		{
+			m_file.read( (char*)buffer, size );
+			if( m_file.gcount() != size )
+				throw std::runtime_error( 
+					"FileStreamPacket::Write failed - unexpected EOF?" 
+					);
+			sizeWritten += size;
+		}
+		if( sizeWritten != m_size )
+			throw std::runtime_error(
+				"FileStreamPacket::Write failed - not enough data written"
+				);
+	}
+	static Connection::TSendPacketPtr Create(std::ifstream& file,unsigned int size)
+	{
+		return Connection::TSendPacketPtr(
+			new FileStreamPacket( file,size )
+			);
+	}
+private:
+	FileStreamPacket( std::ifstream& file,unsigned int size ) :
+		m_size( size ),
+		m_file( file )
+	{
+	};
+	mutable std::ifstream& m_file;
+	unsigned int m_size;
+};
 
 Connection::Connection( const ConnectionDetails& details ) :
 	TCPConnection( details.m_host, details.m_port ),
@@ -97,6 +173,84 @@ Connection::SendProtocolBuffer( uint32_t packetType, const google::protobuf::Mes
 	message.SerializeToZeroCopyStream( &oStream2 );
 
 	Send( buffer );
+}
+
+void 
+Connection::SendProtocolBuffer( uint32_t packetType, const Connection::TSendPacketList& subpackets )
+{
+	pb::PacketHeader pbHeader;
+	pbHeader.set_packet_type(packetType);
+	unsigned int sizeNeeded = comms::PacketHeader::BYTE_SIZE + pbHeader.ByteSize();
+	unsigned int subPacketSizes = 0;
+	BOOST_FOREACH( const TSendPacketPtr& subpacket, subpackets ) {
+		pbHeader.add_subpacket_sizes( subpacket->GetSize() );
+		subPacketSizes += subpacket->GetSize();
+	}
+	sizeNeeded += subPacketSizes;
+	
+	std::vector<unsigned char> buffer( sizeNeeded );
+
+	comms::PacketHeader()
+		.SetFirstByte( comms::PB_REQUEST_FIRST_BYTE )
+		.SetPacketSize( subPacketSizes )
+		.Write( buffer );
+
+	google::protobuf::io::ArrayOutputStream oStream1( 
+		&buffer[ comms::PacketHeader::BYTE_SIZE ],
+		pbHeader.ByteSize(),
+		pbHeader.ByteSize()
+		);
+
+	pbHeader.SerializeToZeroCopyStream( &oStream1 );
+	
+	unsigned int sizeSoFar = comms::PacketHeader::BYTE_SIZE + pbHeader.ByteSize();
+	BOOST_FOREACH( const TSendPacketPtr& subpacket, subpackets ) {
+		google::protobuf::io::ArrayOutputStream oStream2( 
+			&buffer[ sizeSoFar ],
+			subpacket->GetSize(),
+			subpacket->GetSize()
+			);
+		sizeSoFar += subpacket->GetSize();
+		subpacket->Write( oStream2 );
+	}
+
+	Send( buffer );
+}
+
+Connection::TRecvPacketPtr 
+Connection::RecvProtocolBuffer(uint32_t expectedPacketType, unsigned int expectedNumSubpackets)
+{
+	TRecvPacketPtr rv = RecvProtocolBuffer();
+	comms::packet_types::ePBPacketTypes expectedType = 
+		static_cast< comms::packet_types::ePBPacketTypes >( 
+			expectedPacketType 
+			);
+	comms::packet_types::ePBPacketTypes type = 
+		static_cast< comms::packet_types::ePBPacketTypes >( 
+			rv->GetPacketType()
+			);
+	if( type != expectedType )
+	{
+		std::stringstream error;
+		error << "Unexpected packet type in RecvProtocolBuffer.\n" <<
+			"Expected: " << 
+			syncro::comms::packet_types::Str( expectedType ) << 
+			" Actual: " <<
+			syncro::comms::packet_types::Str( type ) <<
+			"\n";
+		throw std::runtime_error( error.str().c_str() );
+	}
+	if( rv->GetNumSubpackets() != expectedNumSubpackets )
+	{
+		std::stringstream error;
+		error << "Unexpected number of subpackets in RecvProtocolBuffer.\n" <<
+			"Expected: " << expectedNumSubpackets << 
+			" Actual: " << rv->GetNumSubpackets() << "\n" <<
+			"Packet Type: " << comms::packet_types::Str( expectedType ) <<
+			"\n";
+		throw std::runtime_error( error.str().c_str() );
+	}
+	return rv;
 }
 
 Connection::TRecvPacketPtr 
@@ -149,13 +303,9 @@ void Connection::DoHandshake() {
 	
 	SendProtocolBuffer( comms::packet_types::HandshakeRequest , oRequest );
 
-	TRecvPacketPtr responsePacket = RecvProtocolBuffer();
-	if( responsePacket->GetPacketType() != comms::packet_types::HandshakeResponse ) {
-		throw std::runtime_error( "Handshake request not replied to");
-	}
-	if( responsePacket->GetNumSubpackets() != 1 ) {
-		throw std::runtime_error( "Incorrect number of handshake response subpackets");
-	}
+	TRecvPacketPtr responsePacket = RecvProtocolBuffer(
+		comms::packet_types::HandshakeResponse, 1
+		);
 	pb::HandshakeResponse response;
 	response.ParsePartialFromZeroCopyStream( responsePacket->ReadSubpacket( 0 ).get() );
 	if( !response.has_magic() || response.magic().compare( comms::HANDSHAKE_RESPONSE_MAGIC ) != 0 ) {
@@ -173,13 +323,9 @@ void Connection::GetFolderList(FolderList& list) {
 
 	SendProtocolBuffer( comms::packet_types::FolderListRequest, request );
 
-	TRecvPacketPtr responsePacket = RecvProtocolBuffer();
-	if( responsePacket->GetPacketType() != comms::packet_types::FolderListResponse ) {
-		throw std::runtime_error( "Folder list request not replied to");
-	}
-	if( responsePacket->GetNumSubpackets() != 1 ) {
-		throw std::runtime_error( "Invalid number of folder list response subpackets" );
-	}
+	TRecvPacketPtr responsePacket = RecvProtocolBuffer(
+		comms::packet_types::FolderListResponse, 1
+		);
 	pb::FolderList response;
 	response.ParseFromZeroCopyStream( responsePacket->ReadSubpacket( 0 ).get() );
 	list.resize( response.folders_size() );
@@ -203,14 +349,9 @@ void Connection::SendAdminCommand( const std::string& command, const std::string
 
 	SendProtocolBuffer( comms::packet_types::AdminGenericCommand, request );
 
-	TRecvPacketPtr responsePacket = RecvProtocolBuffer();
-	//TODO: Could maybe pass the packet type & num subpackets to the recv function
-	//		rather than duplicate error checking all over the place
-	if( responsePacket->GetPacketType() != comms::packet_types::AdminAck )
-		throw std::runtime_error( "Admin command request not replied to" );
-	if( responsePacket->GetNumSubpackets() != 1 ) {
-		throw std::runtime_error( "Invalid number of subpackets in admin command ack" );
-	}
+	TRecvPacketPtr responsePacket = RecvProtocolBuffer( 
+		comms::packet_types::AdminAck, 1 
+		);
 	pb::AdminAck ack;
 	ack.ParseFromZeroCopyStream( responsePacket->ReadSubpacket(0).get() );
 	if( ack.has_ok() ) {
@@ -219,6 +360,74 @@ void Connection::SendAdminCommand( const std::string& command, const std::string
 			throw std::runtime_error( "Admin command failed" );
 		}
 	}
+}
+
+void Connection::UploadFile(const UploadFileDetails& details)
+{
+	pb::BinaryDataRequest request;
+	request.set_file_name( details.m_remotePath );
+	request.set_file_size(
+		static_cast<google::protobuf::int32>( 
+			boost::filesystem::file_size( details.m_localPath )
+			)
+		);
+	request.set_folder_id( details.m_folderId );
+	pb::BinaryIncomingResponse initialResponse;
+	SendProtocolBuffer( comms::packet_types::BinaryIncomingRequest, request );
+	{
+		TRecvPacketPtr responsePacket = RecvProtocolBuffer( 
+			comms::packet_types::BinaryIncomingResponse, 1
+			);
+		initialResponse.ParseFromZeroCopyStream( 
+			responsePacket->ReadSubpacket(0).get() 
+		);
+	}
+	if( !initialResponse.has_accepted() ) 
+		throw std::runtime_error( "Initial response does not contain an accepted value" );
+	if( initialResponse.accepted() )
+	{
+		bool error = false;
+		std::ifstream file( details.m_localPath.c_str() );
+		bool start = true;
+		file.seekg( 0, std::ios::end );
+		std::streamsize totalSize = file.tellg();
+		file.seekg( 0, std::ios::beg );
+		while( !file.eof() && !error && !file.fail() ) {
+			pb::BinaryPacketHeader header;
+			if( start )
+			{
+				header.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_START );
+				start = false;
+			}
+			else
+				header.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_MIDDLE );
+			unsigned int sizeToRead = SEND_BUFFER_SIZE;
+			unsigned int currPos = static_cast<unsigned int>( file.tellg() );
+			if( (currPos + sizeToRead) > totalSize )
+			{
+				header.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
+				sizeToRead = static_cast<unsigned int>(totalSize) - currPos;
+			}
+			TSendPacketList subpackets;
+			subpackets.push_back( ProtocolBufferPacket::Create( header ) );
+			subpackets.push_back( FileStreamPacket::Create( file, sizeToRead ) );
+			SendProtocolBuffer( comms::packet_types::BinaryIncomingData, subpackets );
+			TRecvPacketPtr responsePacket = 
+				RecvProtocolBuffer( comms::packet_types::BinaryIncomingDataAck, 1 );
+			pb::BinaryIncomingAck ack;
+			ack.ParseFromZeroCopyStream( responsePacket->ReadSubpacket(0).get() );
+			if( !ack.has_ok() )
+				throw std::runtime_error(
+					"FileUpload failed - no ok returned in ack"
+					);
+			if( !ack.ok() )
+				throw std::runtime_error(
+					"FileUpload failed - server returned error"
+					);
+		}
+	}
+	else
+		throw std::runtime_error( "File was rejected by server" );
 }
 
 

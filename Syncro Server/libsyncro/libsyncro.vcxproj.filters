@@ -39,6 +39,9 @@
     <ClCompile Include="src\protocol_buffers\folders.pb.cc">
       <Filter>Source Files\Protocol Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="src\packet_types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h">

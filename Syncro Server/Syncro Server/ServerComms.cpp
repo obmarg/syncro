@@ -94,10 +94,15 @@ void CTCPConnection::FinishedRecv(const boost::system::error_code& inoError, std
 
 		TCharBuffer oBuffer( m_aBuffer, innBytes );
 
-		m_pSelectedRecvHandler->HandleReceive(oBuffer);
-		if( m_pSelectedRecvHandler->FatalError() )
+		if( !m_pSelectedRecvHandler ) {
+			cout << "ERROR: FinishedRecv called with no recv handler selected\n";
 			fatalError = true;
-		m_pSelectedRecvHandler.reset();
+		} else {
+			m_pSelectedRecvHandler->HandleReceive(oBuffer);
+			if( m_pSelectedRecvHandler->FatalError() )
+				fatalError = true;
+			m_pSelectedRecvHandler.reset();
+		}
 	}
 	TRecvHandlerMap::iterator pRecv;
 	for(pRecv = m_oRecvHandlers.begin(); pRecv != m_oRecvHandlers.end(); pRecv++ ) {

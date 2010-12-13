@@ -1,6 +1,8 @@
 #ifndef _SYNCRO_PACKET_TYPES_H_
 #define _SYNCRO_PACKET_TYPES_H_
 
+#include <string>
+
 namespace syncro {
 namespace comms {
 namespace packet_types {
@@ -22,6 +24,8 @@ enum ePBPacketTypes {
 	SaltRequest,				// 14
 	SaltResponse,				// 15
 };
+
+extern std::string Str( ePBPacketTypes );
 
 }	// namespace packet_types
 }	// namespace comms

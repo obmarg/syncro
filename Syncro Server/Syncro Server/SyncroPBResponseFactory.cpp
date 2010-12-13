@@ -26,7 +26,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	//TODO: Add in admin mode control messages etc.
 	if( !m_fAuthenticated ) {
 		if( 
-			(innPacketType != packet_types::HandshakeRequest) ||
+			(innPacketType != packet_types::HandshakeRequest) &&
 			(innPacketType != packet_types::SaltRequest)
 			)
 		throw authentication_exception("Not authenticated");
