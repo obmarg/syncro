@@ -180,19 +180,23 @@ Connection::SendProtocolBuffer( uint32_t packetType, const Connection::TSendPack
 {
 	pb::PacketHeader pbHeader;
 	pbHeader.set_packet_type(packetType);
-	unsigned int sizeNeeded = comms::PacketHeader::BYTE_SIZE + pbHeader.ByteSize();
 	unsigned int subPacketSizes = 0;
 	BOOST_FOREACH( const TSendPacketPtr& subpacket, subpackets ) {
 		pbHeader.add_subpacket_sizes( subpacket->GetSize() );
 		subPacketSizes += subpacket->GetSize();
 	}
-	sizeNeeded += subPacketSizes;
+	unsigned int commsPacketSize(
+		pbHeader.ByteSize() + subPacketSizes
+		);
+	unsigned int sizeNeeded(
+		comms::PacketHeader::BYTE_SIZE + commsPacketSize
+		);
 	
 	std::vector<unsigned char> buffer( sizeNeeded );
 
 	comms::PacketHeader()
 		.SetFirstByte( comms::PB_REQUEST_FIRST_BYTE )
-		.SetPacketSize( subPacketSizes )
+		.SetPacketSize( commsPacketSize )
 		.Write( buffer );
 
 	google::protobuf::io::ArrayOutputStream oStream1( 
@@ -386,6 +390,11 @@ void Connection::UploadFile(const UploadFileDetails& details)
 		throw std::runtime_error( "Initial response does not contain an accepted value" );
 	if( initialResponse.accepted() )
 	{
+		int sendBufferSize = SEND_BUFFER_SIZE;
+		if( initialResponse.has_max_packet_size() )
+			if( sendBufferSize >  initialResponse.max_packet_size() )
+				sendBufferSize = initialResponse.max_packet_size();
+
 		bool error = false;
 		std::ifstream file( details.m_localPath.c_str() );
 		bool start = true;
@@ -401,7 +410,7 @@ void Connection::UploadFile(const UploadFileDetails& details)
 			}
 			else
 				header.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_MIDDLE );
-			unsigned int sizeToRead = SEND_BUFFER_SIZE;
+			unsigned int sizeToRead = sendBufferSize;
 			unsigned int currPos = static_cast<unsigned int>( file.tellg() );
 			if( (currPos + sizeToRead) > totalSize )
 			{

@@ -319,16 +319,24 @@ class BinaryIncomingResponse : public ::google::protobuf::MessageLite {
   inline bool accepted() const;
   inline void set_accepted(bool value);
   
+  // optional int32 max_packet_size = 2;
+  inline bool has_max_packet_size() const;
+  inline void clear_max_packet_size();
+  static const int kMaxPacketSizeFieldNumber = 2;
+  inline ::google::protobuf::int32 max_packet_size() const;
+  inline void set_max_packet_size(::google::protobuf::int32 value);
+  
   // @@protoc_insertion_point(class_scope:syncro.pb.BinaryIncomingResponse)
  private:
   mutable int _cached_size_;
   
   bool accepted_;
+  ::google::protobuf::int32 max_packet_size_;
   friend void  protobuf_AddDesc_binarydata_2eproto();
   friend void protobuf_AssignDesc_binarydata_2eproto();
   friend void protobuf_ShutdownFile_binarydata_2eproto();
   
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
   
   // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
   inline bool _has_bit(int index) const {
@@ -605,6 +613,22 @@ inline bool BinaryIncomingResponse::accepted() const {
 inline void BinaryIncomingResponse::set_accepted(bool value) {
   _set_bit(0);
   accepted_ = value;
+}
+
+// optional int32 max_packet_size = 2;
+inline bool BinaryIncomingResponse::has_max_packet_size() const {
+  return _has_bit(1);
+}
+inline void BinaryIncomingResponse::clear_max_packet_size() {
+  max_packet_size_ = 0;
+  _clear_bit(1);
+}
+inline ::google::protobuf::int32 BinaryIncomingResponse::max_packet_size() const {
+  return max_packet_size_;
+}
+inline void BinaryIncomingResponse::set_max_packet_size(::google::protobuf::int32 value) {
+  _set_bit(1);
+  max_packet_size_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -58,6 +58,8 @@ protected:
 			m_pMessage.reset( new pb::BinaryIncomingResponse() );
 			pb::BinaryIncomingResponse* pResponse = dynamic_cast<pb::BinaryIncomingResponse*>( m_pMessage.get() );
 			pResponse->set_accepted(infValue);
+			//TODO: This max packet size needs to be retrieved from the comms somehow
+			pResponse->set_max_packet_size( 768 );
 			break;
 		}
 		case eResponseType_Ack: {

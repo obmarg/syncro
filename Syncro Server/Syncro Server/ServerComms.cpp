@@ -170,6 +170,13 @@ CTCPConnection::ClientIP()
 		return rv;
 }
 
+uint32_t
+CTCPConnection::RecvBufferSize()
+{
+	//Buffer size - some space for headers etc.
+	return DEFAULT_RECV_BUFFER - comms::PacketHeader::BYTE_SIZE - 128;
+}
+
 const TCharBuffer CSendHandler::GetBuffer() {
 	return TCharBuffer( m_aBuffer,m_aBuffer.size() );
 }

@@ -602,6 +602,7 @@ void BinaryPacketHeader::Swap(BinaryPacketHeader* other) {
 
 #ifndef _MSC_VER
 const int BinaryIncomingResponse::kAcceptedFieldNumber;
+const int BinaryIncomingResponse::kMaxPacketSizeFieldNumber;
 #endif  // !_MSC_VER
 
 BinaryIncomingResponse::BinaryIncomingResponse()
@@ -621,6 +622,7 @@ BinaryIncomingResponse::BinaryIncomingResponse(const BinaryIncomingResponse& fro
 void BinaryIncomingResponse::SharedCtor() {
   _cached_size_ = 0;
   accepted_ = false;
+  max_packet_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -651,6 +653,7 @@ BinaryIncomingResponse* BinaryIncomingResponse::New() const {
 void BinaryIncomingResponse::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     accepted_ = false;
+    max_packet_size_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -669,6 +672,22 @@ bool BinaryIncomingResponse::MergePartialFromCodedStream(
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &accepted_)));
           _set_bit(0);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_max_packet_size;
+        break;
+      }
+      
+      // optional int32 max_packet_size = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_max_packet_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &max_packet_size_)));
+          _set_bit(1);
         } else {
           goto handle_uninterpreted;
         }
@@ -698,6 +717,11 @@ void BinaryIncomingResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->accepted(), output);
   }
   
+  // optional int32 max_packet_size = 2;
+  if (_has_bit(1)) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->max_packet_size(), output);
+  }
+  
 }
 
 int BinaryIncomingResponse::ByteSize() const {
@@ -707,6 +731,13 @@ int BinaryIncomingResponse::ByteSize() const {
     // optional bool accepted = 1;
     if (has_accepted()) {
       total_size += 1 + 1;
+    }
+    
+    // optional int32 max_packet_size = 2;
+    if (has_max_packet_size()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->max_packet_size());
     }
     
   }
@@ -727,6 +758,9 @@ void BinaryIncomingResponse::MergeFrom(const BinaryIncomingResponse& from) {
     if (from._has_bit(0)) {
       set_accepted(from.accepted());
     }
+    if (from._has_bit(1)) {
+      set_max_packet_size(from.max_packet_size());
+    }
   }
 }
 
@@ -744,6 +778,7 @@ bool BinaryIncomingResponse::IsInitialized() const {
 void BinaryIncomingResponse::Swap(BinaryIncomingResponse* other) {
   if (other != this) {
     std::swap(accepted_, other->accepted_);
+    std::swap(max_packet_size_, other->max_packet_size_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }

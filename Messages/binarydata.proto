@@ -26,6 +26,7 @@ message BinaryPacketHeader {
 
 message BinaryIncomingResponse {
 	optional bool accepted = 1;
+	optional int32 max_packet_size = 2;
 };
 
 message BinaryIncomingAck {

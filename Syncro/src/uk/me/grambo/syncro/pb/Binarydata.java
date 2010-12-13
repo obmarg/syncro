@@ -823,6 +823,13 @@ public final class Binarydata {
     public boolean hasAccepted() { return hasAccepted; }
     public boolean getAccepted() { return accepted_; }
     
+    // optional int32 max_packet_size = 2;
+    public static final int MAX_PACKET_SIZE_FIELD_NUMBER = 2;
+    private boolean hasMaxPacketSize;
+    private int maxPacketSize_ = 0;
+    public boolean hasMaxPacketSize() { return hasMaxPacketSize; }
+    public int getMaxPacketSize() { return maxPacketSize_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -835,6 +842,9 @@ public final class Binarydata {
       if (hasAccepted()) {
         output.writeBool(1, getAccepted());
       }
+      if (hasMaxPacketSize()) {
+        output.writeInt32(2, getMaxPacketSize());
+      }
     }
     
     private int memoizedSerializedSize = -1;
@@ -846,6 +856,10 @@ public final class Binarydata {
       if (hasAccepted()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(1, getAccepted());
+      }
+      if (hasMaxPacketSize()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, getMaxPacketSize());
       }
       memoizedSerializedSize = size;
       return size;
@@ -994,6 +1008,9 @@ public final class Binarydata {
         if (other.hasAccepted()) {
           setAccepted(other.getAccepted());
         }
+        if (other.hasMaxPacketSize()) {
+          setMaxPacketSize(other.getMaxPacketSize());
+        }
         return this;
       }
       
@@ -1016,6 +1033,10 @@ public final class Binarydata {
               setAccepted(input.readBool());
               break;
             }
+            case 16: {
+              setMaxPacketSize(input.readInt32());
+              break;
+            }
           }
         }
       }
@@ -1036,6 +1057,24 @@ public final class Binarydata {
       public Builder clearAccepted() {
         result.hasAccepted = false;
         result.accepted_ = false;
+        return this;
+      }
+      
+      // optional int32 max_packet_size = 2;
+      public boolean hasMaxPacketSize() {
+        return result.hasMaxPacketSize();
+      }
+      public int getMaxPacketSize() {
+        return result.getMaxPacketSize();
+      }
+      public Builder setMaxPacketSize(int value) {
+        result.hasMaxPacketSize = true;
+        result.maxPacketSize_ = value;
+        return this;
+      }
+      public Builder clearMaxPacketSize() {
+        result.hasMaxPacketSize = false;
+        result.maxPacketSize_ = 0;
         return this;
       }
       
