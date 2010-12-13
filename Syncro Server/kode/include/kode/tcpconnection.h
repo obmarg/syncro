@@ -49,7 +49,7 @@ protected:
 
 private:
 	void DoSend( const boost::asio::const_buffers_1& buffer );
-	void DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvSize );
+	void DoRecv( boost::asio::mutable_buffers_1 buffer, size_t recvSize );
 };
 
 }	// namespace net

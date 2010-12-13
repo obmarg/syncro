@@ -43,7 +43,7 @@ void TCPConnection::DoSend( const boost::asio::const_buffers_1& buffer ) {
 		throw NetworkException( error );
 }
 
-void TCPConnection::DoRecv( boost::asio::mutable_buffers_1& buffer, size_t recvSize ) {
+void TCPConnection::DoRecv( boost::asio::mutable_buffers_1 buffer, size_t recvSize ) {
 	//TODO: Add a way to make sure we don't read too much stuff here
 	//		internal buffering perhaps?
 	boost::system::error_code error;

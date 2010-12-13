@@ -1,16 +1,17 @@
 #include "connection.h"
 #include "comms.h"
+#include "packet_types.h"
 #include "protocol_buffers/handshake.pb.h"
 #include "protocol_buffers/header.pb.h"
 #include "protocol_buffers/folders.pb.h"
 #include "protocol_buffers/admin.pb.h"
 #include "protocol_buffers/binarydata.pb.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
-#include <stdexcept>
 #include <boost/shared_array.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/filesystem.hpp>
-#include "packet_types.h"
+#include <stdexcept>
+#include <fstream>
 
 
 namespace syncro {
@@ -26,8 +27,8 @@ typedef std::vector<sBuffer> TBufferList;
 class RecvPacketImp : public Connection::RecvPacket {
 public:
 	RecvPacketImp(unsigned int packetType, unsigned int numSubpackets) :
-	  m_buffers( numSubpackets ),
-	  m_packetType( packetType )
+	  m_packetType( packetType ),
+	  m_buffers( numSubpackets )
 	{
 	}
 	virtual unsigned int GetNumSubpackets()
@@ -98,7 +99,7 @@ public:
 	{
 		void *buffer;
 		int size;
-		int sizeWritten = 0;
+		unsigned int sizeWritten = 0;
 		while( stream.Next( &buffer, &size ) && !m_file.eof() )
 		{
 			m_file.read( (char*)buffer, size );
@@ -121,8 +122,8 @@ public:
 	}
 private:
 	FileStreamPacket( std::ifstream& file,unsigned int size ) :
-		m_size( size ),
-		m_file( file )
+		m_file( file ),
+		m_size( size )
 	{
 	};
 	mutable std::ifstream& m_file;
