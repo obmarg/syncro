@@ -300,7 +300,7 @@ public:
 		int nIndex = FindColumn( parameter );
 		if( nIndex == -1 )
 			throw SqlException( "Invalid column passed to Statement::GetColumn: " + parameter, 0 );
-		return GetColumn( nIndex, data );
+		return GetColumn<tData>( nIndex );
 	}
 
 #ifdef _WIN32

@@ -30,7 +30,7 @@ public:
 
 	template< class tBuffer >
 	void SendByVal( const tBuffer buffer, size_t size ) {
-		DoSend( boost::asio::buffer( buffer, size ) )
+		DoSend( boost::asio::buffer( buffer, size ) );
 	}
 
 	template< class tBuffer >
