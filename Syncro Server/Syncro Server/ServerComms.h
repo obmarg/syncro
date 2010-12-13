@@ -67,7 +67,6 @@ public:
 	boost::asio::ip::tcp::socket& GetSocket() { return m_oSocket; };
 	
 	std::string		ClientIP();
-	uint32_t		RecvBufferSize();
 
 private:
 	CTCPConnection(boost::asio::io_service& inoIOService);

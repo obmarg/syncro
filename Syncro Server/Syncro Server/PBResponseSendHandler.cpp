@@ -49,9 +49,19 @@ bool CPBResponseSendHandler::SendStarting() {
 }
 
 void CPBResponseSendHandler::SendDone(int innSent) {
-	m_pResponse.reset( );
 	//TODO: maybe don't start recv if there are no current recv handlers.  add checks for this
-	m_pConn->StartRecv( 0 );
+	
+	unsigned int recvBufferSize = 0;
+	
+	if( m_pResponse->NextRecvBufferSize() != 0 )
+		recvBufferSize = 
+			m_pResponse->NextRecvBufferSize()
+			+ comms::PacketHeader::BYTE_SIZE
+			+ 1024;
+
+	m_pConn->StartRecv( recvBufferSize );
+
+	m_pResponse.reset( );
 }
 
 } //namespace syncro

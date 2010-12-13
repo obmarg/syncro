@@ -49,17 +49,24 @@ public:
 			return comms::packet_types::BinaryIncomingDataAck;
 		}
 	};
+
+	virtual uint32_t NextRecvBufferSize()
+	{
+		return m_recvBufferSize;
+	}
 protected:
 
-	CBinaryIncomingResponse(eResponseType eType, bool infValue) {
+	CBinaryIncomingResponse(eResponseType eType, bool infValue) :
+		m_recvBufferSize(0)
+	{
 		m_eType = eType;
 		switch( eType ) {
 		case eResponseType_Response: {
 			m_pMessage.reset( new pb::BinaryIncomingResponse() );
 			pb::BinaryIncomingResponse* pResponse = dynamic_cast<pb::BinaryIncomingResponse*>( m_pMessage.get() );
 			pResponse->set_accepted(infValue);
-			//TODO: This max packet size needs to be retrieved from the comms somehow
-			pResponse->set_max_packet_size( 768 );
+			m_recvBufferSize = 1024 * 51;
+			pResponse->set_max_packet_size( m_recvBufferSize );
 			break;
 		}
 		case eResponseType_Ack: {
@@ -75,6 +82,7 @@ protected:
 
 	boost::scoped_ptr<google::protobuf::MessageLite> m_pMessage;
 	eResponseType m_eType;
+	uint32_t m_recvBufferSize;
 };
 
 };

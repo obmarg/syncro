@@ -55,9 +55,11 @@ void CTCPConnection::StartRecv(int inBytes) {
 	using namespace boost::asio;
 	using boost::bind;
 
-	if( inBytes == 0 ) 
-		inBytes = DEFAULT_RECV_BUFFER;
-	m_aBuffer.resize( inBytes );
+	if( inBytes != 0 ) 
+		m_aBuffer.resize( inBytes );
+	else if( m_aBuffer.size() == 0 )
+		m_aBuffer.resize( DEFAULT_RECV_BUFFER );
+	
 //	m_nWaitingRecv = inBytes;
 	async_read( m_oSocket, buffer( m_aBuffer ), 
 		bind(&CTCPConnection::IsRecvFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
@@ -168,13 +170,6 @@ CTCPConnection::ClientIP()
 		return "";
 	else
 		return rv;
-}
-
-uint32_t
-CTCPConnection::RecvBufferSize()
-{
-	//Buffer size - some space for headers etc.
-	return DEFAULT_RECV_BUFFER - comms::PacketHeader::BYTE_SIZE - 128;
 }
 
 const TCharBuffer CSendHandler::GetBuffer() {

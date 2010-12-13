@@ -185,18 +185,17 @@ Connection::SendProtocolBuffer( uint32_t packetType, const Connection::TSendPack
 		pbHeader.add_subpacket_sizes( subpacket->GetSize() );
 		subPacketSizes += subpacket->GetSize();
 	}
-	unsigned int commsPacketSize(
-		pbHeader.ByteSize() + subPacketSizes
-		);
 	unsigned int sizeNeeded(
-		comms::PacketHeader::BYTE_SIZE + commsPacketSize
+		comms::PacketHeader::BYTE_SIZE
+		+ pbHeader.ByteSize()
+		+ subPacketSizes
 		);
 	
 	std::vector<unsigned char> buffer( sizeNeeded );
 
 	comms::PacketHeader()
 		.SetFirstByte( comms::PB_REQUEST_FIRST_BYTE )
-		.SetPacketSize( commsPacketSize )
+		.SetPacketSize( pbHeader.ByteSize() )
 		.Write( buffer );
 
 	google::protobuf::io::ArrayOutputStream oStream1( 
@@ -401,7 +400,8 @@ void Connection::UploadFile(const UploadFileDetails& details)
 		file.seekg( 0, std::ios::end );
 		std::streamsize totalSize = file.tellg();
 		file.seekg( 0, std::ios::beg );
-		while( !file.eof() && !error && !file.fail() ) {
+		bool done = false;
+		while( !done && !error && !file.fail() ) {
 			pb::BinaryPacketHeader header;
 			if( start )
 			{
@@ -416,6 +416,7 @@ void Connection::UploadFile(const UploadFileDetails& details)
 			{
 				header.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
 				sizeToRead = static_cast<unsigned int>(totalSize) - currPos;
+				done = true;
 			}
 			TSendPacketList subpackets;
 			subpackets.push_back( ProtocolBufferPacket::Create( header ) );

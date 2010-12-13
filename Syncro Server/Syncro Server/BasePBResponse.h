@@ -1,9 +1,11 @@
 #ifndef _BASE_PB_RESPONSE_H_
 #define _BASE_PB_RESPONSE_H_
 
-#include <string>
+
 #include <libsyncro/protocol_buffers/header.pb.h>
 #include <boost/shared_ptr.hpp>
+#include <string>
+#include <cstdint>
 
 namespace syncro {
 
@@ -24,6 +26,8 @@ public:
 	virtual void WriteMessage(const google::protobuf::MessageLite& inoMessage, google::protobuf::io::ZeroCopyOutputStream& stream ) {
 		inoMessage.SerializeToZeroCopyStream( &stream );
 	}
+
+	virtual uint32_t NextRecvBufferSize() { return 0; };
 };
 
 class CBasePBResponseFactory {
