@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -347,6 +348,12 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				e.printStackTrace();
 			}
 			oFile.close();
+			if( insDestFilename.endsWith(".mp3") )
+			{
+				//HACK: Media client any mp3s
+				//TODO: Fix this so it does things much better, rather than this crude filename hack.
+				MediaScannerConnection.scanFile(this, new String[]{ insDestFilename }, null, null);
+			}
 		}
 		return fOK;
 	}
