@@ -18,7 +18,10 @@ enum eAdminCommand {
 
 class admin_command_exception : public std::runtime_error {
 public:
-	admin_command_exception( int nErrorCode ) : m_nErrorCode( nErrorCode ), runtime_error( "Admin Command Exception" ) {};
+	admin_command_exception( int nErrorCode ) : 
+		runtime_error( "Admin Command Exception" ), 
+		m_nErrorCode( nErrorCode )
+	{};
 
 	int GetErrorCode() const { return m_nErrorCode; };
 private:

@@ -288,7 +288,11 @@ public:
 
 	template<class tData>
 	tData GetColumn(int innIndex) {
-		std::string sData = std::string( sqlite3_column_text( m_handle, innIndex ) );
+		std::string sData = std::string( 
+			reinterpret_cast<const char*>(
+				sqlite3_column_text( m_handle, innIndex )
+				)
+			);
 		return boost::lexical_cast<tData,std::string>( sData );
 	}
 

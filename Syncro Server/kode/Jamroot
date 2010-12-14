@@ -4,4 +4,5 @@ lib kode : src/Database.cpp src/utils.cpp src/tcpconnection.cpp
 		<include>../../Dependencies/sqlite/
 		<include>include/
 		<include>include/kode/
+		<link>static
 	;

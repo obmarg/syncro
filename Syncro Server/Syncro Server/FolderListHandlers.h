@@ -1,7 +1,7 @@
 #ifndef __FOLDER_LIST_HANDLERS_H_
 #define __FOLDER_LIST_HANDLERS_H_
 
-#include "Common.h"
+#include "common.h"
 #include "BasePBResponse.h"
 
 namespace syncro {

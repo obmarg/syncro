@@ -2,8 +2,8 @@
 #include "AdminCommandManager.h"
 #include "SyncroPBResponseFactory.h"
 #include "AuthManager.h"
-#include <libsyncro\protocol_buffers\admin.pb.h>
-#include <libsyncro\packet_types.h>
+#include <libsyncro/protocol_buffers/admin.pb.h>
+#include <libsyncro/packet_types.h>
 
 namespace syncro {
 

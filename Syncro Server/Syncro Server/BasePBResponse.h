@@ -5,7 +5,7 @@
 #include <libsyncro/protocol_buffers/header.pb.h>
 #include <boost/shared_ptr.hpp>
 #include <string>
-#include <cstdint>
+#include <stdint.h>
 
 namespace syncro {
 

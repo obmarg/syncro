@@ -6,6 +6,7 @@ lib libsyncro : src/packet_types.cpp src/connection.cpp protocol_buffers
 		<include>../../Dependencies/protobuf-2.3.0/include
 		<include>include/
 		<include>include/libsyncro/
-		<include>include/libsyncro/protocol_buffers
+		<include>include/libsyncro/protocol_buffers/
 		<include>../kode/include/
+		<link>static
 	;
