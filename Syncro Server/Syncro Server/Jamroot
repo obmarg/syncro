@@ -18,5 +18,6 @@ exe syncro
 	 <include>../../Dependencies/tinyxml/
 	 <include>../kode/include/
 	 <include>../libsyncro/include/
+	 <include>../../libsyncro/include/libsyncro/protocol_buffers/
 	<debug-symbols>on
 	;

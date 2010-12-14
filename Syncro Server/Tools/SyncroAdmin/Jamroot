@@ -1,0 +1,23 @@
+alias sqlite : ../../../Dependencies/sqlite//<link>shared ;
+alias tinyxml : ../../../Dependencies/tinyxml//<link>static ;
+alias pthreads : /usr/lib/libpthread.so ;
+alias stdcpp : /usr/lib/libstdc++.so.6 ;
+alias libc : /usr/lib/libc.so ;
+alias libdl : /usr/lib/libdl.so ;
+alias libboost : /usr/lib/libboost_system-mt.a /usr/lib/libboost_thread.a /usr/lib/libboost_filesystem-mt.a /usr/lib/libboost_program_options.a ;
+alias libprotobuf-lite : /usr/lib/libprotobuf.so.6 ;
+alias libsyncro : ../../libsyncro//<link>static ;
+alias kode : ../../kode//<link>static ; 
+exe syncroadmin
+	:  SyncroAdmin.cpp
+	sqlite tinyxml pthreads stdcpp libc libdl libboost libprotobuf-lite libsyncro kode
+	: <include>/usr/include/
+	  <include>/usr/include/c++/4.4/
+	 <include>../../../Dependencies/protobuf-2.3.0/include/
+	 <include>../../../Dependencies/sqlite/
+	 <include>../../../Dependencies/tinyxml/
+	 <include>../../kode/include/
+	 <include>../../libsyncro/include/
+	 <include>../../libsyncro/include/libsyncro/protocol_buffers/
+	<debug-symbols>on
+	;
