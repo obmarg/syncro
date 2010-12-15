@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -24,6 +25,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import uk.me.grambo.syncro.pb.Binarydata;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -35,6 +37,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -69,6 +73,22 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	@Override
 	protected void onHandleIntent(Intent arg0) {
 		if( arg0.getAction().equals("uk.me.grambo.syncro.SYNCRO_SYNC") ) {
+			
+			//Temporary hack - only run on wifi.
+			//TODO: Make the logic of this better - check user preferences etc.
+			WifiManager wifiMan = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+			if( !wifiMan.isWifiEnabled() )
+			{
+				return;
+			}
+			WifiInfo wifiInfo = wifiMan.getConnectionInfo();
+			if( wifiInfo == null )
+				return;
+			String ssid = wifiInfo.getSSID(); 
+			if( ssid == null )
+				return;
+			//Otherwise, attempt to sync.
+			
 			Uri oURI = arg0.getData();
 			if( oURI != null ) {
 				String oScheme = oURI.getScheme();
@@ -128,7 +148,22 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				oDB = null;
 			}
 			oSock.close();
-			
+			//
+			// TEMPORARY HACK: Start a timer to make us sync again in a bit
+			//					( but only if we've not crashed or anything )
+			//
+			//TODO: Replace this shit with some user preference controlled thing
+			AlarmManager alarmMan = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+			Intent i = new Intent( this, SyncroService.class );
+			i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
+			i.setData( Uri.parse( "syncroid://" + innServerID ) );
+			PendingIntent pendingIntent = PendingIntent.getService(this, 0, i, 0);
+			alarmMan.setInexactRepeating(
+					AlarmManager.ELAPSED_REALTIME, 
+					System.currentTimeMillis() + 60000, 
+					AlarmManager.INTERVAL_HOUR, 
+					pendingIntent
+					);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

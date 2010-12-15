@@ -378,6 +378,7 @@ void Connection::UploadFile(const UploadFileDetails& details)
 	request.set_folder_id( details.m_folderId );
 	pb::BinaryIncomingResponse initialResponse;
 	SendProtocolBuffer( comms::packet_types::BinaryIncomingRequest, request );
+
 	{
 		TRecvPacketPtr responsePacket = RecvProtocolBuffer( 
 			comms::packet_types::BinaryIncomingResponse, 1
@@ -386,6 +387,7 @@ void Connection::UploadFile(const UploadFileDetails& details)
 			responsePacket->ReadSubpacket(0).get() 
 		);
 	}
+
 	if( !initialResponse.has_accepted() ) 
 		throw std::runtime_error( "Initial response does not contain an accepted value" );
 	if( initialResponse.accepted() )
