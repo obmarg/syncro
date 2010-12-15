@@ -40,7 +40,14 @@ int main(int argc, char* argv[])
 
 		if( vm.count("addfolder") )
 		{
-			conn.SendAdminCommand( "AddFolder", vm["addfolder"].as<std::string>() );
+			std::string folderName = vm["addfolder"].as<std::string>();
+			boost::filesystem::path path( folderName );
+			if( !boost::filesystem::is_directory( path ) )
+				std::cout << "Error: Path supplied to addfolder is not a directory\n";
+			else
+			{
+				conn.SendAdminCommand( "AddFolder",  );
+			}
 		}
 		if( vm.count("uploadfile") )
 		{
