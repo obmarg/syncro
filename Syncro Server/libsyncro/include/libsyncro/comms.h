@@ -8,6 +8,11 @@ namespace comms {
 
 const int SERVER_PORT = 9998;
 
+const unsigned int BROADCAST_SERVER_PORT = 9995;
+const unsigned int BROADCAST_RESPONSE_PORT = 9996;
+const std::string BROADCAST_DISCOVERY_STRING = "SyncroHELLO";
+const std::string BROADCAST_RESPONSE_PREFIX = "HELLO: ";
+
 const unsigned char PB_REQUEST_FIRST_BYTE = 105;
 const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 

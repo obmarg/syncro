@@ -1,4 +1,5 @@
 #include "BroadcastListener.h"
+#include <libsyncro/comms.h>
 #include <boost/bind.hpp>
 
 namespace syncro {
@@ -9,7 +10,7 @@ using std::string;
 const std::string RESPOND_MESSAGE = "SyncroHELLO";
 
 CBroadcastListener::CBroadcastListener(boost::asio::io_service& inoIOService,const std::string &insServerName)
-	:m_oSocket( inoIOService, udp::endpoint(udp::v4(), 9995) ),
+	:m_oSocket( inoIOService, udp::endpoint(udp::v4(), comms::BROADCAST_SERVER_PORT) ),
 	 m_sServerName( insServerName ) {
 		StartRecieve();
 }
@@ -29,7 +30,7 @@ CBroadcastListener::HandleReceive(const boost::system::error_code& error, std::s
 		}
 	}
 	if( fOK ) {
-		string oResponse = "HELLO: " + m_sServerName;
+		string oResponse = comms::BROADCAST_RESPONSE_PREFIX + m_sServerName;
 		m_oSocket.send_to( boost::asio::buffer(oResponse), m_oEndpoint );
 	}
 	StartRecieve();
