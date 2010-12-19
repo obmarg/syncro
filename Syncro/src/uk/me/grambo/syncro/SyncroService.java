@@ -153,7 +153,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			//					( but only if we've not crashed or anything )
 			//
 			//TODO: Replace this shit with some user preference controlled thing
-			AlarmManager alarmMan = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+/*			AlarmManager alarmMan = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 			Intent i = new Intent( this, SyncroService.class );
 			i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
 			i.setData( Uri.parse( "syncroid://" + innServerID ) );
@@ -163,7 +163,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 					System.currentTimeMillis() + 60000, 
 					AlarmManager.INTERVAL_HOUR, 
 					pendingIntent
-					);
+					);*/
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
