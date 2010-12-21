@@ -23,6 +23,10 @@ public:
 				m_nFileSize = oRequest.file_size();
 			else
 				m_nFileSize = -1;
+			m_oneShot = false;
+			if( oRequest.has_one_shot() )
+				m_oneShot = oRequest.one_shot();
+			//TODO: Add upload direction at some point?
 		} 
 	}
 	~CBinaryDataRequest() {};
@@ -30,11 +34,13 @@ public:
 	const int GetFolderId() const { return m_nFolderId; };
 	const int GetBufferSize() const { return m_nBufferSize; };
 	const int GetFileSize() const { return m_nFileSize; };
+	const bool IsOneShot() const { return m_oneShot; };
 private:
 	std::string m_sFilename;
 	int m_nFolderId;
 	int m_nBufferSize;
 	int m_nFileSize;
+	bool m_oneShot;
 };
 
 };	//namespace syncro

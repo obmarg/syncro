@@ -1,12 +1,39 @@
 #include "FolderMan.h"
+#include "Folder.h"
 #include "BinaryDataRequest.h"
 #include <boost/filesystem.hpp>
+#include <boost/bind.hpp>
+#include <string>
 
 namespace syncro {
 
 using namespace std;
 using namespace boost::filesystem;
 using namespace kode::db;
+
+class UploadFinishDetails {
+public:
+	UploadFinishDetails(
+		const std::string& inFilename,
+		const bool inOneShot,
+		const int inFolderId,
+		const std::string& inFolderPath,
+		const std::string& inLocalPath
+		) :
+	fileName( inFilename ),
+	oneShot( inOneShot ),
+	folderId( inFolderId ),
+	folderPath( inFolderPath ),
+	localPath( inLocalPath )
+	{
+
+	}
+	std::string fileName;
+	bool oneShot;
+	unsigned int folderId;
+	std::string folderPath;
+	std::string localPath;
+};
 
 CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
 	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path FROM Folders" );
@@ -50,21 +77,85 @@ CFolderMan::GetFileName(int nFolderId,const std::string& fileName) {
 	return rv;
 }
 
-std::string 
-CFolderMan::IncomingFile( const CBinaryDataRequest& fileData )
+bool 
+CFolderMan::IncomingFile( 
+	const CBinaryDataRequest& fileData, 
+	IncomingFileDetails& details 
+	)
 {
 	const FolderInfo& folderInfo = FindFolder( fileData.GetFolderId() );
-	std::string destFileName = folderInfo.Name + fileData.GetFilename();
+	std::string destFileName = folderInfo.Name;
+	if( fileData.IsOneShot() )
+	{
+		//If one shot, then we need to upload to a temporary folder
+
+		//TODO: First, have the temporary path configurable 
+		//		(for now it's just temp in run dir)
+		//		Then: Extract configuration stuff to a seperate class in kode...
+		destFileName = "temp/";
+		boost::filesystem::path path( destFileName );
+		if( !boost::filesystem::exists( path ) )
+		{
+			boost::filesystem::create_directories( path );
+		}
+	}
+	destFileName += fileData.GetFilename();
 	path destFile( destFileName );
+	details.m_filename = destFile.native_file_string();
+	//TODO: Add support for folder path in here. for now doesn't matter
+	//		can possibly remove the parameter if it turns out just the
+	//		name is good enough
+	UploadFinishDetailsPtr finishDetails(
+		new UploadFinishDetails(
+			fileData.GetFilename(),
+			fileData.IsOneShot(),
+			fileData.GetFolderId(),
+			"",
+			destFileName
+			)
+		);
+	details.m_callback = boost::bind(
+		&CFolderMan::FileUploadFinished,
+		this,
+		finishDetails
+		);
 	if( !exists( destFile ) )
-		return destFile.native_file_string();
+	{
+		return true;
+	}
 	int nFileSize = fileData.GetFileSize();
 	if( nFileSize != -1 ) 
 	{
 		if( file_size( destFile ) != nFileSize )
-			return destFile.native_file_string();
+			return true;
 	}
 	//TODO: SHould i just throw an exception here?
-	return std::string();
+	return false;
 }
+
+void CFolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
+{
+	if( details->oneShot )
+	{
+		//If we're a one shot file, we need to add a database entry
+		if( !m_addOneShot )
+		{
+			m_addOneShot = m_pDB->prepare(
+				"INSERT INTO Files "
+				"(Filename,FolderPath,LocalPath,FolderId,OneShot) "
+				"VALUES (?, ?, ?, ?, 1);"
+				);
+		}
+		kode::db::AutoReset reset( m_addOneShot );
+		m_addOneShot->Bind( 1, details->fileName );
+		m_addOneShot->Bind( 2, details->folderPath );
+		m_addOneShot->Bind( 3, details->localPath );
+		m_addOneShot->Bind( 4, details->folderId );
+		m_addOneShot->GetNextRow();
+		//TODO: Maybe after commiting that row, query it, and get the ID
+		//		then move the file to a prfix of that id (or just id for
+		//		filename)  to save overwriting things accidentally.
+	}
+}
+
 };		//end namespace syncro

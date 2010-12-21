@@ -42,7 +42,7 @@
     <ClCompile Include="src\packet_types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\libsyncro\src\scanner.cpp">
+    <ClCompile Include="src\scanner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

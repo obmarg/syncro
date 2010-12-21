@@ -376,6 +376,13 @@ void Connection::UploadFile(const UploadFileDetails& details)
 			)
 		);
 	request.set_folder_id( details.m_folderId );
+	request.set_direction( 
+		pb::BinaryDataRequest_TransferDirection_Upload
+		);
+	if( details.m_oneShot )
+	{
+		request.set_one_shot( details.m_oneShot );
+	}
 	pb::BinaryIncomingResponse initialResponse;
 	SendProtocolBuffer( comms::packet_types::BinaryIncomingRequest, request );
 

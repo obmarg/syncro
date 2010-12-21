@@ -8,12 +8,16 @@ namespace syncro {
 
 class CBinaryIncomingData {
 public:
-	CBinaryIncomingData( const std::string sFilename );
+	CBinaryIncomingData( 
+		const std::string sFilename, 
+		VoidCallback completedCallback 
+		);
 	~CBinaryIncomingData();
 
 	void HandlePacket(TInputStreamList& inaInputStreams);
 private:
 	std::ofstream m_oFile;
+	VoidCallback m_completedCallback;
 };
 
 }

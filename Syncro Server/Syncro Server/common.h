@@ -3,6 +3,7 @@
 
 #include <kode/utils.h>
 #include <google/protobuf/io/zero_copy_stream.h>
+#include <boost/function.hpp>
 #include <vector>
 #include <stdexcept>
 
@@ -72,6 +73,8 @@ private:
 using google::protobuf::io::ZeroCopyInputStream;
 
 typedef std::vector<ZeroCopyInputStream*> TInputStreamList;
+
+typedef boost::function< void () > VoidCallback;
 
 }; //namespace syncro
 

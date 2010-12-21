@@ -74,7 +74,7 @@ bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 		CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
 		dynamic_cast<CPBResponseSendHandler&>(*m_pSendHandler).SetPBResponse( pResponse );
 		m_pConn->Send( m_pSendHandler );
-	}catch( const authentication_exception& error ) {
+	}catch( const authentication_exception& ) {
 		//TODO: do we want to return false here?
 		m_fCloseConnection = true;
 		m_fatalError = true;

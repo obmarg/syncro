@@ -20,7 +20,9 @@ int main(int argc, char* argv[])
 		("scan,s", "scan for servers")
 		("addfolder,a", po::value< std::string >(), "add folder")
 		("uploadfile,u", po::value< std::string >(), "upload file")
-		("folderid,f", po::value< int >(), "folder id to use for upload/download");
+		("folderid,f", po::value< int >(), "folder id to use for upload/download")
+		("oneshot,o", "upload file as one shot file");
+
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
 	po::notify(vm);    
@@ -83,6 +85,7 @@ int main(int argc, char* argv[])
 					.SetFolderId( vm["folderid"].as<int>() )
 					.SetLocalPath( filename )
 					.SetRemotePath( path.filename() )
+					.SetOneShot( vm.count("oneshot") > 0 )
 				);
 
 		}

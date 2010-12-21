@@ -1,6 +1,7 @@
 
 #include "XMLBuilder.h"
 #include "FolderMan.h"
+#include "Folder.h"
 #include "tinyxml.h"
 #include <fstream>
 #include <iterator>

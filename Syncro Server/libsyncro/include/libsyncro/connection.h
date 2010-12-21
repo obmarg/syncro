@@ -66,10 +66,15 @@ public:
 		m_localPath = localPath;
 		return (*this);
 	}
+	UploadFileDetails& SetOneShot(bool oneShot) {
+		m_oneShot = oneShot;
+		return (*this);
+	}
 private:
 	int				m_folderId;
 	std::string		m_localPath;
 	std::string		m_remotePath;
+	bool			m_oneShot;
 };
 
 typedef boost::shared_ptr< google::protobuf::io::ZeroCopyInputStream > TRecvStream;

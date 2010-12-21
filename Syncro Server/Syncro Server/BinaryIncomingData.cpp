@@ -3,7 +3,13 @@
 
 namespace syncro {
 
-CBinaryIncomingData::CBinaryIncomingData( const std::string insFilename ) : m_oFile(insFilename.c_str(), std::ios::out | std::ios::binary ) {
+CBinaryIncomingData::CBinaryIncomingData( 
+	const std::string insFilename,
+	VoidCallback completedCallback
+	) : 
+m_oFile(insFilename.c_str(), std::ios::out | std::ios::binary ),
+m_completedCallback( completedCallback )
+{
 
 }
 
@@ -27,7 +33,13 @@ CBinaryIncomingData::HandlePacket(TInputStreamList& inaInputStreams) {
 		m_oFile.write( reinterpret_cast< const char* >(pData), nSize );
 	}
 	if( oPacket.binary_packet_type() == pb::BinaryPacketHeader_SectionType_END )
+	{
 		m_oFile.close();
+		if( m_completedCallback )
+		{
+			m_completedCallback();
+		}
+	}
 }
 
 }

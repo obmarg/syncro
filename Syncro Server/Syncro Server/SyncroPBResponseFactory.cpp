@@ -55,9 +55,17 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 		}
 	case packet_types::BinaryIncomingRequest: {
 			CBinaryDataRequest oRequest( inaInputStreams );
-			std::string sFilename = m_pFolderMan->IncomingFile( oRequest );
-			bool fAccept = !sFilename.empty();
-			m_pCurrentRecvData.reset( new CBinaryIncomingData( sFilename ) );
+			IncomingFileDetails details;
+			bool fAccept = m_pFolderMan->IncomingFile( oRequest, details );
+			if( fAccept ) 
+			{
+				m_pCurrentRecvData.reset( 
+					new CBinaryIncomingData( 
+						details.Filename(),
+						details.CompletionCallback()
+						) 
+					);
+			}
 			return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Response, fAccept );
 		}
 	case packet_types::BinaryIncomingData: {
@@ -65,7 +73,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			try {
 				m_pCurrentRecvData->HandlePacket( inaInputStreams );
 			}
-			catch( const std::exception& ex ) 
+			catch( const std::exception& ) 
 			{
 				fOK = false;
 			}
