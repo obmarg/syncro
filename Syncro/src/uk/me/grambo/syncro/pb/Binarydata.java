@@ -25,6 +25,45 @@ public final class Binarydata {
       return defaultInstance;
     }
     
+    public enum TransferDirection
+        implements com.google.protobuf.Internal.EnumLite {
+      Upload(0, 2),
+      Download(1, 1),
+      ;
+      
+      
+      public final int getNumber() { return value; }
+      
+      public static TransferDirection valueOf(int value) {
+        switch (value) {
+          case 2: return Upload;
+          case 1: return Download;
+          default: return null;
+        }
+      }
+      
+      public static com.google.protobuf.Internal.EnumLiteMap<TransferDirection>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<TransferDirection>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<TransferDirection>() {
+              public TransferDirection findValueByNumber(int number) {
+                return TransferDirection.valueOf(number)
+      ;        }
+            };
+      
+      private final int index;
+      private final int value;
+      private TransferDirection(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+      
+      // @@protoc_insertion_point(enum_scope:syncro.pb.BinaryDataRequest.TransferDirection)
+    }
+    
     // optional string file_name = 1;
     public static final int FILE_NAME_FIELD_NUMBER = 1;
     private boolean hasFileName;
@@ -53,7 +92,22 @@ public final class Binarydata {
     public boolean hasFileSize() { return hasFileSize; }
     public int getFileSize() { return fileSize_; }
     
+    // optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+    public static final int DIRECTION_FIELD_NUMBER = 5;
+    private boolean hasDirection;
+    private uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection direction_;
+    public boolean hasDirection() { return hasDirection; }
+    public uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection getDirection() { return direction_; }
+    
+    // optional bool one_shot = 6;
+    public static final int ONE_SHOT_FIELD_NUMBER = 6;
+    private boolean hasOneShot;
+    private boolean oneShot_ = false;
+    public boolean hasOneShot() { return hasOneShot; }
+    public boolean getOneShot() { return oneShot_; }
+    
     private void initFields() {
+      direction_ = uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection.Upload;
     }
     public final boolean isInitialized() {
       if (!hasFolderId) return false;
@@ -74,6 +128,12 @@ public final class Binarydata {
       }
       if (hasFileSize()) {
         output.writeInt32(4, getFileSize());
+      }
+      if (hasDirection()) {
+        output.writeEnum(5, getDirection().getNumber());
+      }
+      if (hasOneShot()) {
+        output.writeBool(6, getOneShot());
       }
     }
     
@@ -98,6 +158,14 @@ public final class Binarydata {
       if (hasFileSize()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, getFileSize());
+      }
+      if (hasDirection()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(5, getDirection().getNumber());
+      }
+      if (hasOneShot()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, getOneShot());
       }
       memoizedSerializedSize = size;
       return size;
@@ -255,6 +323,12 @@ public final class Binarydata {
         if (other.hasFileSize()) {
           setFileSize(other.getFileSize());
         }
+        if (other.hasDirection()) {
+          setDirection(other.getDirection());
+        }
+        if (other.hasOneShot()) {
+          setOneShot(other.getOneShot());
+        }
         return this;
       }
       
@@ -287,6 +361,18 @@ public final class Binarydata {
             }
             case 32: {
               setFileSize(input.readInt32());
+              break;
+            }
+            case 40: {
+              int rawValue = input.readEnum();
+              uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection value = uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection.valueOf(rawValue);
+              if (value != null) {
+                setDirection(value);
+              }
+              break;
+            }
+            case 48: {
+              setOneShot(input.readBool());
               break;
             }
           }
@@ -366,6 +452,45 @@ public final class Binarydata {
       public Builder clearFileSize() {
         result.hasFileSize = false;
         result.fileSize_ = 0;
+        return this;
+      }
+      
+      // optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+      public boolean hasDirection() {
+        return result.hasDirection();
+      }
+      public uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection getDirection() {
+        return result.getDirection();
+      }
+      public Builder setDirection(uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasDirection = true;
+        result.direction_ = value;
+        return this;
+      }
+      public Builder clearDirection() {
+        result.hasDirection = false;
+        result.direction_ = uk.me.grambo.syncro.pb.Binarydata.BinaryDataRequest.TransferDirection.Upload;
+        return this;
+      }
+      
+      // optional bool one_shot = 6;
+      public boolean hasOneShot() {
+        return result.hasOneShot();
+      }
+      public boolean getOneShot() {
+        return result.getOneShot();
+      }
+      public Builder setOneShot(boolean value) {
+        result.hasOneShot = true;
+        result.oneShot_ = value;
+        return this;
+      }
+      public Builder clearOneShot() {
+        result.hasOneShot = false;
+        result.oneShot_ = false;
         return this;
       }
       

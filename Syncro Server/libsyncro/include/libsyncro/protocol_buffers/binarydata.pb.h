@@ -37,6 +37,15 @@ class BinaryPacketHeader;
 class BinaryIncomingResponse;
 class BinaryIncomingAck;
 
+enum BinaryDataRequest_TransferDirection {
+  BinaryDataRequest_TransferDirection_Upload = 2,
+  BinaryDataRequest_TransferDirection_Download = 1
+};
+bool BinaryDataRequest_TransferDirection_IsValid(int value);
+const BinaryDataRequest_TransferDirection BinaryDataRequest_TransferDirection_TransferDirection_MIN = BinaryDataRequest_TransferDirection_Download;
+const BinaryDataRequest_TransferDirection BinaryDataRequest_TransferDirection_TransferDirection_MAX = BinaryDataRequest_TransferDirection_Upload;
+const int BinaryDataRequest_TransferDirection_TransferDirection_ARRAYSIZE = BinaryDataRequest_TransferDirection_TransferDirection_MAX + 1;
+
 enum BinaryPacketHeader_SectionType {
   BinaryPacketHeader_SectionType_START = 0,
   BinaryPacketHeader_SectionType_MIDDLE = 1,
@@ -90,6 +99,19 @@ class BinaryDataRequest : public ::google::protobuf::MessageLite {
   
   // nested types ----------------------------------------------------
   
+  typedef BinaryDataRequest_TransferDirection TransferDirection;
+  static const TransferDirection Upload = BinaryDataRequest_TransferDirection_Upload;
+  static const TransferDirection Download = BinaryDataRequest_TransferDirection_Download;
+  static inline bool TransferDirection_IsValid(int value) {
+    return BinaryDataRequest_TransferDirection_IsValid(value);
+  }
+  static const TransferDirection TransferDirection_MIN =
+    BinaryDataRequest_TransferDirection_TransferDirection_MIN;
+  static const TransferDirection TransferDirection_MAX =
+    BinaryDataRequest_TransferDirection_TransferDirection_MAX;
+  static const int TransferDirection_ARRAYSIZE =
+    BinaryDataRequest_TransferDirection_TransferDirection_ARRAYSIZE;
+  
   // accessors -------------------------------------------------------
   
   // optional string file_name = 1;
@@ -123,6 +145,20 @@ class BinaryDataRequest : public ::google::protobuf::MessageLite {
   inline ::google::protobuf::int32 file_size() const;
   inline void set_file_size(::google::protobuf::int32 value);
   
+  // optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+  inline bool has_direction() const;
+  inline void clear_direction();
+  static const int kDirectionFieldNumber = 5;
+  inline ::syncro::pb::BinaryDataRequest_TransferDirection direction() const;
+  inline void set_direction(::syncro::pb::BinaryDataRequest_TransferDirection value);
+  
+  // optional bool one_shot = 6;
+  inline bool has_one_shot() const;
+  inline void clear_one_shot();
+  static const int kOneShotFieldNumber = 6;
+  inline bool one_shot() const;
+  inline void set_one_shot(bool value);
+  
   // @@protoc_insertion_point(class_scope:syncro.pb.BinaryDataRequest)
  private:
   mutable int _cached_size_;
@@ -132,11 +168,13 @@ class BinaryDataRequest : public ::google::protobuf::MessageLite {
   ::google::protobuf::int32 folder_id_;
   ::google::protobuf::int32 recv_buffer_size_;
   ::google::protobuf::int32 file_size_;
+  int direction_;
+  bool one_shot_;
   friend void  protobuf_AddDesc_binarydata_2eproto();
   friend void protobuf_AssignDesc_binarydata_2eproto();
   friend void protobuf_ShutdownFile_binarydata_2eproto();
   
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
   
   // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
   inline bool _has_bit(int index) const {
@@ -524,6 +562,39 @@ inline ::google::protobuf::int32 BinaryDataRequest::file_size() const {
 inline void BinaryDataRequest::set_file_size(::google::protobuf::int32 value) {
   _set_bit(3);
   file_size_ = value;
+}
+
+// optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+inline bool BinaryDataRequest::has_direction() const {
+  return _has_bit(4);
+}
+inline void BinaryDataRequest::clear_direction() {
+  direction_ = 2;
+  _clear_bit(4);
+}
+inline ::syncro::pb::BinaryDataRequest_TransferDirection BinaryDataRequest::direction() const {
+  return static_cast< ::syncro::pb::BinaryDataRequest_TransferDirection >(direction_);
+}
+inline void BinaryDataRequest::set_direction(::syncro::pb::BinaryDataRequest_TransferDirection value) {
+  GOOGLE_DCHECK(::syncro::pb::BinaryDataRequest_TransferDirection_IsValid(value));
+  _set_bit(4);
+  direction_ = value;
+}
+
+// optional bool one_shot = 6;
+inline bool BinaryDataRequest::has_one_shot() const {
+  return _has_bit(5);
+}
+inline void BinaryDataRequest::clear_one_shot() {
+  one_shot_ = false;
+  _clear_bit(5);
+}
+inline bool BinaryDataRequest::one_shot() const {
+  return one_shot_;
+}
+inline void BinaryDataRequest::set_one_shot(bool value) {
+  _set_bit(5);
+  one_shot_ = value;
 }
 
 // -------------------------------------------------------------------

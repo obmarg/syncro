@@ -44,12 +44,31 @@ struct StaticDescriptorInitializer_binarydata_2eproto {
 
 // ===================================================================
 
+bool BinaryDataRequest_TransferDirection_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const BinaryDataRequest_TransferDirection BinaryDataRequest::Upload;
+const BinaryDataRequest_TransferDirection BinaryDataRequest::Download;
+const BinaryDataRequest_TransferDirection BinaryDataRequest::TransferDirection_MIN;
+const BinaryDataRequest_TransferDirection BinaryDataRequest::TransferDirection_MAX;
+const int BinaryDataRequest::TransferDirection_ARRAYSIZE;
+#endif  // _MSC_VER
 const ::std::string BinaryDataRequest::_default_file_name_;
 #ifndef _MSC_VER
 const int BinaryDataRequest::kFileNameFieldNumber;
 const int BinaryDataRequest::kFolderIdFieldNumber;
 const int BinaryDataRequest::kRecvBufferSizeFieldNumber;
 const int BinaryDataRequest::kFileSizeFieldNumber;
+const int BinaryDataRequest::kDirectionFieldNumber;
+const int BinaryDataRequest::kOneShotFieldNumber;
 #endif  // !_MSC_VER
 
 BinaryDataRequest::BinaryDataRequest()
@@ -72,6 +91,8 @@ void BinaryDataRequest::SharedCtor() {
   folder_id_ = 0;
   recv_buffer_size_ = 0;
   file_size_ = 0;
+  direction_ = 2;
+  one_shot_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -112,6 +133,8 @@ void BinaryDataRequest::Clear() {
     folder_id_ = 0;
     recv_buffer_size_ = 0;
     file_size_ = 0;
+    direction_ = 2;
+    one_shot_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -179,6 +202,41 @@ bool BinaryDataRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(40)) goto parse_direction;
+        break;
+      }
+      
+      // optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_direction:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::syncro::pb::BinaryDataRequest_TransferDirection_IsValid(value)) {
+            set_direction(static_cast< ::syncro::pb::BinaryDataRequest_TransferDirection >(value));
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(48)) goto parse_one_shot;
+        break;
+      }
+      
+      // optional bool one_shot = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_one_shot:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &one_shot_)));
+          _set_bit(5);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -221,6 +279,17 @@ void BinaryDataRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->file_size(), output);
   }
   
+  // optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+  if (_has_bit(4)) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      5, this->direction(), output);
+  }
+  
+  // optional bool one_shot = 6;
+  if (_has_bit(5)) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->one_shot(), output);
+  }
+  
 }
 
 int BinaryDataRequest::ByteSize() const {
@@ -255,6 +324,17 @@ int BinaryDataRequest::ByteSize() const {
           this->file_size());
     }
     
+    // optional .syncro.pb.BinaryDataRequest.TransferDirection direction = 5;
+    if (has_direction()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->direction());
+    }
+    
+    // optional bool one_shot = 6;
+    if (has_one_shot()) {
+      total_size += 1 + 1;
+    }
+    
   }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
@@ -282,6 +362,12 @@ void BinaryDataRequest::MergeFrom(const BinaryDataRequest& from) {
     if (from._has_bit(3)) {
       set_file_size(from.file_size());
     }
+    if (from._has_bit(4)) {
+      set_direction(from.direction());
+    }
+    if (from._has_bit(5)) {
+      set_one_shot(from.one_shot());
+    }
   }
 }
 
@@ -303,6 +389,8 @@ void BinaryDataRequest::Swap(BinaryDataRequest* other) {
     std::swap(folder_id_, other->folder_id_);
     std::swap(recv_buffer_size_, other->recv_buffer_size_);
     std::swap(file_size_, other->file_size_);
+    std::swap(direction_, other->direction_);
+    std::swap(one_shot_, other->one_shot_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }

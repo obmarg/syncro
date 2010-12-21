@@ -5,10 +5,16 @@ option optimize_for = LITE_RUNTIME;
 
 
 message BinaryDataRequest {
+	enum TransferDirection {
+		Upload = 2;
+		Download = 1;
+	}
 	optional string file_name = 1;
 	required int32 folder_id = 2;
 	optional int32 recv_buffer_size = 3;
 	optional int32 file_size = 4;
+	optional TransferDirection direction = 5;
+	optional bool one_shot = 6;
 };
 
 message BinaryPacketHeader {
