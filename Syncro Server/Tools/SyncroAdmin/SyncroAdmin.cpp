@@ -104,6 +104,10 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Network Exception: " << ex.what() << "\n";
 	}
+	catch( const std::exception& ex )
+	{
+		std::cout << "Exception: " << ex.what() << "\n";
+	}
 	return 0;
 }
 
