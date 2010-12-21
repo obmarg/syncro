@@ -65,7 +65,9 @@ bool CPBRequestHandler::HandleReceive(const TCharBuffer& inoBuffer) {
 	int nCurrentPosition = m_nBufferReadSoFar;
 	shared_ptr<ArrayInputStream> pAIS;
 	for( int nSubpacket=0; nSubpacket < m_oHeader.subpacket_sizes_size(); nSubpacket++ ) {
-		pAIS.reset( new ArrayInputStream( &inoBuffer.aBuffer[nCurrentPosition], m_oHeader.subpacket_sizes(nSubpacket) ) );
+		int nSize = m_oHeader.subpacket_sizes(nSubpacket);
+		pAIS.reset( new ArrayInputStream( &inoBuffer.aBuffer[nCurrentPosition], nSize ) );
+		nCurrentPosition += nSize;
 		aMemoryManSubpackets.push_back( pAIS );
 		aSubpackets.push_back( pAIS.get() );
 	}
