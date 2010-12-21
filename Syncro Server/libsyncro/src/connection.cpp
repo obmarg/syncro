@@ -103,15 +103,18 @@ public:
 		while( stream.Next( &buffer, &size ) && !m_file.eof() )
 		{
 			m_file.read( (char*)buffer, size );
-			if( m_file.gcount() != size )
+			std::streamsize sizeRead = m_file.gcount();
+			if( (sizeRead != size) && ( m_file.eof() || m_file.fail() ) )
+			{
 				throw std::runtime_error( 
-					"FileStreamPacket::Write failed - unexpected EOF?" 
+					"FileStreamPacket::Write failed - unexpected EOF in file?" 
 					);
+			}
 			sizeWritten += size;
 		}
 		if( sizeWritten != m_size )
 			throw std::runtime_error(
-				"FileStreamPacket::Write failed - not enough data written"
+				"FileStreamPacket::Write failed - not enough data written to buffer"
 				);
 	}
 	static Connection::TSendPacketPtr Create(std::ifstream& file,unsigned int size)
@@ -405,7 +408,10 @@ void Connection::UploadFile(const UploadFileDetails& details)
 				sendBufferSize = initialResponse.max_packet_size();
 
 		bool error = false;
-		std::ifstream file( details.m_localPath.c_str() );
+		std::ifstream file( 
+			details.m_localPath.c_str(), 
+			std::ios::in | std::ios::binary
+			);
 		bool start = true;
 		file.seekg( 0, std::ios::end );
 		std::streamsize totalSize = file.tellg();
