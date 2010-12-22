@@ -57,7 +57,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			CBinaryDataRequest oRequest( inaInputStreams );
 			IncomingFileDetails details;
 			bool fAccept = m_pFolderMan->IncomingFile( oRequest, details );
-			if( fAccept ) 
+			if( fAccept )
 			{
 				m_pCurrentRecvData.reset( 
 					new CBinaryIncomingData( 

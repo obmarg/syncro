@@ -1,5 +1,7 @@
 #include "FileSendData.h"
 
+#include <boost/numeric/conversion/cast.hpp>
+
 namespace syncro {
 
 const int DEFAULT_FILE_SEND_BUFFER_SIZE = 1024 * 1024;
@@ -66,8 +68,21 @@ bool CFileSendData::IsStartFile() {
 }
 
 bool CFileSendData::IsFileFinished() {
+	using boost::numeric_cast;
+
 	if( m_oFile.tellg() == (std::streamoff)m_nFileSize )
+	{
+		int64_t timeMs = m_stopwatch.GetMS();
+		float dataTransferred = 
+			numeric_cast<float>( GetFilePosition() ) / 1024.0f;
+
+		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f; 
+
+		float rate = dataTransferred / timeSecs;
+		std::cout << "Finished sending file (" << rate << "kb/s)\n";
+
 		return true;
+	}
 	return m_oFile.eof();
 }
 

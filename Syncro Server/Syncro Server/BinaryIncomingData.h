@@ -2,6 +2,7 @@
 #define _BINARY_INCOMING_DATA_H_
 
 #include "common.h"
+#include <kode/stopwatch.h>
 #include <fstream>
 
 namespace syncro {
@@ -18,6 +19,8 @@ public:
 private:
 	std::ofstream m_oFile;
 	VoidCallback m_completedCallback;
+	kode::time::Stopwatch m_stopwatch;
+	unsigned int m_dataTransferred;
 };
 
 }

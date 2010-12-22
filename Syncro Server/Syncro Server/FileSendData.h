@@ -3,12 +3,11 @@
 
 #include "common.h"
 #include <kode/utils.h>
-#include <fstream>
-#include <boost/shared_ptr.hpp>
-
-#include <boost/noncopyable.hpp>
-
+#include <kode/stopwatch.h>
 #include <google/protobuf/io/zero_copy_stream.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
+#include <fstream>
 
 namespace syncro {
 
@@ -37,6 +36,8 @@ private:
 	unsigned int	m_nFileSize;
 
 	unsigned int m_nRequestedBufferSize;
+
+	kode::time::Stopwatch m_stopwatch;
 };
 
 } //end namespace syncro
