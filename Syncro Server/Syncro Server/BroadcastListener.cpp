@@ -24,7 +24,7 @@ CBroadcastListener::HandleReceive(const boost::system::error_code& error, std::s
 	bool fOK = false;
 	if( innSize >= RESPOND_MESSAGE.length() ) {
 		fOK = true;
-		for(int nChar=0; nChar < RESPOND_MESSAGE.length();nChar++ ) {
+		for(unsigned int nChar=0; nChar < RESPOND_MESSAGE.length();nChar++ ) {
 			if( RESPOND_MESSAGE[nChar] != m_aRecvBuff[nChar] ) 
 				fOK = false;
 		}
