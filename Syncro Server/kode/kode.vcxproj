@@ -74,12 +74,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\stopwatch.cpp" />
     <ClCompile Include="src\tcpconnection.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\kode\Database.h" />
     <ClInclude Include="include\kode\net.h" />
+    <ClInclude Include="include\kode\stopwatch.h" />
     <ClInclude Include="include\kode\tcpconnection.h" />
     <ClInclude Include="include\kode\utils.h" />
   </ItemGroup>
