@@ -2,19 +2,18 @@
 
 #include "stdafx.h"
 #include "CSyncroExtension.h"
+#include "BackgroundThread.h"
 #include <atlconv.h>  // for ATL string conversion macros
 #include <libsyncro/connection.h>
+#include <libsyncro/folderlist.h>
 #include <ShellAPI.h>
+#include <boost/foreach.hpp>
+#include <iostream>
 
 CCSyncroExtension::CCSyncroExtension()
+	:m_background( BackgroundThread::GetInstance() )
 {
-	syncro::client::Connection conn(
-		syncro::client::ConnectionDetails()
-			.SetHostname("localhost")
-			.SetUsername("grambo")
-			.SetPassword("password")
-		);
-	//If we got here, we're sorted.
+	
 }
 
 STDMETHODIMP CCSyncroExtension::Initialize ( 
@@ -75,14 +74,26 @@ HRESULT CCSyncroExtension::QueryContextMenu (
 		if ( uFlags & CMF_DEFAULTONLY )
 			return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, 0 );
 
-		HMENU hPopupMenu = CreateMenu();
+		bool addMenu = m_background.GetData(
+			boost::bind( &CCSyncroExtension::ServerListCallback, this, _1 )
+			);
 
-		AppendMenu( hPopupMenu, MF_STRING, 0, L"Add Folder");
-		AppendMenu( hPopupMenu, MF_STRING, 1, L"Send File To Folder");
-		AppendMenu( hPopupMenu, MF_STRING, 2, L"Send File Once");
+		if( addMenu )
+		{
+			HMENU hPopupMenu = CreateMenu();
 
-		InsertMenu ( hmenu, uMenuIndex, MF_BYPOSITION | MF_STRING | MF_POPUP,
-			reinterpret_cast< UINT_PTR >(hPopupMenu), _T("Syncro") );
+			//TODO: Ids need to link to actual actions...
+			AppendMenu( hPopupMenu, MF_STRING, 0, L"Add Folder");
+			AppendMenu( 
+				hPopupMenu, 
+				MF_STRING | MF_POPUP, 
+				reinterpret_cast< UINT_PTR >(m_sendFileMenu),
+				L"Send File"
+				);
+
+			InsertMenu ( hmenu, uMenuIndex, MF_BYPOSITION | MF_STRING | MF_POPUP,
+				reinterpret_cast< UINT_PTR >(hPopupMenu), _T("Syncro") );
+		}
 
 		return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, 1 );
 }
@@ -130,8 +141,80 @@ HRESULT CCSyncroExtension::GetCommandString (
 
 HRESULT CCSyncroExtension::InvokeCommand (
 	LPCMINVOKECOMMANDINFO pCmdInfo ) {
+		
+		if ( 0 != HIWORD( pCmdInfo->lpVerb ) )
+			return E_INVALIDARG;
+
+		int commandId = LOWORD( pCmdInfo->lpVerb );
+		if( commandId >= 0 || commandId < m_menuItems.size() )
+		{
+			if( m_menuItems[ commandId ].Callback )
+				m_menuItems[ commandId ].Callback();
+		}
+
 		//TODO: perform some actions
-		 return E_INVALIDARG;
+		return E_INVALIDARG;
+}
+
+void CCSyncroExtension::ServerListCallback( 
+	const BackgroundThread::ServerList& list 
+	)
+{
+	using syncro::FolderInfo;
+	using syncro::FolderList;
+
+	m_sendFileMenu = CreateMenu();
+	m_menuItems.clear();
+
+	if( list.size() == 1 )
+	{
+		m_menuItems.reserve( list[0].folders.size() );
+
+		std::wstring folderPostfix = 
+			L"on " + kode::utils::wstring( list[0].Name );
+
+		const FolderList& folders = list[0].folders;
+		BOOST_FOREACH( const FolderInfo& folder, folders )
+		{
+			//TODO: Associate this menu item with a callback
+			//		in some sort of callback list
+			std::wstring itemText = 
+				kode::utils::wstring( folder.Name ) + folderPostfix;
+			AppendMenu( m_sendFileMenu, MF_STRING, m_menuItems.size() , itemText.c_str() );
+			m_menuItems.push_back( MenuItemInfo(
+				L"Upload file to " + itemText,
+				VoidCallback()
+				) );
+		}
+	}
+	else
+	{
+		BOOST_FOREACH( const BackgroundThread::ServerInfo& info, list )
+		{
+			HMENU serverMenu = CreateMenu();
+
+			std::wstring serverName = kode::utils::wstring( info.Name );
+			const FolderList& folders = list[0].folders;
+			BOOST_FOREACH( const FolderInfo& folder, folders )
+			{
+				//TODO: Associate this menu item with a callback
+				//		in some sort of callback list
+				std::wstring itemText = kode::utils::wstring( folder.Name );
+				AppendMenu( serverMenu, MF_STRING, m_menuItems.size(), itemText.c_str() );
+				m_menuItems.push_back( MenuItemInfo(
+					L"Upload file to " + itemText + L" on " + serverName,
+					VoidCallback()
+					) );
+			}
+			AppendMenu(
+				m_sendFileMenu, 
+				MF_STRING | MF_POPUP,
+				reinterpret_cast< UINT_PTR >(serverMenu), 
+				serverName.c_str()
+				);
+		}
+	}
+
 }
 
 // CCSyncroExtension

@@ -122,6 +122,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackgroundThread.cpp" />
     <ClCompile Include="CSyncroExtension.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -146,6 +147,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackgroundThread.h" />
     <ClInclude Include="CSyncroExtension.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="ExplorerExtension_i.h" />

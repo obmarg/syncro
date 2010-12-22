@@ -5,10 +5,13 @@
 #include "resource.h"       // main symbols
 #include <comsvcs.h>
 #include <ShlObj.h>
+#include <boost/function.hpp>
+
+#include "BackgroundThread.h"
 
 using namespace ATL;
 
-
+typedef boost::function< void () > VoidCallback;
 
 // CCSyncroExtension
 
@@ -46,8 +49,28 @@ BEGIN_COM_MAP(CCSyncroExtension)
 	COM_INTERFACE_ENTRY(IContextMenu)
 END_COM_MAP()
 
+private:
+	struct MenuItemInfo
+	{
+		MenuItemInfo(
+			const std::wstring& inHelpText,
+			const VoidCallback& inCallback
+			) :
+		HelpText( inHelpText ),
+		Callback( inCallback )
+		{
 
+		}
+		std::wstring HelpText;
+		VoidCallback Callback;
+	};
+	typedef std::vector<MenuItemInfo> MenuItemList;
 
+	BackgroundThread& m_background;
+	HMENU m_sendFileMenu;
+	MenuItemList m_menuItems;
+
+	void ServerListCallback( const BackgroundThread::ServerList& list );
 
 // ISyncroExtension
 public:
