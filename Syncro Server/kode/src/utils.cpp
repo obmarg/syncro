@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <vector>
 
 namespace kode {
@@ -17,6 +18,22 @@ std::string GenerateUUID()
 		aUUID[n] = oUUID.data[n];
 	}
 	return std::string( aUUID.begin(), aUUID.end() );
+}
+
+std::wstring wstring( const std::string& str )
+{
+	std::wstring rv( str.length(), 0 );
+	std::string::const_iterator 
+		srcIt = str.begin(),
+		srcItEnd = str.end();
+	std::wstring::iterator
+		destIt = rv.begin(),
+		destItEnd = rv.end();
+	for( ; srcIt != srcItEnd; ++srcIt, ++destIt )
+	{
+		(*destIt) = boost::numeric_cast<wchar_t>( *srcIt );
+	}
+	return rv;
 }
 
 }	// namespace utils

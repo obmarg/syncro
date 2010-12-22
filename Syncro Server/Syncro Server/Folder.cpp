@@ -33,4 +33,10 @@ CFolder::~CFolder( ) {
 
 }
 
+void
+CFolder::AddFile( const std::string& name, unsigned int size )
+{
+	m_oFiles.push_back( sFileData(name, size ) );
+}
+
 };		//end namespace syncro

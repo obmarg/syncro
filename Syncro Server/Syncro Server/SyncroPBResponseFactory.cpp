@@ -34,8 +34,18 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	switch( innPacketType ) {
 	case packet_types::BinaryRequest: {
 			CBinaryDataRequest oRequest( inaInputStreams );
-			std::string sActualFilename = m_pFolderMan->GetFileName( oRequest.GetFolderId(), oRequest.GetFilename() );
-			m_pCurrentSendData.reset( new CFileSendData( sActualFilename, oRequest.GetBufferSize() ) );
+			FileTransferDetails details;
+			bool fAccept = m_pFolderMan->FileRequested( oRequest, details );
+			if( !fAccept )
+			{
+				break;
+			}
+			m_pCurrentSendData.reset( 
+				new CFileSendData( 
+					details.Filename(),
+					oRequest.GetBufferSize()
+					)
+				);
 		}
 		//Fall through
 	case packet_types::BinaryContinue:
@@ -55,7 +65,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 		}
 	case packet_types::BinaryIncomingRequest: {
 			CBinaryDataRequest oRequest( inaInputStreams );
-			IncomingFileDetails details;
+			FileTransferDetails details;
 			bool fAccept = m_pFolderMan->IncomingFile( oRequest, details );
 			if( fAccept )
 			{
