@@ -135,12 +135,12 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		m_oProgressNotification = new ProgressNotification(this);
 		m_oProgressNotification.setShowRate(true);
 		m_oProgressNotification.update();
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Syncro");
+		 wl.acquire();
 		try {
 			//TODO: Implement wake lock sometime
-/*			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Syncro");
-			 wl.acquire();
-			 wl.release();*/
+			
 			
 			Socket oSock = new Socket(insHost,innPort);
 			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
@@ -179,6 +179,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
+		wl.release();
 		m_oProgressNotification.stop();
 	}
 	
