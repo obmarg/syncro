@@ -39,6 +39,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -135,6 +136,12 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		m_oProgressNotification.setShowRate(true);
 		m_oProgressNotification.update();
 		try {
+			//TODO: Implement wake lock sometime
+/*			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Syncro");
+			 wl.acquire();
+			 wl.release();*/
+			
 			Socket oSock = new Socket(insHost,innPort);
 			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
 			

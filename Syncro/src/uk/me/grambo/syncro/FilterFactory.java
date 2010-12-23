@@ -49,7 +49,7 @@ public class FilterFactory {
 		} else {
 			//TODO: Remove this after the GUI filter management is finished
 			String aArgs2[] = { Integer.toString(innFolderID) };
-			Cursor oPathResults = inoDB.rawQuery("SELECT LocalPath FROM folders WHERE ID=?", aArgs2 );
+			Cursor oPathResults = inoDB.rawQuery("SELECT LocalPath FROM folders WHERE IDOnServer=?", aArgs2 );
 			if( oPathResults.moveToFirst() ) {
 				inoList.add( new CloneFilenameFilter( oPathResults.getString(0) ) );
 			} else {

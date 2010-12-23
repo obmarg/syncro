@@ -94,7 +94,7 @@ CFolderMan::GetFolder( int nFolderID ) {
 	if( !m_listOneShots )
 	{
 		m_listOneShots = m_pDB->prepare(
-			"SELECT FileName,LocalPath FROM files"
+			"SELECT FileName,LocalPath FROM files "
 			"WHERE OneShot=1 AND FolderID=?"
 			);
 	}
@@ -102,8 +102,9 @@ CFolderMan::GetFolder( int nFolderID ) {
 	m_listOneShots->Bind( 1, nFolderID );
 	while( m_listOneShots->GetNextRow() )
 	{
-		std::string name = m_listOneShots->GetColumn< std::string >( 1 );
-		path filePath( name );
+		std::string localPath = m_listOneShots->GetColumn< std::string >( 1 );
+		std::string name =  m_listOneShots->GetColumn< std::string >( 0 );
+		path filePath( localPath );
 		if( exists( filePath ) )
 		{
 			uint32_t size =
@@ -134,7 +135,7 @@ CFolderMan::FileRequested(
 		if( !m_findOneShot )
 		{
 			m_findOneShot = m_pDB->prepare(
-				"SELECT ID,LocalPath,OneShot FROM files"
+				"SELECT ID,LocalPath,OneShot FROM files "
 				"WHERE FolderID=? AND FileName=?"
 				);
 		}

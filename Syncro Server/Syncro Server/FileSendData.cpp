@@ -10,14 +10,18 @@ const unsigned char FILE_SEND_FIRST_BYTE = 11;
 const unsigned char FILE_SECTION_FIRST_BYTE = 16;
 const unsigned char FILE_LAST_SECTION_FIRST_BYTE = 20;
 
-CFileSendData::CFileSendData(const std::string& insFilename,const int innRequestedBufferSize) : m_sFilename(insFilename) {
+CFileSendData::CFileSendData(
+	const std::string& insFilename,
+	const int innRequestedBufferSize,
+	const VoidCallback& completionCallback
+	) 
+	: 
+m_sFilename( insFilename ),
+m_completionCallback( completionCallback ),
+m_finishedAfterChunk( false )
+{
 	m_nRequestedBufferSize = innRequestedBufferSize;
 	OpenFile();
-}
-
-CFileSendData::CFileSendData( CFileSendData& inoOther ) : m_sFilename(inoOther.m_sFilename) {
-	OpenFile();
-	m_oFile.seekg( inoOther.m_oFile.tellg() );
 }
 
 CFileSendData::~CFileSendData() {
@@ -48,6 +52,11 @@ void CFileSendData::FillBuffer(google::protobuf::io::ZeroCopyOutputStream& strea
 		m_oFile.read( pChars, nSize );
 		nReadAmount -= nSize;
 	}
+	if( m_finishedAfterChunk && m_completionCallback )
+	{
+		m_completionCallback();
+		m_completionCallback.clear();
+	}
 }
 
 unsigned int CFileSendData::GetChunkSize() {
@@ -70,7 +79,7 @@ bool CFileSendData::IsStartFile() {
 bool CFileSendData::IsFileFinished() {
 	using boost::numeric_cast;
 
-	if( m_oFile.tellg() == (std::streamoff)m_nFileSize )
+	if( m_oFile.tellg() == (std::streamoff)m_nFileSize || m_oFile.eof() )
 	{
 		int64_t timeMs = m_stopwatch.GetMS();
 		float dataTransferred = 
@@ -81,9 +90,15 @@ bool CFileSendData::IsFileFinished() {
 		float rate = dataTransferred / timeSecs;
 		std::cout << "Finished sending file (" << rate << "kb/s)\n";
 
+		if( m_completionCallback )
+		{
+			m_completionCallback();
+			m_completionCallback.clear();
+		}
+
 		return true;
 	}
-	return m_oFile.eof();
+	return false;
 }
 
 unsigned int CFileSendData::GetFilePosition() {
@@ -92,8 +107,10 @@ unsigned int CFileSendData::GetFilePosition() {
 
 bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize ) {
 	std::streamoff nNextTell = m_oFile.tellg() + (std::streamoff)inNextChunkSize;
-	if( nNextTell == (std::streamoff)m_nFileSize )
+	if( nNextTell == (std::streamoff)m_nFileSize ) {
+		m_finishedAfterChunk = true;
 		return true;
+	}
 	return false;
 }
 

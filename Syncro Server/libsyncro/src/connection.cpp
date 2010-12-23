@@ -305,8 +305,14 @@ void Connection::DoHandshake() {
 	oRequest.set_client_ver_major(0);
 	oRequest.set_client_ver_major(6);
 	oRequest.set_magic( comms::HANDSHAKE_REQUEST_MAGIC );
-	oRequest.set_username( m_serverDetails.m_username );
-	oRequest.set_password( m_serverDetails.m_password );
+	if( !m_serverDetails.m_username.empty() )
+	{
+		oRequest.set_username( m_serverDetails.m_username );
+	}
+	if( !m_serverDetails.m_password.empty() )
+	{
+		oRequest.set_password( m_serverDetails.m_password );
+	}
 	
 	SendProtocolBuffer( comms::packet_types::HandshakeRequest , oRequest );
 

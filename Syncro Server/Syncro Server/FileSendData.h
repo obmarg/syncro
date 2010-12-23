@@ -13,8 +13,12 @@ namespace syncro {
 
 class CFileSendData : boost::noncopyable {
 public:
-	CFileSendData(const std::string& insFilename,int innRequestedBufferSize=0);
-	CFileSendData( CFileSendData& inoOther );
+	CFileSendData( 
+		const std::string& insFilename, 
+		int innRequestedBufferSize=0,
+		const VoidCallback& completionCallback=VoidCallback()
+		);
+
 	~CFileSendData();
 
 	void FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream );
@@ -38,6 +42,9 @@ private:
 	unsigned int m_nRequestedBufferSize;
 
 	kode::time::Stopwatch m_stopwatch;
+	VoidCallback m_completionCallback;
+
+	bool m_finishedAfterChunk;
 };
 
 } //end namespace syncro

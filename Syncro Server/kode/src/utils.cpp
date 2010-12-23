@@ -36,5 +36,21 @@ std::wstring wstring( const std::string& str )
 	return rv;
 }
 
+std::string string( const std::wstring& str )
+{
+	std::string rv( str.length(), 0 );
+	std::wstring::const_iterator 
+		srcIt = str.begin(),
+		srcItEnd = str.end();
+	std::string::iterator
+		destIt = rv.begin(),
+		destItEnd = rv.end();
+	for( ; srcIt != srcItEnd; ++srcIt, ++destIt )
+	{
+		(*destIt) = boost::numeric_cast<char>( *srcIt );
+	}
+	return rv;
+}
+
 }	// namespace utils
 }	// namespace kode

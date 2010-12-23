@@ -43,7 +43,8 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			m_pCurrentSendData.reset( 
 				new CFileSendData( 
 					details.Filename(),
-					oRequest.GetBufferSize()
+					oRequest.GetBufferSize(),
+					details.CompletionCallback()
 					)
 				);
 		}
