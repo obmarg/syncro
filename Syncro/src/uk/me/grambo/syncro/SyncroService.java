@@ -222,9 +222,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		nSize = oInput.readInt();
 		if( nSize > 5 ) {
 			byte aData[] = new byte[nSize - 5];
-			if( oInput.read(aData) != (nSize-5) ) {
+			/*if( oInput.read(aData) != (nSize-5) ) {
 				return false;
-			}
+			}*/
+			oInput.readFully(aData);
 			Log.i("Syncro",new String(aData) );
 			ProcessXML(new ByteArrayInputStream(aData), new FolderListXMLHandler(inoInsertStatement));
 		}
@@ -282,9 +283,10 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		int nSize = oInput.readInt();
 		if( nSize > 5 ) {
 			byte aData[] = new byte[nSize - 5];
-			if( oInput.read(aData) != (nSize-5) ) {
+			oInput.readFully(aData); 
+			/*if( nSizeRead != (nSize-5) ) {
 				return false;
-			}
+			}*/
 			Log.i("Syncro",new String(aData) );
 			FolderContentsXMLHandler oHandler = new FolderContentsXMLHandler();
 			oHandler.AddFileHandler(this);
