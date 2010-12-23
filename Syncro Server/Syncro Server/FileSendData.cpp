@@ -52,10 +52,9 @@ void CFileSendData::FillBuffer(google::protobuf::io::ZeroCopyOutputStream& strea
 		m_oFile.read( pChars, nSize );
 		nReadAmount -= nSize;
 	}
-	if( m_finishedAfterChunk && m_completionCallback )
+	if( m_finishedAfterChunk )
 	{
-		m_completionCallback();
-		m_completionCallback.clear();
+		CallCompletionCallback();
 	}
 }
 
@@ -77,24 +76,10 @@ bool CFileSendData::IsStartFile() {
 }
 
 bool CFileSendData::IsFileFinished() {
-	using boost::numeric_cast;
 
 	if( m_oFile.tellg() == (std::streamoff)m_nFileSize || m_oFile.eof() )
 	{
-		int64_t timeMs = m_stopwatch.GetMS();
-		float dataTransferred = 
-			numeric_cast<float>( GetFilePosition() ) / 1024.0f;
-
-		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f; 
-
-		float rate = dataTransferred / timeSecs;
-		std::cout << "Finished sending file (" << rate << "kb/s)\n";
-
-		if( m_completionCallback )
-		{
-			m_completionCallback();
-			m_completionCallback.clear();
-		}
+		CallCompletionCallback();
 
 		return true;
 	}
@@ -112,6 +97,26 @@ bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize ) {
 		return true;
 	}
 	return false;
+}
+
+void CFileSendData::CallCompletionCallback()
+{
+	using boost::numeric_cast;
+
+	int64_t timeMs = m_stopwatch.GetMS();
+	float dataTransferred = 
+		numeric_cast<float>( GetFilePosition() ) / 1024.0f;
+
+	float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f; 
+
+	float rate = dataTransferred / timeSecs;
+	std::cout << "Finished sending file (" << rate << "kb/s)\n";
+
+	if( m_completionCallback )
+	{
+		m_completionCallback();
+		m_completionCallback.clear();
+	}
 }
 
 };		//namespace syncro
