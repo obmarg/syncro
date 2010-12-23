@@ -33,6 +33,8 @@ public:
 private:
 
 	void OpenFile();
+	
+	void CallCompletionCallback();
 
 	std::ifstream m_oFile;
 	const std::string m_sFilename;
