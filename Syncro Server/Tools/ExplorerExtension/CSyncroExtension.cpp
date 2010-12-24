@@ -3,11 +3,15 @@
 #include "stdafx.h"
 #include "CSyncroExtension.h"
 #include "BackgroundThread.h"
+#include "UploadThread.h"
 #include <atlconv.h>  // for ATL string conversion macros
 #include <libsyncro/connection.h>
 #include <libsyncro/folderlist.h>
+#include <kode/utils.h>
 #include <ShellAPI.h>
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 
 CCSyncroExtension::CCSyncroExtension()
@@ -59,6 +63,10 @@ STDMETHODIMP CCSyncroExtension::Initialize (
 		TCHAR file[ MAX_PATH ];
 		if ( 0 == DragQueryFile ( hDrop, 0, file, MAX_PATH ) )
 			hr = E_INVALIDARG;
+
+		//TODO: support multiple files at some point
+		std::wstring str( file );
+		m_currentFile = kode::utils::string(str);
 
 		GlobalUnlock ( stg.hGlobal );
 		ReleaseStgMedium ( &stg );
@@ -145,7 +153,7 @@ HRESULT CCSyncroExtension::InvokeCommand (
 		if ( 0 != HIWORD( pCmdInfo->lpVerb ) )
 			return E_INVALIDARG;
 
-		int commandId = LOWORD( pCmdInfo->lpVerb );
+		unsigned int commandId = LOWORD( pCmdInfo->lpVerb );
 		if( commandId >= 0 || commandId < m_menuItems.size() )
 		{
 			if( m_menuItems[ commandId ].Callback )
@@ -166,6 +174,9 @@ void CCSyncroExtension::ServerListCallback(
 	m_sendFileMenu = CreateMenu();
 	m_menuItems.clear();
 
+	boost::filesystem::path filePath( m_currentFile );
+	
+
 	if( list.size() == 1 )
 	{
 		m_menuItems.reserve( list[0].folders.size() );
@@ -181,9 +192,20 @@ void CCSyncroExtension::ServerListCallback(
 			std::wstring itemText = 
 				kode::utils::wstring( folder.Name ) + folderPostfix;
 			AppendMenu( m_sendFileMenu, MF_STRING, m_menuItems.size() , itemText.c_str() );
+
+			syncro::client::UploadFileDetails upload;
+			upload.SetFolderId( folder.Id )
+				.SetOneShot( true )
+				.SetLocalPath( m_currentFile )
+				.SetRemotePath( filePath.filename() );
+
 			m_menuItems.push_back( MenuItemInfo(
 				L"Upload file to " + itemText,
-				VoidCallback()
+				boost::bind(
+					&UploadThread::Create,
+					list[0].connDetails,
+					upload
+					)
 				) );
 		}
 	}
@@ -201,9 +223,20 @@ void CCSyncroExtension::ServerListCallback(
 				//		in some sort of callback list
 				std::wstring itemText = kode::utils::wstring( folder.Name );
 				AppendMenu( serverMenu, MF_STRING, m_menuItems.size(), itemText.c_str() );
+
+				syncro::client::UploadFileDetails upload;
+				upload.SetFolderId( folder.Id )
+					.SetOneShot( true )
+					.SetLocalPath( m_currentFile )
+					.SetRemotePath( filePath.filename() );
+
 				m_menuItems.push_back( MenuItemInfo(
 					L"Upload file to " + itemText + L" on " + serverName,
-					VoidCallback()
+					boost::bind(
+						&UploadThread::Create,
+						info.connDetails,
+						upload
+						)
 					) );
 			}
 			AppendMenu(

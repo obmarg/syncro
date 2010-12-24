@@ -70,7 +70,7 @@ BackgroundThread::RunThread()
 		{
 			boost::mutex::scoped_lock( m_dataMutex );
 			Connection conn( (*details) );
-			m_servers.push_back( ServerInfo( details->Name() ) );
+			m_servers.push_back( ServerInfo( details->Name(), *details ) );
 			conn.GetFolderList( m_servers.back().folders );
 		}
 		catch( const std::exception& ex )

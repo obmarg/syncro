@@ -66,6 +66,8 @@ private:
 	};
 	typedef std::vector<MenuItemInfo> MenuItemList;
 
+	std::string m_currentFile;
+
 	BackgroundThread& m_background;
 	HMENU m_sendFileMenu;
 	MenuItemList m_menuItems;

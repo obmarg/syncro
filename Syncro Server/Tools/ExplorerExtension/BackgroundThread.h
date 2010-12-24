@@ -2,6 +2,7 @@
 #define BACKGROUND_THREAD_H_
 
 #include <libsyncro/folderlist.h>
+#include <libsyncro/connection.h>
 #include <boost/thread.hpp>
 #include <vector>
 
@@ -11,11 +12,16 @@ public:
 	struct ServerInfo
 	{
 	public:
-		ServerInfo( std::string inname )
-			:Name(inname)
-		{
-		};
+		ServerInfo( 
+			std::string inname, 
+			const syncro::client::ConnectionDetails& conn
+			) :
+		Name(inname),
+		connDetails( conn )
+		{ };
+
 		std::string Name;
+		syncro::client::ConnectionDetails connDetails;
 		syncro::FolderList folders;
 	};
 	typedef std::vector<ServerInfo> ServerList;
