@@ -61,7 +61,7 @@ public:
 };
 
 CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
-	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path FROM Folders" );
+	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path,UploadPrefix FROM Folders" );
 	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
 	foreach( Database::Row& oRow, oRS ) {
 		path oPath( oRow["Path"] );
@@ -71,7 +71,8 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
 		m_folders.push_back( 
 			FolderInfo( 
 				boost::lexical_cast<int>( oRow["ID"] ) , 
-				oPath.native_directory_string()
+				oPath.native_directory_string(),
+				oRow["UploadPrefix"]
 				) 
 			);
 		if( ( *m_folders.back().Name.rbegin() ) != '/'
@@ -206,6 +207,12 @@ CFolderMan::IncomingFile(
 		//		Then: Extract configuration stuff to a seperate class in kode...
 		destFileName = "temp/";
 	}
+	else if( !folderInfo.UploadPrefix.empty() )
+	{
+		std::string prefix = folderInfo.UploadPrefix;
+		//TODO: Here, we want to process the prefix for various replacement vars
+		destFileName += prefix;
+	}
 	boost::filesystem::path path( destFileName );
 	if( !boost::filesystem::exists( path ) )
 	{
@@ -231,18 +238,44 @@ CFolderMan::IncomingFile(
 		this,
 		finishDetails
 		);
-	if( !exists( destFile ) )
-	{
-		return true;
-	}
 	int nFileSize = fileData.GetFileSize();
-	if( nFileSize != -1 ) 
+	if( exists(destFile) && nFileSize != -1 ) 
 	{
 		if( file_size( destFile ) != nFileSize )
+		{
+			// File size doesn't match, definetly download again.
 			return true;
+		}
+	}
+	//
+	// Check the database to see if this has been uploaded already
+	//
+	if( !m_checkUploadHistory ) 
+	{
+		m_checkUploadHistory = m_pDB->prepare(
+			"SELECT ID,ActualFilename FROM UploadHistory "
+			"WHERE FolderID=? AND Filename=?"
+			);
+	}
+	bool accept = true;
+	kode::db::AutoReset reset( m_checkUploadHistory );
+	m_checkUploadHistory->Bind( 1, fileData.GetFolderId() );
+	m_checkUploadHistory->Bind( 2, fileData.GetFilename() );
+	while( m_checkUploadHistory->GetNextRow() )
+	{
+		boost::filesystem::path otherFile( 
+			m_checkUploadHistory->GetColumn<std::string>( 1 )
+			);
+		if( exists( otherFile ) )
+		{
+			if( file_size( otherFile ) == nFileSize )
+			{
+				accept = false;
+			}
+		}
 	}
 	//TODO: SHould i just throw an exception here?
-	return false;
+	return accept;
 }
 
 void CFolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
@@ -268,6 +301,25 @@ void CFolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 		//		then move the file to a prefix of that id (or just id for
 		//		filename)  to save overwriting things accidentally.
 	}
+	else
+	{
+		if( !m_addToUploadHistory )
+		{
+			m_addToUploadHistory = m_pDB->prepare(
+				"INSERT INTO UploadHistory "
+				"(Filename, FolderId, ActualFilename) "
+				"VALUES( ?, ?, ?);"
+				);
+		}
+		kode::db::AutoReset reset( m_addToUploadHistory );
+		m_addToUploadHistory->Bind( 1, details->fileName );
+		m_addToUploadHistory->Bind( 2, details->folderId );
+		m_addToUploadHistory->Bind( 3, details->localPath );
+		m_addToUploadHistory->GetNextRow();
+	}
+	
+	//TODO: At some point, would be good to clear out the old uploaded files database,
+	//		based on clients no longer attempting to upload the file.
 }
 
 void CFolderMan::FileDownloadFinished( DownloadFinishDetailsPtr details )

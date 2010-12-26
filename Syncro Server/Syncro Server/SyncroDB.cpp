@@ -2,7 +2,7 @@
 
 namespace syncro {
 
-const int CSyncroDB::EXPECTED_DB_VERSION = 7;
+const int CSyncroDB::EXPECTED_DB_VERSION = 9;
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE = 
@@ -11,7 +11,8 @@ const std::string FOLDERS_TABLE_CREATE =
                 "Name TEXT NOT NULL, " +
                 "Path TEXT NOT NULL, " + 
                 "Writable INTEGER NOT NULL DEFAULT 0, " +
-				"Readable INTEGER NOT NULL DEFAULT 1);";
+				"Readable INTEGER NOT NULL DEFAULT 1, " +
+				"UploadPrefix TEXT NOT NULL DEFAULT '');";
 
 const std::string SERVER_ID_TABLE_NAME = "ServerID";
 const std::string SERVER_ID_TABLE_CREATE = 
@@ -37,6 +38,14 @@ const std::string FILES_TABLE_CREATE =
 				"OneShot INTEGER NOT NULL, "
 				"FolderID INTEGER NOT NULL);";
 
+const std::string UPLOAD_HISTORY_TABLE_NAME = "UploadHistory";
+const std::string UPLOAD_HISTORY_CREATE = 
+				"CREATE TABLE IF NOT EXISTS " + UPLOAD_HISTORY_TABLE_NAME + " (" +
+				"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				"Filename TEXT NOT NULL, " + 
+				"FolderID INTEGER NOT NULL, " +
+				"ActualFilename TEXT NOT NULL);";
+
 
 //TODO: Move the database versioning stuff out into kode probably, then subclass that here.
 
@@ -61,10 +70,11 @@ CSyncroDB::~CSyncroDB() {
 
 bool CSyncroDB::CreateDatabase() {
 	//TODO: possibly add a new function to database that doesn' return a result set
-	run(FOLDERS_TABLE_CREATE);
-	run(SERVER_ID_TABLE_CREATE);
-	run(USERS_TABLE_CREATE);
-	run(FILES_TABLE_CREATE);
+	run( FOLDERS_TABLE_CREATE );
+	run( SERVER_ID_TABLE_CREATE );
+	run( USERS_TABLE_CREATE );
+	run( FILES_TABLE_CREATE );
+	run( UPLOAD_HISTORY_CREATE );
 	clearResult();
 	return true;
 }
@@ -85,6 +95,14 @@ bool CSyncroDB::UpgradeDatabase(int nCurrentVersion) {
 	}
 	if( nCurrentVersion < 7 ) {
 		run(FILES_TABLE_CREATE);
+	}
+	if( nCurrentVersion < 8 ) {
+		run( "DROP TABLE " + FOLDERS_TABLE_NAME + ";");
+		run( FOLDERS_TABLE_CREATE );
+	}
+	if( nCurrentVersion < 9 )
+	{
+		run( UPLOAD_HISTORY_CREATE );
 	}
 	clearResult();
 	return true;

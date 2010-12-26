@@ -42,6 +42,10 @@ private:
 	kode::db::StatementPtr m_findOneShot;
 	kode::db::StatementPtr m_delOneShot;
 
+	kode::db::StatementPtr m_addToUploadHistory;
+	kode::db::StatementPtr m_checkUploadHistory;
+	kode::db::StatementPtr m_clearUploadHistory;
+
 	typedef boost::shared_ptr< UploadFinishDetails > UploadFinishDetailsPtr;
 	typedef boost::shared_ptr< DownloadFinishDetails > DownloadFinishDetailsPtr;
 
