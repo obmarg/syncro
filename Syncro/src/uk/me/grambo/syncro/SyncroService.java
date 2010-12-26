@@ -483,12 +483,17 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			new FileInputStream( filename );
 		
 		long totalFileSize = new File(filename).length();
+		if( totalFileSize > Integer.MAX_VALUE )
+		{
+			throw new Exception("File is too big to send");
+		}
 		
 		Binarydata.BinaryDataRequest oInitialRequest = Binarydata.BinaryDataRequest.newBuilder()
 			.setFileName( sendFilename )
 			.setFolderId( inFolderId )
 			.setRecvBufferSize( inoSock.getSendBufferSize() )
 			.setDirection( Binarydata.BinaryDataRequest.TransferDirection.Upload )
+			.setFileSize( (int)totalFileSize )
 			.setOneShot(false)
 			
 			.build();
