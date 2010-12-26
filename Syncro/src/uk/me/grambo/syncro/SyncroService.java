@@ -151,6 +151,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,LocalPath) VALUES(?," + innServerID + ",?,?,'/mnt/sdcard/Syncro/')");
 				GetFolderList(oSock,oInsertStatement);
 				GetFolderContents(oSock,innServerID,oDB);
+				SendFiles(oSock,innServerID,oDB);
 				oDB.close();
 				oDB = null;
 			}
@@ -430,5 +431,128 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			}
 		}while( !fDone );
 		return true;
+	}
+	
+	protected boolean SendFiles(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException,Exception {
+		String args[] = { Integer.valueOf(innServerID).toString() };
+		Cursor results = inoDB.rawQuery(
+				"SELECT ID,IDOnServer,LocalPath " +
+				"FROM folders WHERE SyncFromPhone=1 AND ServerID=?", 
+				args);
+		while( results.moveToNext() )
+		{
+			String folderPath = results.getString(2);
+			File folder = new File(folderPath);
+			if( !folder.isDirectory() || !folder.canRead() )
+			{
+				continue;
+			}
+			m_sCurrentLocalPath = folder.getAbsolutePath();
+			if( !m_sCurrentLocalPath.endsWith( File.separator ) )
+				m_sCurrentLocalPath = 
+					m_sCurrentLocalPath.concat( File.separator );
+			SendFolder( inoSock, results.getInt(1), folder );
+		}
+		
+		return true;
+	}
+	
+	protected void SendFolder(Socket inoSock,int inFolderId,File folder) throws Exception
+	{
+		File[] files = folder.listFiles();
+		
+		for( int nFile=0; nFile < files.length; nFile++ )
+		{
+			if( files[nFile].isDirectory() )
+			{
+				SendFolder(inoSock,inFolderId,files[nFile]);
+			}
+			else
+			{
+				String sendPath = files[nFile].getAbsolutePath().substring( m_sCurrentLocalPath.length() );
+				SendFile( inoSock, files[nFile].getAbsolutePath(), sendPath, inFolderId );
+			}
+		}
+	}
+	
+	protected void SendFile(Socket inoSock, String filename, String sendFilename,int inFolderId ) throws Exception {
+		InputStream oInputStream = inoSock.getInputStream();
+		OutputStream oOutputStream = inoSock.getOutputStream();
+		
+		FileInputStream fileStream = 
+			new FileInputStream( filename );
+		
+		long totalFileSize = new File(filename).length();
+		
+		Binarydata.BinaryDataRequest oInitialRequest = Binarydata.BinaryDataRequest.newBuilder()
+			.setFileName( sendFilename )
+			.setFolderId( inFolderId )
+			.setRecvBufferSize( inoSock.getSendBufferSize() )
+			.setDirection( Binarydata.BinaryDataRequest.TransferDirection.Upload )
+			.setOneShot(false)
+			
+			.build();
+		
+		m_oPBInterface.SendObject(
+				oOutputStream, 
+				PBSocketInterface.RequestTypes.BINARY_INCOMING_REQUEST, 
+				oInitialRequest);
+	
+		UploadResponseHandler responseHandler = new UploadResponseHandler();
+		byte[] sendBuffer = null;
+		
+		Binarydata.BinaryPacketHeader.SectionType sectionType = 
+			Binarydata.BinaryPacketHeader.SectionType.START;
+		long totalSizeRead = 0;
+		boolean finishedSending = false;
+		
+		m_oPBInterface.addResponseHandler( responseHandler );
+		do {
+			m_oPBInterface.HandleResponse(oInputStream);
+			//TODO: Progress notification
+			if( !responseHandler.canRemove() )
+			{
+				if( sendBuffer == null )
+				{
+					//TODO: The -128 bit might not be accurate/needed
+					sendBuffer = new byte[ responseHandler.getMaxPacketSize() - 128 ];
+				}
+				//Send some data
+				int nSizeRead = fileStream.read(sendBuffer);
+				if( nSizeRead != -1 )
+					totalSizeRead += nSizeRead;
+				else
+				{
+					finishedSending = true;
+				}
+				if( !finishedSending )
+				{
+					if( nSizeRead < sendBuffer.length && totalSizeRead == totalFileSize )
+					{
+						sectionType = 
+							Binarydata.BinaryPacketHeader.SectionType.END;
+					}
+					Binarydata.BinaryPacketHeader oRequest = Binarydata.BinaryPacketHeader.newBuilder()
+						.setBinaryPacketType( sectionType )
+				
+						.build();
+					m_oPBInterface.SendObjectAndData(
+							oOutputStream, 
+							PBSocketInterface.RequestTypes.BINARY_INCOMING_DATA, 
+							oRequest, 
+							sendBuffer, 
+							nSizeRead
+							);
+					
+					sectionType =
+						Binarydata.BinaryPacketHeader.SectionType.MIDDLE;
+				}
+			}
+			else
+			{
+				finishedSending = true;
+			}
+		}while( !finishedSending );
+		
 	}
 }
