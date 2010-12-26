@@ -68,7 +68,18 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
 		if( !is_directory( oPath ) )
 			throw std::runtime_error( "Invalid path read from DB in CFolderMan constructor" );
 		//TODO: Do something with the name as well
-		m_folders.push_back( FolderInfo( boost::lexical_cast<int>( oRow["ID"] ) , oPath.native_directory_string() ) );
+		m_folders.push_back( 
+			FolderInfo( 
+				boost::lexical_cast<int>( oRow["ID"] ) , 
+				oPath.native_directory_string()
+				) 
+			);
+		if( ( *m_folders.back().Name.rbegin() ) != '/'
+			&& ( *m_folders.back().Name.rbegin() ) != '\\' )
+		{
+			//TODO: Replace this with real path seperator for current platform
+			m_folders.back().Name += "/";
+		}
 	}
 }
 
@@ -194,14 +205,14 @@ CFolderMan::IncomingFile(
 		//		(for now it's just temp in run dir)
 		//		Then: Extract configuration stuff to a seperate class in kode...
 		destFileName = "temp/";
-		boost::filesystem::path path( destFileName );
-		if( !boost::filesystem::exists( path ) )
-		{
-			boost::filesystem::create_directories( path );
-		}
+	}
+	boost::filesystem::path path( destFileName );
+	if( !boost::filesystem::exists( path ) )
+	{
+		boost::filesystem::create_directories( path );
 	}
 	destFileName += fileData.GetFilename();
-	path destFile( destFileName );
+	boost::filesystem::path destFile( destFileName );
 	details.m_filename = destFile.native_file_string();
 	//TODO: Add support for folder path in here. for now doesn't matter
 	//		can possibly remove the parameter if it turns out just the
