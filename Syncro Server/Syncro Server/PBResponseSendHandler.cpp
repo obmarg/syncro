@@ -1,7 +1,10 @@
 #include "PBResponseSendHandler.h"
-#include <vector>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <libsyncro/comms.h>
+#include <libsyncro/packet_types.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <boost/numeric/conversion/cast.hpp>
+#include <vector>
+#include <iostream>
 
 namespace syncro {
 
@@ -15,6 +18,8 @@ CPBResponseSendHandler::~CPBResponseSendHandler() {
 
 bool CPBResponseSendHandler::SendStarting() {
 	using std::vector;
+	using boost::numeric_cast;
+	using namespace syncro::comms;
 
 	if( !m_pResponse )
 		throw std::logic_error( "PB Send Starting, but PBResponseSendHandler has not been assigned any data" );
@@ -24,6 +29,14 @@ bool CPBResponseSendHandler::SendStarting() {
 
 	pb::PacketHeader oResponseHeader;
 	oResponseHeader.set_packet_type( m_pResponse->GetPacketType() );
+#ifdef _DEBUG
+	packet_types::ePBPacketTypes packetType =
+		numeric_cast< packet_types::ePBPacketTypes >( m_pResponse->GetPacketType() );
+	std::cout << 
+		"Sending " << 
+		packet_types::Str( packetType ) << 
+		" packet\n";
+#endif
 
 	vector<unsigned int> aPacketSizes = m_pResponse->GetSubpacketSizes();
 	unsigned int nTotalPacketSize = 0;

@@ -9,6 +9,8 @@
 #include "AdminCommandManager.h"
 #include "AdminCommandHandler.h"
 #include "FolderListHandlers.h"
+#include <libsyncro/packet_types.h>
+#include <boost/numeric/conversion/cast.hpp>
 
 namespace syncro {
 
@@ -22,6 +24,7 @@ CSyncroPBResponseFactory::CSyncroPBResponseFactory() {
 
 CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigned int innPacketType, TInputStreamList& inaInputStreams) {
 	using namespace comms;
+	using boost::numeric_cast;
 
 	//TODO: Add in admin mode control messages etc.
 	if( !m_fAuthenticated ) {
@@ -31,6 +34,14 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			)
 		throw authentication_exception("Not authenticated");
 	}
+#ifdef _DEBUG
+	packet_types::ePBPacketTypes packetType =
+		numeric_cast< packet_types::ePBPacketTypes >( innPacketType );
+	std::cout << 
+		"Received " << 
+		packet_types::Str( packetType ) << 
+		" packet\n";
+#endif
 	switch( innPacketType ) {
 	case packet_types::BinaryRequest: {
 			CBinaryDataRequest oRequest( inaInputStreams );
