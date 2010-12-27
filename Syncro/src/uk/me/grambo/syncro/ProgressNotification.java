@@ -62,6 +62,15 @@ public class ProgressNotification {
 		m_nLastProgressUpdate = 0;
 	}
 	
+	public void setCurrentFileDetails(String insFilename, int inFileSize, int innFileNum )
+	{
+		m_nFilename = insFilename;
+		m_nCurrentTotalSize = inFileSize;
+		m_fHaveFile = true;
+		m_nFileNum = innFileNum;
+		m_nLastProgressUpdate = 0;
+	}
+	
 	public void clearFileDetails() {
 		m_fHaveFile = false;
 	}

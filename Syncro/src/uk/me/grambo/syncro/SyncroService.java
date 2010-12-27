@@ -439,6 +439,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				"SELECT ID,IDOnServer,LocalPath " +
 				"FROM folders WHERE SyncFromPhone=1 AND ServerID=?", 
 				args);
+		m_oProgressNotification.setTotalNumFiles(1);
 		while( results.moveToNext() )
 		{
 			String folderPath = results.getString(2);
@@ -511,6 +512,13 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		long totalSizeRead = 0;
 		boolean finishedSending = false;
 		
+		//TODO: Could pass an actual file number (and total number of files)
+		//		but can't be arsed;
+		m_oProgressNotification.setCurrentFileDetails(
+				sendFilename, 
+				(int)totalFileSize, 
+				1
+				);
 		m_oPBInterface.addResponseHandler( responseHandler );
 		do {
 			m_oPBInterface.HandleResponse(oInputStream);
@@ -548,6 +556,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 							sendBuffer, 
 							nSizeRead
 							);
+					m_oProgressNotification.setProgress( (int)totalSizeRead );
 					
 					sectionType =
 						Binarydata.BinaryPacketHeader.SectionType.MIDDLE;
