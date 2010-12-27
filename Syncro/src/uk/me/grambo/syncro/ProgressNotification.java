@@ -12,7 +12,7 @@ public class ProgressNotification {
 	
 	final static int PROGRESS_NOTIFICATION_ID = 1;
 	
-	final static int UPDATE_RATE = 250;
+	final static int UPDATE_RATE = 500;
 	
 	private Notification m_oNotification;
 	private Context m_oContext;
@@ -31,6 +31,8 @@ public class ProgressNotification {
 	private float m_nDataSinceLast;
 	
 	private long m_nLastUpdateTime;
+	
+	private boolean m_downloading;
 	
 	protected ProgressNotification(Context inoContext) {
 		m_oContext = inoContext;
@@ -59,7 +61,8 @@ public class ProgressNotification {
 		m_nCurrentTotalSize = inoFile.Size;
 		m_fHaveFile = true;
 		m_nFileNum = innFileNum;
-		m_nLastProgressUpdate = 0;
+		// Set the clock so we'll update in 1 second
+		m_nLastProgressUpdate = SystemClock.uptimeMillis()-3000;
 	}
 	
 	public void setCurrentFileDetails(String insFilename, int inFileSize, int innFileNum )
@@ -68,7 +71,8 @@ public class ProgressNotification {
 		m_nCurrentTotalSize = inFileSize;
 		m_fHaveFile = true;
 		m_nFileNum = innFileNum;
-		m_nLastProgressUpdate = 0;
+		// Set the clock so we'll update in 1 second
+		m_nLastProgressUpdate = SystemClock.uptimeMillis()-3000;
 	}
 	
 	public void clearFileDetails() {
