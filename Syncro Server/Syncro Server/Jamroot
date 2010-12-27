@@ -4,7 +4,7 @@ alias pthreads : /usr/lib/libpthread.so ;
 alias stdcpp : /usr/lib/libstdc++.so.6 ;
 alias libc : /usr/lib/libc.so ;
 alias libdl : /usr/lib/libdl.so ;
-alias libboost : /usr/lib/libboost_system-mt.a /usr/lib/libboost_thread.a /usr/lib/libboost_filesystem-mt.a ;
+alias libboost : /usr/lib/libboost_system-mt.a /usr/lib/libboost_thread.a /usr/lib/libboost_filesystem-mt.a /usr/lib/libboost_regex-mt.a /usr/lib/libboost_date_time-mt.a ;
 alias libprotobuf-lite : /usr/lib/libprotobuf.so.6 ;
 alias libsyncro : ../libsyncro//<link>static ;
 alias kode : ../kode//<link>static ; 
@@ -20,4 +20,5 @@ exe syncro
 	 <include>../libsyncro/include/
 	 <include>../libsyncro/include/libsyncro/protocol_buffers/
 	<debug-symbols>on
+	<define>_DEBUG
 	;
