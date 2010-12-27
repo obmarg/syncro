@@ -19,6 +19,7 @@
     <ClCompile Include="src\protocol_buffers\handshake.pb.cc" />
     <ClCompile Include="src\protocol_buffers\header.pb.cc" />
     <ClCompile Include="src\scanner.cpp" />
+    <ClCompile Include="src\stringutils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="include\libsyncro\protocol_buffers\header.pb.h" />
     <ClInclude Include="include\libsyncro\comms.h" />
     <ClInclude Include="include\libsyncro\scanner.h" />
+    <ClInclude Include="include\libsyncro\stringutils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2635E2D6-2097-46B8-8237-46A4450C4019}</ProjectGuid>

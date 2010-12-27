@@ -1,6 +1,7 @@
 #include "FolderMan.h"
 #include "Folder.h"
 #include "BinaryDataRequest.h"
+#include <libsyncro/stringutils.h>
 #include <boost/filesystem.hpp>
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
@@ -210,7 +211,8 @@ CFolderMan::IncomingFile(
 	else if( !folderInfo.UploadPrefix.empty() )
 	{
 		std::string prefix = folderInfo.UploadPrefix;
-		//TODO: Here, we want to process the prefix for various replacement vars
+		syncro::utils::ReplaceStringVars( prefix );
+		//TODO: Need to ensure that the prefix has a trailing slash
 		destFileName += prefix;
 	}
 	boost::filesystem::path path( destFileName );
@@ -320,6 +322,8 @@ void CFolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 	
 	//TODO: At some point, would be good to clear out the old uploaded files database,
 	//		based on clients no longer attempting to upload the file.
+	//		Could keep a list of files requested upload, then on destruction
+	//		delete anything that's not in the list...
 }
 
 void CFolderMan::FileDownloadFinished( DownloadFinishDetailsPtr details )

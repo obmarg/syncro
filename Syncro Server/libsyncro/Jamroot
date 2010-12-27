@@ -1,5 +1,5 @@
 alias protocol_buffers : src/protocol_buffers/binarydata.pb.cc src/protocol_buffers/handshake.pb.cc src/protocol_buffers/header.pb.cc src/protocol_buffers/folders.pb.cc src/protocol_buffers/admin.pb.cc ;
-lib libsyncro : src/packet_types.cpp src/connection.cpp protocol_buffers 
+lib libsyncro : src/packet_types.cpp src/connection.cpp protocol_buffers src/stringutils.cpp 
 	: 	<include>/usr/include
 	  	<include>/usr/include/c++/4.4
 		<include>../../Dependencies/sqlite/
