@@ -566,7 +566,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			{
 				finishedSending = true;
 			}
-		}while( !finishedSending );
-		
+		} while( !finishedSending );
+		//Need to manually remove the response handler here,
+		//as it doesn't know that we're done with the file
+		m_oPBInterface.removeResponseHandler(responseHandler);
 	}
 }

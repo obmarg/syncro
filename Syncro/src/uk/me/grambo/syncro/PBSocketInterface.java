@@ -177,6 +177,10 @@ public class PBSocketInterface {
 		m_aResponseHandlers.add(inoHandler);
 	}
 	
+	public void removeResponseHandler(PBResponseHandler inoHandler) {
+		m_aResponseHandlers.remove(inoHandler);
+	}
+	
 	public void clearAllResponseHandlers() {
 		m_aResponseHandlers.clear();
 	}

@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.util.Log;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import uk.me.grambo.syncro.pb.Binarydata;
@@ -75,7 +77,14 @@ public class UploadResponseHandler implements PBResponseHandler {
 		if( oPacketInfo.getAccepted() )
 		{
 			m_maxPacketSize = oPacketInfo.getMaxPacketSize();
+			//Log.d("Syncro", "Incoming Response: Accepted");
+			//Log.d("Syncro", "Packet Size: " + m_maxPacketSize);
 			return true;
+		} 
+		else
+		{
+			
+			//Log.d("Syncro", "Incoming Response: Not Accepted");
 		}
 		m_finished = true;
 		return false;
