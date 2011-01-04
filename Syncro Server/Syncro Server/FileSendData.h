@@ -24,8 +24,8 @@ public:
 	void FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream );
 	unsigned int GetChunkSize();
 
-	unsigned int GetFilePosition();
-	unsigned int GetFileSize() { return m_nFileSize; };
+	std::istream::pos_type GetFilePosition();
+	std::istream::pos_type GetFileSize() { return m_nFileSize; };
 	bool IsFileFinished();
 	bool IsStartFile();
 	bool IsFileFinishedAfterChunk( unsigned int inNextChunkSize );

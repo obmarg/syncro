@@ -1,6 +1,7 @@
 #include "FileSendData.h"
 
 #include <boost/numeric/conversion/cast.hpp>
+#include <cstdint>
 
 namespace syncro {
 
@@ -65,8 +66,12 @@ unsigned int CFileSendData::GetChunkSize() {
 		nBufferSize = std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
 	}
 	//TODO: maybe stop doing the above -1024, and find a better way of doing it
-	int nSizeLeft = m_nFileSize - (int)m_oFile.tellg();
-	return std::min( nBufferSize, nSizeLeft );
+	int64_t nSizeLeft = m_nFileSize - (int)m_oFile.tellg();
+	int64_t rv = std::min( 
+		boost::numeric_cast<int64_t>(nBufferSize), 
+		nSizeLeft 
+		);
+	return boost::numeric_cast<unsigned int>(rv);
 }
 
 bool CFileSendData::IsStartFile() {
@@ -86,8 +91,8 @@ bool CFileSendData::IsFileFinished() {
 	return false;
 }
 
-unsigned int CFileSendData::GetFilePosition() {
-	return (unsigned int)m_oFile.tellg();
+std::istream::pos_type CFileSendData::GetFilePosition() {
+	return m_oFile.tellg();
 }
 
 bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize ) {
@@ -103,14 +108,21 @@ void CFileSendData::CallCompletionCallback()
 {
 	using boost::numeric_cast;
 
-	int64_t timeMs = m_stopwatch.GetMS();
-	float dataTransferred = 
-		numeric_cast<float>( GetFilePosition() ) / 1024.0f;
+	try {
 
-	float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f; 
+		int64_t timeMs = m_stopwatch.GetMS();
+		float dataTransferred = 
+			numeric_cast<float>( GetFilePosition() ) / 1024.0f;
 
-	float rate = dataTransferred / timeSecs;
-	std::cout << "Finished sending file (" << rate << "kb/s)\n";
+		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f; 
+
+		float rate = dataTransferred / timeSecs;
+		std::cout << "Finished sending file (" << rate << "kb/s)\n";
+	}catch( const std::exception& ex )
+	{
+		std::cout << "Error when calculating transfer rate in CFileSendData::CallCompletionCallback:\n"
+			<< ex.what();
+	}
 
 	if( m_completionCallback )
 	{
