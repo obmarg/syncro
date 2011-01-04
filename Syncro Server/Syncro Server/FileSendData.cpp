@@ -1,7 +1,7 @@
 #include "FileSendData.h"
 
 #include <boost/numeric/conversion/cast.hpp>
-#include <cstdint>
+#include <stdint.h>
 
 namespace syncro {
 
