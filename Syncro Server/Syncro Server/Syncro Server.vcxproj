@@ -55,7 +55,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include\;..\libsyncro\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\include\;..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include\;..\libsyncro\include\</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
@@ -75,7 +75,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include;..\libsyncro\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\include\;..\..\Dependencies\tinyxml\;..\..\Dependencies\sqlite\;..\..\Dependencies\protobuf-2.3.0\include\;..\kode\include;..\libsyncro\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -88,62 +88,62 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AdminCommandHandler.h" />
-    <ClInclude Include="AdminCommandManager.h" />
-    <ClInclude Include="AuthManager.h" />
-    <ClInclude Include="BasePBResponse.h" />
-    <ClInclude Include="BinaryDataRequest.h" />
-    <ClInclude Include="BinaryDataResponse.h" />
-    <ClInclude Include="BinaryIncomingData.h" />
-    <ClInclude Include="BinaryIncomingResponse.h" />
-    <ClInclude Include="BroadcastListener.h" />
-    <ClInclude Include="BroadcastThread.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="FileSendData.h" />
-    <ClInclude Include="Folder.h" />
-    <ClInclude Include="FolderListHandlers.h" />
-    <ClInclude Include="FolderMan.h" />
-    <ClInclude Include="HandshakeHandlers.h" />
-    <ClInclude Include="PBRequestHandler.h" />
-    <ClInclude Include="PBResponseSendHandler.h" />
-    <ClInclude Include="ServerComms.h" />
-    <ClInclude Include="SyncroDB.h" />
-    <ClInclude Include="SyncroPBResponseFactory.h" />
-    <ClInclude Include="SyncroServer.h" />
-    <ClInclude Include="VectorPBResponse.h" />
-    <ClInclude Include="XMLBuilder.h" />
-    <ClInclude Include="XMLHandlers.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="AdminCommandHandler.cpp" />
-    <ClCompile Include="AdminCommandManager.cpp" />
-    <ClCompile Include="AuthManager.cpp" />
-    <ClCompile Include="BinaryDataResponse.cpp" />
-    <ClCompile Include="BinaryIncomingData.cpp" />
-    <ClCompile Include="BroadcastListener.cpp" />
-    <ClCompile Include="BroadcastThread.cpp" />
-    <ClCompile Include="FileSendData.cpp" />
-    <ClCompile Include="Folder.cpp" />
-    <ClCompile Include="FolderListHandlers.cpp" />
-    <ClCompile Include="FolderMan.cpp" />
-    <ClCompile Include="HandshakeHandlers.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="PBRequestHandler.cpp" />
-    <ClCompile Include="PBResponseSendHandler.cpp" />
-    <ClCompile Include="ServerComms.cpp" />
-    <ClCompile Include="SyncroDB.cpp" />
-    <ClCompile Include="SyncroPBResponseFactory.cpp" />
-    <ClCompile Include="SyncroServer.cpp" />
-    <ClCompile Include="XMLBuilder.cpp" />
-    <ClCompile Include="XMLHandlers.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\Messages\admin.proto" />
     <None Include="..\..\Messages\binarydata.proto" />
     <None Include="..\..\Messages\build.bat" />
     <None Include="..\..\Messages\folders.proto" />
     <None Include="..\..\Messages\handshake.proto" />
     <None Include="..\..\Messages\header.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\include\AdminCommandHandler.h" />
+    <ClInclude Include="src\include\AdminCommandManager.h" />
+    <ClInclude Include="src\include\AuthManager.h" />
+    <ClInclude Include="src\include\BasePBResponse.h" />
+    <ClInclude Include="src\include\BinaryDataRequest.h" />
+    <ClInclude Include="src\include\BinaryDataResponse.h" />
+    <ClInclude Include="src\include\BinaryIncomingData.h" />
+    <ClInclude Include="src\include\BinaryIncomingResponse.h" />
+    <ClInclude Include="src\include\BroadcastListener.h" />
+    <ClInclude Include="src\include\BroadcastThread.h" />
+    <ClInclude Include="src\include\common.h" />
+    <ClInclude Include="src\include\FileSendData.h" />
+    <ClInclude Include="src\include\Folder.h" />
+    <ClInclude Include="src\include\FolderListHandlers.h" />
+    <ClInclude Include="src\include\FolderMan.h" />
+    <ClInclude Include="src\include\HandshakeHandlers.h" />
+    <ClInclude Include="src\include\PBRequestHandler.h" />
+    <ClInclude Include="src\include\PBResponseSendHandler.h" />
+    <ClInclude Include="src\include\ServerComms.h" />
+    <ClInclude Include="src\include\SyncroDB.h" />
+    <ClInclude Include="src\include\SyncroPBResponseFactory.h" />
+    <ClInclude Include="src\include\SyncroServer.h" />
+    <ClInclude Include="src\include\VectorPBResponse.h" />
+    <ClInclude Include="src\include\XMLBuilder.h" />
+    <ClInclude Include="src\include\XMLHandlers.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AdminCommandHandler.cpp" />
+    <ClCompile Include="src\AdminCommandManager.cpp" />
+    <ClCompile Include="src\AuthManager.cpp" />
+    <ClCompile Include="src\BinaryDataResponse.cpp" />
+    <ClCompile Include="src\BinaryIncomingData.cpp" />
+    <ClCompile Include="src\BroadcastListener.cpp" />
+    <ClCompile Include="src\BroadcastThread.cpp" />
+    <ClCompile Include="src\FileSendData.cpp" />
+    <ClCompile Include="src\Folder.cpp" />
+    <ClCompile Include="src\FolderListHandlers.cpp" />
+    <ClCompile Include="src\FolderMan.cpp" />
+    <ClCompile Include="src\HandshakeHandlers.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PBRequestHandler.cpp" />
+    <ClCompile Include="src\PBResponseSendHandler.cpp" />
+    <ClCompile Include="src\ServerComms.cpp" />
+    <ClCompile Include="src\SyncroDB.cpp" />
+    <ClCompile Include="src\SyncroPBResponseFactory.cpp" />
+    <ClCompile Include="src\SyncroServer.cpp" />
+    <ClCompile Include="src\XMLBuilder.cpp" />
+    <ClCompile Include="src\XMLHandlers.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
