@@ -20,3 +20,11 @@ temp.xml
 *_i.h
 *_p.c
 *.vspscc
+*.o
+*.a
+*.so
+*.log
+*.db
+*.dblite
+bin/
+build/

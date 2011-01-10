@@ -1,8 +1,0 @@
-lib kode : src/Database.cpp src/utils.cpp src/tcpconnection.cpp src/stopwatch.cpp
-	: 	<include>/usr/include
-	  	<include>/usr/include/c++/4.4
-		<include>../../Dependencies/sqlite/
-		<include>include/
-		<include>include/kode/
-		<link>static
-	;
