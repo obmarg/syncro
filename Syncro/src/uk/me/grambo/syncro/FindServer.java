@@ -53,6 +53,14 @@ public class FindServer extends Activity
         	      	aArgs[2] = Integer.toString( 9998 );
         	     	oDB.execSQL( "INSERT INTO servers(Name,Ip,Port) VALUES(?,?,?);", aArgs );
         		    oDB.close();
+        		    
+        		    Context context = getApplicationContext();
+        		    CharSequence text = "Added server: " + aArgs[0];
+        		    int duration = Toast.LENGTH_SHORT;
+        		    Toast toast = Toast.makeText(context, text, duration);
+        		    toast.show();
+        		    //TODO: call a function to remove this server from the list
+        		    //FindServer.this.RemoveServer(innPosition);
         	    }catch(SQLException oException) {
         	     	oException.printStackTrace();
         	    }
@@ -96,6 +104,13 @@ public class FindServer extends Activity
     	for(int n=0; n< m_aServers.length; n++ ) {
     		m_aServerNames[n] = m_aServers[n].Name;
     	}
+    	BuildServerList();
+    }
+    
+    //TODO: Implement some server removing function
+    
+    public void BuildServerList()
+    {
     	ListView oListView = (ListView)findViewById(R.id.findserverlist);
     	oListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServerNames ));
     }

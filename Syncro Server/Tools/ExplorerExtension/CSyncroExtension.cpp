@@ -153,6 +153,9 @@ HRESULT CCSyncroExtension::InvokeCommand (
 		if ( 0 != HIWORD( pCmdInfo->lpVerb ) )
 			return E_INVALIDARG;
 
+		//TODO: CHeck the size of the input structure, and then
+		//		act appropriately.
+
 		unsigned int commandId = LOWORD( pCmdInfo->lpVerb );
 		if( commandId >= 0 || commandId < m_menuItems.size() )
 		{
