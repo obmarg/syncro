@@ -5,6 +5,6 @@ VariantDir( 'build/', 'src/', duplicate=0 )
 
 env = Environment( CPPPATH = cpppath )
 
-sources = [ 'src/packet_types.cpp', 'src/connection.cpp', 'src/stringutils.cpp', 'src/protocol_buffers/binarydata.pb.cc', 'src/protocol_buffers/handshake.pb.cc', 'src/protocol_buffers/header.pb.cc', 'src/protocol_buffers/folders.pb.cc', 'src/protocol_buffers/admin.pb.cc' ]
+sources = [ 'src/scanner.cpp', 'src/packet_types.cpp', 'src/connection.cpp', 'src/stringutils.cpp', 'src/protocol_buffers/binarydata.pb.cc', 'src/protocol_buffers/handshake.pb.cc', 'src/protocol_buffers/header.pb.cc', 'src/protocol_buffers/folders.pb.cc', 'src/protocol_buffers/admin.pb.cc' ]
 
 env.StaticLibrary( 'syncro', sources )
