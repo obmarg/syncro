@@ -1,0 +1,11 @@
+
+cpppath = [ "include", "../../kode/include/", "../../libsyncro/include/", "../../libsyncro/include/libsyncro/protocol_buffers", "../../../Dependencies/protobuf-2.3.0/include", "../../../Dependencies/sqlite/", "../../../Dependencies/tinyxml/" ] 
+
+libpath = [ "../../kode/", "../../libsyncro/", "../../../Dependencies/bin/" ] 
+
+libs = [ 'syncro', 'kode', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_date_time', 'protobuf-lite', 'boost_program_options' ]
+
+#VariantDir( 'build', 'c', duplicate=0 )
+env = Environment( CPPPATH = cpppath, LIBPATH=libpath, LIBS=libs )
+
+env.Program( target = 'SyncroAdmin', source = ['SyncroAdmin.cpp'] )
