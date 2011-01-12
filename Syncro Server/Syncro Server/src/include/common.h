@@ -5,6 +5,7 @@
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <boost/function.hpp>
 #include <vector>
+#include <map>
 #include <stdexcept>
 
 namespace syncro {
@@ -75,6 +76,8 @@ using google::protobuf::io::ZeroCopyInputStream;
 typedef std::vector<ZeroCopyInputStream*> TInputStreamList;
 
 typedef boost::function< void () > VoidCallback;
+
+typedef std::map< std::string, std::string > StringMap;
 
 }; //namespace syncro
 

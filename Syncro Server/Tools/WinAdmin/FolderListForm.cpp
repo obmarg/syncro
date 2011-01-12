@@ -26,7 +26,7 @@ void FolderListForm::InitialSetup()
 	Connection conn(
 		ConnectionDetails()
 			.SetHostname("localhost")
-			.SetUsername("grambo")
+			.SetUsername("admin")
 			.SetPassword("password")
 		);
 
@@ -63,12 +63,17 @@ void FolderListForm::StartAddFolder()
 		Connection conn(
 			ConnectionDetails()
 				.SetHostname("localhost")
-				.SetUsername("grambo")
+				.SetUsername("admin")
 				.SetPassword("password")
 			);
 		
-		std::string folderString = string( addFolderDialog->GetPath() );
-		conn.SendAdminCommand( "AddFolder", folderString );
+		Connection::StringMap params;
+		params.insert( std::make_pair( 
+			"path", 
+			string( addFolderDialog->GetPath() )
+			) );
+
+		conn.SendAdminCommand( "AddFolder", params );
 		SetupList( conn );
 	}
 }
@@ -84,12 +89,17 @@ void FolderListForm::DeleteFolder(unsigned int id)
 	Connection conn(
 		ConnectionDetails()
 			.SetHostname("localhost")
-			.SetUsername("grambo")
+			.SetUsername("admin")
 			.SetPassword("password")
 		);
+	Connection::StringMap params;
+	params.insert( std::make_pair( 
+		"id", 
+		boost::lexical_cast< std::string >( id )
+		) );
 	conn.SendAdminCommand( 
 		"DelFolder",
-		boost::lexical_cast< std::string >( id )
+		params
 		);
 	SetupList( conn );
 }

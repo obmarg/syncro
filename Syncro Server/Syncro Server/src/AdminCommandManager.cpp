@@ -17,19 +17,24 @@ CAdminCommandManager::CAdminCommandManager() : m_aCommands( eAdminCommand_Total 
 	//TODO: Set up m_addLocalFile;
 }
 
-void CAdminCommandManager::HandleCommand( const std::string& sName, const std::string& sParam, const CAuthToken& insAuth ) {
+void CAdminCommandManager::HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth ) {
 	eAdminCommand command = FindCommand( sName );
 	if( ( !insAuth.IsInitialised() ) || m_aCommands[ command ].AuthLevel > insAuth.GetAccessLevel() )
 		throw admin_command_exception( -1 );
+	
 	switch( command ) {
 	case eAdminCommand_AddFolder:
-		AddFolder( sParam );
+		AddFolder( params.find("path")->second );
 		break;
 	case eAdminCommand_DelFolder:
-		DelFolder( boost::lexical_cast<unsigned int>(sParam) );
+		DelFolder( 
+			boost::lexical_cast<unsigned int>( 
+				 params.find("id")->second 
+				 ) 
+			);
 		break;
 	case eAdminCommand_AddLocalFile:
-		AddLocalFile( sParam );
+		AddLocalFile( params.find("filename")->second );
 		break;
 	default:
 		throw admin_command_exception( -2 );

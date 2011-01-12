@@ -39,10 +39,23 @@ CAdminCommandHandler::CAdminCommandHandler(TInputStreamList& inaInputStreams,  c
 	if( !oCommand.has_command() )
 		throw std::runtime_error( "Invalid command recieved by CAdminCommandHandler" );
 	try {
-		std::string param;
-		if( oCommand.has_param() )
-			param = oCommand.param();
-		commandManager.HandleCommand( oCommand.command(), param, inUserAuth );
+
+		StringMap map;
+		for( int paramNum=0; paramNum < oCommand.params_size(); ++paramNum )
+		{
+			const syncro::pb::AdminParameter& param = oCommand.params( paramNum );
+			if( param.has_int_value() )
+			{
+				throw std::logic_error( "AdminCommandHandler passed int value parameter, but not implemented yet");
+			}
+			if( !param.has_string_value() )
+			{
+				throw std::runtime_error( "AdminCommandHandler needs to be passed a string value");
+			}
+			map.insert( std::make_pair( param.name(), param.string_value() ) );
+		}
+
+		commandManager.HandleCommand( oCommand.command(), map, inUserAuth );
 		m_pResponse.reset( new CAdminCommandResponse( true ) );
 	}
 	catch( const admin_command_exception& ex ) {

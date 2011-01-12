@@ -32,7 +32,7 @@ class CAdminCommandManager : boost::noncopyable {
 public:
 	CAdminCommandManager();
 
-	void HandleCommand( const std::string& sName, const std::string& sParam, const CAuthToken& insAuth );
+	void HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth );
 
 private:
 	struct sAdminCommand {

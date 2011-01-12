@@ -99,6 +99,8 @@ public:
 	};
 	typedef boost::shared_ptr<SendPacket> TSendPacketPtr;
 	typedef std::vector<TSendPacketPtr> TSendPacketList;
+
+	typedef std::map< std::string, std::string > StringMap;
 	
 public:
 	Connection( const ConnectionDetails& details );
@@ -114,8 +116,8 @@ public:
 	void GetFolderList(FolderList& list);
 
 	void UploadFile(const UploadFileDetails& details); 
-	
-	void SendAdminCommand( const std::string& command, const std::string& param );
+
+	void SendAdminCommand( const std::string& command, const StringMap& params );
 protected:
 
 	void DoHandshake();

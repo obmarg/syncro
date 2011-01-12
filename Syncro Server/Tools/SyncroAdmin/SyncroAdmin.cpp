@@ -68,7 +68,9 @@ int main(int argc, char* argv[])
 				std::cout << "Error: Path supplied to addfolder is not a directory\n";
 			else
 			{
-				conn.SendAdminCommand( "AddFolder", folderName );
+				Connection::StringMap params;
+				params.insert( std::make_pair( "path", folderName ) );
+				conn.SendAdminCommand( "AddFolder", params );
 			}
 		}
 		if( vm.count("uploadfile") )

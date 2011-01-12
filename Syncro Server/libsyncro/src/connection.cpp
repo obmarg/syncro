@@ -355,10 +355,19 @@ void Connection::GetFolderList(FolderList& list) {
 	//return const_cast<const FolderList>(rv);
 }
 
-void Connection::SendAdminCommand( const std::string& command, const std::string& param ) {
+void Connection::SendAdminCommand( const std::string& command, const StringMap& params ) {
 	pb::GenericAdminCommand request;
 	request.set_command( command );
-	request.set_param( param );
+	
+	StringMap::const_iterator 
+		it = params.begin(),
+		itEnd = params.end();
+	for( ; it != itEnd; ++it )
+	{
+		syncro::pb::AdminParameter* param = request.add_params();
+		param->set_name( it->first );
+		param->set_string_value( it->second );
+	}
 
 	SendProtocolBuffer( comms::packet_types::AdminGenericCommand, request );
 
