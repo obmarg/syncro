@@ -38,8 +38,9 @@ private:
 	unsigned int m_port;
 };
 
-Scanner::Scanner()
-	:m_response(100,0)
+Scanner::Scanner() :
+m_response(100,0),
+m_responseBuffer(100)	
 {
 
 };
@@ -90,7 +91,7 @@ void Scanner::Scan(unsigned int timeout)
 		udp::endpoint sender;
 		//TODO: This buffer size could probably be a lot better.
 		socket.async_receive_from(
-			boost::asio::buffer( m_response ),
+			boost::asio::buffer( m_responseBuffer ),
 			m_sender,
 			0,
 			boost::bind(
@@ -116,6 +117,11 @@ bool Scanner::HandleReceive(
 	std::size_t size
 	)
 {
+	m_response = std::string( 
+		m_responseBuffer.begin(), 
+		m_responseBuffer.begin()+size 
+		);
+
 	if( error )
 		throw kode::net::NetworkException( error );
 	int ok = 

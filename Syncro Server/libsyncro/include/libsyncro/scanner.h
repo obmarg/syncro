@@ -47,6 +47,7 @@ public:
 private:
 	ServerList m_servers;
 	std::string m_response;
+	std::vector< char > m_responseBuffer;
 	boost::asio::ip::udp::endpoint m_sender;
 	bool m_finished;
 

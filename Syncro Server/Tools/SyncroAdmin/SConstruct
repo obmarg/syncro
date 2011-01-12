@@ -3,10 +3,9 @@ cpppath = [ "include", "../../kode/include/", "../../libsyncro/include/", "../..
 
 libpath = [ "../../kode/", "../../libsyncro/", "../../../Dependencies/bin/" ] 
 
-#libs = [ 'syncro', 'kode', 'tinyxml', 'sqlite3', 'pthread', 'stdc++', 'c', 'dl', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_regex', 'boost_date_time', 'protobuf-lite' ]
-libs = [ 'syncro', 'kode', 'tinyxml', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_regex', 'boost_date_time', 'protobuf-lite' ]
+libs = [ 'syncro', 'kode', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_date_time', 'protobuf-lite', 'boost_program_options' ]
 
 #VariantDir( 'build', 'c', duplicate=0 )
 env = Environment( CPPPATH = cpppath, LIBPATH=libpath, LIBS=libs )
 
-SConscript( 'src/SConscript', exports='env libs', variant_dir='build', duplicate=0 )
+env.Program( target = 'SyncroAdmin', source = ['SyncroAdmin.cpp'] )
