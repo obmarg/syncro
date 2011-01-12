@@ -32,10 +32,112 @@ void  protobuf_AddDesc_admin_2eproto();
 void protobuf_AssignDesc_admin_2eproto();
 void protobuf_ShutdownFile_admin_2eproto();
 
+class AdminParameter;
 class GenericAdminCommand;
 class AdminAck;
 
 // ===================================================================
+
+class AdminParameter : public ::google::protobuf::MessageLite {
+ public:
+  AdminParameter();
+  virtual ~AdminParameter();
+  
+  AdminParameter(const AdminParameter& from);
+  
+  inline AdminParameter& operator=(const AdminParameter& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  static const AdminParameter& default_instance();
+  
+  void Swap(AdminParameter* other);
+  
+  // implements Message ----------------------------------------------
+  
+  AdminParameter* New() const;
+  void CheckTypeAndMergeFrom(const ::google::protobuf::MessageLite& from);
+  void CopyFrom(const AdminParameter& from);
+  void MergeFrom(const AdminParameter& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::std::string GetTypeName() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  
+  // optional string string_value = 2;
+  inline bool has_string_value() const;
+  inline void clear_string_value();
+  static const int kStringValueFieldNumber = 2;
+  inline const ::std::string& string_value() const;
+  inline void set_string_value(const ::std::string& value);
+  inline void set_string_value(const char* value);
+  inline void set_string_value(const char* value, size_t size);
+  inline ::std::string* mutable_string_value();
+  
+  // optional int32 int_value = 3;
+  inline bool has_int_value() const;
+  inline void clear_int_value();
+  static const int kIntValueFieldNumber = 3;
+  inline ::google::protobuf::int32 int_value() const;
+  inline void set_int_value(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:syncro.pb.AdminParameter)
+ private:
+  mutable int _cached_size_;
+  
+  ::std::string* name_;
+  static const ::std::string _default_name_;
+  ::std::string* string_value_;
+  static const ::std::string _default_string_value_;
+  ::google::protobuf::int32 int_value_;
+  friend void  protobuf_AddDesc_admin_2eproto();
+  friend void protobuf_AssignDesc_admin_2eproto();
+  friend void protobuf_ShutdownFile_admin_2eproto();
+  
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static AdminParameter* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class GenericAdminCommand : public ::google::protobuf::MessageLite {
  public:
@@ -90,15 +192,17 @@ class GenericAdminCommand : public ::google::protobuf::MessageLite {
   inline void set_command(const char* value, size_t size);
   inline ::std::string* mutable_command();
   
-  // optional string param = 2;
-  inline bool has_param() const;
-  inline void clear_param();
-  static const int kParamFieldNumber = 2;
-  inline const ::std::string& param() const;
-  inline void set_param(const ::std::string& value);
-  inline void set_param(const char* value);
-  inline void set_param(const char* value, size_t size);
-  inline ::std::string* mutable_param();
+  // repeated .syncro.pb.AdminParameter params = 3;
+  inline int params_size() const;
+  inline void clear_params();
+  static const int kParamsFieldNumber = 3;
+  inline const ::syncro::pb::AdminParameter& params(int index) const;
+  inline ::syncro::pb::AdminParameter* mutable_params(int index);
+  inline ::syncro::pb::AdminParameter* add_params();
+  inline const ::google::protobuf::RepeatedPtrField< ::syncro::pb::AdminParameter >&
+      params() const;
+  inline ::google::protobuf::RepeatedPtrField< ::syncro::pb::AdminParameter >*
+      mutable_params();
   
   // @@protoc_insertion_point(class_scope:syncro.pb.GenericAdminCommand)
  private:
@@ -106,8 +210,7 @@ class GenericAdminCommand : public ::google::protobuf::MessageLite {
   
   ::std::string* command_;
   static const ::std::string _default_command_;
-  ::std::string* param_;
-  static const ::std::string _default_param_;
+  ::google::protobuf::RepeatedPtrField< ::syncro::pb::AdminParameter > params_;
   friend void  protobuf_AddDesc_admin_2eproto();
   friend void protobuf_AssignDesc_admin_2eproto();
   friend void protobuf_ShutdownFile_admin_2eproto();
@@ -218,6 +321,110 @@ class AdminAck : public ::google::protobuf::MessageLite {
 
 // ===================================================================
 
+// AdminParameter
+
+// required string name = 1;
+inline bool AdminParameter::has_name() const {
+  return _has_bit(0);
+}
+inline void AdminParameter::clear_name() {
+  if (name_ != &_default_name_) {
+    name_->clear();
+  }
+  _clear_bit(0);
+}
+inline const ::std::string& AdminParameter::name() const {
+  return *name_;
+}
+inline void AdminParameter::set_name(const ::std::string& value) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void AdminParameter::set_name(const char* value) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void AdminParameter::set_name(const char* value, size_t size) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* AdminParameter::mutable_name() {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+
+// optional string string_value = 2;
+inline bool AdminParameter::has_string_value() const {
+  return _has_bit(1);
+}
+inline void AdminParameter::clear_string_value() {
+  if (string_value_ != &_default_string_value_) {
+    string_value_->clear();
+  }
+  _clear_bit(1);
+}
+inline const ::std::string& AdminParameter::string_value() const {
+  return *string_value_;
+}
+inline void AdminParameter::set_string_value(const ::std::string& value) {
+  _set_bit(1);
+  if (string_value_ == &_default_string_value_) {
+    string_value_ = new ::std::string;
+  }
+  string_value_->assign(value);
+}
+inline void AdminParameter::set_string_value(const char* value) {
+  _set_bit(1);
+  if (string_value_ == &_default_string_value_) {
+    string_value_ = new ::std::string;
+  }
+  string_value_->assign(value);
+}
+inline void AdminParameter::set_string_value(const char* value, size_t size) {
+  _set_bit(1);
+  if (string_value_ == &_default_string_value_) {
+    string_value_ = new ::std::string;
+  }
+  string_value_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* AdminParameter::mutable_string_value() {
+  _set_bit(1);
+  if (string_value_ == &_default_string_value_) {
+    string_value_ = new ::std::string;
+  }
+  return string_value_;
+}
+
+// optional int32 int_value = 3;
+inline bool AdminParameter::has_int_value() const {
+  return _has_bit(2);
+}
+inline void AdminParameter::clear_int_value() {
+  int_value_ = 0;
+  _clear_bit(2);
+}
+inline ::google::protobuf::int32 AdminParameter::int_value() const {
+  return int_value_;
+}
+inline void AdminParameter::set_int_value(::google::protobuf::int32 value) {
+  _set_bit(2);
+  int_value_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // GenericAdminCommand
 
 // optional string command = 1;
@@ -262,46 +469,29 @@ inline ::std::string* GenericAdminCommand::mutable_command() {
   return command_;
 }
 
-// optional string param = 2;
-inline bool GenericAdminCommand::has_param() const {
-  return _has_bit(1);
+// repeated .syncro.pb.AdminParameter params = 3;
+inline int GenericAdminCommand::params_size() const {
+  return params_.size();
 }
-inline void GenericAdminCommand::clear_param() {
-  if (param_ != &_default_param_) {
-    param_->clear();
-  }
-  _clear_bit(1);
+inline void GenericAdminCommand::clear_params() {
+  params_.Clear();
 }
-inline const ::std::string& GenericAdminCommand::param() const {
-  return *param_;
+inline const ::syncro::pb::AdminParameter& GenericAdminCommand::params(int index) const {
+  return params_.Get(index);
 }
-inline void GenericAdminCommand::set_param(const ::std::string& value) {
-  _set_bit(1);
-  if (param_ == &_default_param_) {
-    param_ = new ::std::string;
-  }
-  param_->assign(value);
+inline ::syncro::pb::AdminParameter* GenericAdminCommand::mutable_params(int index) {
+  return params_.Mutable(index);
 }
-inline void GenericAdminCommand::set_param(const char* value) {
-  _set_bit(1);
-  if (param_ == &_default_param_) {
-    param_ = new ::std::string;
-  }
-  param_->assign(value);
+inline ::syncro::pb::AdminParameter* GenericAdminCommand::add_params() {
+  return params_.Add();
 }
-inline void GenericAdminCommand::set_param(const char* value, size_t size) {
-  _set_bit(1);
-  if (param_ == &_default_param_) {
-    param_ = new ::std::string;
-  }
-  param_->assign(reinterpret_cast<const char*>(value), size);
+inline const ::google::protobuf::RepeatedPtrField< ::syncro::pb::AdminParameter >&
+GenericAdminCommand::params() const {
+  return params_;
 }
-inline ::std::string* GenericAdminCommand::mutable_param() {
-  _set_bit(1);
-  if (param_ == &_default_param_) {
-    param_ = new ::std::string;
-  }
-  return param_;
+inline ::google::protobuf::RepeatedPtrField< ::syncro::pb::AdminParameter >*
+GenericAdminCommand::mutable_params() {
+  return &params_;
 }
 
 // -------------------------------------------------------------------

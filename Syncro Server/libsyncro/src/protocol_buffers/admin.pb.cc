@@ -11,6 +11,7 @@ namespace syncro {
 namespace pb {
 
 void protobuf_ShutdownFile_admin_2eproto() {
+  delete AdminParameter::default_instance_;
   delete GenericAdminCommand::default_instance_;
   delete AdminAck::default_instance_;
 }
@@ -21,8 +22,10 @@ void protobuf_AddDesc_admin_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  AdminParameter::default_instance_ = new AdminParameter();
   GenericAdminCommand::default_instance_ = new GenericAdminCommand();
   AdminAck::default_instance_ = new AdminAck();
+  AdminParameter::default_instance_->InitAsDefaultInstance();
   GenericAdminCommand::default_instance_->InitAsDefaultInstance();
   AdminAck::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_admin_2eproto);
@@ -38,11 +41,253 @@ struct StaticDescriptorInitializer_admin_2eproto {
 
 // ===================================================================
 
+const ::std::string AdminParameter::_default_name_;
+const ::std::string AdminParameter::_default_string_value_;
+#ifndef _MSC_VER
+const int AdminParameter::kNameFieldNumber;
+const int AdminParameter::kStringValueFieldNumber;
+const int AdminParameter::kIntValueFieldNumber;
+#endif  // !_MSC_VER
+
+AdminParameter::AdminParameter()
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+}
+
+void AdminParameter::InitAsDefaultInstance() {
+}
+
+AdminParameter::AdminParameter(const AdminParameter& from)
+  : ::google::protobuf::MessageLite() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void AdminParameter::SharedCtor() {
+  _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&_default_name_);
+  string_value_ = const_cast< ::std::string*>(&_default_string_value_);
+  int_value_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+AdminParameter::~AdminParameter() {
+  SharedDtor();
+}
+
+void AdminParameter::SharedDtor() {
+  if (name_ != &_default_name_) {
+    delete name_;
+  }
+  if (string_value_ != &_default_string_value_) {
+    delete string_value_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void AdminParameter::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const AdminParameter& AdminParameter::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_admin_2eproto();  return *default_instance_;
+}
+
+AdminParameter* AdminParameter::default_instance_ = NULL;
+
+AdminParameter* AdminParameter::New() const {
+  return new AdminParameter;
+}
+
+void AdminParameter::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (_has_bit(0)) {
+      if (name_ != &_default_name_) {
+        name_->clear();
+      }
+    }
+    if (_has_bit(1)) {
+      if (string_value_ != &_default_string_value_) {
+        string_value_->clear();
+      }
+    }
+    int_value_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+bool AdminParameter::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string name = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_string_value;
+        break;
+      }
+      
+      // optional string string_value = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_string_value:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_string_value()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_int_value;
+        break;
+      }
+      
+      // optional int32 int_value = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_int_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &int_value_)));
+          _set_bit(2);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void AdminParameter::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required string name = 1;
+  if (_has_bit(0)) {
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->name(), output);
+  }
+  
+  // optional string string_value = 2;
+  if (_has_bit(1)) {
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->string_value(), output);
+  }
+  
+  // optional int32 int_value = 3;
+  if (_has_bit(2)) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->int_value(), output);
+  }
+  
+}
+
+int AdminParameter::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+    
+    // optional string string_value = 2;
+    if (has_string_value()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->string_value());
+    }
+    
+    // optional int32 int_value = 3;
+    if (has_int_value()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->int_value());
+    }
+    
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void AdminParameter::CheckTypeAndMergeFrom(
+    const ::google::protobuf::MessageLite& from) {
+  MergeFrom(*::google::protobuf::down_cast<const AdminParameter*>(&from));
+}
+
+void AdminParameter::MergeFrom(const AdminParameter& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from._has_bit(0)) {
+      set_name(from.name());
+    }
+    if (from._has_bit(1)) {
+      set_string_value(from.string_value());
+    }
+    if (from._has_bit(2)) {
+      set_int_value(from.int_value());
+    }
+  }
+}
+
+void AdminParameter::CopyFrom(const AdminParameter& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool AdminParameter::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  
+  return true;
+}
+
+void AdminParameter::Swap(AdminParameter* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(string_value_, other->string_value_);
+    std::swap(int_value_, other->int_value_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::std::string AdminParameter::GetTypeName() const {
+  return "syncro.pb.AdminParameter";
+}
+
+
+// ===================================================================
+
 const ::std::string GenericAdminCommand::_default_command_;
-const ::std::string GenericAdminCommand::_default_param_;
 #ifndef _MSC_VER
 const int GenericAdminCommand::kCommandFieldNumber;
-const int GenericAdminCommand::kParamFieldNumber;
+const int GenericAdminCommand::kParamsFieldNumber;
 #endif  // !_MSC_VER
 
 GenericAdminCommand::GenericAdminCommand()
@@ -62,7 +307,6 @@ GenericAdminCommand::GenericAdminCommand(const GenericAdminCommand& from)
 void GenericAdminCommand::SharedCtor() {
   _cached_size_ = 0;
   command_ = const_cast< ::std::string*>(&_default_command_);
-  param_ = const_cast< ::std::string*>(&_default_param_);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -73,9 +317,6 @@ GenericAdminCommand::~GenericAdminCommand() {
 void GenericAdminCommand::SharedDtor() {
   if (command_ != &_default_command_) {
     delete command_;
-  }
-  if (param_ != &_default_param_) {
-    delete param_;
   }
   if (this != default_instance_) {
   }
@@ -103,12 +344,8 @@ void GenericAdminCommand::Clear() {
         command_->clear();
       }
     }
-    if (_has_bit(1)) {
-      if (param_ != &_default_param_) {
-        param_->clear();
-      }
-    }
   }
+  params_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -127,20 +364,21 @@ bool GenericAdminCommand::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_param;
+        if (input->ExpectTag(26)) goto parse_params;
         break;
       }
       
-      // optional string param = 2;
-      case 2: {
+      // repeated .syncro.pb.AdminParameter params = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_param:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_param()));
+         parse_params:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_params()));
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(26)) goto parse_params;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -168,10 +406,10 @@ void GenericAdminCommand::SerializeWithCachedSizes(
       1, this->command(), output);
   }
   
-  // optional string param = 2;
-  if (_has_bit(1)) {
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->param(), output);
+  // repeated .syncro.pb.AdminParameter params = 3;
+  for (int i = 0; i < this->params_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessage(
+      3, this->params(i), output);
   }
   
 }
@@ -187,14 +425,15 @@ int GenericAdminCommand::ByteSize() const {
           this->command());
     }
     
-    // optional string param = 2;
-    if (has_param()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->param());
-    }
-    
   }
+  // repeated .syncro.pb.AdminParameter params = 3;
+  total_size += 1 * this->params_size();
+  for (int i = 0; i < this->params_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->params(i));
+  }
+  
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -208,12 +447,10 @@ void GenericAdminCommand::CheckTypeAndMergeFrom(
 
 void GenericAdminCommand::MergeFrom(const GenericAdminCommand& from) {
   GOOGLE_CHECK_NE(&from, this);
+  params_.MergeFrom(from.params_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from._has_bit(0)) {
       set_command(from.command());
-    }
-    if (from._has_bit(1)) {
-      set_param(from.param());
     }
   }
 }
@@ -226,13 +463,16 @@ void GenericAdminCommand::CopyFrom(const GenericAdminCommand& from) {
 
 bool GenericAdminCommand::IsInitialized() const {
   
+  for (int i = 0; i < params_size(); i++) {
+    if (!this->params(i).IsInitialized()) return false;
+  }
   return true;
 }
 
 void GenericAdminCommand::Swap(GenericAdminCommand* other) {
   if (other != this) {
     std::swap(command_, other->command_);
-    std::swap(param_, other->param_);
+    params_.Swap(&other->params_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     std::swap(_cached_size_, other->_cached_size_);
   }

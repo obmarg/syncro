@@ -3,9 +3,15 @@ package syncro.pb;
 option java_package = "uk.me.grambo.syncro.pb";
 option optimize_for = LITE_RUNTIME;
 
+message AdminParameter {
+	required string name = 1;
+	optional string string_value = 2;
+	optional int32 int_value = 3;
+};
+
 message GenericAdminCommand {
 	optional string command = 1;
-	optional string param = 2;
+	repeated AdminParameter params = 3;
 };
 
 message AdminAck {
