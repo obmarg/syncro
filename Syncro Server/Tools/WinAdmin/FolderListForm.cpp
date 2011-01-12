@@ -2,6 +2,7 @@
 #include "FolderListForm.h"
 #include "EditFolderDetails.h"
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/lexical_cast.hpp>
 #include <string>
 
 namespace WinAdmin
@@ -39,9 +40,14 @@ void FolderListForm::SetupList( syncro::client::Connection& conn )
 
 	lstFolders->BeginUpdate();
 	lstFolders->Items->Clear();
+	m_folderIds = gcnew cli::array<unsigned int>( folders.size() );
+
+	int i = 0;
 	BOOST_FOREACH( const syncro::FolderInfo& folder, folders )
 	{
 		lstFolders->Items->Add( gcnew String( folder.Name.c_str() ) );
+		m_folderIds[ i ] = folder.Id;
+		++i;
 	}
 	lstFolders->EndUpdate();
 }
@@ -71,9 +77,21 @@ void FolderListForm::StartEditFolder()
 {
 }
 
-void FolderListForm::DeleteFolder()
+void FolderListForm::DeleteFolder(unsigned int id)
 {
+	using namespace syncro::client;
 
+	Connection conn(
+		ConnectionDetails()
+			.SetHostname("localhost")
+			.SetUsername("grambo")
+			.SetPassword("password")
+		);
+	conn.SendAdminCommand( 
+		"DelFolder",
+		boost::lexical_cast< std::string >( id )
+		);
+	SetupList( conn );
 }
 
 }	// namespace WinAdmin

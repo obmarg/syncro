@@ -10,6 +10,7 @@ namespace WinAdmin {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Collections;
 
 	/// <summary>
 	/// Summary for Form1
@@ -39,11 +40,14 @@ namespace WinAdmin {
 		void SetupList( syncro::client::Connection& conn );
 		void StartAddFolder();
 		void StartEditFolder();
-		void DeleteFolder();
+		void DeleteFolder(unsigned int folderId);
+
+		cli::array<unsigned int>^ m_folderIds;
 
 	private: System::Windows::Forms::ListBox^  lstFolders;
+	private: System::Windows::Forms::Button^  btnQuit;
 	protected: 
-	private: System::Windows::Forms::Button^  btnOk;
+
 	private: System::Windows::Forms::Button^  btnAdd;
 	private: System::Windows::Forms::Button^  btnEdit;
 	private: System::Windows::Forms::Button^  btnDelete;
@@ -62,7 +66,7 @@ namespace WinAdmin {
 		void InitializeComponent(void)
 		{
 			this->lstFolders = (gcnew System::Windows::Forms::ListBox());
-			this->btnOk = (gcnew System::Windows::Forms::Button());
+			this->btnQuit = (gcnew System::Windows::Forms::Button());
 			this->btnAdd = (gcnew System::Windows::Forms::Button());
 			this->btnEdit = (gcnew System::Windows::Forms::Button());
 			this->btnDelete = (gcnew System::Windows::Forms::Button());
@@ -76,14 +80,15 @@ namespace WinAdmin {
 			this->lstFolders->Size = System::Drawing::Size(259, 212);
 			this->lstFolders->TabIndex = 0;
 			// 
-			// btnOk
+			// btnQuit
 			// 
-			this->btnOk->Location = System::Drawing::Point(106, 262);
-			this->btnOk->Name = L"btnOk";
-			this->btnOk->Size = System::Drawing::Size(75, 23);
-			this->btnOk->TabIndex = 1;
-			this->btnOk->Text = L"Ok";
-			this->btnOk->UseVisualStyleBackColor = true;
+			this->btnQuit->Location = System::Drawing::Point(106, 262);
+			this->btnQuit->Name = L"btnQuit";
+			this->btnQuit->Size = System::Drawing::Size(75, 23);
+			this->btnQuit->TabIndex = 1;
+			this->btnQuit->Text = L"Quit";
+			this->btnQuit->UseVisualStyleBackColor = true;
+			this->btnQuit->Click += gcnew System::EventHandler(this, &FolderListForm::btnQuit_Click);
 			// 
 			// btnAdd
 			// 
@@ -112,6 +117,7 @@ namespace WinAdmin {
 			this->btnDelete->TabIndex = 4;
 			this->btnDelete->Text = L"Delete";
 			this->btnDelete->UseVisualStyleBackColor = true;
+			this->btnDelete->Click += gcnew System::EventHandler(this, &FolderListForm::deleteFolderClick);
 			// 
 			// FolderListForm
 			// 
@@ -121,7 +127,7 @@ namespace WinAdmin {
 			this->Controls->Add(this->btnDelete);
 			this->Controls->Add(this->btnEdit);
 			this->Controls->Add(this->btnAdd);
-			this->Controls->Add(this->btnOk);
+			this->Controls->Add(this->btnQuit);
 			this->Controls->Add(this->lstFolders);
 			this->Name = L"FolderListForm";
 			this->Text = L"Form1";
@@ -132,6 +138,14 @@ namespace WinAdmin {
 	private: System::Void addFolderClick(System::Object^  sender, System::EventArgs^  e) {
 				 StartAddFolder();
 			 }
+private: System::Void deleteFolderClick(System::Object^  sender, System::EventArgs^  e) {
+			 DeleteFolder( m_folderIds[ lstFolders->SelectedIndex ] );
+		 }
+private: System::Void deleteFolderClicked(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void btnQuit_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->Close();
+		 }
 };
 }
 
