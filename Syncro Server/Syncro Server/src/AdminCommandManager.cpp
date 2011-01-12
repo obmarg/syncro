@@ -60,7 +60,9 @@ void CAdminCommandManager::AddFolder(const std::string& folderPath) {
 }
 
 void CAdminCommandManager::DelFolder(unsigned int Id) {
-
+	kode::db::AutoReset ar( m_delFolder );
+	m_delFolder->Bind( 1, Id );
+	m_delFolder->GetNextRow();
 }
 
 void CAdminCommandManager::AddLocalFile( const std::string& path) {
