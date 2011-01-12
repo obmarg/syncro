@@ -20,7 +20,7 @@ CAdminCommandManager::CAdminCommandManager() : m_aCommands( eAdminCommand_Total 
 void CAdminCommandManager::HandleCommand( const std::string& sName, const std::string& sParam, const CAuthToken& insAuth ) {
 	eAdminCommand command = FindCommand( sName );
 	if( ( !insAuth.IsInitialised() ) || m_aCommands[ command ].AuthLevel > insAuth.GetAccessLevel() )
-		throw new admin_command_exception( -1 );
+		throw admin_command_exception( -1 );
 	switch( command ) {
 	case eAdminCommand_AddFolder:
 		AddFolder( sParam );
@@ -32,7 +32,7 @@ void CAdminCommandManager::HandleCommand( const std::string& sName, const std::s
 		AddLocalFile( sParam );
 		break;
 	default:
-		throw new admin_command_exception( -2 );
+		throw admin_command_exception( -2 );
 	}
 }
 
@@ -43,7 +43,7 @@ eAdminCommand CAdminCommandManager::FindCommand( const std::string& name ) const
 			return static_cast<eAdminCommand>( nRV );
 		++nRV;
 	}
-	throw new admin_command_exception( -3 );
+	throw admin_command_exception( -3 );
 }
 
 void CAdminCommandManager::AddFolder(const std::string& folderPath) {
