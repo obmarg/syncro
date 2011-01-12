@@ -2,7 +2,7 @@
 
 namespace syncro {
 
-const int CSyncroDB::EXPECTED_DB_VERSION = 9;
+const int CSyncroDB::EXPECTED_DB_VERSION = 10;
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE = 
@@ -46,6 +46,11 @@ const std::string UPLOAD_HISTORY_CREATE =
 				"FolderID INTEGER NOT NULL, " +
 				"ActualFilename TEXT NOT NULL);";
 
+const std::string DEFAULT_USER_CREATE = 
+				"INSERT INTO " + USERS_TABLE_NAME + " (" +
+				"Username,Password,IP ) " +
+				" VALUES " +
+				"('admin','password','127.0.0.1');";
 
 //TODO: Move the database versioning stuff out into kode probably, then subclass that here.
 
@@ -75,6 +80,7 @@ bool CSyncroDB::CreateDatabase() {
 	run( USERS_TABLE_CREATE );
 	run( FILES_TABLE_CREATE );
 	run( UPLOAD_HISTORY_CREATE );
+	run( DEFAULT_USER_CREATE );
 	clearResult();
 	return true;
 }
@@ -103,6 +109,10 @@ bool CSyncroDB::UpgradeDatabase(int nCurrentVersion) {
 	if( nCurrentVersion < 9 )
 	{
 		run( UPLOAD_HISTORY_CREATE );
+	}
+	if( nCurrentVersion < 10 )
+	{
+		run( DEFAULT_USER_CREATE );
 	}
 	clearResult();
 	return true;
