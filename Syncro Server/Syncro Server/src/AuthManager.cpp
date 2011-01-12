@@ -38,4 +38,11 @@ const CAuthToken CAuthManager::Authenticate(const std::string& username, const s
 	throw authentication_exception("Invalid username or password" );
 }
 
+const CAuthToken CAuthManager::DefaultAuth()
+{
+	if( NeedsAuth() )
+		throw authentication_exception( "Authentication required but no details provided" );
+	return CAuthToken( "default", -1, CAuthToken::AccessLevel_Normal );
+}
+
 }

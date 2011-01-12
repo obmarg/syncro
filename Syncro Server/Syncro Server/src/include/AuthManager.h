@@ -17,6 +17,8 @@ public:
 	const CAuthToken Authenticate(const std::string& username, const std::string& password, const std::string& ip);
 	const std::string Salt() const { return m_salt; };
 
+	const CAuthToken DefaultAuth();
+
 private:
 	kode::db::DatabasePtr m_pDB;
 	kode::db::StatementPtr m_pCheckLoginStatement;
