@@ -14,6 +14,7 @@ message FolderInfo {
 	optional string folder_name = 2;
 	optional bool can_write = 3;
 	optional bool can_read = 4;
+	optional string folder_path = 5;
 };
 
 message FolderList {

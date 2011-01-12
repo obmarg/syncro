@@ -72,12 +72,13 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB(inpDB) {
 		m_folders.push_back( 
 			FolderInfo( 
 				boost::lexical_cast<int>( oRow["ID"] ) , 
+				oRow["Name"],
 				oPath.native_directory_string(),
 				oRow["UploadPrefix"]
 				) 
 			);
-		if( ( *m_folders.back().Name.rbegin() ) != '/'
-			&& ( *m_folders.back().Name.rbegin() ) != '\\' )
+		if( ( *m_folders.back().Path.rbegin() ) != '/'
+			&& ( *m_folders.back().Path.rbegin() ) != '\\' )
 		{
 			//TODO: Replace this with real path seperator for current platform
 			m_folders.back().Name += "/";

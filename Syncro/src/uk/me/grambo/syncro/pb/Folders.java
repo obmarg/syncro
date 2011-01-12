@@ -386,6 +386,13 @@ public final class Folders {
     public boolean hasCanRead() { return hasCanRead; }
     public boolean getCanRead() { return canRead_; }
     
+    // optional string folder_path = 5;
+    public static final int FOLDER_PATH_FIELD_NUMBER = 5;
+    private boolean hasFolderPath;
+    private java.lang.String folderPath_ = "";
+    public boolean hasFolderPath() { return hasFolderPath; }
+    public java.lang.String getFolderPath() { return folderPath_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -407,6 +414,9 @@ public final class Folders {
       }
       if (hasCanRead()) {
         output.writeBool(4, getCanRead());
+      }
+      if (hasFolderPath()) {
+        output.writeString(5, getFolderPath());
       }
     }
     
@@ -431,6 +441,10 @@ public final class Folders {
       if (hasCanRead()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(4, getCanRead());
+      }
+      if (hasFolderPath()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(5, getFolderPath());
       }
       memoizedSerializedSize = size;
       return size;
@@ -588,6 +602,9 @@ public final class Folders {
         if (other.hasCanRead()) {
           setCanRead(other.getCanRead());
         }
+        if (other.hasFolderPath()) {
+          setFolderPath(other.getFolderPath());
+        }
         return this;
       }
       
@@ -620,6 +637,10 @@ public final class Folders {
             }
             case 32: {
               setCanRead(input.readBool());
+              break;
+            }
+            case 42: {
+              setFolderPath(input.readString());
               break;
             }
           }
@@ -699,6 +720,27 @@ public final class Folders {
       public Builder clearCanRead() {
         result.hasCanRead = false;
         result.canRead_ = false;
+        return this;
+      }
+      
+      // optional string folder_path = 5;
+      public boolean hasFolderPath() {
+        return result.hasFolderPath();
+      }
+      public java.lang.String getFolderPath() {
+        return result.getFolderPath();
+      }
+      public Builder setFolderPath(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasFolderPath = true;
+        result.folderPath_ = value;
+        return this;
+      }
+      public Builder clearFolderPath() {
+        result.hasFolderPath = false;
+        result.folderPath_ = getDefaultInstance().getFolderPath();
         return this;
       }
       

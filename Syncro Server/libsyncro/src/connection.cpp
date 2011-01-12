@@ -348,6 +348,8 @@ void Connection::GetFolderList(FolderList& list) {
 			list[ folderNum ].Id = folder.folder_id();
 		if( folder.has_folder_name() )
 			list[ folderNum ].Name = folder.folder_name();
+		if( folder.has_folder_path() )
+			list[ folderNum ].Path = folder.folder_path();
 		//TODO: Fill these 2 in at some point...
 		if( folder.has_can_read() ) {};
 		if( folder.has_can_write() ) {};	

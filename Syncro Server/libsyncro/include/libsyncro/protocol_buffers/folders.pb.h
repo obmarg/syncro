@@ -209,6 +209,16 @@ class FolderInfo : public ::google::protobuf::MessageLite {
   inline bool can_read() const;
   inline void set_can_read(bool value);
   
+  // optional string folder_path = 5;
+  inline bool has_folder_path() const;
+  inline void clear_folder_path();
+  static const int kFolderPathFieldNumber = 5;
+  inline const ::std::string& folder_path() const;
+  inline void set_folder_path(const ::std::string& value);
+  inline void set_folder_path(const char* value);
+  inline void set_folder_path(const char* value, size_t size);
+  inline ::std::string* mutable_folder_path();
+  
   // @@protoc_insertion_point(class_scope:syncro.pb.FolderInfo)
  private:
   mutable int _cached_size_;
@@ -218,11 +228,13 @@ class FolderInfo : public ::google::protobuf::MessageLite {
   static const ::std::string _default_folder_name_;
   bool can_write_;
   bool can_read_;
+  ::std::string* folder_path_;
+  static const ::std::string _default_folder_path_;
   friend void  protobuf_AddDesc_folders_2eproto();
   friend void protobuf_AssignDesc_folders_2eproto();
   friend void protobuf_ShutdownFile_folders_2eproto();
   
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
   
   // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
   inline bool _has_bit(int index) const {
@@ -493,6 +505,48 @@ inline bool FolderInfo::can_read() const {
 inline void FolderInfo::set_can_read(bool value) {
   _set_bit(3);
   can_read_ = value;
+}
+
+// optional string folder_path = 5;
+inline bool FolderInfo::has_folder_path() const {
+  return _has_bit(4);
+}
+inline void FolderInfo::clear_folder_path() {
+  if (folder_path_ != &_default_folder_path_) {
+    folder_path_->clear();
+  }
+  _clear_bit(4);
+}
+inline const ::std::string& FolderInfo::folder_path() const {
+  return *folder_path_;
+}
+inline void FolderInfo::set_folder_path(const ::std::string& value) {
+  _set_bit(4);
+  if (folder_path_ == &_default_folder_path_) {
+    folder_path_ = new ::std::string;
+  }
+  folder_path_->assign(value);
+}
+inline void FolderInfo::set_folder_path(const char* value) {
+  _set_bit(4);
+  if (folder_path_ == &_default_folder_path_) {
+    folder_path_ = new ::std::string;
+  }
+  folder_path_->assign(value);
+}
+inline void FolderInfo::set_folder_path(const char* value, size_t size) {
+  _set_bit(4);
+  if (folder_path_ == &_default_folder_path_) {
+    folder_path_ = new ::std::string;
+  }
+  folder_path_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* FolderInfo::mutable_folder_path() {
+  _set_bit(4);
+  if (folder_path_ == &_default_folder_path_) {
+    folder_path_ = new ::std::string;
+  }
+  return folder_path_;
 }
 
 // -------------------------------------------------------------------

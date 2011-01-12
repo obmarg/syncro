@@ -72,6 +72,10 @@ void FolderListForm::StartAddFolder()
 			"path", 
 			string( addFolderDialog->GetPath() )
 			) );
+		params.insert( std::make_pair(
+			"name",
+			string( addFolderDialog->GetName() )
+			) );
 
 		conn.SendAdminCommand( "AddFolder", params );
 		SetupList( conn );

@@ -48,7 +48,9 @@ private:
 
 	eAdminCommand FindCommand( const std::string& sName ) const;
 
-	void AddFolder(const std::string& path);
+	std::string GetParam( const StringMap& params, const std::string& name ) const;
+
+	void AddFolder( const StringMap& params );
 	void DelFolder(unsigned int Id);
 	void AddLocalFile( const std::string& path);
 
