@@ -78,7 +78,7 @@ void CXMLBuilder::ProcessFolder( TiXmlElement& inoParentElement, boost::shared_p
 	TiXmlElement* pThisElement;
 	if( !infIsRoot ) {
 		pThisElement = new TiXmlElement( "Folder" );
-		pThisElement->SetAttribute( " name", inoFolder->GetName().c_str() );
+		pThisElement->SetAttribute( " name", inoFolder->GetPath().c_str() );
 		inoParentElement.LinkEndChild( pThisElement );
 	} else
 		pThisElement = &inoParentElement;

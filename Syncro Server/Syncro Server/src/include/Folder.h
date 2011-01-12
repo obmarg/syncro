@@ -24,10 +24,11 @@ public:
 
 	typedef std::vector< sFileData > TFileList;
 
-	CFolder( const std::string& insPath );
+	CFolder( const std::string& insPath, const std::string& name );
 	~CFolder();
 
 	std::string GetName() { return m_sFolderName; }
+	std::string GetPath() { return m_sPath; }
 	const TFileList& GetFiles() { return m_oFiles; };
 	std::vector< boost::shared_ptr<CFolder> >& GetChildren() { return m_oChildren; }
 

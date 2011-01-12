@@ -102,7 +102,10 @@ const FolderInfo& CFolderMan::FindFolder( int nFolderId ) {
 
 boost::shared_ptr<CFolder> 
 CFolderMan::GetFolder( int nFolderID ) {
-	boost::shared_ptr<CFolder> rv( new CFolder( FindFolder(nFolderID).Name ) );
+	const FolderInfo& info = FindFolder(nFolderID);
+	boost::shared_ptr<CFolder> rv( 
+		new CFolder( info.Path, info.Name ) 
+		);
 	//TODO: handle exception here or elsewhere?
 
 	if( !m_listOneShots )
@@ -136,7 +139,7 @@ CFolderMan::FileRequested(
 	) 
 {
 	std::string rv = 
-		FindFolder( requestData.GetFolderId() ).Name;
+		FindFolder( requestData.GetFolderId() ).Path;
 
 	char aLastChar = *( rv.rbegin() ) ;
 	if( (aLastChar != '\\') && (aLastChar != '/') )
@@ -199,7 +202,7 @@ CFolderMan::IncomingFile(
 	)
 {
 	const FolderInfo& folderInfo = FindFolder( fileData.GetFolderId() );
-	std::string destFileName = folderInfo.Name;
+	std::string destFileName = folderInfo.Path;
 	if( fileData.IsOneShot() )
 	{
 		//If one shot, then we need to upload to a temporary folder
