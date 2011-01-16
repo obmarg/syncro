@@ -65,14 +65,13 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	case packet_types::HandshakeRequest: {
 			CPBHandshakeRequest oRequest( inaInputStreams );
 			CBasePBResponse::TPointer pResponse = oRequest.GetResponse();
-			CAuthManager oAuthMan;
 			if( oRequest.HasAuthDetails() ) 
 			{
-				m_oAuthToken = oAuthMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword(), "" );
+				m_oAuthToken = m_authMan.Authenticate( oRequest.GetUsername(), oRequest.GetPassword(), "" );
 			}
 			else
 			{
-				m_oAuthToken = oAuthMan.DefaultAuth();
+				m_oAuthToken = m_authMan.DefaultAuth();
 			}
 			//if we've got this far and haven't thrown, we're authed
 			m_fAuthenticated = true;

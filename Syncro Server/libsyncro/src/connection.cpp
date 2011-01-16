@@ -6,7 +6,10 @@
 #include "protocol_buffers/folders.pb.h"
 #include "protocol_buffers/admin.pb.h"
 #include "protocol_buffers/binarydata.pb.h"
+#include <kode/base64.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <cryptopp/hmac.h>
+#include <cryptopp/sha.h>
 #include <boost/shared_array.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/filesystem.hpp>
@@ -132,6 +135,16 @@ private:
 	mutable std::ifstream& m_file;
 	unsigned int m_size;
 };
+
+void ConnectionDetails::HashPassword( const std::string& password )
+{
+	m_passwordHash.resize( CryptoPP::SHA::DIGESTSIZE );
+	CryptoPP::SHA().CalculateDigest(
+		&m_passwordHash[0],
+		reinterpret_cast< const unsigned char* >( password.c_str() ),
+		password.length()
+		);
+}
 
 Connection::Connection( const ConnectionDetails& details ) :
 	TCPConnection( details.m_host, details.m_port ),
@@ -299,19 +312,45 @@ Connection::RecvProtocolBuffer(  ) {
 	return rv;
 }
 
-void Connection::DoHandshake() {
-	//TODO: Perform a handshake with authentication
+void Connection::DoHandshake() 
+{	
 	pb::HandshakeRequest oRequest;
+
+	if( !m_serverDetails.m_passwordHash.empty() )
+	{
+		std::vector< unsigned char > salt( CryptoPP::SHA::DIGESTSIZE );
+		pb::SaltRequest saltRequest;
+		saltRequest.set_size( CryptoPP::SHA::DIGESTSIZE );
+		SendProtocolBuffer( comms::packet_types::SaltRequest, saltRequest );
+		TRecvPacketPtr saltResponsePacket = RecvProtocolBuffer(
+			comms::packet_types::SaltResponse, 1
+			);
+		pb::SaltResponse saltResponse;
+		saltResponse.ParseFromZeroCopyStream( saltResponsePacket->ReadSubpacket( 0 ).get() );
+		if( !saltResponse.has_salt() )
+			throw std::runtime_error( "Salt response does not contain a salt" );
+		kode::base64::Decode( saltResponse.salt(), salt );
+
+		std::vector< unsigned char > sendPassword( CryptoPP::SHA::DIGESTSIZE );
+
+		CryptoPP::HMAC< CryptoPP::SHA >( &salt[0], salt.size() )
+			.CalculateDigest(
+					&sendPassword[0],
+					&m_serverDetails.m_passwordHash[0],
+					m_serverDetails.m_passwordHash.size()
+					);
+		
+		oRequest.set_password( 
+			kode::base64::Encode( &sendPassword[0], sendPassword.size() )
+			);
+	}
+
 	oRequest.set_client_ver_major(0);
 	oRequest.set_client_ver_major(6);
 	oRequest.set_magic( comms::HANDSHAKE_REQUEST_MAGIC );
 	if( !m_serverDetails.m_username.empty() )
 	{
 		oRequest.set_username( m_serverDetails.m_username );
-	}
-	if( !m_serverDetails.m_password.empty() )
-	{
-		oRequest.set_password( m_serverDetails.m_password );
 	}
 	
 	SendProtocolBuffer( comms::packet_types::HandshakeRequest , oRequest );

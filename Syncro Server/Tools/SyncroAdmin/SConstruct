@@ -3,7 +3,7 @@ cpppath = [ "include", "../../kode/include/", "../../libsyncro/include/", "../..
 
 libpath = [ "../../kode/", "../../libsyncro/", "../../../Dependencies/bin/" ] 
 
-libs = [ 'syncro', 'kode', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_date_time', 'protobuf-lite', 'boost_program_options' ]
+libs = [ 'syncro', 'kode', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_date_time', 'protobuf-lite', 'boost_program_options', 'libcrypto++' ]
 
 #VariantDir( 'build', 'c', duplicate=0 )
 env = Environment( CPPPATH = cpppath, LIBPATH=libpath, LIBS=libs )

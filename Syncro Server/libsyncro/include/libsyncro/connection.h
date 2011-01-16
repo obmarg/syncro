@@ -25,6 +25,7 @@ class Connection;
 
 class ConnectionDetails {
 	friend class Connection;
+	typedef std::vector< uint8_t > HashType;
 public:
 	ConnectionDetails() : m_port( comms::SERVER_PORT ){};	//TODO: Set some defaults?
 	ConnectionDetails& SetHostname( const std::string& host ) {
@@ -39,15 +40,21 @@ public:
 		m_username = username;
 		return (*this);
 	}
+	ConnectionDetails& SetPasswordHash( const HashType& password ) {
+		m_passwordHash = password;
+		return (*this);
+	}
 	ConnectionDetails& SetPassword( const std::string& password ) {
-		m_password = password;
+		HashPassword( password );
 		return (*this);
 	}
 private:
 	std::string		m_host;
 	std::string		m_username;
-	std::string		m_password;
+	HashType		m_passwordHash;
+
 	unsigned int	m_port;
+	void HashPassword( const std::string& password );
 };
 
 class UploadFileDetails {

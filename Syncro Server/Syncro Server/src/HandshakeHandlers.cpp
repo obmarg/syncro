@@ -100,6 +100,7 @@ void CPBHandshakeResponse::WriteSubpacket(int inSubpacketIndex,google::protobuf:
 CSaltResponse::CSaltResponse(std::string salt)
 {
 	m_aSubpackets.resize( 1 );
+	m_aSubpackets[0].reset( new TCharBuffer::TBuff() );
 	pb::SaltResponse response;
 	response.set_salt( salt );
 	std::size_t size = response.ByteSize();

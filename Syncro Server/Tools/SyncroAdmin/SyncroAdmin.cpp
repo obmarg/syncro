@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 	{
 		Connection conn(
 			ConnectionDetails()
-				.SetUsername( "grambo" )
+				.SetUsername( "admin" )
 				.SetPassword( "password" )
 				.SetHostname( "localhost" )
 			);

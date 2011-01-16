@@ -1,3 +1,5 @@
+#
+#
 
 cpppath = [ "include", "../../kode/include/", "../../libsyncro/include/", "../../libsyncro/include/libsyncro/protocol_buffers", "../../../Dependencies/protobuf-2.3.0/include", "../../../Dependencies/sqlite/", "../../../Dependencies/tinyxml/" ] 
 
@@ -5,7 +7,15 @@ libpath = [ "../../kode/", "../../libsyncro/", "../../../Dependencies/bin/" ]
 
 libs = [ 'syncro', 'kode', 'tinyxml', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_regex', 'boost_date_time', 'protobuf-lite', 'crypto++' ]
 
-#VariantDir( 'build', 'c', duplicate=0 )
-env = Environment( CPPPATH = cpppath, LIBPATH=libpath, LIBS=libs )
+cppdefines = [ "_LINUX" ];
+
+env = Environment()
+
+debug = ARGUMENTS.get( 'debug', 0 )
+
+if int(debug):
+	cppdefines += [ '_DEBUG' ]
+
+env.Append( CPPPATH = cpppath, LIBPATH=libpath, LIBS=libs, CPPDEFINES=cppdefines )
 
 SConscript( 'src/SConscript', exports='env libs', variant_dir='build', duplicate=0 )

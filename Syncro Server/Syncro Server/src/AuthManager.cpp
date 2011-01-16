@@ -2,6 +2,7 @@
 #include "SyncroDB.h"
 #include <kode/base64.h>
 #include <cryptopp/hmac.h>
+#include <boost/foreach.hpp>
 #include <iostream>
 
 namespace syncro {
@@ -16,31 +17,7 @@ CAuthManager::CAuthManager() {
 		reinterpret_cast< const unsigned char* >( uuid.c_str() ), 
 		uuid.length() 
 		);
-#if 0
-	CryptoPP::Base64Encoder encoder;
-	encoder.PutMessageEnd( 
-		m_salt,
-	       	sizeof( m_salt ) 
-		);
-	if( !encoder.AnyRetrievable() )
-		throw std::runtime_error( "Base64 error in CAuthManager::CAuthManager()" );
 
-	unsigned int destSize = encoder.MaxRetrievable();
-	std::vector< char > saltVector( destSize );
-
-	unsigned int sizeRead = encoder.Get( 
-		reinterpret_cast< unsigned char* >( &saltVector[0] ),
-		destSize
-		);
-	if( sizeRead != destSize )
-	{
-		std::cout << "Warning: Salt vector read legnth is less than expected in " <<
-			"CAuthManager::CAuthManager()\n";
-		saltVector.resize( sizeRead );
-	}
-
-	m_saltString = std::string( saltVector.begin(), saltVector.end() );
-#endif
 	m_saltString = kode::base64::Encode( m_salt, sizeof( m_salt ) );
 	std::cout << "Salt: " << m_saltString << "\n";
 }
@@ -58,8 +35,11 @@ const CAuthToken CAuthManager::Authenticate(const std::string& username, const s
 	
 	m_pCheckLoginStatement->Bind( "@Username", username );
 	if( m_pCheckLoginStatement->GetNextRow() ) {
+
 		int nID = m_pCheckLoginStatement->GetColumn<int>( 0 );
-		std::string passwordHash = m_pCheckLoginStatement->GetColumn<std::string>( 1 );	
+		std::string encodedHash = m_pCheckLoginStatement->GetColumn<std::string>( 1 );
+		std::vector< unsigned char > passwordHash( CryptoPP::SHA::DIGESTSIZE );
+		kode::base64::Decode( encodedHash, passwordHash );
 
 		//
 		// Now we need to confirm the passwords match
@@ -68,12 +48,12 @@ const CAuthToken CAuthManager::Authenticate(const std::string& username, const s
 		CryptoPP::HMAC< CryptoPP::SHA >( m_salt, sizeof( m_salt ) )
 			.CalculateDigest( 
 				hashBuffer, 
-				reinterpret_cast< const unsigned char* >( passwordHash.c_str() ), 
-				passwordHash.length()
+				&passwordHash[0], 
+				passwordHash.size()
 				);
-		
-		
-		if( passwordHash != password )
+		std::string hmac = kode::base64::Encode( hashBuffer, sizeof( hashBuffer ) );
+
+		if( hmac != password )
 			throw authentication_exception("Invalid username or password");
 		return CAuthToken( username, nID, CAuthToken::AccessLevel_Admin );
 	}
