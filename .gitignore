@@ -28,3 +28,4 @@ temp.xml
 *.dblite
 bin/
 build/
+protocol_buffers/
