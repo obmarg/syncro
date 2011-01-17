@@ -14,6 +14,11 @@ void stringToLower(sqlite3_context* db,int argc,sqlite3_value** argv);
 
 Database::Database(std::string file)
 {
+#ifndef SQLITE_SINGLE_THREADED
+	if( !sqlite3_threadsafe() )
+		throw std::logic_error( "Sqlite not compiled threadsafe!" );
+#endif
+
 	int rc = sqlite3_open(file.c_str(),&db);
 	if( rc )
 	{
