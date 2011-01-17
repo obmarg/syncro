@@ -56,4 +56,12 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EditFolderDetails.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolderListForm.resX">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

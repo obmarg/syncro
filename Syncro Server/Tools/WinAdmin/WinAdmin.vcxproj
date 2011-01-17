@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
-    <LibraryPath>C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <IncludePath>..\..\..\Dependencies\;C:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+    <LibraryPath>..\..\..\Dependencies\cryptopp\Win32\Output\Debug;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
-    <LibraryPath>C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <IncludePath>..\..\..\Dependencies\;C:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+    <LibraryPath>..\..\..\Dependencies\cryptopp\Win32\Output\Release;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libprotobuf.lib</AdditionalDependencies>
+      <AdditionalDependencies>libprotobuf.lib;cryptlib.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
       <AdditionalLibraryDirectories>..\..\..\Dependencies\protobuf-2.3.0\lib\Debug</AdditionalLibraryDirectories>
@@ -75,7 +75,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libprotobuf.lib</AdditionalDependencies>
+      <AdditionalDependencies>libprotobuf.lib;cryptlib.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>main</EntryPointSymbol>
       <AdditionalLibraryDirectories>..\..\..\Dependencies\protobuf-2.3.0\lib\Release</AdditionalLibraryDirectories>
