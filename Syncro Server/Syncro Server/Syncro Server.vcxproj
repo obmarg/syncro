@@ -39,14 +39,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Dependencies\;C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Debug;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;</LibraryPath>
+    <IncludePath>..\..\Dependencies;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Debug;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -62,7 +62,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Debug;..\..\Dependencies\sqlite\Debug;..\..\Dependencies\protobuf-2.3.0\lib\Debug;..\Debug\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxmld.lib;kode.lib;libsyncro.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;cryptlib.lib;tinyxmld.lib;kode.lib;libsyncro.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -83,7 +83,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Users\Grambo\Documents\Code\tinyxml\Release\;..\..\Dependencies\sqlite\Release;..\..\Dependencies\protobuf-2.3.0\lib\Release;..\Release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;tinyxml.lib;kode.lib;libsyncro.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sqlite3.lib;libprotobuf.lib;cryptlib.lib;tinyxml.lib;kode.lib;libsyncro.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

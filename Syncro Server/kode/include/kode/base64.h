@@ -2,10 +2,12 @@
 #define _KODE_BASE64_H_
 
 #include <cryptopp/base64.h>
+#include <boost/numeric/conversion/cast.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <stdint.h>
 
 namespace kode {
 namespace base64 {
@@ -21,8 +23,9 @@ std::string Encode(const unsigned char* data,const unsigned int len)
 
 	if( !encoder.AnyRetrievable() )
 		throw std::runtime_error( "Base64 error in kode::base64::Encode" );
-
-	unsigned int destSize = encoder.MaxRetrievable();
+	uint32_t destSize = boost::numeric_cast< uint32_t >( 
+												encoder.MaxRetrievable()
+												);
 	std::vector< char > destVector( destSize );
 
 	unsigned int sizeRead = encoder.Get( 
@@ -31,7 +34,7 @@ std::string Encode(const unsigned char* data,const unsigned int len)
 		);
 	if( sizeRead != destSize )
 	{
-		std::cout << "Warning: Base64 read legnth is less than expected in " <<
+		std::cout << "Warning: Base64 read length is less than expected in " <<
 			"kode::base64::Encode()\n";
 		destVector.resize( sizeRead );
 	}
@@ -51,7 +54,9 @@ void Decode( const std::string& input, std::vector< unsigned char >& output )
 	if( !decoder.AnyRetrievable() )
 		throw std::runtime_error( "Base64 error in kode::base64::Decode" );
 
-	unsigned int destSize = decoder.MaxRetrievable();
+	uint32_t destSize =  boost::numeric_cast< uint32_t >( 
+													decoder.MaxRetrievable()
+													);
 	if( destSize == 0 )
 		throw std::runtime_error( "Base64 error in kode::base64::Decode" );
 	output.resize( destSize );
@@ -59,7 +64,7 @@ void Decode( const std::string& input, std::vector< unsigned char >& output )
 	unsigned int sizeRead = decoder.Get( &output[0], destSize );
 	if( sizeRead != destSize )
 	{
-		std::cout << "Warning: Base64 read legnth is less than expected in " <<
+		std::cout << "Warning: Base64 read length is less than expected in " <<
 			"kode::base64::Encode()\n";
 		output.resize( sizeRead );
 	}
