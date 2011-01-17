@@ -13,6 +13,16 @@ try:
 	os.mkdir( "../../Messages/gen" )
 except OSError:
 	pass 
+try:
+	os.mkdir( "src/protocol_buffers" )
+except OSError:
+	pass
+
+try:
+	os.mkdir( "include/libsyncro/protocol_buffers/" )
+except OSError:
+	pass
+
 subprocess.call(["./build.sh",""],shell=True,cwd="../../Messages")
 
 env.StaticLibrary( 'syncro', sources )
