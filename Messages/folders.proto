@@ -19,4 +19,5 @@ message FolderInfo {
 
 message FolderList {
 	repeated FolderInfo folders = 1;
+	optional bool empty = 2;
 };

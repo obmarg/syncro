@@ -10,10 +10,18 @@ namespace syncro {
 class FolderListResponse : public CBasePBResponse {
 public:
 	FolderListResponse(const FolderList& list) {
-		foreach( const FolderInfo& folder, list ) {
-			pb::FolderInfo* info = m_response.add_folders();
-			info->set_folder_id( folder.Id );
-			info->set_folder_name( folder.Name );
+		if( list.empty() )
+		{
+			m_response.set_empty( true );
+		}
+		else
+		{
+			foreach( const FolderInfo& folder, list ) 
+			{
+				pb::FolderInfo* info = m_response.add_folders();
+				info->set_folder_id( folder.Id );
+				info->set_folder_name( folder.Name );
+			}
 		}
 	}
 
