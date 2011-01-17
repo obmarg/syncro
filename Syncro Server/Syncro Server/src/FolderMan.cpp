@@ -244,7 +244,7 @@ CFolderMan::IncomingFile(
 		this,
 		finishDetails
 		);
-	int nFileSize = fileData.GetFileSize();
+	int64_t nFileSize = fileData.GetFileSize();
 	if( exists(destFile) && nFileSize != -1 ) 
 	{
 		if( file_size( destFile ) != nFileSize )

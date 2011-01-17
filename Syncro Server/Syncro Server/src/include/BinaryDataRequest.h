@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
+#include <stdint.h>
 
 
 namespace syncro {
@@ -33,13 +34,13 @@ public:
 	const std::string& GetFilename() const { return m_sFilename; };
 	const int GetFolderId() const { return m_nFolderId; };
 	const int GetBufferSize() const { return m_nBufferSize; };
-	const int GetFileSize() const { return m_nFileSize; };
+	const int64_t GetFileSize() const { return m_nFileSize; };
 	const bool IsOneShot() const { return m_oneShot; };
 private:
 	std::string m_sFilename;
 	int m_nFolderId;
 	int m_nBufferSize;
-	int m_nFileSize;
+	int64_t m_nFileSize;
 	bool m_oneShot;
 };
 

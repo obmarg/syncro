@@ -114,6 +114,10 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 	case packet_types::SaltRequest: {
 			return CSaltResponse::Create( m_authMan.Salt() );
 		}
+	case packet_types::FileHashRequest: {
+			//TODO: Check if the hash is fine, and return a hash
+			
+		}
 	};
 	
 	throw std::runtime_error("Invalid pb request passed to response factory");

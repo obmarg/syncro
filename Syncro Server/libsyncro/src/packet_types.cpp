@@ -38,6 +38,10 @@ std::string Str( ePBPacketTypes type ) {
 		return "Salt Request";
 	case SaltResponse:
 		return "Salt Response";
+	case FileHashRequest:
+		return "File Hash Request";
+	case FileHashResponse:
+		return "File Hash Response";
 	default:
 		return "Unknown (" + boost::lexical_cast<std::string>( type ) + ")";
 	}
