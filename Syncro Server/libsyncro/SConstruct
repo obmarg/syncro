@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 cpppath = [ "include", "include/libsyncro", "include/libsyncro/protocol_buffers", "../kode/include", "../../Dependencies/sqlite/", "../../Dependencies/protobuf-2.3.0/include",  ] 
 
@@ -8,6 +9,10 @@ env = Environment( CPPPATH = cpppath )
 
 sources = [ 'src/scanner.cpp', 'src/packet_types.cpp', 'src/connection.cpp', 'src/stringutils.cpp', 'src/protocol_buffers/binarydata.pb.cc', 'src/protocol_buffers/handshake.pb.cc', 'src/protocol_buffers/header.pb.cc', 'src/protocol_buffers/folders.pb.cc', 'src/protocol_buffers/admin.pb.cc' ]
 
+try:
+	os.mkdir( "../../Messages/gen" )
+except OSError:
+	pass 
 subprocess.call(["./build.sh",""],shell=True,cwd="../../Messages")
 
 env.StaticLibrary( 'syncro', sources )
