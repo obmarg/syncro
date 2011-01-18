@@ -1,6 +1,6 @@
 Import('env', 'libs')
 
-sources = [ "AdminCommandHandler.cpp", "AdminCommandManager.cpp", "AuthManager.cpp", "BinaryDataResponse.cpp", "BinaryIncomingData.cpp", "BroadcastListener.cpp", "BroadcastThread.cpp", "FileSendData.cpp", "Folder.cpp", "FolderListHandlers.cpp", "FolderMan.cpp", "HandshakeHandlers.cpp", "main.cpp", "PBRequestHandler.cpp", "PBResponseSendHandler.cpp", "ServerComms.cpp", "SyncroDB.cpp", "SyncroPBResponseFactory.cpp", "SyncroServer.cpp", "XMLBuilder.cpp", "XMLHandlers.cpp" ]
+sources = [ "AdminCommandHandler.cpp", "AdminCommandManager.cpp", "AuthManager.cpp", "BinaryDataResponse.cpp", "BinaryIncomingData.cpp", "BroadcastListener.cpp", "BroadcastThread.cpp", "FileSendData.cpp", "Folder.cpp", "FolderListHandlers.cpp", "FolderMan.cpp", "HandshakeHandlers.cpp", "main.cpp", "PBRequestHandler.cpp", "PBResponseSendHandler.cpp", "ServerComms.cpp", "SyncroDB.cpp", "SyncroPBResponseFactory.cpp", "SyncroServer.cpp", "XMLBuilder.cpp", "XMLHandlers.cpp" "FileHashHandlers.cpp" ]
 
 output = env.Program( target = 'syncro', source = sources )
 
