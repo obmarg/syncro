@@ -12,7 +12,7 @@
 namespace kode {
 namespace base64 {
 
-std::string Encode(const unsigned char* data,const unsigned int len)
+inline std::string Encode(const unsigned char* data,const unsigned int len)
 {
 	CryptoPP::Base64Encoder encoder;
 	
@@ -42,7 +42,7 @@ std::string Encode(const unsigned char* data,const unsigned int len)
 	return std::string( destVector.begin(), destVector.end() );
 }
 
-void Decode( const std::string& input, std::vector< unsigned char >& output )
+inline void Decode( const std::string& input, std::vector< unsigned char >& output )
 {
 	CryptoPP::Base64Decoder decoder;
 

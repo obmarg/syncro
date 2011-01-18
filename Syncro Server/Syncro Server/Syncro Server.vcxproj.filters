@@ -16,6 +16,12 @@
     <Filter Include="Message Files">
       <UniqueIdentifier>{16774950-0089-4583-a193-aa6075182812}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\PB Handlers">
+      <UniqueIdentifier>{f807332e-605e-47ba-a260-313fa7c56b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build Files">
+      <UniqueIdentifier>{5b483e9c-0595-4870-a4a6-98f3b27732b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Messages\binarydata.proto">
@@ -35,6 +41,12 @@
     </None>
     <None Include="..\..\Messages\folders.proto">
       <Filter>Message Files</Filter>
+    </None>
+    <None Include="SConstruct">
+      <Filter>Build Files</Filter>
+    </None>
+    <None Include="src\SConscript">
+      <Filter>Build Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +125,12 @@
     <ClInclude Include="src\include\XMLHandlers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\FileHashHandlers.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\SimplePBResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AdminCommandHandler.cpp">
@@ -176,6 +194,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\XMLHandlers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileHashHandlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

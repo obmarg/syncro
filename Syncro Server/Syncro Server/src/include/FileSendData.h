@@ -16,7 +16,8 @@ public:
 	CFileSendData( 
 		const std::string& insFilename, 
 		int innRequestedBufferSize=0,
-		const VoidCallback& completionCallback=VoidCallback()
+		const VoidCallback& completionCallback=VoidCallback(),
+		int64_t fileStartOffset=0
 		);
 
 	~CFileSendData();
@@ -32,14 +33,14 @@ public:
 
 private:
 
-	void OpenFile();
+	void OpenFile(int64_t fileStartOffset);
 	
 	void CallCompletionCallback();
 
 	std::ifstream m_oFile;
 	const std::string m_sFilename;
 
-	unsigned int	m_nFileSize;
+	int64_t	m_nFileSize;
 
 	unsigned int m_nRequestedBufferSize;
 

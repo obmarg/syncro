@@ -94,6 +94,8 @@
     <None Include="..\..\Messages\folders.proto" />
     <None Include="..\..\Messages\handshake.proto" />
     <None Include="..\..\Messages\header.proto" />
+    <None Include="SConstruct" />
+    <None Include="src\SConscript" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\AdminCommandHandler.h" />
@@ -107,6 +109,7 @@
     <ClInclude Include="src\include\BroadcastListener.h" />
     <ClInclude Include="src\include\BroadcastThread.h" />
     <ClInclude Include="src\include\common.h" />
+    <ClInclude Include="src\include\FileHashHandlers.h" />
     <ClInclude Include="src\include\FileSendData.h" />
     <ClInclude Include="src\include\Folder.h" />
     <ClInclude Include="src\include\FolderListHandlers.h" />
@@ -115,6 +118,7 @@
     <ClInclude Include="src\include\PBRequestHandler.h" />
     <ClInclude Include="src\include\PBResponseSendHandler.h" />
     <ClInclude Include="src\include\ServerComms.h" />
+    <ClInclude Include="src\include\SimplePBResponse.h" />
     <ClInclude Include="src\include\SyncroDB.h" />
     <ClInclude Include="src\include\SyncroPBResponseFactory.h" />
     <ClInclude Include="src\include\SyncroServer.h" />
@@ -130,6 +134,7 @@
     <ClCompile Include="src\BinaryIncomingData.cpp" />
     <ClCompile Include="src\BroadcastListener.cpp" />
     <ClCompile Include="src\BroadcastThread.cpp" />
+    <ClCompile Include="src\FileHashHandlers.cpp" />
     <ClCompile Include="src\FileSendData.cpp" />
     <ClCompile Include="src\Folder.cpp" />
     <ClCompile Include="src\FolderListHandlers.cpp" />

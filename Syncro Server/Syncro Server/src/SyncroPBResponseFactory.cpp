@@ -9,6 +9,7 @@
 #include "AdminCommandManager.h"
 #include "AdminCommandHandler.h"
 #include "FolderListHandlers.h"
+#include "FileHashHandlers.h"
 #include <libsyncro/packet_types.h>
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -55,7 +56,8 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 				new CFileSendData( 
 					details.Filename(),
 					oRequest.GetBufferSize(),
-					details.CompletionCallback()
+					details.CompletionCallback(),
+					oRequest.GetStartOffset()
 					)
 				);
 		}
@@ -115,8 +117,8 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse(const unsigne
 			return CSaltResponse::Create( m_authMan.Salt() );
 		}
 	case packet_types::FileHashRequest: {
-			//TODO: Check if the hash is fine, and return a hash
-			
+			pbHandlers::FileHashRequest request( inaInputStreams, (*m_pFolderMan) );
+			return request.GetResponse();
 		}
 	};
 	

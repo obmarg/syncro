@@ -10,6 +10,17 @@ namespace syncro {
 
 class CBinaryDataRequest {
 public:
+	CBinaryDataRequest( int folderId, const std::string& filename ) :
+	m_sFilename( filename ),
+	m_nFolderId( folderId ),
+	m_nBufferSize( 0 ),
+	m_nFileSize( -1 ),
+	m_oneShot( false ),
+	m_startOffset( 0 )
+	{
+
+	}
+
 	CBinaryDataRequest(TInputStreamList& inaInputStreams) {
 		pb::BinaryDataRequest oRequest;
 		if( inaInputStreams.size() == 1 ) {
@@ -27,6 +38,9 @@ public:
 			m_oneShot = false;
 			if( oRequest.has_one_shot() )
 				m_oneShot = oRequest.one_shot();
+			m_startOffset = 0;
+			if( oRequest.has_start_offset() )
+				m_startOffset = oRequest.start_offset();
 			//TODO: Add upload direction at some point?
 		} 
 	}
@@ -36,12 +50,14 @@ public:
 	const int GetBufferSize() const { return m_nBufferSize; };
 	const int64_t GetFileSize() const { return m_nFileSize; };
 	const bool IsOneShot() const { return m_oneShot; };
+	const int64_t GetStartOffset() const { return m_startOffset; }
 private:
 	std::string m_sFilename;
 	int m_nFolderId;
 	int m_nBufferSize;
 	int64_t m_nFileSize;
 	bool m_oneShot;
+	int64_t m_startOffset;
 };
 
 };	//namespace syncro

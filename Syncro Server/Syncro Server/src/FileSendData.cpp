@@ -14,7 +14,8 @@ const unsigned char FILE_LAST_SECTION_FIRST_BYTE = 20;
 CFileSendData::CFileSendData(
 	const std::string& insFilename,
 	const int innRequestedBufferSize,
-	const VoidCallback& completionCallback
+	const VoidCallback& completionCallback,
+	int64_t fileStartOffset
 	) 
 	: 
 m_sFilename( insFilename ),
@@ -22,20 +23,20 @@ m_completionCallback( completionCallback ),
 m_finishedAfterChunk( false )
 {
 	m_nRequestedBufferSize = innRequestedBufferSize;
-	OpenFile();
+	OpenFile( fileStartOffset );
 }
 
 CFileSendData::~CFileSendData() {
 
 }
 
-void CFileSendData::OpenFile() {
+void CFileSendData::OpenFile(int64_t fileStartOffset) {
 	using namespace std;
 	m_oFile.open( m_sFilename.c_str() ,ios::in | ios::binary);
 	if( m_oFile.is_open() ) {
 		m_oFile.seekg( 0, ios::end );
 		m_nFileSize = (unsigned int)m_oFile.tellg();
-		m_oFile.seekg( 0, ios::beg );
+		m_oFile.seekg( fileStartOffset, ios::beg );
 	} else
 		throw std::runtime_error( "CFileSendData called on non existant file" );
 }
@@ -66,7 +67,7 @@ unsigned int CFileSendData::GetChunkSize() {
 		nBufferSize = std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
 	}
 	//TODO: maybe stop doing the above -1024, and find a better way of doing it
-	int64_t nSizeLeft = m_nFileSize - (int)m_oFile.tellg();
+	int64_t nSizeLeft = m_nFileSize - m_oFile.tellg();
 	int64_t rv = std::min( 
 		boost::numeric_cast<int64_t>(nBufferSize), 
 		nSizeLeft 
@@ -82,7 +83,7 @@ bool CFileSendData::IsStartFile() {
 
 bool CFileSendData::IsFileFinished() {
 
-	if( m_oFile.tellg() == (std::streamoff)m_nFileSize || m_oFile.eof() )
+	if( m_oFile.tellg() == m_nFileSize || m_oFile.eof() )
 	{
 		CallCompletionCallback();
 
@@ -97,7 +98,7 @@ std::istream::pos_type CFileSendData::GetFilePosition() {
 
 bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize ) {
 	std::streamoff nNextTell = m_oFile.tellg() + (std::streamoff)inNextChunkSize;
-	if( nNextTell == (std::streamoff)m_nFileSize ) {
+	if( nNextTell == m_nFileSize ) {
 		m_finishedAfterChunk = true;
 		return true;
 	}

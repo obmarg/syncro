@@ -30,3 +30,4 @@ bin/
 build/
 protocol_buffers/
 pb/
+cryptopp/
