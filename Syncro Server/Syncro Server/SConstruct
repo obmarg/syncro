@@ -8,14 +8,25 @@ libpath = [ "../../kode/", "../../libsyncro/", "../../../Dependencies/bin/" ]
 libs = [ 'syncro', 'kode', 'tinyxml', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_regex', 'boost_date_time', 'protobuf-lite', 'crypto++' ]
 
 cppdefines = [ "_LINUX" ];
+ccflags = [];
 
 env = Environment()
 
 debug = ARGUMENTS.get( 'debug', 0 )
 
+builddir='build_release'
+
 if int(debug):
 	cppdefines += [ '_DEBUG' ]
+	ccflags += [ '-g' ]
+	builddir='build_debug'
 
-env.Append( CPPPATH = cpppath, LIBPATH=libpath, LIBS=libs, CPPDEFINES=cppdefines )
+env.Append( 
+	CPPPATH = cpppath, 
+	LIBPATH=libpath, 
+	LIBS=libs,
+	CPPDEFINES=cppdefines,
+	CCFLAGS=ccflags
+	)
 
-SConscript( 'src/SConscript', exports='env libs', variant_dir='build', duplicate=0 )
+SConscript( 'src/SConscript', exports='env libs', variant_dir=builddir, duplicate=0 )

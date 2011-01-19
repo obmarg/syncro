@@ -28,6 +28,8 @@ temp.xml
 *.dblite
 bin/
 build/
+build_debug/
+build_release/
 protocol_buffers/
 pb/
 cryptopp/
