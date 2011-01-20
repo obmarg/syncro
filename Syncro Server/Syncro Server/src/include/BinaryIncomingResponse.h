@@ -10,42 +10,53 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-namespace syncro {
+namespace syncro
+{
 
-class CBinaryIncomingResponse : public CBasePBResponse {
+class CBinaryIncomingResponse : public CBasePBResponse
+{
 public:
 
-	enum eResponseType{
+	enum eResponseType
+	{
 		eResponseType_Response,
 		eResponseType_Ack
 	};
 
-	static CBasePBResponse::TPointer Create(eResponseType eType, bool infValue) {
+	static CBasePBResponse::TPointer Create( eResponseType eType, bool infValue )
+	{
 		CBasePBResponse::TPointer oPointer( new CBinaryIncomingResponse( eType, infValue ) );
 		return oPointer;
 	}
 
 	virtual ~CBinaryIncomingResponse() {};
 
-	virtual std::vector<unsigned int> GetSubpacketSizes() {
-		std::vector<unsigned int> oRV(1);
+	virtual std::vector<unsigned int> GetSubpacketSizes()
+	{
+		std::vector<unsigned int> oRV( 1 );
 		oRV[0] = m_pMessage->ByteSize();
 		return oRV;
 	}
-	virtual unsigned int GetSubpacketCount() {
+	virtual unsigned int GetSubpacketCount()
+	{
 		return 1;
 	}
 
-	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
+	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
+	{
 		if( inSubpacketIndex != 0 )
 			throw std::logic_error( "BinaryIncomingResponse::WriteSubpacket called with imaginary subpacket index" );
 		m_pMessage->SerializeToZeroCopyStream( &stream );
 	}
 
-	virtual unsigned int GetPacketType() {
-		if( m_eType == eResponseType_Response ) {
+	virtual unsigned int GetPacketType()
+	{
+		if( m_eType == eResponseType_Response )
+		{
 			return comms::packet_types::BinaryIncomingResponse;
-		} else {
+		}
+		else
+		{
 			return comms::packet_types::BinaryIncomingDataAck;
 		}
 	};
@@ -56,23 +67,26 @@ public:
 	}
 protected:
 
-	CBinaryIncomingResponse(eResponseType eType, bool infValue) :
-		m_recvBufferSize(0)
+	CBinaryIncomingResponse( eResponseType eType, bool infValue ) :
+		m_recvBufferSize( 0 )
 	{
 		m_eType = eType;
-		switch( eType ) {
-		case eResponseType_Response: {
+		switch( eType )
+		{
+		case eResponseType_Response:
+		{
 			m_pMessage.reset( new pb::BinaryIncomingResponse() );
 			pb::BinaryIncomingResponse* pResponse = dynamic_cast<pb::BinaryIncomingResponse*>( m_pMessage.get() );
-			pResponse->set_accepted(infValue);
+			pResponse->set_accepted( infValue );
 			m_recvBufferSize = 1024 * 51;
 			pResponse->set_max_packet_size( m_recvBufferSize );
 			break;
 		}
-		case eResponseType_Ack: {
+		case eResponseType_Ack:
+		{
 			m_pMessage.reset( new pb::BinaryIncomingAck );
 			pb::BinaryIncomingAck* pResponse = dynamic_cast<pb::BinaryIncomingAck*>( m_pMessage.get() );
-			pResponse->set_ok(infValue);
+			pResponse->set_ok( infValue );
 			break;
 		}
 		default:

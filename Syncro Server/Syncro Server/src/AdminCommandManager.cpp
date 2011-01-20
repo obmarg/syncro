@@ -5,18 +5,19 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
-namespace syncro {
+namespace syncro
+{
 
 class MissingParamException : public std::runtime_error
 {
 public:
 	MissingParamException( const std::string& what )
-		:runtime_error( what.c_str() )
+		: runtime_error( what.c_str() )
 	{
 
 	}
 	MissingParamException( const char* what )
-		:runtime_error( what )
+		: runtime_error( what )
 	{
 
 	}
@@ -33,25 +34,28 @@ CAdminCommandManager::CAdminCommandManager() : m_aCommands( eAdminCommand_Total 
 	//TODO: Set up m_addLocalFile;
 }
 
-void CAdminCommandManager::HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth ) {
+void CAdminCommandManager::HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth )
+{
 	eAdminCommand command = FindCommand( sName );
-	if( ( !insAuth.IsInitialised() ) || m_aCommands[ command ].AuthLevel > insAuth.GetAccessLevel() )
+	if(( !insAuth.IsInitialised() ) || m_aCommands[ command ].AuthLevel > insAuth.GetAccessLevel() )
 		throw admin_command_exception( -1 );
-	
-	try {
-		switch( command ) {
+
+	try
+	{
+		switch( command )
+		{
 		case eAdminCommand_AddFolder:
 			AddFolder( params );
 			break;
 		case eAdminCommand_DelFolder:
-			DelFolder( 
-				boost::lexical_cast<unsigned int>( 
-					 GetParam( params, "id" ) 
-					 ) 
-				);
+			DelFolder(
+			    boost::lexical_cast<unsigned int>(
+			        GetParam( params, "id" )
+			    )
+			);
 			break;
 		case eAdminCommand_AddLocalFile:
-			AddLocalFile( GetParam( params, "filename") );
+			AddLocalFile( GetParam( params, "filename" ) );
 			break;
 		default:
 			throw admin_command_exception( -2 );
@@ -65,9 +69,11 @@ void CAdminCommandManager::HandleCommand( const std::string& sName, const String
 	}
 }
 
-eAdminCommand CAdminCommandManager::FindCommand( const std::string& name ) const {
+eAdminCommand CAdminCommandManager::FindCommand( const std::string& name ) const
+{
 	int nRV = eAdminCommand_AddFolder;
-	BOOST_FOREACH( const sAdminCommand& command, m_aCommands ) {
+	BOOST_FOREACH( const sAdminCommand & command, m_aCommands )
+	{
 		if( command.Name.compare( name ) == 0 )
 			return static_cast<eAdminCommand>( nRV );
 		++nRV;
@@ -75,44 +81,49 @@ eAdminCommand CAdminCommandManager::FindCommand( const std::string& name ) const
 	throw admin_command_exception( -3 );
 }
 
-std::string CAdminCommandManager::GetParam( 
-	const StringMap& params, 
-	const std::string& name 
-	) const
+std::string CAdminCommandManager::GetParam(
+    const StringMap& params,
+    const std::string& name
+) const
 {
-	StringMap::const_iterator it = 
-		params.find( name );
+	StringMap::const_iterator it =
+	    params.find( name );
 	if( it == params.end() )
-		throw MissingParamException(name);
+		throw MissingParamException( name );
 	return it->second;
 };
 
 void CAdminCommandManager::AddFolder(
-	const StringMap& params
-	) 
+    const StringMap& params
+)
 {
 	std::string folderPath( GetParam( params, "path" ) );
 
 	boost::filesystem::path folder( folderPath );
-	if( boost::filesystem::exists( folder ) ) {
+	if( boost::filesystem::exists( folder ) )
+	{
 		kode::db::AutoReset ar( m_addFolder );
-		m_addFolder->Bind( 1, GetParam( params, "name") );
+		m_addFolder->Bind( 1, GetParam( params, "name" ) );
 		m_addFolder->Bind( 2, folderPath );
 		m_addFolder->GetNextRow();
-	} else {
+	}
+	else
+	{
 		//TODO: Add symbolic constants for these exceptions...
 		throw admin_command_exception( -4 );
 	}
 }
 
-void CAdminCommandManager::DelFolder(unsigned int Id) {
+void CAdminCommandManager::DelFolder( unsigned int Id )
+{
 	kode::db::AutoReset ar( m_delFolder );
 	m_delFolder->Bind( 1, Id );
 	m_delFolder->GetNextRow();
 }
 
-void CAdminCommandManager::AddLocalFile( const std::string& path) {
-	
+void CAdminCommandManager::AddLocalFile( const std::string& path )
+{
+
 }
 
 };		// namespace syncro

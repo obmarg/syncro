@@ -3,39 +3,41 @@
 #include <boost/thread.hpp>
 
 void UploadThread::Create(
-	const syncro::client::ConnectionDetails& connDetails,
-	const syncro::client::UploadFileDetails& uploadDetails
-	)
+    const syncro::client::ConnectionDetails& connDetails,
+    const syncro::client::UploadFileDetails& uploadDetails
+)
 {
 	boost::thread thread(
-		boost::bind(
-			&UploadThread::ThreadFunc,
-			connDetails,
-			uploadDetails
-			)
-		);
+	    boost::bind(
+	        &UploadThread::ThreadFunc,
+	        connDetails,
+	        uploadDetails
+	    )
+	);
 }
 
 void UploadThread::ThreadFunc(
-	const syncro::client::ConnectionDetails& connDetails,
-	const syncro::client::UploadFileDetails& uploadDetails
-	)
+    const syncro::client::ConnectionDetails& connDetails,
+    const syncro::client::UploadFileDetails& uploadDetails
+)
 {
-	try {
-		UploadThread object(connDetails,uploadDetails);
+	try
+	{
+		UploadThread object( connDetails, uploadDetails );
 		object.Run();
-	}catch( const std::exception& )
+	}
+	catch( const std::exception& )
 	{
 		//TODO: Handle exceptions
 	}
 }
 
 UploadThread::UploadThread(
-		const syncro::client::ConnectionDetails& connDetails,
-		const syncro::client::UploadFileDetails& uploadDetails
-		) :
-m_conn( connDetails ),
-m_uploadDetails( uploadDetails )
+    const syncro::client::ConnectionDetails& connDetails,
+    const syncro::client::UploadFileDetails& uploadDetails
+) :
+	m_conn( connDetails ),
+	m_uploadDetails( uploadDetails )
 {
 
 }

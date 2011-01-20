@@ -11,7 +11,8 @@
 #include <vector>
 
 
-namespace syncro {
+namespace syncro
+{
 
 class CBinaryDataRequest;
 class FileTransferDetails;
@@ -19,20 +20,24 @@ class UploadFinishDetails;
 class DownloadFinishDetails;
 class CFolder;
 
-class CFolderMan {
+class CFolderMan
+{
 public:
 
 	CFolderMan( kode::db::Database::TPointer inpDB );
 	~CFolderMan();
 
-	const FolderList& GetFoldersInfo() const { return m_folders; };
+	const FolderList& GetFoldersInfo() const
+	{
+		return m_folders;
+	};
 
 	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
 
 	bool FileRequested( const CBinaryDataRequest& fileData, FileTransferDetails& details );
 
 	bool IncomingFile( const CBinaryDataRequest& fileData, FileTransferDetails& details );
-	
+
 private:
 	FolderList m_folders;
 	kode::db::Database::TPointer m_pDB;
@@ -55,12 +60,18 @@ private:
 	void FileDownloadFinished( DownloadFinishDetailsPtr details );
 };
 
-class FileTransferDetails {
+class FileTransferDetails
+{
 	friend class CFolderMan;
 public:
-	std::string Filename() { return m_filename; }
+	std::string Filename()
+	{
+		return m_filename;
+	}
 	VoidCallback CompletionCallback()
-	{ return m_callback; }
+	{
+		return m_callback;
+	}
 
 private:
 	std::string m_filename;

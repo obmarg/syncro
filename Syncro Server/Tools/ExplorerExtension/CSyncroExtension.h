@@ -35,29 +35,29 @@ public:
 	{
 	}
 
-	STDMETHODIMP Initialize(LPCITEMIDLIST, LPDATAOBJECT, HKEY);
-	STDMETHODIMP GetCommandString(UINT, UINT, UINT*, LPSTR, UINT);
-	STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO);
-	STDMETHODIMP QueryContextMenu(HMENU, UINT, UINT, UINT, UINT);
+	STDMETHODIMP Initialize( LPCITEMIDLIST, LPDATAOBJECT, HKEY );
+	STDMETHODIMP GetCommandString( UINT, UINT, UINT*, LPSTR, UINT );
+	STDMETHODIMP InvokeCommand( LPCMINVOKECOMMANDINFO );
+	STDMETHODIMP QueryContextMenu( HMENU, UINT, UINT, UINT, UINT );
 
-DECLARE_REGISTRY_RESOURCEID(IDR_CSYNCROEXTENSION)
+	DECLARE_REGISTRY_RESOURCEID( IDR_CSYNCROEXTENSION )
 
-DECLARE_NOT_AGGREGATABLE(CCSyncroExtension)
+	DECLARE_NOT_AGGREGATABLE( CCSyncroExtension )
 
-BEGIN_COM_MAP(CCSyncroExtension)
-	COM_INTERFACE_ENTRY(IShellExtInit)
-	COM_INTERFACE_ENTRY(IContextMenu)
-END_COM_MAP()
+	BEGIN_COM_MAP( CCSyncroExtension )
+	COM_INTERFACE_ENTRY( IShellExtInit )
+	COM_INTERFACE_ENTRY( IContextMenu )
+	END_COM_MAP()
 
 private:
 	struct MenuItemInfo
 	{
 		MenuItemInfo(
-			const std::wstring& inHelpText,
-			const VoidCallback& inCallback
-			) :
-		HelpText( inHelpText ),
-		Callback( inCallback )
+		    const std::wstring& inHelpText,
+		    const VoidCallback& inCallback
+		) :
+			HelpText( inHelpText ),
+			Callback( inCallback )
 		{
 
 		}
@@ -78,4 +78,4 @@ private:
 public:
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(CSyncroExtension), CCSyncroExtension)
+OBJECT_ENTRY_AUTO( __uuidof( CSyncroExtension ), CCSyncroExtension )

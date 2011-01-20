@@ -5,17 +5,20 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-namespace syncro {
+namespace syncro
+{
 
-class CFolder {
+class CFolder
+{
 public:
-	struct sFileData {
+	struct sFileData
+	{
 		sFileData(
-			const std::string& insName,
-			const unsigned int innSize
-			) :
-		name( insName ),
-		size( innSize )
+		    const std::string& insName,
+		    const unsigned int innSize
+		) :
+			name( insName ),
+			size( innSize )
 		{ };
 
 		std::string name;
@@ -27,10 +30,22 @@ public:
 	CFolder( const std::string& insPath, const std::string& name );
 	~CFolder();
 
-	std::string GetName() { return m_sFolderName; }
-	std::string GetPath() { return m_sPath; }
-	const TFileList& GetFiles() { return m_oFiles; };
-	std::vector< boost::shared_ptr<CFolder> >& GetChildren() { return m_oChildren; }
+	std::string GetName()
+	{
+		return m_sFolderName;
+	}
+	std::string GetPath()
+	{
+		return m_sPath;
+	}
+	const TFileList& GetFiles()
+	{
+		return m_oFiles;
+	};
+	std::vector< boost::shared_ptr<CFolder> >& GetChildren()
+	{
+		return m_oChildren;
+	}
 
 	void AddFile( const std::string& name, unsigned int size );
 

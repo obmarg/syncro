@@ -7,46 +7,57 @@
 #include <boost/noncopyable.hpp>
 #include <boost/asio.hpp>
 
-namespace google {
-	namespace protobuf{
-		class MessageLite;
-		namespace io {
-			class ZeroCopyInputStream;
-			class ZeroCopyOutputStream;
-		}
-	}
+namespace google
+{
+namespace protobuf
+{
+class MessageLite;
+namespace io
+{
+class ZeroCopyInputStream;
+class ZeroCopyOutputStream;
+}
+}
 }
 
 
-namespace syncro {
-namespace client {
+namespace syncro
+{
+namespace client
+{
 
 class Connection;
 
-class ConnectionDetails {
+class ConnectionDetails
+{
 	friend class Connection;
 	typedef std::vector< uint8_t > HashType;
 public:
-	ConnectionDetails() : m_port( comms::SERVER_PORT ){};	//TODO: Set some defaults?
-	ConnectionDetails& SetHostname( const std::string& host ) {
+	ConnectionDetails() : m_port( comms::SERVER_PORT ) {};	//TODO: Set some defaults?
+	ConnectionDetails& SetHostname( const std::string& host )
+	{
 		m_host = host;
-		return (*this);
+		return ( *this );
 	}
-	ConnectionDetails& SetPort( const unsigned int port ) {
+	ConnectionDetails& SetPort( const unsigned int port )
+	{
 		m_port = port;
-		return (*this);
+		return ( *this );
 	}
-	ConnectionDetails& SetUsername( const std::string& username ) {
+	ConnectionDetails& SetUsername( const std::string& username )
+	{
 		m_username = username;
-		return (*this);
+		return ( *this );
 	}
-	ConnectionDetails& SetPasswordHash( const HashType& password ) {
+	ConnectionDetails& SetPasswordHash( const HashType& password )
+	{
 		m_passwordHash = password;
-		return (*this);
+		return ( *this );
 	}
-	ConnectionDetails& SetPassword( const std::string& password ) {
+	ConnectionDetails& SetPassword( const std::string& password )
+	{
 		HashPassword( password );
-		return (*this);
+		return ( *this );
 	}
 private:
 	std::string		m_host;
@@ -57,25 +68,30 @@ private:
 	void HashPassword( const std::string& password );
 };
 
-class UploadFileDetails {
+class UploadFileDetails
+{
 	friend class Connection;
 public:
 	UploadFileDetails() {};
-	UploadFileDetails& SetFolderId(int folderId) { 
+	UploadFileDetails& SetFolderId( int folderId )
+	{
 		m_folderId = folderId;
-		return (*this);
+		return ( *this );
 	}
-	UploadFileDetails& SetRemotePath(std::string remotePath) { 
+	UploadFileDetails& SetRemotePath( std::string remotePath )
+	{
 		m_remotePath = remotePath;
-		return (*this);
+		return ( *this );
 	}
-	UploadFileDetails& SetLocalPath(std::string localPath) { 
+	UploadFileDetails& SetLocalPath( std::string localPath )
+	{
 		m_localPath = localPath;
-		return (*this);
+		return ( *this );
 	}
-	UploadFileDetails& SetOneShot(bool oneShot) {
+	UploadFileDetails& SetOneShot( bool oneShot )
+	{
 		m_oneShot = oneShot;
-		return (*this);
+		return ( *this );
 	}
 private:
 	int				m_folderId;
@@ -87,42 +103,47 @@ private:
 typedef boost::shared_ptr< google::protobuf::io::ZeroCopyInputStream > TRecvStream;
 typedef boost::shared_ptr< google::protobuf::io::ZeroCopyOutputStream > TWriteStream;
 
-class Connection : private kode::net::TCPConnection {
+class Connection : private kode::net::TCPConnection
+{
 public:
-	class RecvPacket : boost::noncopyable {
+	class RecvPacket : boost::noncopyable
+	{
 	public:
-		virtual unsigned int GetNumSubpackets()=0;
-		virtual TRecvStream ReadSubpacket(unsigned int num)=0;
-		virtual unsigned int GetPacketType()=0;
+		virtual unsigned int GetNumSubpackets() = 0;
+		virtual TRecvStream ReadSubpacket( unsigned int num ) = 0;
+		virtual unsigned int GetPacketType() = 0;
 	};
 	typedef boost::shared_ptr<RecvPacket> TRecvPacketPtr;
-	class SendPacket : boost::noncopyable {
+	class SendPacket : boost::noncopyable
+	{
 	public:
 		virtual ~SendPacket() {};
-		virtual unsigned int GetSize() const =0 ;
-		virtual void Write( 
-			google::protobuf::io::ZeroCopyOutputStream& stream 
-			) const =0 ;
+		virtual unsigned int GetSize() const = 0 ;
+		virtual void Write(
+		    google::protobuf::io::ZeroCopyOutputStream& stream
+		) const = 0 ;
 	};
 	typedef boost::shared_ptr<SendPacket> TSendPacketPtr;
 	typedef std::vector<TSendPacketPtr> TSendPacketList;
 
 	typedef std::map< std::string, std::string > StringMap;
-	
+
 public:
 	Connection( const ConnectionDetails& details );
 	~Connection();
-	
-	const std::string GetUuid() const {
+
+	const std::string GetUuid() const
+	{
 		return m_uuid;
 	}
-	const std::string GetServerName() const {
+	const std::string GetServerName() const
+	{
 		return m_serverName;
 	}
 
-	void GetFolderList(FolderList& list);
+	void GetFolderList( FolderList& list );
 
-	void UploadFile(const UploadFileDetails& details); 
+	void UploadFile( const UploadFileDetails& details );
 
 	void SendAdminCommand( const std::string& command, const StringMap& params );
 protected:
@@ -131,7 +152,7 @@ protected:
 
 	void SendProtocolBuffer( uint32_t packetType, const google::protobuf::MessageLite& message );
 	void SendProtocolBuffer( uint32_t packetType, const TSendPacketList& subpackets );
-	TRecvPacketPtr RecvProtocolBuffer(uint32_t expectedPacketType, unsigned int expectedNumSubpackets);
+	TRecvPacketPtr RecvProtocolBuffer( uint32_t expectedPacketType, unsigned int expectedNumSubpackets );
 	TRecvPacketPtr RecvProtocolBuffer();
 
 	const ConnectionDetails m_serverDetails;

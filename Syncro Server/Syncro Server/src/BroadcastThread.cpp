@@ -3,21 +3,25 @@
 #include <boost/asio/ip/host_name.hpp>
 #include "SyncroDB.h"
 
-namespace syncro {
+namespace syncro
+{
 
-CBroadcastThread::CBroadcastThread() {
+CBroadcastThread::CBroadcastThread()
+{
 	//TODO: get the hostname from the database or something
 	m_sServerName = boost::asio::ip::host_name();
 }
 
-CBroadcastThread::~CBroadcastThread() {
+CBroadcastThread::~CBroadcastThread()
+{
 
 }
 
 void
-CBroadcastThread::operator()() {
+CBroadcastThread::operator()()
+{
 	boost::asio::io_service oIOService;
-	CBroadcastListener oListener(oIOService,m_sServerName);
+	CBroadcastListener oListener( oIOService, m_sServerName );
 	oIOService.run();
 }
 

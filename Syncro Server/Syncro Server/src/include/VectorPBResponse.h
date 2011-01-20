@@ -4,35 +4,44 @@
 #include "common.h"
 #include "BasePBResponse.h"
 
-namespace syncro {
+namespace syncro
+{
 
-class CVectorPBResponse : public CBasePBResponse {
+class CVectorPBResponse : public CBasePBResponse
+{
 public:
 
-	virtual std::vector<unsigned int> GetSubpacketSizes() {
+	virtual std::vector<unsigned int> GetSubpacketSizes()
+	{
 		std::vector<unsigned int> oResponse;
-		foreach( TSubpacketPtr pSubpacket, m_aSubpackets ) {
+		foreach( TSubpacketPtr pSubpacket, m_aSubpackets )
+		{
 			oResponse.push_back( pSubpacket->size() );
 		}
 		return oResponse;
 	};
-	virtual unsigned int GetSubpacketCount() {
+	virtual unsigned int GetSubpacketCount()
+	{
 		return m_aSubpackets.size();
 	};
 
-	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
+	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
+	{
 		//std::copy( m_aSubpackets[inSubpacketIndex]->begin(),m_aSubpackets[inSubpacketIndex]->end(), inoInsert );
 		int nToCopy = m_aSubpackets[inSubpacketIndex]->size();
 		void* pData;
 		int nCurrentBufferSize = 0;
 		TCharBuffer::TBuff::iterator pEnd = m_aSubpackets[inSubpacketIndex]->end();
 		TCharBuffer::TBuff::iterator pCurr = m_aSubpackets[inSubpacketIndex]->begin();
-		while( (pCurr != pEnd) ) {
-			if( !stream.Next(&pData, &nCurrentBufferSize ) ) {
+		while(( pCurr != pEnd ) )
+		{
+			if( !stream.Next( &pData, &nCurrentBufferSize ) )
+			{
 				throw std::runtime_error( "ZeroCopyOutputStream::Next returned false in VectorPBResponse::WriteSubpacket" );
 			}
 			TCharBuffer::TChar* pCurrBuffer = reinterpret_cast< TCharBuffer::TChar* >( pData );
-			if( nCurrentBufferSize != 0 ) {
+			if( nCurrentBufferSize != 0 )
+			{
 				if( nCurrentBufferSize > nToCopy )
 					nCurrentBufferSize = nToCopy;
 				TCharBuffer::TBuff::iterator pNextBlock = pCurr + nCurrentBufferSize;
@@ -45,7 +54,7 @@ public:
 		}
 		//TODO: Handle errors?
 	}
-	
+
 protected:
 	CVectorPBResponse() {};
 	~CVectorPBResponse() {};

@@ -5,17 +5,19 @@
 #include <kode/stopwatch.h>
 #include <fstream>
 
-namespace syncro {
+namespace syncro
+{
 
-class CBinaryIncomingData {
+class CBinaryIncomingData
+{
 public:
-	CBinaryIncomingData( 
-		const std::string sFilename, 
-		VoidCallback completedCallback 
-		);
+	CBinaryIncomingData(
+	    const std::string sFilename,
+	    VoidCallback completedCallback
+	);
 	~CBinaryIncomingData();
 
-	void HandlePacket(TInputStreamList& inaInputStreams);
+	void HandlePacket( TInputStreamList& inaInputStreams );
 private:
 	std::ofstream m_oFile;
 	VoidCallback m_completedCallback;

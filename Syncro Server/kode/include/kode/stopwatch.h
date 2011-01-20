@@ -3,14 +3,16 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-namespace kode {
-namespace time { 
+namespace kode
+{
+namespace time
+{
 
 class Stopwatch
 {
 public:
 	Stopwatch()
-		:m_running( false )
+		: m_running( false )
 	{
 		Start();
 	}
@@ -27,6 +29,6 @@ private:
 };
 
 }	// namespace time
-}	// namespace kode 
+}	// namespace kode
 
 #endif

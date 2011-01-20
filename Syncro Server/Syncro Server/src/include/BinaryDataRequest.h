@@ -6,24 +6,28 @@
 #include <stdint.h>
 
 
-namespace syncro {
+namespace syncro
+{
 
-class CBinaryDataRequest {
+class CBinaryDataRequest
+{
 public:
 	CBinaryDataRequest( int folderId, const std::string& filename ) :
-	m_sFilename( filename ),
-	m_nFolderId( folderId ),
-	m_nBufferSize( 0 ),
-	m_nFileSize( -1 ),
-	m_oneShot( false ),
-	m_startOffset( 0 )
+		m_sFilename( filename ),
+		m_nFolderId( folderId ),
+		m_nBufferSize( 0 ),
+		m_nFileSize( -1 ),
+		m_oneShot( false ),
+		m_startOffset( 0 )
 	{
 
 	}
 
-	CBinaryDataRequest(TInputStreamList& inaInputStreams) {
+	CBinaryDataRequest( TInputStreamList& inaInputStreams )
+	{
 		pb::BinaryDataRequest oRequest;
-		if( inaInputStreams.size() == 1 ) {
+		if( inaInputStreams.size() == 1 )
+		{
 			if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
 				throw std::runtime_error( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
 			m_sFilename = oRequest.file_name();
@@ -42,15 +46,33 @@ public:
 			if( oRequest.has_start_offset() )
 				m_startOffset = oRequest.start_offset();
 			//TODO: Add upload direction at some point?
-		} 
+		}
 	}
 	~CBinaryDataRequest() {};
-	const std::string& GetFilename() const { return m_sFilename; };
-	const int GetFolderId() const { return m_nFolderId; };
-	const int GetBufferSize() const { return m_nBufferSize; };
-	const int64_t GetFileSize() const { return m_nFileSize; };
-	const bool IsOneShot() const { return m_oneShot; };
-	const int64_t GetStartOffset() const { return m_startOffset; }
+	const std::string& GetFilename() const
+	{
+		return m_sFilename;
+	};
+	const int GetFolderId() const
+	{
+		return m_nFolderId;
+	};
+	const int GetBufferSize() const
+	{
+		return m_nBufferSize;
+	};
+	const int64_t GetFileSize() const
+	{
+		return m_nFileSize;
+	};
+	const bool IsOneShot() const
+	{
+		return m_oneShot;
+	};
+	const int64_t GetStartOffset() const
+	{
+		return m_startOffset;
+	}
 private:
 	std::string m_sFilename;
 	int m_nFolderId;

@@ -9,16 +9,18 @@
 #include <boost/noncopyable.hpp>
 #include <fstream>
 
-namespace syncro {
+namespace syncro
+{
 
-class CFileSendData : boost::noncopyable {
+class CFileSendData : boost::noncopyable
+{
 public:
-	CFileSendData( 
-		const std::string& insFilename, 
-		int innRequestedBufferSize=0,
-		const VoidCallback& completionCallback=VoidCallback(),
-		int64_t fileStartOffset=0
-		);
+	CFileSendData(
+	    const std::string& insFilename,
+	    int innRequestedBufferSize = 0,
+	    const VoidCallback& completionCallback = VoidCallback(),
+	    int64_t fileStartOffset = 0
+	);
 
 	~CFileSendData();
 
@@ -26,15 +28,18 @@ public:
 	unsigned int GetChunkSize();
 
 	std::istream::pos_type GetFilePosition();
-	std::istream::pos_type GetFileSize() { return m_nFileSize; };
+	std::istream::pos_type GetFileSize()
+	{
+		return m_nFileSize;
+	};
 	bool IsFileFinished();
 	bool IsStartFile();
 	bool IsFileFinishedAfterChunk( unsigned int inNextChunkSize );
 
 private:
 
-	void OpenFile(int64_t fileStartOffset);
-	
+	void OpenFile( int64_t fileStartOffset );
+
 	void CallCompletionCallback();
 
 	std::ifstream m_oFile;

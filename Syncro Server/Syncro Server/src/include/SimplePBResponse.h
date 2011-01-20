@@ -8,38 +8,43 @@
 #include <vector>
 #include <exception>
 
-namespace syncro {
+namespace syncro
+{
 
-class SimplePBResponse : public CBasePBResponse {
+class SimplePBResponse : public CBasePBResponse
+{
 public:
 	typedef boost::shared_ptr< google::protobuf::MessageLite > MessagePtr;
-	
+
 	SimplePBResponse( unsigned int messageType, MessagePtr message ) :
-	m_messageType( messageType ),
-	m_message( message )
+		m_messageType( messageType ),
+		m_message( message )
 	{
 
 	}
 	virtual ~SimplePBResponse() {};
 
-	virtual std::vector<unsigned int> GetSubpacketSizes() {
-		std::vector< unsigned int > rv(1);
+	virtual std::vector<unsigned int> GetSubpacketSizes()
+	{
+		std::vector< unsigned int > rv( 1 );
 		rv[0] = m_message->ByteSize();
 		return rv;
 	}
 
-	virtual unsigned int GetSubpacketCount() {
+	virtual unsigned int GetSubpacketCount()
+	{
 		return 1;
 	};
 
-	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream)
+	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
 	{
 		if( inSubpacketIndex != 0 )
 			throw std::logic_error( "Invalid subpacket index in SimplePBResponse::WriteSubpacket" );
 		WriteMessage( *m_message, stream );
 	}
 
-	virtual unsigned int GetPacketType() { 
+	virtual unsigned int GetPacketType()
+	{
 		return m_messageType;
 	}
 private:

@@ -3,15 +3,16 @@
 #include <tinyxml.h>
 #include <boost/filesystem.hpp>
 
-namespace syncro {
+namespace syncro
+{
 
 using namespace boost::filesystem;
 using boost::shared_ptr;
 
 using namespace std;
 
-CFolder::CFolder( const string& insPath, const string& name ) : 
-m_sFolderName( name )
+CFolder::CFolder( const string& insPath, const string& name ) :
+	m_sFolderName( name )
 {
 	using boost::filesystem::path;
 	using boost::filesystem::file_size;
@@ -20,28 +21,29 @@ m_sFolderName( name )
 	m_sPath = oPath.filename();
 	if( !is_directory( oPath ) )
 		return;
-	for( directory_iterator pItem( oPath ); pItem != directory_iterator(); pItem++ ) 
-	{ 
-		if( is_directory( pItem->status() ) ) 
+	for( directory_iterator pItem( oPath ); pItem != directory_iterator(); pItem++ )
+	{
+		if( is_directory( pItem->status() ) )
 		{
-			boost::shared_ptr<CFolder> folder( 
-				new CFolder( 
-					pItem->path().directory_string(),
-					pItem->path().directory_string() 
-					) 
-				);
+			boost::shared_ptr<CFolder> folder(
+			    new CFolder(
+			        pItem->path().directory_string(),
+			        pItem->path().directory_string()
+			    )
+			);
 			m_oChildren.push_back( folder );
-		} 
-		else 
+		}
+		else
 		{
 			//m_oFiles.push_back( pItem->path().directory_string() );
-			
-			m_oFiles.push_back( sFileData(pItem->filename(), (const unsigned int)file_size( pItem->path() ) ) );
+
+			m_oFiles.push_back( sFileData( pItem->filename(), ( const unsigned int )file_size( pItem->path() ) ) );
 		}
 	}
 }
 
-CFolder::~CFolder( ) {
+CFolder::~CFolder( )
+{
 
 }
 

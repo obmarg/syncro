@@ -3,9 +3,11 @@
 
 #include <string>
 
-namespace syncro {
+namespace syncro
+{
 
-class CBroadcastThread {
+class CBroadcastThread
+{
 public:
 	CBroadcastThread();
 	~CBroadcastThread();

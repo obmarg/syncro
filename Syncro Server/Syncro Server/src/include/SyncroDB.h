@@ -3,12 +3,15 @@
 
 #include <kode/Database.h>
 
-namespace syncro {
+namespace syncro
+{
 
-class CSyncroDB : public kode::db::Database, boost::noncopyable {
+class CSyncroDB : public kode::db::Database, boost::noncopyable
+{
 public:
-	static Database::TPointer OpenDB() {
-		Database::TPointer pDatabase( new CSyncroDB("syncro.db") );
+	static Database::TPointer OpenDB()
+	{
+		Database::TPointer pDatabase( new CSyncroDB( "syncro.db" ) );
 		return pDatabase;
 	}
 
@@ -16,10 +19,10 @@ public:
 private:
 	static const int EXPECTED_DB_VERSION;
 
-	CSyncroDB(std::string insFile);
+	CSyncroDB( std::string insFile );
 
 	bool CreateDatabase();
-	bool UpgradeDatabase(int nCurrentVersion);
+	bool UpgradeDatabase( int nCurrentVersion );
 };
 
 };		//namespace syncro

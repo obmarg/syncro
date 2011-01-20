@@ -12,12 +12,12 @@ public:
 	struct ServerInfo
 	{
 	public:
-		ServerInfo( 
-			std::string inname, 
-			const syncro::client::ConnectionDetails& conn
-			) :
-		Name(inname),
-		connDetails( conn )
+		ServerInfo(
+		    std::string inname,
+		    const syncro::client::ConnectionDetails& conn
+		) :
+			Name( inname ),
+			connDetails( conn )
 		{ };
 
 		std::string Name;
@@ -26,9 +26,9 @@ public:
 	};
 	typedef std::vector<ServerInfo> ServerList;
 
-	typedef boost::function<
-		void (const ServerList&) 
-		> ServerListCallback;
+	typedef boost::function <
+	void ( const ServerList& )
+	> ServerListCallback;
 
 public:
 	BackgroundThread();
@@ -38,7 +38,7 @@ public:
 	// Attempts to lock the mutex, then calls the callback.
 	// Returns instantly otherwise
 	//
-	bool GetData(ServerListCallback callback);
+	bool GetData( ServerListCallback callback );
 
 	static BackgroundThread& GetInstance();
 

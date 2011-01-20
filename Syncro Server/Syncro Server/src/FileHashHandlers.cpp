@@ -9,45 +9,47 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <fstream>
 
-namespace syncro {
-namespace pbHandlers {
+namespace syncro
+{
+namespace pbHandlers
+{
 
 FileHashRequest::FileHashRequest(
-	TInputStreamList& inaInputStreams,
-	CFolderMan&	folderMan
-	) :
-m_ok( false )
+    TInputStreamList& inaInputStreams,
+    CFolderMan&	folderMan
+) :
+	m_ok( false )
 {
 	pb::FileHashRequest hashRequest;
 	if( inaInputStreams.size() != 1 )
 	{
-		throw std::runtime_error( 
-			"Invalid number of subpackets passed to "
-			"FileHashRequestHandler::FileHashRequestHandler"
-			);
+		throw std::runtime_error(
+		    "Invalid number of subpackets passed to "
+		    "FileHashRequestHandler::FileHashRequestHandler"
+		);
 	}
 	hashRequest.ParseFromZeroCopyStream( inaInputStreams[0] );
 
-	if( !hashRequest.has_data_size() || hashRequest.data_size() == 0)
+	if( !hashRequest.has_data_size() || hashRequest.data_size() == 0 )
 	{
 		return;
 	}
-	
+
 	FileTransferDetails fileDetails;
-	CBinaryDataRequest fileRequest( 
-		hashRequest.folder_id(),
-		hashRequest.file_name()
-		);
+	CBinaryDataRequest fileRequest(
+	    hashRequest.folder_id(),
+	    hashRequest.file_name()
+	);
 	bool foundFile = folderMan.FileRequested( fileRequest, fileDetails );
 	if( !foundFile )
 	{
 		return;
 	}
 	CryptoPP::SHA hashObject;
-	std::ifstream file( 
-		fileDetails.Filename().c_str(), 
-		std::ios::binary | std::ios::in 
-		);
+	std::ifstream file(
+	    fileDetails.Filename().c_str(),
+	    std::ios::binary | std::ios::in
+	);
 	if( file.fail() )
 	{
 		return;
@@ -66,52 +68,53 @@ m_ok( false )
 	}
 
 	std::vector<unsigned char> buffer( 1024 );
-	do 
+	do
 	{
 		int64_t sizeLeft = fileSize - file.tellg();
 		if( sizeLeft == 0 )
 			break;
 
 		if( sizeLeft < buffer.size() )
-			buffer.resize( 
-				boost::numeric_cast< size_t >( sizeLeft )
-				);
-		file.read( 
-			reinterpret_cast< char* >( &buffer[0] ),
-			buffer.size()
+			buffer.resize(
+			    boost::numeric_cast< size_t >( sizeLeft )
 			);
+		file.read(
+		    reinterpret_cast< char* >( &buffer[0] ),
+		    buffer.size()
+		);
 
 		hashObject.Update( &buffer[0], buffer.size() );
-	} while ( !file.eof() );
-	
+	}
+	while( !file.eof() );
+
 	unsigned char hashBuffer[ CryptoPP::SHA::DIGESTSIZE ];
 	hashObject.Final( hashBuffer );
 
-	std::string hash = kode::base64::Encode( 
-		hashBuffer,
-		sizeof( hashBuffer )
-		);
+	std::string hash = kode::base64::Encode(
+	                       hashBuffer,
+	                       sizeof( hashBuffer )
+	                   );
 
 	m_ok = ( hash == hashRequest.hash() );
 }
 
-CBasePBResponse::TPointer 
-	FileHashRequest::GetResponse()
+CBasePBResponse::TPointer
+FileHashRequest::GetResponse()
 {
 	SimplePBResponse::MessagePtr msg;
 	msg.reset( new pb::FileHashResponse() );
-	
-	pb::FileHashResponse* ptr = 
-		static_cast< pb::FileHashResponse* >( msg.get() );
+
+	pb::FileHashResponse* ptr =
+	    static_cast< pb::FileHashResponse* >( msg.get() );
 	ptr->set_ok( m_ok );
 
 	CBasePBResponse::TPointer rv;
-	rv.reset( 
-		new SimplePBResponse( 
-			syncro::comms::packet_types::FileHashResponse, 
-			msg 
-			)
-		);
+	rv.reset(
+	    new SimplePBResponse(
+	        syncro::comms::packet_types::FileHashResponse,
+	        msg
+	    )
+	);
 
 	return rv;
 }

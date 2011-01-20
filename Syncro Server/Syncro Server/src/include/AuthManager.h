@@ -7,16 +7,21 @@
 #include <boost/shared_ptr.hpp>
 #include <stdint.h>
 
-namespace syncro {
+namespace syncro
+{
 
-class CAuthManager {
+class CAuthManager
+{
 public:
 	CAuthManager();
 	~CAuthManager();
 
 	bool NeedsAuth();
-	const CAuthToken Authenticate(const std::string& username, const std::string& password, const std::string& ip);
-	const std::string Salt() const { return m_saltString; };
+	const CAuthToken Authenticate( const std::string& username, const std::string& password, const std::string& ip );
+	const std::string Salt() const
+	{
+		return m_saltString;
+	};
 
 	const CAuthToken DefaultAuth();
 

@@ -7,20 +7,20 @@ class UploadThread
 {
 public:
 	static void Create(
-		const syncro::client::ConnectionDetails& connDetails,
-		const syncro::client::UploadFileDetails& uploadDetails
-		);
+	    const syncro::client::ConnectionDetails& connDetails,
+	    const syncro::client::UploadFileDetails& uploadDetails
+	);
 
 private:
 	UploadThread(
-		const syncro::client::ConnectionDetails& connDetails, 
-		const syncro::client::UploadFileDetails& uploadDetails
-		);
+	    const syncro::client::ConnectionDetails& connDetails,
+	    const syncro::client::UploadFileDetails& uploadDetails
+	);
 
 	static void ThreadFunc(
-		const syncro::client::ConnectionDetails& connDetails,
-		const syncro::client::UploadFileDetails& uploadDetails
-		);
+	    const syncro::client::ConnectionDetails& connDetails,
+	    const syncro::client::UploadFileDetails& uploadDetails
+	);
 
 	void Run();
 

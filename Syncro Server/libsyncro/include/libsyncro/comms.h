@@ -3,8 +3,10 @@
 
 #include <kode/utils.h>
 
-namespace syncro {
-namespace comms {
+namespace syncro
+{
+namespace comms
+{
 
 const int SERVER_PORT = 9998;
 
@@ -19,7 +21,8 @@ const unsigned char PB_RESPONSE_FIRST_BYTE = 106;
 const std::string HANDSHAKE_REQUEST_MAGIC =		"Hello Syncro?";
 const std::string HANDSHAKE_RESPONSE_MAGIC =	"Hey bitch!";
 
-class PacketHeader {
+class PacketHeader
+{
 public:
 	PacketHeader()
 	{
@@ -33,30 +36,36 @@ public:
 	enum { BYTE_SIZE = sizeof( PB_REQUEST_FIRST_BYTE ) + sizeof( unsigned int ) };
 
 	template<class tByteArray>
-	void Read(const tByteArray& input) {
+	void Read( const tByteArray& input )
+	{
 		m_firstByte = input[0];
-		m_packetSize = ( *(unsigned int*)(&input[1]) );
-		m_packetSize = kode::utils::FromJavaEndian(m_packetSize);
+		m_packetSize = ( *( unsigned int* )( &input[1] ) );
+		m_packetSize = kode::utils::FromJavaEndian( m_packetSize );
 	}
 
 	template<class tByteArray>
-	void Write(tByteArray& output) {
+	void Write( tByteArray& output )
+	{
 		output[0] = m_firstByte;
-		*((unsigned int*)(&output[1])) = kode::utils::ToJavaEndian( m_packetSize );
+		*(( unsigned int* )( &output[1] ) ) = kode::utils::ToJavaEndian( m_packetSize );
 	}
 
-	PacketHeader& SetFirstByte( const unsigned char byte ) {
+	PacketHeader& SetFirstByte( const unsigned char byte )
+	{
 		m_firstByte = byte;
-		return (*this);
+		return ( *this );
 	}
-	PacketHeader& SetPacketSize( const unsigned int packetSize ) {
+	PacketHeader& SetPacketSize( const unsigned int packetSize )
+	{
 		m_packetSize = packetSize;
-		return (*this);
+		return ( *this );
 	}
-	unsigned char FirstByte() {
+	unsigned char FirstByte()
+	{
 		return m_firstByte;
 	}
-	unsigned int PacketSize() {
+	unsigned int PacketSize()
+	{
 		return m_packetSize;
 	}
 

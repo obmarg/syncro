@@ -7,16 +7,18 @@
 #include <boost/asio.hpp>
 #include <set>
 
-namespace syncro {
-namespace client {
+namespace syncro
+{
+namespace client
+{
 
-class Scanner 
+class Scanner
 {
 public:
 	class ServerDetails
 	{
 	public:
-		virtual const std::string& Name() const =0;
+		virtual const std::string& Name() const = 0;
 		operator ConnectionDetails()
 		{
 			return GetConnDetails();
@@ -28,16 +30,16 @@ public:
 			return ( Name().compare( rhs.Name() ) < 0 );
 		}
 	protected:
-		virtual ConnectionDetails GetConnDetails() const=0;
+		virtual ConnectionDetails GetConnDetails() const = 0;
 	};
 	typedef boost::shared_ptr<ServerDetails> ServerDetailsPtr;
-	typedef std::set<ServerDetailsPtr,kode::utils::CPointerLessThan> ServerList;
+	typedef std::set<ServerDetailsPtr, kode::utils::CPointerLessThan> ServerList;
 
 public:
 	Scanner();
 	~Scanner();
 
-	void Scan(unsigned int timeout);
+	void Scan( unsigned int timeout );
 	void Reset();
 
 	const ServerList& Servers() const
@@ -52,9 +54,9 @@ private:
 	bool m_finished;
 
 	bool HandleReceive(
-		const boost::system::error_code& error,
-		std::size_t
-		);
+	    const boost::system::error_code& error,
+	    std::size_t
+	);
 	bool Finished()
 	{
 		m_finished = true;

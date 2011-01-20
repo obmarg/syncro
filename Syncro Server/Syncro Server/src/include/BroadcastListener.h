@@ -3,11 +3,13 @@
 
 #include <boost/asio.hpp>
 
-namespace syncro {
+namespace syncro
+{
 
-class CBroadcastListener {
+class CBroadcastListener
+{
 public:
-	CBroadcastListener(boost::asio::io_service& inoIOService,const std::string &insServerName);
+	CBroadcastListener( boost::asio::io_service& inoIOService, const std::string& insServerName );
 	~CBroadcastListener();
 
 private:
@@ -17,7 +19,7 @@ private:
 
 	const std::string m_sServerName;
 
-	void HandleReceive(const boost::system::error_code& error, std::size_t );
+	void HandleReceive( const boost::system::error_code& error, std::size_t );
 	void StartRecieve();
 };
 

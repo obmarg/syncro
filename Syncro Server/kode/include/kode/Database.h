@@ -24,12 +24,16 @@
 #include <pthread.h>
 #endif
 
-namespace kode {
-namespace db {
+namespace kode
+{
+namespace db
+{
 
-class SqlException : std::runtime_error {
+class SqlException : std::runtime_error
+{
 public:
-	SqlException( std::string sMessage, int nErrorCode ) : runtime_error( sMessage.c_str() ) {
+	SqlException( std::string sMessage, int nErrorCode ) : runtime_error( sMessage.c_str() )
+	{
 		m_nErrorCode = nErrorCode;
 	}
 private:
@@ -45,9 +49,9 @@ typedef boost::shared_ptr<Statement> StatementPtr;
 class Database
 {
 public:
-	typedef boost::shared_ptr<Database> TPointer;	
+	typedef boost::shared_ptr<Database> TPointer;
 
-	typedef std::map<std::string,std::string,utils::CStringLessThan> Row;
+	typedef std::map<std::string, std::string, utils::CStringLessThan> Row;
 
 	class ResultSet
 	{
@@ -57,8 +61,8 @@ public:
 		std::vector<std::string> colNames;
 	public:
 		ResultSet() {};
-		ResultSet(const ResultSet& inoOther) : rows( inoOther.rows.begin(), inoOther.rows.end() ), colNames( inoOther.colNames.begin(), inoOther.colNames.end() ) { };
-		
+		ResultSet( const ResultSet& inoOther ) : rows( inoOther.rows.begin(), inoOther.rows.end() ), colNames( inoOther.colNames.begin(), inoOther.colNames.end() ) { };
+
 		/*ResultSet& operator=(const syncro::Database::ResultsSet& inoRHS) {
 			rows = inoRHS.rows;
 			colNames = inoRHS.colNames;
@@ -66,90 +70,127 @@ public:
 
 		typedef std::vector<Row>::iterator iterator;
 		typedef std::vector<Row>::const_iterator const_iterator;
-		iterator begin() { return rows.begin(); };
-		iterator end() { return rows.end(); };
-		const_iterator begin() const { return rows.begin(); };
-		const_iterator end() const { return rows.end(); };
+		iterator begin()
+		{
+			return rows.begin();
+		};
+		iterator end()
+		{
+			return rows.end();
+		};
+		const_iterator begin() const
+		{
+			return rows.begin();
+		};
+		const_iterator end() const
+		{
+			return rows.end();
+		};
 
-		bool empty() const { 
+		bool empty() const
+		{
 			if( rows.empty() )
-				return true; 
-			else 
+				return true;
+			else
 				return colNames.empty();
 		}
 
-		Database::Row operator[](int ID){return rows[ID];};
-		Database::Row getRow(int ID) {return rows[ID];};
-		int numRows() {return rows.size();};
-		int numCols() {return colNames.size();};
-		void clear() { rows.clear(); colNames.clear(); };
-		void add(Database::Row row) { rows.push_back(row); };
-		void defineCols(int num,char **names)
+		Database::Row operator[]( int ID )
 		{
-			for(int i =0;i<num;i++)
-				colNames.push_back(std::string(names[i]));
+			return rows[ID];
+		};
+		Database::Row getRow( int ID )
+		{
+			return rows[ID];
+		};
+		int numRows()
+		{
+			return rows.size();
+		};
+		int numCols()
+		{
+			return colNames.size();
+		};
+		void clear()
+		{
+			rows.clear();
+			colNames.clear();
+		};
+		void add( Database::Row row )
+		{
+			rows.push_back( row );
+		};
+		void defineCols( int num, char** names )
+		{
+			for( int i = 0; i < num; i++ )
+				colNames.push_back( std::string( names[i] ) );
 		}
-		Database::Row find(std::string col,std::string value)
+		Database::Row find( std::string col, std::string value )
 		{
-			BOOST_FOREACH( Row& oRow, rows ) {
+			BOOST_FOREACH( Row & oRow, rows )
+			{
 				Row::iterator pCol = oRow.find( col );
-				if( ( pCol != oRow.end() ) && ( pCol->second == value ) )
-					return Row(oRow);
+				if(( pCol != oRow.end() ) && ( pCol->second == value ) )
+					return Row( oRow );
 			}
 			return Row();
 		}
-		void log(int level)
+		void log( int level )
 		{
-			if(numRows() != 0)
+			if( numRows() != 0 )
 			{
 				std::string names = "Columns:";
-				for(unsigned int i=0;i<colNames.size();i++)
+				for( unsigned int i = 0; i < colNames.size(); i++ )
 					names += colNames[i] + "|";
 //				Logger.Log(names,level);
-				for(unsigned int i=0;i<rows.size();i++)
+				for( unsigned int i = 0; i < rows.size(); i++ )
 				{
 					std::string values = "";
-					for(unsigned int y=0;y<colNames.size();y++)
+					for( unsigned int y = 0; y < colNames.size(); y++ )
 						values += rows[i][colNames[y]] + "|";
 					//Logger.Log(values,level);
 				}
 			}
 		}
 	};
-	
-	friend int callback(void*,int,char**,char**);
 
-	ResultSet run(std::string query);
+	friend int callback( void*, int, char**, char** );
+
+	ResultSet run( std::string query );
 
 	template<class tReturnType>
-	tReturnType runScalar(std::string query) {
-		ResultSet oResults = run(query);
+	tReturnType runScalar( std::string query )
+	{
+		ResultSet oResults = run( query );
 		if( oResults.empty() )
-			throw std::out_of_range("DB::runScalar call returned nothing");
+			throw std::out_of_range( "DB::runScalar call returned nothing" );
 		const std::string& sColName = oResults.colNames[0];
 		const Row& oRow = oResults[0];
 		Row::const_iterator oData = oRow.find( sColName );
-		if( oData != oRow.end() ) {
-			tReturnType rv = boost::lexical_cast<tReturnType,std::string>( oData->second );
+		if( oData != oRow.end() )
+		{
+			tReturnType rv = boost::lexical_cast<tReturnType, std::string>( oData->second );
 			result.clear();
 			return rv;
-		} else {
+		}
+		else
+		{
 			result.clear();
-			throw std::out_of_range("DB::runScalar call returned nothing");
+			throw std::out_of_range( "DB::runScalar call returned nothing" );
 		}
 		//Control should never reach this point
 		return tReturnType();
 	}
 
-	StatementPtr prepare(std::string insSql);
+	StatementPtr prepare( std::string insSql );
 
 #ifdef _WIN32
 	template<>
-	std::string runScalar<std::string>(std::string query);
+	std::string runScalar<std::string>( std::string query );
 #endif
 
 private:
-	sqlite3 *db;
+	sqlite3* db;
 	ResultSet result;
 
 #ifdef USING_PTHREADS
@@ -159,28 +200,33 @@ private:
 protected:
 	void clearResult();
 
-	Database(std::string file);
+	Database( std::string file );
 	virtual ~Database();
 };
 
 #ifdef _WIN32
 //TODO: figure out how the fuck you do specialization like this in gcc
 template<>
-std::string Database::runScalar<std::string>(std::string query) {
-	ResultSet oResults( run(query) );
-	if( oResults.empty() ) {
-		throw std::out_of_range("DB::runScalar call returned nothing");
+std::string Database::runScalar<std::string>( std::string query )
+{
+	ResultSet oResults( run( query ) );
+	if( oResults.empty() )
+	{
+		throw std::out_of_range( "DB::runScalar call returned nothing" );
 	}
 	const std::string& sColName = oResults.colNames[0];
 	const Row& oRow = oResults[0];
 	Row::const_iterator oData = oRow.find( sColName );
-	if( oData != oRow.end() ) {
+	if( oData != oRow.end() )
+	{
 		std::string sRV = oData->second;
 		result.clear();
 		return sRV;
-	} else {
+	}
+	else
+	{
 		result.clear();
-		throw std::out_of_range("DB::runScalar call returned nothing");
+		throw std::out_of_range( "DB::runScalar call returned nothing" );
 	}
 	//Control should never reach this point
 	return "";
@@ -192,112 +238,128 @@ class Statement
 	//TODO: Make statement support pthreads stuff?
 	friend class Database;
 protected:
-	Statement(sqlite3_stmt* handle) : m_handle(handle), m_fFetchedNames(false) {};
+	Statement( sqlite3_stmt* handle ) : m_handle( handle ), m_fFetchedNames( false ) {};
 
-	void FetchColumnNames() {
+	void FetchColumnNames()
+	{
 		int nCount = sqlite3_column_count( m_handle );
 		m_columnNames.reserve( nCount );
-		for( int iNum = 0; iNum < nCount; ++iNum ) {
+		for( int iNum = 0; iNum < nCount; ++iNum )
+		{
 			m_columnNames.push_back( std::string( sqlite3_column_name( m_handle, iNum ) ) );
 		}
 		m_fFetchedNames = true;
 	}
 
-	int FindColumn(std::string colName) {
+	int FindColumn( std::string colName )
+	{
 		int nIndex = 0;
-		BOOST_FOREACH( const std::string& current, m_columnNames ) {
+		BOOST_FOREACH( const std::string & current, m_columnNames )
+		{
 			if( current.compare( colName ) == 0 )
 				return nIndex;
 			++nIndex;
 		}
 		return -1;
 	}
-	
+
 public:
 	//TODO: THis could all be done better with template meta programming type stuff
-	virtual ~Statement() {
+	virtual ~Statement()
+	{
 		sqlite3_finalize( m_handle );
 	}
 
-	bool GetNextRow() {
+	bool GetNextRow()
+	{
 		int nErrorCode = sqlite3_step( m_handle );
-		switch( nErrorCode ) {
-			case SQLITE_BUSY: 
-				throw SqlException( "Could not get next row - database busy", nErrorCode );
-			case SQLITE_ROW:
-				return true;
-			case SQLITE_DONE:
-				return false;
-			default:
-				throw SqlException( "Error in Statement::GetNextRow", nErrorCode );
+		switch( nErrorCode )
+		{
+		case SQLITE_BUSY:
+			throw SqlException( "Could not get next row - database busy", nErrorCode );
+		case SQLITE_ROW:
+			return true;
+		case SQLITE_DONE:
+			return false;
+		default:
+			throw SqlException( "Error in Statement::GetNextRow", nErrorCode );
 		}
 	}
 
-	void Reset() {
+	void Reset()
+	{
 		sqlite3_reset( m_handle );
 	}
 
 	template<class tData>
-	Statement& Bind(int innIndex, tData data) {
-		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, boost::lexical_cast<std::string>(data).c_str(), -1, SQLITE_TRANSIENT );
+	Statement& Bind( int innIndex, tData data )
+	{
+		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, boost::lexical_cast<std::string>( data ).c_str(), -1, SQLITE_TRANSIENT );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return (*this);
+		return ( *this );
 	}
 
 	template<class tData>
-	Statement& Bind(std::string parameter, tData data) {
+	Statement& Bind( std::string parameter, tData data )
+	{
 		int nIndex = sqlite3_bind_parameter_index( m_handle, parameter.c_str() );
 		Bind( nIndex, data );
-		return (*this);
+		return ( *this );
 	}
 #ifdef _WIN32
 	template<>
-	Statement& Bind<std::string>(int innIndex, std::string data) {
+	Statement& Bind<std::string>( int innIndex, std::string data )
+	{
 		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, data.c_str(), -1, SQLITE_TRANSIENT );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return (*this);
-	}
-	
-	template<>
-	Statement& Bind<int>(int innIndex, int innData) {
-		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, innData );
-		if( nErrorCode != SQLITE_OK )
-			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return (*this);
+		return ( *this );
 	}
 
 	template<>
-	Statement& Bind<bool>(int innIndex, bool infData) {
+	Statement& Bind<int>( int innIndex, int innData )
+	{
+		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, innData );
+		if( nErrorCode != SQLITE_OK )
+			throw SqlException( "Statement::Bind failed", nErrorCode );
+		return ( *this );
+	}
+
+	template<>
+	Statement& Bind<bool>( int innIndex, bool infData )
+	{
 		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, ( infData ? 1 : 0 ) );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return (*this);
+		return ( *this );
 	}
-	
+
 	template<>
-	Statement& Bind<unsigned int>(int innIndex, unsigned int innData) {
+	Statement& Bind<unsigned int>( int innIndex, unsigned int innData )
+	{
 		int nErrorCode = sqlite3_bind_int64( m_handle, innIndex, innData );
 		if( nErrorCode != SQLITE_OK )
 			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return (*this);
+		return ( *this );
 	}
 
 #endif
 
 	template<class tData>
-	tData GetColumn(int innIndex) {
-		std::string sData = std::string( 
-			reinterpret_cast<const char*>(
-				sqlite3_column_text( m_handle, innIndex )
-				)
-			);
-		return boost::lexical_cast<tData,std::string>( sData );
+	tData GetColumn( int innIndex )
+	{
+		std::string sData = std::string(
+		                        reinterpret_cast<const char*>(
+		                            sqlite3_column_text( m_handle, innIndex )
+		                        )
+		                    );
+		return boost::lexical_cast<tData, std::string>( sData );
 	}
 
 	template<class tData>
-	tData GetColumn(std::string parameter) {
+	tData GetColumn( std::string parameter )
+	{
 		if( !m_fFetchedNames )
 			FetchColumnNames();
 
@@ -309,20 +371,24 @@ public:
 
 #ifdef _WIN32
 	template<>
-	std::string GetColumn<std::string>( int innIndex) {
+	std::string GetColumn<std::string>( int innIndex )
+	{
 		return std::string( reinterpret_cast<const char*>( sqlite3_column_text( m_handle, innIndex ) ) );
 	}
 
 	template<>
-	int GetColumn<int>(int innIndex) {
+	int GetColumn<int>( int innIndex )
+	{
 		return sqlite3_column_int( m_handle, innIndex );
 	}
 	template<>
-	bool GetColumn<bool>( int innIndex ) {
-		return (sqlite3_column_int( m_handle, innIndex ) == 1);
+	bool GetColumn<bool>( int innIndex )
+	{
+		return ( sqlite3_column_int( m_handle, innIndex ) == 1 );
 	}
 	template<>
-	unsigned int GetColumn<unsigned int>( int innIndex ) {
+	unsigned int GetColumn<unsigned int>( int innIndex )
+	{
 		return static_cast<unsigned int>( sqlite3_column_int64( m_handle, innIndex ) );
 	}
 #endif
@@ -333,10 +399,12 @@ private:
 	bool m_fFetchedNames;
 };
 
-class AutoReset : boost::noncopyable {
+class AutoReset : boost::noncopyable
+{
 public:
 	AutoReset( const StatementPtr statement ) : m_statement( statement ) {};
-	~AutoReset() {
+	~AutoReset()
+	{
 		m_statement->Reset();
 	};
 private:

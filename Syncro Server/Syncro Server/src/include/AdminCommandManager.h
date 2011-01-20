@@ -7,35 +7,43 @@
 #include <stdexcept>
 #include <vector>
 
-namespace syncro {
+namespace syncro
+{
 
-enum eAdminCommand {
+enum eAdminCommand
+{
 	eAdminCommand_AddFolder,
 	eAdminCommand_DelFolder,
 	eAdminCommand_AddLocalFile,
 	eAdminCommand_Total
 };
 
-class admin_command_exception : public std::runtime_error {
+class admin_command_exception : public std::runtime_error
+{
 public:
-	admin_command_exception( int nErrorCode ) : 
-		runtime_error( "Admin Command Exception" ), 
+	admin_command_exception( int nErrorCode ) :
+		runtime_error( "Admin Command Exception" ),
 		m_nErrorCode( nErrorCode )
 	{};
 
-	int GetErrorCode() const { return m_nErrorCode; };
+	int GetErrorCode() const
+	{
+		return m_nErrorCode;
+	};
 private:
 	int m_nErrorCode;
 };
 
-class CAdminCommandManager : boost::noncopyable {
+class CAdminCommandManager : boost::noncopyable
+{
 public:
 	CAdminCommandManager();
 
 	void HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth );
 
 private:
-	struct sAdminCommand {
+	struct sAdminCommand
+	{
 		void Set( std::string inName, CAuthToken::AccessLevel inAuthLevel )
 		{
 			Name = inName;
@@ -51,8 +59,8 @@ private:
 	std::string GetParam( const StringMap& params, const std::string& name ) const;
 
 	void AddFolder( const StringMap& params );
-	void DelFolder(unsigned int Id);
-	void AddLocalFile( const std::string& path);
+	void DelFolder( unsigned int Id );
+	void AddLocalFile( const std::string& path );
 
 	kode::db::DatabasePtr m_db;
 	kode::db::StatementPtr m_addFolder;

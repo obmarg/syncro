@@ -3,10 +3,12 @@
 
 #include <string>
 
-namespace syncro {
-namespace utils {
+namespace syncro
+{
+namespace utils
+{
 
-extern void ReplaceStringVars(std::string& string);
+extern void ReplaceStringVars( std::string& string );
 
 }	// namespace utils
 }	// namespace syncro

@@ -5,20 +5,22 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/bind.hpp>
 
-namespace syncro {
-namespace client {
+namespace syncro
+{
+namespace client
+{
 
 class ServerDetailsImp : public Scanner::ServerDetails
 {
 public:
 	ServerDetailsImp(
-		std::string name, 
-		std::string hostname, 
-		unsigned int port
-		) :
-	m_name( name ),
-	m_hostname( hostname ),
-	m_port( port )
+	    std::string name,
+	    std::string hostname,
+	    unsigned int port
+	) :
+		m_name( name ),
+		m_hostname( hostname ),
+		m_port( port )
 	{
 	}
 
@@ -29,8 +31,8 @@ public:
 	virtual ConnectionDetails GetConnDetails() const
 	{
 		return ConnectionDetails()
-			.SetHostname(m_hostname)
-			.SetPort( m_port );
+		       .SetHostname( m_hostname )
+		       .SetPort( m_port );
 	};
 private:
 	std::string m_name;
@@ -39,8 +41,8 @@ private:
 };
 
 Scanner::Scanner() :
-m_response(100,0),
-m_responseBuffer(100)	
+	m_response( 100, 0 ),
+	m_responseBuffer( 100 )
 {
 
 };
@@ -50,61 +52,62 @@ Scanner::~Scanner()
 
 };
 
-void Scanner::Scan(unsigned int timeout)
+void Scanner::Scan( unsigned int timeout )
 {
 	using namespace boost::asio::ip;
 	boost::asio::io_service service;
-	udp::socket socket(service);
+	udp::socket socket( service );
 	//TODO: Maybe make the address selection slightly more intelligent here?
 	udp::endpoint dest( address_v4::broadcast(), comms::BROADCAST_SERVER_PORT );
 	udp::endpoint local( address_v4::any(), comms::BROADCAST_RESPONSE_PORT );
 
 	boost::system::error_code error;
 	socket.open( udp::v4(), error );
-	socket.set_option( boost::asio::socket_base::broadcast(true) );
+	socket.set_option( boost::asio::socket_base::broadcast( true ) );
 	//socket.bind( local, error );
-	
+
 	if( error )
 		throw kode::net::NetworkException( error );
 
 	socket.send_to(
-		boost::asio::buffer( comms::BROADCAST_DISCOVERY_STRING ),
-		dest,
-		0,
-		error
-		);
+	    boost::asio::buffer( comms::BROADCAST_DISCOVERY_STRING ),
+	    dest,
+	    0,
+	    error
+	);
 
 	if( error )
 		throw kode::net::NetworkException( error );
 
 	m_finished = false;
 	boost::asio::deadline_timer t(
-		service, 
-		boost::posix_time::milliseconds(timeout)
-		);
+	    service,
+	    boost::posix_time::milliseconds( timeout )
+	);
 	t.async_wait( boost::bind(
-		&Scanner::Finished,
-		this
-		) );
-	do 
+	                  &Scanner::Finished,
+	                  this
+	              ) );
+	do
 	{
 		udp::endpoint sender;
 		//TODO: This buffer size could probably be a lot better.
 		socket.async_receive_from(
-			boost::asio::buffer( m_responseBuffer ),
-			m_sender,
-			0,
-			boost::bind(
-				&Scanner::HandleReceive,
-				this,
-				boost::asio::placeholders::error,
-				boost::asio::placeholders::bytes_transferred
-				)
-			);
+		    boost::asio::buffer( m_responseBuffer ),
+		    m_sender,
+		    0,
+		    boost::bind(
+		        &Scanner::HandleReceive,
+		        this,
+		        boost::asio::placeholders::error,
+		        boost::asio::placeholders::bytes_transferred
+		    )
+		);
 		service.run_one( error );
 		if( error )
 			throw new kode::net::NetworkException( error );
-	} while ( !m_finished );
+	}
+	while( !m_finished );
 }
 
 void Scanner::Reset()
@@ -113,43 +116,43 @@ void Scanner::Reset()
 }
 
 bool Scanner::HandleReceive(
-	const boost::system::error_code& error,
-	std::size_t size
-	)
+    const boost::system::error_code& error,
+    std::size_t size
+)
 {
-	m_response = std::string( 
-		m_responseBuffer.begin(), 
-		m_responseBuffer.begin()+size 
-		);
+	m_response = std::string(
+	                 m_responseBuffer.begin(),
+	                 m_responseBuffer.begin() + size
+	             );
 
 	if( error )
 		throw kode::net::NetworkException( error );
-	int ok = 
-		m_response.substr( 
-		0, 
-		comms::BROADCAST_RESPONSE_PREFIX.length() 
-		).compare( comms::BROADCAST_RESPONSE_PREFIX );
-	if( ok == 0 ) 
+	int ok =
+	    m_response.substr(
+	        0,
+	        comms::BROADCAST_RESPONSE_PREFIX.length()
+	    ).compare( comms::BROADCAST_RESPONSE_PREFIX );
+	if( ok == 0 )
 	{
-		std::string serverName = 
-			m_response.substr( 
-			comms::BROADCAST_RESPONSE_PREFIX.length(),
-			m_response.npos
-			);
+		std::string serverName =
+		    m_response.substr(
+		        comms::BROADCAST_RESPONSE_PREFIX.length(),
+		        m_response.npos
+		    );
 		boost::system::error_code error2;
-		std::string address = m_sender.address().to_string(error2);
+		std::string address = m_sender.address().to_string( error2 );
 		if( error2 )
 			throw kode::net::NetworkException( error );
 
-		ServerDetailsPtr newVal( 
-			new ServerDetailsImp( 
-				serverName, address, comms::SERVER_PORT
-				)
-			);
+		ServerDetailsPtr newVal(
+		    new ServerDetailsImp(
+		        serverName, address, comms::SERVER_PORT
+		    )
+		);
 		m_servers.insert( newVal );
 	}
 	return true;
 }
 
 }	// namespace client
-}	// namespace syncro 
+}	// namespace syncro

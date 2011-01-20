@@ -11,27 +11,32 @@
 #include "AuthManager.h"
 #include <libsyncro/packet_types.h>
 
-namespace syncro {
+namespace syncro
+{
 
-struct sSubpackets {
+struct sSubpackets
+{
 	typedef std::vector<unsigned int> TSizeList;
 	unsigned int Count;
 	TSizeList Sizes;
 	const TCharBuffer::TBuff& Buffer;
 };
 
-class CSyncroPBResponseFactory : public CBasePBResponseFactory {
+class CSyncroPBResponseFactory : public CBasePBResponseFactory
+{
 public:
-	CSyncroPBResponseFactory(const CSyncroPBResponseFactory& inoOther){
+	CSyncroPBResponseFactory( const CSyncroPBResponseFactory& inoOther )
+	{
 		//TODO: Implement copying of stuff (or make uncopyable?)
 	}
 	virtual ~CSyncroPBResponseFactory() {};
 
-	static CBasePBResponseFactory::TPointer Create() {
+	static CBasePBResponseFactory::TPointer Create()
+	{
 		return CBasePBResponseFactory::TPointer( new CSyncroPBResponseFactory() );
 	};
 
-	virtual CBasePBResponse::TPointer CreateResponse(const unsigned int innPacketType,TInputStreamList& inaInputStreams);
+	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, TInputStreamList& inaInputStreams );
 private:
 	CSyncroPBResponseFactory();
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
@@ -47,4 +52,4 @@ private:
 };
 
 }; //namespace syncro
-#endif 
+#endif

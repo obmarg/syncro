@@ -7,17 +7,20 @@
 #include <boost/scoped_ptr.hpp>
 #include <google/protobuf/message_lite.h>
 
-namespace syncro {
+namespace syncro
+{
 
 class CAuthToken;
 class CAdminCommandManager;
 
-class CAdminCommandHandler {
+class CAdminCommandHandler
+{
 public:
-	CAdminCommandHandler(TInputStreamList& inaInputStreams, const CAuthToken& inUserAuth, CAdminCommandManager& commandManager );
+	CAdminCommandHandler( TInputStreamList& inaInputStreams, const CAuthToken& inUserAuth, CAdminCommandManager& commandManager );
 	~CAdminCommandHandler();
 
-	CBasePBResponse::TPointer GetResponse() {
+	CBasePBResponse::TPointer GetResponse()
+	{
 		return m_pResponse;
 	}
 private:

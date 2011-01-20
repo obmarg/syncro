@@ -7,17 +7,19 @@
 
 class TiXmlDocument;
 
-namespace syncro {
+namespace syncro
+{
 
-class CXMLBuilder {
+class CXMLBuilder
+{
 public:
 	CXMLBuilder();
 	~CXMLBuilder();
 
-	void SaveDocAsFile(std::string inoFile);
+	void SaveDocAsFile( std::string inoFile );
 
 	bool GetFolderXML();
-	bool GetFolderContentsXML(int innFolderID);
+	bool GetFolderContentsXML( int innFolderID );
 private:
 	TiXmlDocument m_oXML;
 
@@ -25,14 +27,16 @@ private:
 
 };
 
-class CXMLOutput {
+class CXMLOutput
+{
 public:
-	CXMLOutput(CXMLBuilder& inoBuilder) : m_oBuilder(inoBuilder) {
+	CXMLOutput( CXMLBuilder& inoBuilder ) : m_oBuilder( inoBuilder )
+	{
 
 	}
-	CXMLOutput(const CXMLOutput& inoOther) : m_oBuilder( inoOther.m_oBuilder ) {};
+	CXMLOutput( const CXMLOutput& inoOther ) : m_oBuilder( inoOther.m_oBuilder ) {};
 
-	void operator()(TCharBuffer::TBuff& inoBuffer);
+	void operator()( TCharBuffer::TBuff& inoBuffer );
 private:
 	CXMLBuilder& m_oBuilder;
 };

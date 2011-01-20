@@ -4,18 +4,21 @@
 #include "common.h"
 #include "BasePBResponse.h"
 
-namespace syncro {
+namespace syncro
+{
 
 class CFolderMan;
 
-namespace pbHandlers {
+namespace pbHandlers
+{
 
-class FileHashRequest {
+class FileHashRequest
+{
 public:
 	FileHashRequest(
-		TInputStreamList& inaInputStreams,
-		CFolderMan& folderMan
-		);
+	    TInputStreamList& inaInputStreams,
+	    CFolderMan& folderMan
+	);
 	CBasePBResponse::TPointer GetResponse();
 private:
 	bool m_ok;

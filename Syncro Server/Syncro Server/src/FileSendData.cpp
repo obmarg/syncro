@@ -3,7 +3,8 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <stdint.h>
 
-namespace syncro {
+namespace syncro
+{
 
 const int DEFAULT_FILE_SEND_BUFFER_SIZE = 1024 * 1024;
 
@@ -12,41 +13,47 @@ const unsigned char FILE_SECTION_FIRST_BYTE = 16;
 const unsigned char FILE_LAST_SECTION_FIRST_BYTE = 20;
 
 CFileSendData::CFileSendData(
-	const std::string& insFilename,
-	const int innRequestedBufferSize,
-	const VoidCallback& completionCallback,
-	int64_t fileStartOffset
-	) 
-	: 
-m_sFilename( insFilename ),
-m_completionCallback( completionCallback ),
-m_finishedAfterChunk( false )
+    const std::string& insFilename,
+    const int innRequestedBufferSize,
+    const VoidCallback& completionCallback,
+    int64_t fileStartOffset
+)
+	:
+	m_sFilename( insFilename ),
+	m_completionCallback( completionCallback ),
+	m_finishedAfterChunk( false )
 {
 	m_nRequestedBufferSize = innRequestedBufferSize;
 	OpenFile( fileStartOffset );
 }
 
-CFileSendData::~CFileSendData() {
+CFileSendData::~CFileSendData()
+{
 
 }
 
-void CFileSendData::OpenFile(int64_t fileStartOffset) {
+void CFileSendData::OpenFile( int64_t fileStartOffset )
+{
 	using namespace std;
-	m_oFile.open( m_sFilename.c_str() ,ios::in | ios::binary);
-	if( m_oFile.is_open() ) {
+	m_oFile.open( m_sFilename.c_str() , ios::in | ios::binary );
+	if( m_oFile.is_open() )
+	{
 		m_oFile.seekg( 0, ios::end );
 		m_nFileSize = m_oFile.tellg();
 		m_oFile.seekg( fileStartOffset, ios::beg );
-	} else
+	}
+	else
 		throw std::runtime_error( "CFileSendData called on non existant file" );
 }
 
-void CFileSendData::FillBuffer(google::protobuf::io::ZeroCopyOutputStream& stream) {
+void CFileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream )
+{
 	int nReadAmount = GetChunkSize();
 
-	void *pData;
+	void* pData;
 	int nSize;
-	while( nReadAmount > 0 ) {
+	while( nReadAmount > 0 )
+	{
 		if( !stream.Next( &pData, &nSize ) )
 			throw std::runtime_error( "ZeroCopyOutputStream returned false in CFileSendData::FillBuffer" );
 		char* pChars = reinterpret_cast< char* >( pData );
@@ -60,28 +67,32 @@ void CFileSendData::FillBuffer(google::protobuf::io::ZeroCopyOutputStream& strea
 	}
 }
 
-unsigned int CFileSendData::GetChunkSize() {
+unsigned int CFileSendData::GetChunkSize()
+{
 	int nBufferSize = DEFAULT_FILE_SEND_BUFFER_SIZE;
-	if( m_nRequestedBufferSize != 0 ) {
-		int nRequestedBufferSize = (m_nRequestedBufferSize - 1024);		//Take away 1k just to be safe?
+	if( m_nRequestedBufferSize != 0 )
+	{
+		int nRequestedBufferSize = ( m_nRequestedBufferSize - 1024 );		//Take away 1k just to be safe?
 		nBufferSize = std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
 	}
 	//TODO: maybe stop doing the above -1024, and find a better way of doing it
 	int64_t nSizeLeft = m_nFileSize - m_oFile.tellg();
-	int64_t rv = std::min( 
-		boost::numeric_cast<int64_t>(nBufferSize), 
-		nSizeLeft 
-		);
-	return boost::numeric_cast<unsigned int>(rv);
+	int64_t rv = std::min(
+	                 boost::numeric_cast<int64_t>( nBufferSize ),
+	                 nSizeLeft
+	             );
+	return boost::numeric_cast<unsigned int>( rv );
 }
 
-bool CFileSendData::IsStartFile() {
-	if( m_oFile.tellg() == (std::streamoff)0 )
+bool CFileSendData::IsStartFile()
+{
+	if( m_oFile.tellg() == ( std::streamoff )0 )
 		return true;
 	return false;
 }
 
-bool CFileSendData::IsFileFinished() {
+bool CFileSendData::IsFileFinished()
+{
 
 	if( m_oFile.tellg() == m_nFileSize || m_oFile.eof() )
 	{
@@ -92,13 +103,16 @@ bool CFileSendData::IsFileFinished() {
 	return false;
 }
 
-std::istream::pos_type CFileSendData::GetFilePosition() {
+std::istream::pos_type CFileSendData::GetFilePosition()
+{
 	return m_oFile.tellg();
 }
 
-bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize ) {
-	std::streamoff nNextTell = m_oFile.tellg() + (std::streamoff)inNextChunkSize;
-	if( nNextTell == m_nFileSize ) {
+bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize )
+{
+	std::streamoff nNextTell = m_oFile.tellg() + ( std::streamoff )inNextChunkSize;
+	if( nNextTell == m_nFileSize )
+	{
 		m_finishedAfterChunk = true;
 		return true;
 	}
@@ -109,20 +123,22 @@ void CFileSendData::CallCompletionCallback()
 {
 	using boost::numeric_cast;
 
-	try {
+	try
+	{
 
 		int64_t timeMs = m_stopwatch.GetMS();
-		float dataTransferred = 
-			numeric_cast<float>( GetFilePosition() ) / 1024.0f;
+		float dataTransferred =
+		    numeric_cast<float>( GetFilePosition() ) / 1024.0f;
 
-		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f; 
+		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f;
 
 		float rate = dataTransferred / timeSecs;
 		std::cout << "Finished sending file (" << rate << "kb/s)\n";
-	}catch( const std::exception& ex )
+	}
+	catch( const std::exception& ex )
 	{
 		std::cout << "Error when calculating transfer rate in CFileSendData::CallCompletionCallback:\n"
-			<< ex.what();
+		          << ex.what();
 	}
 
 	if( m_completionCallback )

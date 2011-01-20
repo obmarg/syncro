@@ -4,11 +4,13 @@
 #include "common.h"
 #include "BasePBResponse.h"
 
-namespace syncro {
+namespace syncro
+{
 
-class FolderListRequestHandler {
+class FolderListRequestHandler
+{
 public:
-	FolderListRequestHandler(TInputStreamList& inaInputStreams);
+	FolderListRequestHandler( TInputStreamList& inaInputStreams );
 
 	CBasePBResponse::TPointer GetResponse();
 };

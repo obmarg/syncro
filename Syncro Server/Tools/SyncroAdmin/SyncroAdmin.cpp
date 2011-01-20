@@ -10,32 +10,32 @@
 
 namespace po = boost::program_options;
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
 	using namespace syncro::client;
 
-	po::options_description desc("Allowed options");
+	po::options_description desc( "Allowed options" );
 	desc.add_options()
-		("help,h", "produce help message")
-		("scan,s", "scan for servers")
-		("addfolder,a", po::value< std::string >(), "add folder")
-		("uploadfile,u", po::value< std::string >(), "upload file")
-		("folderid,f", po::value< int >(), "folder id to use for upload/download")
-		("oneshot,o", "upload file as one shot file");
+	( "help,h", "produce help message" )
+	( "scan,s", "scan for servers" )
+	( "addfolder,a", po::value< std::string >(), "add folder" )
+	( "uploadfile,u", po::value< std::string >(), "upload file" )
+	( "folderid,f", po::value< int >(), "folder id to use for upload/download" )
+	( "oneshot,o", "upload file as one shot file" );
 
 	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);    
+	po::store( po::parse_command_line( argc, argv, desc ), vm );
+	po::notify( vm );
 
-	if( vm.count("help") )
+	if( vm.count( "help" ) )
 	{
 		std::cout << desc << "\n";
 		return 1;
 	}
 
-	if( vm.count("scan") )
+	if( vm.count( "scan" ) )
 	{
-		try 
+		try
 		{
 			Scanner scanner;
 			scanner.Scan( 5000 );
@@ -51,16 +51,16 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	try 
+	try
 	{
 		Connection conn(
-			ConnectionDetails()
-				.SetUsername( "admin" )
-				.SetPassword( "password" )
-				.SetHostname( "localhost" )
-			);
+		    ConnectionDetails()
+		    .SetUsername( "admin" )
+		    .SetPassword( "password" )
+		    .SetHostname( "localhost" )
+		);
 
-		if( vm.count("addfolder") )
+		if( vm.count( "addfolder" ) )
 		{
 			std::string folderName = vm["addfolder"].as<std::string>();
 			boost::filesystem::path path( folderName );
@@ -73,34 +73,34 @@ int main(int argc, char* argv[])
 				conn.SendAdminCommand( "AddFolder", params );
 			}
 		}
-		if( vm.count("uploadfile") )
+		if( vm.count( "uploadfile" ) )
 		{
-			if( !vm.count("folderid") )
+			if( !vm.count( "folderid" ) )
 			{
 				throw std::runtime_error( "Please provide a folder id to upload to" );
 			}
 			std::string filename = vm["uploadfile"].as<std::string>();
-			boost::filesystem::path path(filename);
-			
+			boost::filesystem::path path( filename );
+
 			conn.UploadFile(
-				UploadFileDetails()
-					.SetFolderId( vm["folderid"].as<int>() )
-					.SetLocalPath( filename )
-					.SetRemotePath( path.filename() )
-					.SetOneShot( vm.count("oneshot") > 0 )
-				);
+			    UploadFileDetails()
+			    .SetFolderId( vm["folderid"].as<int>() )
+			    .SetLocalPath( filename )
+			    .SetRemotePath( path.filename() )
+			    .SetOneShot( vm.count( "oneshot" ) > 0 )
+			);
 
 		}
 
 
-	/*	syncro::FolderList list;
+		/*	syncro::FolderList list;
 
-		conn.GetFolderList( list );
+			conn.GetFolderList( list );
 
-		conn.SendAdminCommand("AddFolder","C:\\temp\\");
+			conn.SendAdminCommand("AddFolder","C:\\temp\\");
 
-		int i = 0;
-		i += 1;*/
+			int i = 0;
+			i += 1;*/
 	}
 	catch( const kode::net::NetworkException& ex )
 	{

@@ -11,10 +11,10 @@ BackgroundThread& BackgroundThread::GetInstance()
 
 BackgroundThread::BackgroundThread()
 {
-	m_thread = boost::thread( boost::bind( 
-		&BackgroundThread::RunThread,
-		this
-		) );
+	m_thread = boost::thread( boost::bind(
+	                              &BackgroundThread::RunThread,
+	                              this
+	                          ) );
 }
 
 BackgroundThread::~BackgroundThread()
@@ -29,10 +29,10 @@ BackgroundThread::~BackgroundThread()
 // Attempts to lock the mutex, then calls the callback.
 // Returns instantly otherwise
 //
-bool 
-BackgroundThread::GetData(ServerListCallback callback)
+bool
+BackgroundThread::GetData( ServerListCallback callback )
 {
-	try 
+	try
 	{
 		boost::mutex::scoped_try_lock lock( m_dataMutex );
 
@@ -47,7 +47,7 @@ BackgroundThread::GetData(ServerListCallback callback)
 	return false;
 }
 
-void 
+void
 BackgroundThread::RunThread()
 {
 	using syncro::client::Scanner;
@@ -57,7 +57,7 @@ BackgroundThread::RunThread()
 	Scanner scanner;
 	try
 	{
-		scanner.Scan(500);
+		scanner.Scan( 500 );
 	}
 	catch( const std::exception& ex )
 	{
@@ -69,7 +69,7 @@ BackgroundThread::RunThread()
 		try
 		{
 			boost::mutex::scoped_lock( m_dataMutex );
-			Connection conn( (*details) );
+			Connection conn(( *details ) );
 			m_servers.push_back( ServerInfo( details->Name(), *details ) );
 			conn.GetFolderList( m_servers.back().folders );
 		}

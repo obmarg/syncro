@@ -19,31 +19,35 @@
 #include "SyncroPBResponseFactory.h"
 #include "SyncroDB.h"
 
-namespace syncro {
+namespace syncro
+{
 
 using namespace std;
 using boost::shared_ptr;
 
 CSyncroServer::CSyncroServer() :
-	m_oBroadcastThread( CBroadcastThread() ){
-	//Create a DB object.  to ensure the db file is created 
+	m_oBroadcastThread( CBroadcastThread() )
+{
+	//Create a DB object.  to ensure the db file is created
 	//if it doesn't already exist
 	CSyncroDB::OpenDB();
 }
 
-CSyncroServer::~CSyncroServer() {
+CSyncroServer::~CSyncroServer()
+{
 }
 
-bool 
-CSyncroServer::Run() {
+bool
+CSyncroServer::Run()
+{
 	using boost::asio::io_service;
-	
+
 	io_service oIO;
-	
-	CServerComms oComms(oIO);
+
+	CServerComms oComms( oIO );
 	//TODO: Rename CXMLAcceptHandler (it's not really an xml accepter anymore is it?)
 	CXMLAcceptHandler* pXMLAH = new CXMLAcceptHandler();
-	oComms.AddAcceptHandler( boost::shared_ptr<CAcceptHandler>( (pXMLAH) ) );
+	oComms.AddAcceptHandler( boost::shared_ptr<CAcceptHandler>(( pXMLAH ) ) );
 	oIO.run();
 
 	return true;

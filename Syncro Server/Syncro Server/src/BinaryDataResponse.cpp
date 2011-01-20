@@ -1,9 +1,10 @@
 #include "BinaryDataResponse.h"
 
-namespace syncro {
+namespace syncro
+{
 
-CBinaryDataResponse::CBinaryDataResponse(CFileSendData& inoFileData) 
-	: m_oFileData(inoFileData) 
+CBinaryDataResponse::CBinaryDataResponse( CFileSendData& inoFileData )
+	: m_oFileData( inoFileData )
 {
 	m_oPacketHeader.set_file_offset( m_oFileData.GetFilePosition() );
 	m_oPacketHeader.set_file_size( m_oFileData.GetFileSize() );
@@ -12,21 +13,24 @@ CBinaryDataResponse::CBinaryDataResponse(CFileSendData& inoFileData)
 		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_START );
 	else
 		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_MIDDLE );
-	
-	if( m_oFileData.IsFileFinishedAfterChunk( m_oFileData.GetChunkSize() )  )
+
+	if( m_oFileData.IsFileFinishedAfterChunk( m_oFileData.GetChunkSize() ) )
 		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
 }
 
-CBinaryDataResponse::~CBinaryDataResponse() {
+CBinaryDataResponse::~CBinaryDataResponse()
+{
 
 }
 
-unsigned int CBinaryDataResponse::GetSubpacketCount() {
+unsigned int CBinaryDataResponse::GetSubpacketCount()
+{
 	return 2;
 }
 
-std::vector<unsigned int> CBinaryDataResponse::GetSubpacketSizes() {
-	std::vector<unsigned int> rv(2);
+std::vector<unsigned int> CBinaryDataResponse::GetSubpacketSizes()
+{
+	std::vector<unsigned int> rv( 2 );
 	rv[0] = m_oPacketHeader.ByteSize() ;
 	rv[1] = m_oFileData.GetChunkSize();
 	return rv;
@@ -34,12 +38,14 @@ std::vector<unsigned int> CBinaryDataResponse::GetSubpacketSizes() {
 
 
 
-void CBinaryDataResponse::WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream) {
+void CBinaryDataResponse::WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
+{
 	if( inSubpacketIndex == 0 )
 		WriteMessage( m_oPacketHeader, stream );
-	else {
+	else
+	{
 		m_oFileData.FillBuffer( stream );
 	}
 }
-	
+
 };		//namespace syncro

@@ -4,9 +4,11 @@
 #include "FolderMan.h"
 #include <boost/thread.hpp>
 
-namespace syncro {
+namespace syncro
+{
 
-class CSyncroServer {
+class CSyncroServer
+{
 public:
 	CSyncroServer();
 	~CSyncroServer();

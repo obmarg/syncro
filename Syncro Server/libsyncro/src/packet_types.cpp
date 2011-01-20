@@ -1,11 +1,15 @@
 #include "packet_types.h"
 #include <boost/lexical_cast.hpp>
 
-namespace syncro {
-namespace comms {
-namespace packet_types {
+namespace syncro
+{
+namespace comms
+{
+namespace packet_types
+{
 
-std::string Str( ePBPacketTypes type ) {
+std::string Str( ePBPacketTypes type )
+{
 	switch( type )
 	{
 	case BinaryRequest:

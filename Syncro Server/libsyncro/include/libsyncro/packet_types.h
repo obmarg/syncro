@@ -3,11 +3,15 @@
 
 #include <string>
 
-namespace syncro {
-namespace comms {
-namespace packet_types {
+namespace syncro
+{
+namespace comms
+{
+namespace packet_types
+{
 
-enum ePBPacketTypes {
+enum ePBPacketTypes
+{
 	BinaryRequest = 1,			// 1
 	BinaryContinue,				// 2
 	BinaryResponse,				// 3

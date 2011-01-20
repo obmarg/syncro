@@ -8,19 +8,22 @@
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <libsyncro/packet_types.h>
 
-namespace syncro {
+namespace syncro
+{
 
-class CBinaryDataResponse : public CBasePBResponse {
+class CBinaryDataResponse : public CBasePBResponse
+{
 public:
-	CBinaryDataResponse(CFileSendData& inoFileData);
+	CBinaryDataResponse( CFileSendData& inoFileData );
 	virtual ~CBinaryDataResponse();
 
 	virtual std::vector<unsigned int> GetSubpacketSizes();
 	virtual unsigned int GetSubpacketCount();
 
-	virtual void WriteSubpacket(int inSubpacketIndex,google::protobuf::io::ZeroCopyOutputStream& stream);
+	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream );
 
-	virtual unsigned int GetPacketType() { 
+	virtual unsigned int GetPacketType()
+	{
 		return comms::packet_types::BinaryResponse;
 	};
 protected:
