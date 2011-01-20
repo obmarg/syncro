@@ -26,6 +26,7 @@ public class PBSocketInterface {
 		public static final int HANDSHAKE_REQUEST = 4;
 		public static final int BINARY_INCOMING_REQUEST = 6;
 		public static final int BINARY_INCOMING_DATA = 8;
+		public static final int FILE_HASH_REQUEST = 16;
 		public static String Str(int Type)
 		{
 			switch(Type)
@@ -40,6 +41,8 @@ public class PBSocketInterface {
 				return "Binary Incoming Request";
 			case BINARY_INCOMING_DATA:
 				return "Binary Incoming Data";
+			case FILE_HASH_REQUEST:
+				return "File Hash Request";
 			}
 			return "Unknown";
 		}
@@ -50,6 +53,7 @@ public class PBSocketInterface {
 		public static final int HANDSHAKE_RESPONSE = 5;
 		public static final int BINARY_INCOMING_RESPONSE = 7;
 		public static final int BINARY_INCOMING_DATA_ACK = 9;
+		public static final int FILE_HASH_RESPONSE = 17;
 		public static String Str(int Type)
 		{
 			switch(Type)
@@ -62,6 +66,8 @@ public class PBSocketInterface {
 				return "Binary Incoming Response";
 			case BINARY_INCOMING_DATA_ACK:
 				return "Binary Incoming Data Ack";
+			case FILE_HASH_RESPONSE:
+				return "File Hash Response";
 			}
 			return "Unknown";
 		}

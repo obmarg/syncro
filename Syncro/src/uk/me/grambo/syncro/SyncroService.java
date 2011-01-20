@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,6 +15,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -41,6 +44,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.util.Log;
+import android.util.Base64;
 import android.widget.RemoteViews;
 
 public class SyncroService extends IntentService implements RemoteFileHandler{
@@ -384,10 +388,30 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 	
 	protected boolean GetFile(Socket inoSock,RemoteFileHandler.RemoteFileData inoFileData, String insDestFilename) throws IOException {
+		File destFile = new File( insDestFilename );
+		boolean canResume = false;
+		long nFileStartOffset = 0;
+		if( destFile.exists() )
+		{
+			try {
+				canResume = CheckResume( inoSock, inoFileData, destFile );
+			}
+			catch( IOException e )
+			{
+				throw e;
+			}
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if( canResume )
+				nFileStartOffset = destFile.length();
+		}
+		
 		boolean fOK = false;
-		fOK = StartDownloadingFile(inoSock,inoFileData.FolderId,inoFileData.Filename);
+		fOK = StartDownloadingFile(inoSock,inoFileData.FolderId,inoFileData.Filename,nFileStartOffset);
 		if( fOK ) {
-			FileOutputStream oFile = new FileOutputStream( insDestFilename );
+			FileOutputStream oFile = new FileOutputStream( insDestFilename, canResume );
 			try {
 				fOK = ReceiveFile(inoSock,oFile);
 			}catch (Exception e) {
@@ -404,12 +428,12 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return fOK;
 	}
 
-
-	private boolean StartDownloadingFile(Socket inoSock,int innFolderId, String insFilename) throws IOException {
+	private boolean StartDownloadingFile(Socket inoSock,int innFolderId, String insFilename,long innStartOffset) throws IOException {
 		Binarydata.BinaryDataRequest oRequest = Binarydata.BinaryDataRequest.newBuilder()
-			.setFileName(insFilename)
-			.setFolderId(innFolderId)
+			.setFileName( insFilename )
+			.setFolderId( innFolderId )
 			.setRecvBufferSize( inoSock.getReceiveBufferSize() )
+			.setStartOffset( innStartOffset )
 			.build();
 		m_oPBInterface.SendObject(inoSock.getOutputStream(), PBSocketInterface.RequestTypes.BINARY_REQUEST ,oRequest);
 		return true;
@@ -432,6 +456,45 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}while( !fDone );
 		return true;
 	}
+	
+	private boolean CheckResume( Socket inoSock, RemoteFileHandler.RemoteFileData inoFileData, File inoFile ) throws IOException,Exception
+	{
+		String hash = GetFileHash( inoFile );
+		Binarydata.FileHashRequest oRequest = Binarydata.FileHashRequest.newBuilder()
+			.setFileName( inoFileData.Filename )
+			.setFolderId( inoFileData.FolderId )
+			.setDataSize( inoFile.length() )
+			.setHash( hash )
+			.build();
+		m_oPBInterface.SendObject( inoSock.getOutputStream(), PBSocketInterface.RequestTypes.FILE_HASH_REQUEST, oRequest );
+		
+		FileHashResponseHandler response = new FileHashResponseHandler();
+		m_oPBInterface.addResponseHandler(response);
+		m_oPBInterface.HandleResponse( inoSock.getInputStream() );
+		return response.hashOk();
+	}
+	
+	private String GetFileHash( File inoFile ) throws IOException
+	{
+		MessageDigest digester;
+		try {
+			digester = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "";
+		}
+		byte[] buffer = new byte[ 1024 * 8 ];
+		int read;
+		FileInputStream hashInputStream = new FileInputStream( inoFile );
+		while( ( read = hashInputStream.read( buffer ) ) > 0 )
+		{
+			digester.update(buffer, 0, read);
+		}
+		hashInputStream.close();
+		byte[] hash = digester.digest();
+		return Base64.encodeToString(hash, Base64.DEFAULT );
+	}
+
 	
 	protected boolean SendFiles(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException,Exception {
 		String args[] = { Integer.valueOf(innServerID).toString() };
