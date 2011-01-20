@@ -27,14 +27,19 @@ m_ok( false )
 			);
 	}
 	hashRequest.ParseFromZeroCopyStream( inaInputStreams[0] );
+
+	if( !hashRequest.has_data_size() || hashRequest.data_size() == 0)
+	{
+		return;
+	}
 	
 	FileTransferDetails fileDetails;
 	CBinaryDataRequest fileRequest( 
 		hashRequest.folder_id(),
 		hashRequest.file_name()
 		);
-	m_ok = folderMan.FileRequested( fileRequest, fileDetails );
-	if( !m_ok )
+	bool foundFile = folderMan.FileRequested( fileRequest, fileDetails );
+	if( !foundFile )
 	{
 		return;
 	}
@@ -55,10 +60,7 @@ m_ok( false )
 	{
 		if( fileSize < hashRequest.data_size() )
 		{
-			throw std::runtime_error( 
-				"Data size passed to FileHashRequest is "
-				"bigger than actual file"
-				);
+			return;
 		}
 		fileSize = hashRequest.data_size();
 	}
@@ -67,6 +69,9 @@ m_ok( false )
 	do 
 	{
 		int64_t sizeLeft = fileSize - file.tellg();
+		if( sizeLeft == 0 )
+			break;
+
 		if( sizeLeft < buffer.size() )
 			buffer.resize( 
 				boost::numeric_cast< size_t >( sizeLeft )

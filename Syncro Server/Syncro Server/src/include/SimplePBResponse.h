@@ -36,6 +36,7 @@ public:
 	{
 		if( inSubpacketIndex != 0 )
 			throw std::logic_error( "Invalid subpacket index in SimplePBResponse::WriteSubpacket" );
+		WriteMessage( *m_message, stream );
 	}
 
 	virtual unsigned int GetPacketType() { 

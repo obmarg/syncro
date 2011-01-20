@@ -35,7 +35,7 @@ void CFileSendData::OpenFile(int64_t fileStartOffset) {
 	m_oFile.open( m_sFilename.c_str() ,ios::in | ios::binary);
 	if( m_oFile.is_open() ) {
 		m_oFile.seekg( 0, ios::end );
-		m_nFileSize = (unsigned int)m_oFile.tellg();
+		m_nFileSize = m_oFile.tellg();
 		m_oFile.seekg( fileStartOffset, ios::beg );
 	} else
 		throw std::runtime_error( "CFileSendData called on non existant file" );
