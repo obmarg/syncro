@@ -33,16 +33,7 @@ CBinaryIncomingData::HandlePacket( TInputStreamList& inaInputStreams )
 
 	if( !m_started )
 	{
-		m_started = true;
-#ifdef _DEBUG
-		if( m_oFile.is_open() )
-		{
-			throw std::logic_error( "File already open, but started flag not set in "
-				"CBinaryIncomingData::HandlePacket"
-				);
-		}
-#endif
-		m_oFile.open( m_filename.c_str(), std::ios::out | std::ios::binary );
+		StartFile();
 	}
 
 	if( !m_oFile.is_open() )
@@ -78,42 +69,61 @@ CBinaryIncomingData::HandlePacket( TInputStreamList& inaInputStreams )
 
 void CBinaryIncomingData::ShouldResume(int64_t resumePoint)
 {
+	StartFile( resumePoint );
+}
+
+void CBinaryIncomingData::StartFile(int64_t startOffset) 
+{
 	if( m_started )
 	{
-		throw std::logic_error( "Attempting to resume a BinaryIncomingData that has already started" );
+		throw std::logic_error( "Attempting to start a BinaryIncomingData that has already started" );
 	}
-#ifdef _DEBUG
 	if( m_oFile.is_open() )
 	{
 		throw std::logic_error( "File already open, but started flag not set in "
-			"CBinaryIncomingData::HandlePacket"
+			"CBinaryIncomingData::StartFile"
 			);
 	}
-#endif
-	int64_t destSize = 
-		boost::numeric_cast<int64_t>( 
-			boost::filesystem::file_size( m_filename )
-		);
 
-	if( resumePoint > destSize )
-	{
-		throw std::runtime_error( 
-			"Resume point > file size in "
-			"CBinaryIncomingData::ShouldResume"
-			);
-	}
 	m_started = true;
-	m_oFile.open( 
-		m_filename.c_str(), 
-		std::ios::out | std::ios::binary | std::ios::app 
-		);
-	m_oFile.seekp( resumePoint );
+
+	std::ios_base::openmode openMode = 
+		std::ios::out | std::ios::binary;
+
+	if( startOffset != 0 )
+	{
+		int64_t destSize = 
+			boost::numeric_cast<int64_t>( 
+			boost::filesystem::file_size( m_filename )
+			);
+		if( startOffset > destSize )
+		{
+			throw std::runtime_error( 
+				"Resume point > file size in "
+				"CBinaryIncomingData::StartFile"
+				);
+		}
+		openMode |= std::ios::app;
+	}	
+
+	m_oFile.open( m_filename.c_str(), openMode );
+	m_oFile.seekp( startOffset );
 	if( m_oFile.fail() )
 	{
 		throw std::runtime_error( 
-			"File open/seek fail in CBinaryIncomingData::ShouldResume"
+			"File open/seek fail in CBinaryIncomingData::StartFile"
 			);
 	}
+
+	if( startOffset > 0 )
+	{
+		std::cout << "Resuming receive of file: ";
+	}
+	else
+	{
+		std::cout << "Receiving file: ";
+	} 
+	std::cout << m_filename.c_str() << "\n";
 }
 
 }

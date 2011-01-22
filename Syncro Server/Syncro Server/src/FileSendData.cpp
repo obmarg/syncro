@@ -39,7 +39,7 @@ void CFileSendData::OpenFile( int64_t fileStartOffset )
 	
 	if( fileStartOffset > 0 )
 	{
-		cout << "Resuming file: ";
+		cout << "Resuming send of file: ";
 	}
 	else
 	{

@@ -17,6 +17,9 @@
 namespace syncro
 {
 
+// Uncomment to enable PB packet debug output
+//#define PB_PACKET_DEBUG
+
 CSyncroPBResponseFactory::CSyncroPBResponseFactory()
 {
 	//TODO: make this db loading stuff better
@@ -40,7 +43,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 		)
 			throw authentication_exception( "Not authenticated" );
 	}
-#ifdef _DEBUG
+#ifdef PB_PACKET_DEBUG
 	packet_types::ePBPacketTypes packetType =
 	    numeric_cast< packet_types::ePBPacketTypes >( innPacketType );
 	std::cout <<
@@ -100,6 +103,9 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 			        details.CompletionCallback()
 			    )
 			);
+			std::cout << "Accepted Binary Incoming Request\n";
+			std::cout << "Filename: " << details.Filename().c_str() << "\n";
+			std::cout << "Current Size: " << details.CurrentSize() << "\n";
 		}
 		return CBinaryIncomingResponse::Create( 
 			CBinaryIncomingResponse::eResponseType_Response, 

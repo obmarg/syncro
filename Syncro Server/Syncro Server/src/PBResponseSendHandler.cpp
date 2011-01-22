@@ -9,6 +9,9 @@
 namespace syncro
 {
 
+// Uncomment to enable PB packet debug output
+//#define PB_PACKET_DEBUG
+
 CPBResponseSendHandler::CPBResponseSendHandler( CTCPConnection::TPointer inpConn ) : m_pConn( inpConn )
 {
 
@@ -33,7 +36,7 @@ bool CPBResponseSendHandler::SendStarting()
 
 	pb::PacketHeader oResponseHeader;
 	oResponseHeader.set_packet_type( m_pResponse->GetPacketType() );
-#ifdef _DEBUG
+#ifdef PB_PACKET_DEBUG
 	packet_types::ePBPacketTypes packetType =
 	    numeric_cast< packet_types::ePBPacketTypes >( m_pResponse->GetPacketType() );
 	std::cout <<

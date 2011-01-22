@@ -25,6 +25,9 @@ public:
 	{ return m_filename; };
 
 private:
+	void StartFile(int64_t startOffset=0);
+
+private:
 	std::ofstream m_oFile;
 	std::string m_filename;
 	bool m_started;
