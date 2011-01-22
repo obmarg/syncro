@@ -23,9 +23,9 @@ public:
 		eResponseType_Ack
 	};
 
-	static CBasePBResponse::TPointer Create( eResponseType eType, bool infValue )
+	static CBasePBResponse::TPointer Create( eResponseType eType, bool infValue, int64_t currentSize=0 )
 	{
-		CBasePBResponse::TPointer oPointer( new CBinaryIncomingResponse( eType, infValue ) );
+		CBasePBResponse::TPointer oPointer( new CBinaryIncomingResponse( eType, infValue, currentSize ) );
 		return oPointer;
 	}
 
@@ -67,7 +67,7 @@ public:
 	}
 protected:
 
-	CBinaryIncomingResponse( eResponseType eType, bool infValue ) :
+	CBinaryIncomingResponse( eResponseType eType, bool infValue, int64_t currentSize=0 ) :
 		m_recvBufferSize( 0 )
 	{
 		m_eType = eType;
@@ -80,6 +80,7 @@ protected:
 			pResponse->set_accepted( infValue );
 			m_recvBufferSize = 1024 * 51;
 			pResponse->set_max_packet_size( m_recvBufferSize );
+			pResponse->set_current_file_size( currentSize );
 			break;
 		}
 		case eResponseType_Ack:

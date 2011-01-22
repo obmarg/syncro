@@ -16,7 +16,8 @@ namespace pbHandlers
 
 FileHashRequest::FileHashRequest(
     TInputStreamList& inaInputStreams,
-    CFolderMan&	folderMan
+    CFolderMan&	folderMan,
+	HashOkCallback callback
 ) :
 	m_ok( false )
 {
@@ -96,6 +97,11 @@ FileHashRequest::FileHashRequest(
 	                   );
 
 	m_ok = ( hash == hashRequest.hash() );
+
+	if( m_ok && callback )
+	{
+		callback( fileDetails.Filename(), fileSize );
+	}
 }
 
 CBasePBResponse::TPointer

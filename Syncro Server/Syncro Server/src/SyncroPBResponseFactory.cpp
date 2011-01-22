@@ -12,6 +12,7 @@
 #include "FileHashHandlers.h"
 #include <libsyncro/packet_types.h>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/bind.hpp>
 
 namespace syncro
 {
@@ -100,7 +101,11 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 			    )
 			);
 		}
-		return CBinaryIncomingResponse::Create( CBinaryIncomingResponse::eResponseType_Response, fAccept );
+		return CBinaryIncomingResponse::Create( 
+			CBinaryIncomingResponse::eResponseType_Response, 
+			fAccept,
+			details.CurrentSize()
+			);
 	}
 	case packet_types::BinaryIncomingData:
 	{
@@ -131,12 +136,35 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 	}
 	case packet_types::FileHashRequest:
 	{
-		pbHandlers::FileHashRequest request( inaInputStreams, ( *m_pFolderMan ) );
+		pbHandlers::FileHashRequest request( 
+			inaInputStreams, 
+			( *m_pFolderMan ),
+			boost::bind( 
+				&CSyncroPBResponseFactory::HashOkCallback,
+				this,
+				_1, _2
+				)
+			);
 		return request.GetResponse();
 	}
 	};
 
 	throw std::runtime_error( "Invalid pb request passed to response factory" );
+}
+
+void CSyncroPBResponseFactory::HashOkCallback( 
+	const std::string& filename, 
+	int64_t sizeHashed 
+	)
+{
+	if( m_pCurrentRecvData )
+	{
+		if( m_pCurrentRecvData->Filename() == filename )
+		{
+			//TODO: This might except, should maybe catch it?
+			m_pCurrentRecvData->ShouldResume( sizeHashed );
+		}
+	}
 }
 
 

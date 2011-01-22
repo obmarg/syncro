@@ -201,6 +201,7 @@ CFolderMan::FileRequested(
 	                         this,
 	                         finishDetails
 	                     );
+	details.m_currentSize = requestData.GetStartOffset();
 	return true;
 }
 
@@ -259,6 +260,7 @@ CFolderMan::IncomingFile(
 		if( file_size( destFile ) != nFileSize )
 		{
 			// File size doesn't match, definetly download again.
+			details.m_currentSize = file_size( destFile );
 			return true;
 		}
 	}

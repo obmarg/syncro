@@ -18,8 +18,16 @@ public:
 	~CBinaryIncomingData();
 
 	void HandlePacket( TInputStreamList& inaInputStreams );
+
+	void ShouldResume(int64_t resumePoint);
+
+	std::string Filename() const
+	{ return m_filename; };
+
 private:
 	std::ofstream m_oFile;
+	std::string m_filename;
+	bool m_started;
 	VoidCallback m_completedCallback;
 	kode::time::Stopwatch m_stopwatch;
 	unsigned int m_dataTransferred;

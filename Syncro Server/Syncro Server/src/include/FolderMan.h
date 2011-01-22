@@ -64,18 +64,22 @@ class FileTransferDetails
 {
 	friend class CFolderMan;
 public:
-	std::string Filename()
-	{
-		return m_filename;
-	}
-	VoidCallback CompletionCallback()
-	{
-		return m_callback;
-	}
+	FileTransferDetails() :
+	m_currentSize(0)
+	{ }
 
+	std::string Filename()
+	{ return m_filename; }
+
+	VoidCallback CompletionCallback()
+	{ return m_callback; }
+
+	int64_t CurrentSize()
+	{ return m_currentSize; }
 private:
 	std::string m_filename;
 	VoidCallback m_callback;
+	int64_t m_currentSize;
 };
 
 };

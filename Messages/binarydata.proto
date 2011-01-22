@@ -44,6 +44,7 @@ message BinaryPacketHeader {
 message BinaryIncomingResponse {
 	optional bool accepted = 1;
 	optional int32 max_packet_size = 2;
+	optional int64 current_file_size = 3;
 };
 
 message BinaryIncomingAck {

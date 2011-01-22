@@ -39,6 +39,9 @@ public:
 	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, TInputStreamList& inaInputStreams );
 private:
 	CSyncroPBResponseFactory();
+
+	void HashOkCallback( const std::string& filename, int64_t sizeHashed );
+
 	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
 	TFileSendDataPtr m_pCurrentSendData;
 	boost::scoped_ptr<CFolderMan> m_pFolderMan;

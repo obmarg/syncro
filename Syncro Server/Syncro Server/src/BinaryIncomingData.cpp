@@ -1,6 +1,7 @@
 #include "BinaryIncomingData.h"
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/filesystem.hpp>
 
 namespace syncro
 {
@@ -9,11 +10,11 @@ CBinaryIncomingData::CBinaryIncomingData(
     const std::string insFilename,
     VoidCallback completedCallback
 ) :
-	m_oFile( insFilename.c_str(), std::ios::out | std::ios::binary ),
+	m_filename( insFilename ),
+	m_started(false),
 	m_completedCallback( completedCallback ),
 	m_dataTransferred( 0 )
 {
-
 }
 
 CBinaryIncomingData::~CBinaryIncomingData()
@@ -24,6 +25,20 @@ void
 CBinaryIncomingData::HandlePacket( TInputStreamList& inaInputStreams )
 {
 	using boost::numeric_cast;
+
+	if( !m_started )
+	{
+		m_started = true;
+#ifdef _DEBUG
+		if( m_oFile.is_open() )
+		{
+			throw std::logic_error( "File already open, but started flag not set in "
+				"CBinaryIncomingData::HandlePacket"
+				);
+		}
+#endif
+		m_oFile.open( m_filename.c_str(), std::ios::out | std::ios::binary );
+	}
 
 	if( !m_oFile.is_open() )
 	{
@@ -53,6 +68,41 @@ CBinaryIncomingData::HandlePacket( TInputStreamList& inaInputStreams )
 		{
 			m_completedCallback();
 		}
+	}
+}
+
+void CBinaryIncomingData::ShouldResume(int64_t resumePoint)
+{
+	if( m_started )
+	{
+		throw std::logic_error( "Attempting to resume a BinaryIncomingData that has already started" );
+	}
+#ifdef _DEBUG
+	if( m_oFile.is_open() )
+	{
+		throw std::logic_error( "File already open, but started flag not set in "
+			"CBinaryIncomingData::HandlePacket"
+			);
+	}
+#endif
+	if( resumePoint > boost::filesystem::file_size( m_filename ) )
+	{
+		throw std::runtime_error( 
+			"Resume point > file size in "
+			"CBinaryIncomingData::ShouldResume"
+			);
+	}
+	m_started = true;
+	m_oFile.open( 
+		m_filename.c_str(), 
+		std::ios::out | std::ios::binary | std::ios::app 
+		);
+	m_oFile.seekp( resumePoint );
+	if( m_oFile.fail() )
+	{
+		throw std::runtime_error( 
+			"File open/seek fail in CBinaryIncomingData::ShouldResume"
+			);
 	}
 }
 

@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "BasePBResponse.h"
+#include <boost/function.hpp>
 
 namespace syncro
 {
@@ -15,9 +16,13 @@ namespace pbHandlers
 class FileHashRequest
 {
 public:
+	typedef boost::function< void (const std::string&, int64_t) >
+		HashOkCallback;
+public:
 	FileHashRequest(
 	    TInputStreamList& inaInputStreams,
-	    CFolderMan& folderMan
+	    CFolderMan& folderMan,
+		HashOkCallback callback=HashOkCallback()
 	);
 	CBasePBResponse::TPointer GetResponse();
 private:
