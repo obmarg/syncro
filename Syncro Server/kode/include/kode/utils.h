@@ -69,6 +69,14 @@ extern std::string GenerateUUID();
 extern std::wstring wstring( const std::string& str );
 extern std::string string( const std::wstring& str );
 
+#ifdef _WIN32
+const std::string PATH_SEPERATOR_STR = "\\";
+const char PATH_SEPERATOR_CHAR = '\\';
+#else
+const std::string PATH_SEPERATOR_STR = "/";
+const char PATH_SEPERATOR_CHAR = '/';
+#endif
+
 }	// namespace utils
 };	// namespace kode
 

@@ -2,6 +2,7 @@
 #include "Folder.h"
 #include "BinaryDataRequest.h"
 #include <libsyncro/stringutils.h>
+#include <kode/utils.h>
 #include <boost/filesystem.hpp>
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
@@ -85,7 +86,7 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
 		        && ( *m_folders.back().Path.rbegin() ) != '\\' )
 		{
 			//TODO: Replace this with real path seperator for current platform
-			m_folders.back().Name += "/";
+			m_folders.back().Path += kode::utils::PATH_SEPERATOR_STR;
 		}
 	}
 }

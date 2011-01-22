@@ -57,7 +57,7 @@ bool CPBResponseSendHandler::SendStarting()
 	oResponseHeader.SerializeToArray( &m_aBuffer[nHeadSize], nPBHeaderSize );
 	unsigned int nWrittenSoFar = nPBHeaderSize + nHeadSize;
 
-	for( int nSubpacket = 0; nSubpacket < m_pResponse->GetSubpacketCount(); nSubpacket++ )
+	for( uint32_t nSubpacket = 0; nSubpacket < m_pResponse->GetSubpacketCount(); nSubpacket++ )
 	{
 		google::protobuf::io::ArrayOutputStream oStream( &m_aBuffer[ nWrittenSoFar ], aPacketSizes[ nSubpacket ], aPacketSizes[ nSubpacket ] );
 		m_pResponse->WriteSubpacket( nSubpacket, oStream );
@@ -71,7 +71,7 @@ void CPBResponseSendHandler::SendDone( int innSent )
 {
 	//TODO: maybe don't start recv if there are no current recv handlers.  add checks for this
 
-	unsigned int recvBufferSize = 0;
+	uint32_t recvBufferSize = 0;
 
 	if( m_pResponse->NextRecvBufferSize() != 0 )
 		recvBufferSize =

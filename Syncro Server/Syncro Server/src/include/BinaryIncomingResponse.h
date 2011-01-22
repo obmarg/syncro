@@ -8,6 +8,7 @@
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <vector>
 
 namespace syncro
@@ -63,7 +64,7 @@ public:
 
 	virtual uint32_t NextRecvBufferSize()
 	{
-		return m_recvBufferSize;
+		return boost::numeric_cast<uint32_t>( m_recvBufferSize );
 	}
 protected:
 
@@ -97,7 +98,7 @@ protected:
 
 	boost::scoped_ptr<google::protobuf::MessageLite> m_pMessage;
 	eResponseType m_eType;
-	uint32_t m_recvBufferSize;
+	int32_t m_recvBufferSize;
 };
 
 };

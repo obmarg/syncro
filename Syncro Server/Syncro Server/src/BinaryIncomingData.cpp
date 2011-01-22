@@ -19,6 +19,11 @@ CBinaryIncomingData::CBinaryIncomingData(
 
 CBinaryIncomingData::~CBinaryIncomingData()
 {
+	if( m_oFile.is_open() )
+	{
+		//If we wanted, we could call the fail callback in here...
+		m_oFile.close();
+	}
 }
 
 void
@@ -85,7 +90,12 @@ void CBinaryIncomingData::ShouldResume(int64_t resumePoint)
 			);
 	}
 #endif
-	if( resumePoint > boost::filesystem::file_size( m_filename ) )
+	int64_t destSize = 
+		boost::numeric_cast<int64_t>( 
+			boost::filesystem::file_size( m_filename )
+		);
+
+	if( resumePoint > destSize )
 	{
 		throw std::runtime_error( 
 			"Resume point > file size in "
