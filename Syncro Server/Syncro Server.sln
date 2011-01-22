@@ -30,6 +30,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExplorerExtensionPS", "Tool
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinAdmin", "Tools\WinAdmin\WinAdmin.vcxproj", "{C4C2908A-0747-494F-AD39-2346569485D2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{75DCF5D4-1BCC-443F-8820-113154A777BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -62,6 +64,8 @@ Global
 		{C4C2908A-0747-494F-AD39-2346569485D2}.Debug|Win32.Build.0 = Debug|Win32
 		{C4C2908A-0747-494F-AD39-2346569485D2}.Release|Win32.ActiveCfg = Release|Win32
 		{C4C2908A-0747-494F-AD39-2346569485D2}.Release|Win32.Build.0 = Release|Win32
+		{75DCF5D4-1BCC-443F-8820-113154A777BF}.Debug|Win32.ActiveCfg = Debug
+		{75DCF5D4-1BCC-443F-8820-113154A777BF}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
