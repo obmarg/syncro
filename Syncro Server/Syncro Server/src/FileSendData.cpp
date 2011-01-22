@@ -2,6 +2,7 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <stdint.h>
+#include <iostream>
 
 namespace syncro
 {
@@ -35,6 +36,17 @@ CFileSendData::~CFileSendData()
 void CFileSendData::OpenFile( int64_t fileStartOffset )
 {
 	using namespace std;
+	
+	if( fileStartOffset > 0 )
+	{
+		cout << "Resuming file: ";
+	}
+	else
+	{
+		cout << "Sending file: ";
+	} 
+	cout << m_sFilename.c_str() << "\n";
+
 	m_oFile.open( m_sFilename.c_str() , ios::in | ios::binary );
 	if( m_oFile.is_open() )
 	{

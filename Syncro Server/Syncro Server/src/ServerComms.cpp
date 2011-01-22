@@ -110,7 +110,9 @@ void CTCPConnection::FinishedRecv( const boost::system::error_code& inoError, st
 	}
 	else
 	{
+#ifdef COMMS_DEBUG
 		cout << "Received " << innBytes << "\n";
+#endif 
 
 		TCharBuffer oBuffer( m_aBuffer, innBytes );
 
@@ -187,7 +189,9 @@ CTCPConnection::FinishedSend( const boost::system::error_code& inoError, std::si
 	m_pSendHandler.reset();
 	pHandler->SendDone( innBytes );
 
+#ifdef COMMS_DEBUG
 	cout << "Sent " << innBytes << " OK!";
+#endif
 }
 
 std::string
