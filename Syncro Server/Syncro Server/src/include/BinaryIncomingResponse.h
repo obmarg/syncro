@@ -32,11 +32,10 @@ public:
 
 	virtual ~CBinaryIncomingResponse() {};
 
-	virtual std::vector<unsigned int> GetSubpacketSizes()
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
-		std::vector<unsigned int> oRV( 1 );
-		oRV[0] = m_pMessage->ByteSize();
-		return oRV;
+		assert( subpacket == 0 );
+		return m_pMessage->ByteSize();
 	}
 	virtual unsigned int GetSubpacketCount()
 	{

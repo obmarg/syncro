@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <stdexcept>
+#include <cassert>
 
 namespace syncro
 {

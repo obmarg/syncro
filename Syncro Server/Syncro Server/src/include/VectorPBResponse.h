@@ -11,14 +11,9 @@ class CVectorPBResponse : public CBasePBResponse
 {
 public:
 
-	virtual std::vector<unsigned int> GetSubpacketSizes()
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
-		std::vector<unsigned int> oResponse;
-		foreach( TSubpacketPtr pSubpacket, m_aSubpackets )
-		{
-			oResponse.push_back( pSubpacket->size() );
-		}
-		return oResponse;
+		return m_aSubpackets.at( subpacket )->size();
 	};
 	virtual unsigned int GetSubpacketCount()
 	{

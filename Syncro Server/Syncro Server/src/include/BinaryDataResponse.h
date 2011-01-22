@@ -17,7 +17,7 @@ public:
 	CBinaryDataResponse( CFileSendData& inoFileData );
 	virtual ~CBinaryDataResponse();
 
-	virtual std::vector<unsigned int> GetSubpacketSizes();
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket);
 	virtual unsigned int GetSubpacketCount();
 
 	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream );

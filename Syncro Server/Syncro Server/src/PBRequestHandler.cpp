@@ -72,8 +72,10 @@ bool CPBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 	using google::protobuf::io::ArrayInputStream;
 	using boost::shared_ptr;
 
-	TInputStreamList aSubpackets;
-	vector< shared_ptr<ArrayInputStream> > aMemoryManSubpackets;
+	int numSubpackets = m_oHeader.subpacket_sizes_size();
+
+	TInputStreamList aSubpackets( numSubpackets );
+	vector< shared_ptr<ArrayInputStream> > aMemoryManSubpackets( numSubpackets );
 	int nCurrentPosition = m_nBufferReadSoFar;
 	shared_ptr<ArrayInputStream> pAIS;
 	for( int nSubpacket = 0; nSubpacket < m_oHeader.subpacket_sizes_size(); nSubpacket++ )
@@ -81,8 +83,8 @@ bool CPBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 		int nSize = m_oHeader.subpacket_sizes( nSubpacket );
 		pAIS.reset( new ArrayInputStream( &inoBuffer.aBuffer[nCurrentPosition], nSize ) );
 		nCurrentPosition += nSize;
-		aMemoryManSubpackets.push_back( pAIS );
-		aSubpackets.push_back( pAIS.get() );
+		aMemoryManSubpackets[ nSubpacket ] = pAIS;
+		aSubpackets[ nSubpacket ] = pAIS.get();
 	}
 
 	try

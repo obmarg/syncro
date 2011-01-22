@@ -24,11 +24,10 @@ public:
 	}
 	virtual ~SimplePBResponse() {};
 
-	virtual std::vector<unsigned int> GetSubpacketSizes()
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
-		std::vector< unsigned int > rv( 1 );
-		rv[0] = m_message->ByteSize();
-		return rv;
+		assert( subpacket == 0 );
+		return m_message->ByteSize();
 	}
 
 	virtual unsigned int GetSubpacketCount()

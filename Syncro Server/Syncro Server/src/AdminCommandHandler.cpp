@@ -12,13 +12,12 @@ class CAdminCommandResponse : public CBasePBResponse
 {
 	friend class CAdminCommandHandler;
 public:
-	virtual std::vector<unsigned int> GetSubpacketSizes()
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
 		if( !m_pMessage )
 			throw std::logic_error( "CAdminCommandResponse::GetSubpacketSizes called on uninitialised object" );
-		std::vector<unsigned int> aSizes( 1 );
-		aSizes[0] = m_pMessage->ByteSize();
-		return aSizes;
+		assert( subpacket == 0 );
+		return m_pMessage->ByteSize();
 	}
 	virtual unsigned int GetSubpacketCount()
 	{

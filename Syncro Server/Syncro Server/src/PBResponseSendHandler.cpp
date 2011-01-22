@@ -45,26 +45,33 @@ bool CPBResponseSendHandler::SendStarting()
 	          " packet\n";
 #endif
 
-	vector<unsigned int> aPacketSizes = m_pResponse->GetSubpacketSizes();
-	unsigned int nTotalPacketSize = 0;
-	foreach( unsigned int nPacketSize, aPacketSizes )
+	int numPackets = m_pResponse->GetSubpacketCount();
+	uint32_t nTotalPacketSize = 0;
+	for( int packetNum=0; packetNum < numPackets ; ++packetNum )
 	{
-		nTotalPacketSize += nPacketSize;
-		oResponseHeader.add_subpacket_sizes( nPacketSize );
+		uint32_t packetSize = m_pResponse->GetSubpacketSize( packetNum );
+		nTotalPacketSize += packetSize;
+		oResponseHeader.add_subpacket_sizes( packetSize );
 	}
-	unsigned int nPBHeaderSize = oResponseHeader.ByteSize();
+	
+	uint32_t nPBHeaderSize = oResponseHeader.ByteSize();
 	m_aBuffer.resize( nTotalPacketSize + nPBHeaderSize + nHeadSize );
 
 	m_aBuffer[0] = comms::PB_RESPONSE_FIRST_BYTE;
-	*(( int* )( &m_aBuffer[1] ) ) = kode::utils::ToJavaEndian( nPBHeaderSize );
+	*(( uint32_t* )( &m_aBuffer[1] ) ) = kode::utils::ToJavaEndian( nPBHeaderSize );
 	oResponseHeader.SerializeToArray( &m_aBuffer[nHeadSize], nPBHeaderSize );
 	unsigned int nWrittenSoFar = nPBHeaderSize + nHeadSize;
 
 	for( uint32_t nSubpacket = 0; nSubpacket < m_pResponse->GetSubpacketCount(); nSubpacket++ )
 	{
-		google::protobuf::io::ArrayOutputStream oStream( &m_aBuffer[ nWrittenSoFar ], aPacketSizes[ nSubpacket ], aPacketSizes[ nSubpacket ] );
+		uint32_t packetSize = oResponseHeader.subpacket_sizes( nSubpacket );
+		google::protobuf::io::ArrayOutputStream oStream( 
+			&m_aBuffer[ nWrittenSoFar ], 
+			packetSize, 
+			packetSize 
+		);
 		m_pResponse->WriteSubpacket( nSubpacket, oStream );
-		nWrittenSoFar += aPacketSizes[ nSubpacket ];
+		nWrittenSoFar += packetSize;
 	}
 
 	return true;

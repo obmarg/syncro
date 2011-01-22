@@ -89,11 +89,11 @@ public class PBSocketInterface {
 				.setPacketType(inType)
 				.build();
 		//Log.d("Syncro","Sending Message.  Header:\n" + oHeader.toString() );
-		Log.d("Syncro", "Sending message: " + RequestTypes.Str(inType));
+		//Log.d("Syncro", "Sending message: " + RequestTypes.Str(inType));
 		WriteInitialHeader(inoStream,oHeader.getSerializedSize());
 		oHeader.writeTo(inoStream);
 		inoStream.flush();
-		Log.d("Syncro","Finished sending");
+		//Log.d("Syncro","Finished sending");
 	}
 	
 	public void SendObject(OutputStream inoStream,int inType,GeneratedMessageLite inoMessage) throws IOException {
@@ -105,7 +105,7 @@ public class PBSocketInterface {
 		//Log.d("Syncro","Sending Object.  Type: " + inType);
 		//Log.d("Syncro","Header:\n" + oHeader.toString() );
 		//Log.d("Syncro","Object:\n" + inoMessage.toString() );
-		Log.d("Syncro", "Sending message: " + RequestTypes.Str(inType));
+		//Log.d("Syncro", "Sending message: " + RequestTypes.Str(inType));
 		WriteInitialHeader(inoStream,oHeader.getSerializedSize());
 		oHeader.writeTo(inoStream);
 		inoMessage.writeTo(inoStream);

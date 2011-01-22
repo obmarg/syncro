@@ -94,11 +94,10 @@ CPBHandshakeResponse::CPBHandshakeResponse()
 	m_oMessage.set_uuid( sUUID );
 }
 
-std::vector<unsigned int> CPBHandshakeResponse::GetSubpacketSizes()
+uint32_t CPBHandshakeResponse::GetSubpacketSize(uint32_t subpacket)
 {
-	std::vector<unsigned int> aSizes( 1 );
-	aSizes[0] = m_oMessage.ByteSize();
-	return aSizes;
+	assert( subpacket == 0 );
+	return m_oMessage.ByteSize();
 }
 
 unsigned int CPBHandshakeResponse::GetPacketType()

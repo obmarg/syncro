@@ -51,7 +51,7 @@ class CPBHandshakeResponse : public CBasePBResponse
 public:
 	CPBHandshakeResponse();
 
-	virtual std::vector<unsigned int> GetSubpacketSizes();
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket);
 	virtual unsigned int GetSubpacketCount()
 	{
 		return 1;

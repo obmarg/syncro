@@ -28,12 +28,18 @@ unsigned int CBinaryDataResponse::GetSubpacketCount()
 	return 2;
 }
 
-std::vector<unsigned int> CBinaryDataResponse::GetSubpacketSizes()
+uint32_t CBinaryDataResponse::GetSubpacketSize( uint32_t subpacket )
 {
-	std::vector<unsigned int> rv( 2 );
-	rv[0] = m_oPacketHeader.ByteSize() ;
-	rv[1] = m_oFileData.GetChunkSize();
-	return rv;
+	assert( subpacket == 0 || subpacket == 1 );
+	if( subpacket == 0 )
+	{
+		return m_oPacketHeader.ByteSize();
+	}
+	else if( subpacket == 1 )
+	{
+		return m_oFileData.GetChunkSize();
+	}
+	throw std::exception();
 }
 
 

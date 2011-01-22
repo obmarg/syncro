@@ -18,7 +18,7 @@ public:
 	CBasePBResponse() {};
 	virtual ~CBasePBResponse() {};
 
-	virtual std::vector<unsigned int> GetSubpacketSizes() = 0;
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket) = 0;
 	virtual unsigned int GetSubpacketCount() = 0;
 
 	virtual unsigned int GetPacketType() = 0;
