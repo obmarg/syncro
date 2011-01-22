@@ -58,7 +58,8 @@ public class ProgressNotification {
 	
 	public void setCurrentFileDetails(RemoteFileHandler.RemoteFileData inoFile, int innFileNum) {
 		m_nFilename = inoFile.Filename;
-		m_nCurrentTotalSize = inoFile.Size;
+		//TODO: Progress bar won't work for massive files - fix it
+		m_nCurrentTotalSize = (int)inoFile.Size;
 		m_fHaveFile = true;
 		m_nFileNum = innFileNum;
 		// Set the clock so we'll update in 1 second

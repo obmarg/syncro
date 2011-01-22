@@ -123,13 +123,21 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			    		do {
 			    			retry = !RunSync( nID, sAddress, nPort );
 			    			retryCount--;
-			    			try {
-								Thread.sleep( 10000 );
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								retry = false;
-							}
+			    			if( retry && ( retryCount > 0 ) )
+			    			{
+			    				Log.w("Syncro", "Syncro failed.  Retrying in 10 seconds");
+				    			try {
+									Thread.sleep( 10000 );
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+									retry = false;
+								}
+								Log.i("Syncro", "Retrying now...");
+			    			}else if( retry )
+			    			{
+			    				Log.e("Syncro", "Syncro failed, but ran out of retries");
+			    			}
 			    		}while( retry && ( retryCount > 0 ) );
 			    	} else {
 			    		oDB.close();
@@ -152,6 +160,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	//Run sync should return false if we need to retry.
 	protected boolean RunSync(int innServerID,String insHost,int innPort) {
 		boolean retry = false;
+		boolean gotInitialConnection = false;
 		
 		//TODO: probably want to move innServerID into a member variable or something
 		m_oProgressNotification = new ProgressNotification(this);
@@ -165,7 +174,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			
 			
 			Socket oSock = new Socket(insHost,innPort);
-			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
+			gotInitialConnection = true;
 			
 			//Start the progress notification
 			m_oProgressNotification.update();
@@ -199,14 +208,24 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		} 
 		catch ( SocketException e )
 		{
-			retry = true;
+			if( gotInitialConnection )
+				retry = true;
+			else {
+				Log.e("Syncro","Couldn't connect to server");
+				e.printStackTrace();
+			}
 			//TODO: Need to work out the difference between can't connect at all,
 			//		and have been disconnected
 		}
 		catch( EOFException e )
 		{
 			//TODO: Need to determine between network EOF and file EOF
-			retry = true;
+			if( gotInitialConnection )
+				retry = true;
+			else {
+				Log.e("Syncro","Couldn't connect to server");
+				e.printStackTrace();
+			}
 		}
 		catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -496,13 +515,13 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return true;
 	}
 	
-	private boolean CheckResume( Socket inoSock, RemoteFileHandler.RemoteFileData inoFileData, File inoFile ) throws IOException,Exception
+	private boolean CheckResume( Socket inoSock, RemoteFileHandler.RemoteFileData inoFileData, File inoFile, long fileLen ) throws IOException,Exception
 	{
-		String hash = GetFileHash( inoFile );
+		String hash = GetFileHash( inoFile, fileLen );
 		Binarydata.FileHashRequest oRequest = Binarydata.FileHashRequest.newBuilder()
 			.setFileName( inoFileData.Filename )
 			.setFolderId( inoFileData.FolderId )
-			.setDataSize( inoFile.length() )
+			.setDataSize( fileLen )
 			.setHash( hash )
 			.build();
 		m_oPBInterface.SendObject( inoSock.getOutputStream(), PBSocketInterface.RequestTypes.FILE_HASH_REQUEST, oRequest );
@@ -513,25 +532,53 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return response.hashOk();
 	}
 	
-	private String GetFileHash( File inoFile ) throws IOException
+	private boolean CheckResume( Socket inoSock, RemoteFileHandler.RemoteFileData inoFileData, File inoFile ) throws IOException,Exception
 	{
-		MessageDigest digester;
+		return CheckResume( inoSock, inoFileData, inoFile, inoFile.length() );
+	}
+	
+	private String GetFileHash( File inoFile, long size ) throws Exception
+	{
 		try {
-			digester = MessageDigest.getInstance("SHA-1");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			if( size > inoFile.length() )
+			{
+				throw new Exception( "Invalid size passed to GetFileHash" );
+			}
+			MessageDigest digester;
+			try {
+				digester = MessageDigest.getInstance("SHA-1");
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				return "";
+			}
+			byte[] buffer = new byte[ 1024 * 8 ];
+			int read;
+			FileInputStream hashInputStream = new FileInputStream( inoFile );
+			int nextRead = buffer.length;
+			if( nextRead > size )
+				nextRead = (int)size;
+			while( ( read = hashInputStream.read( buffer, 0, nextRead ) ) > 0 )
+			{
+				size -= read;
+				digester.update(buffer, 0, read);
+				if( nextRead > size )
+					nextRead = (int)size;
+				if( size == 0 )
+					break;
+			}
+			hashInputStream.close();
+			byte[] hash = digester.digest();
+			return Base64.encodeToString(hash, Base64.DEFAULT );
+		}
+		catch(IOException e )
+		{
 			return "";
 		}
-		byte[] buffer = new byte[ 1024 * 8 ];
-		int read;
-		FileInputStream hashInputStream = new FileInputStream( inoFile );
-		while( ( read = hashInputStream.read( buffer ) ) > 0 )
-		{
-			digester.update(buffer, 0, read);
-		}
-		hashInputStream.close();
-		byte[] hash = digester.digest();
-		return Base64.encodeToString(hash, Base64.DEFAULT );
+	}
+	
+	private String GetFileHash( File inoFile ) throws Exception
+	{
+		return GetFileHash( inoFile, inoFile.length() );
 	}
 
 	
@@ -614,6 +661,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		long totalSizeRead = 0;
 		boolean finishedSending = false;
 		
+		boolean firstPass = true;
+		
 		//TODO: Could pass an actual file number (and total number of files)
 		//		but can't be arsed;
 		m_oProgressNotification.setCurrentFileDetails(
@@ -627,6 +676,31 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			//TODO: Progress notification
 			if( !responseHandler.canRemove() )
 			{
+				if( firstPass )
+				{
+					firstPass = false;
+					if( responseHandler.getSizeOnServer() > 0 )
+					{
+						RemoteFileHandler.RemoteFileData fileData = new RemoteFileHandler.RemoteFileData();
+						fileData.Filename = sendFilename;
+						fileData.FolderId = inFolderId;
+						//Pretty sure size isn't used by CheckResume, but in case it starts to be in the future
+						fileData.Size = responseHandler.getSizeOnServer();
+						boolean resume = 
+							CheckResume(
+									inoSock, 
+									fileData, 
+									new File(filename), 
+									responseHandler.getSizeOnServer() 
+							);
+						//The server should automatically start us resuming when the hash above passes
+						if( resume )
+						{
+							totalSizeRead = responseHandler.getSizeOnServer();
+							fileStream.skip( totalSizeRead );
+						}
+					}
+				}
 				if( sendBuffer == null )
 				{
 					//TODO: The -128 bit might not be accurate/needed

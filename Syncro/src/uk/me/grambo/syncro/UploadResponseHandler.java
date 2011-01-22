@@ -16,10 +16,12 @@ public class UploadResponseHandler implements PBResponseHandler {
 	private byte[] m_buffer; 
 	private int m_maxPacketSize;
 	private boolean m_finished;
+	private long m_sizeOnServer;
 	
 	public UploadResponseHandler()
 	{
 		m_finished = false;
+		m_sizeOnServer = 0;
 	}
 
 	@Override
@@ -77,6 +79,10 @@ public class UploadResponseHandler implements PBResponseHandler {
 		if( oPacketInfo.getAccepted() )
 		{
 			m_maxPacketSize = oPacketInfo.getMaxPacketSize();
+			if( oPacketInfo.hasCurrentFileSize() )
+			{
+				m_sizeOnServer = oPacketInfo.getCurrentFileSize();
+			}
 			//Log.d("Syncro", "Incoming Response: Accepted");
 			//Log.d("Syncro", "Packet Size: " + m_maxPacketSize);
 			return true;
@@ -113,5 +119,8 @@ public class UploadResponseHandler implements PBResponseHandler {
 
 	public int getMaxPacketSize() {
 		return m_maxPacketSize;
+	}
+	public long getSizeOnServer() {
+		return m_sizeOnServer;
 	}
 }
