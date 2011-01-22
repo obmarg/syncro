@@ -3,6 +3,7 @@ package uk.me.grambo.syncro;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
@@ -46,6 +48,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.util.Base64;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 public class SyncroService extends IntentService implements RemoteFileHandler{
 	
@@ -115,7 +118,19 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			    		nPort = oResults.getInt(2);
 			    		oResults.close();
 			    		oDB.close();
-			    		RunSync( nID, sAddress, nPort );
+			    		boolean retry;
+			    		int retryCount = 5;
+			    		do {
+			    			retry = !RunSync( nID, sAddress, nPort );
+			    			retryCount--;
+			    			try {
+								Thread.sleep( 10000 );
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								retry = false;
+							}
+			    		}while( retry && ( retryCount > 0 ) );
 			    	} else {
 			    		oDB.close();
 			    	}
@@ -134,11 +149,14 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 	}
 	
-	protected void RunSync(int innServerID,String insHost,int innPort) {
+	//Run sync should return false if we need to retry.
+	protected boolean RunSync(int innServerID,String insHost,int innPort) {
+		boolean retry = false;
+		
 		//TODO: probably want to move innServerID into a member variable or something
 		m_oProgressNotification = new ProgressNotification(this);
 		m_oProgressNotification.setShowRate(true);
-		m_oProgressNotification.update();
+
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Syncro");
 		 wl.acquire();
@@ -149,6 +167,8 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			Socket oSock = new Socket(insHost,innPort);
 			//TODO: if we can't connect, use the udp broadcast stuff to find the server again (if possible)
 			
+			//Start the progress notification
+			m_oProgressNotification.update();
 			if( DoHandshake( oSock ) ) {
 				DBHelper oHelper = new DBHelper( this );
 	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();	
@@ -176,7 +196,19 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 					AlarmManager.INTERVAL_HOUR, 
 					pendingIntent
 					);*/
-		} catch (IOException e) {
+		} 
+		catch ( SocketException e )
+		{
+			retry = true;
+			//TODO: Need to work out the difference between can't connect at all,
+			//		and have been disconnected
+		}
+		catch( EOFException e )
+		{
+			//TODO: Need to determine between network EOF and file EOF
+			retry = true;
+		}
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
@@ -186,6 +218,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		}
 		wl.release();
 		m_oProgressNotification.stop();
+		return !retry;
 	}
 	
 	protected boolean DoHandshake(Socket inoSock) throws IOException {
@@ -414,7 +447,13 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			FileOutputStream oFile = new FileOutputStream( insDestFilename, canResume );
 			try {
 				fOK = ReceiveFile(inoSock,oFile);
-			}catch (Exception e) {
+			}
+			catch( IOException e )
+			{
+				throw e;
+			}
+			catch (Exception e) 
+			{
 				e.printStackTrace();
 			}
 			oFile.close();
