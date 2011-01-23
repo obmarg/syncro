@@ -23,6 +23,7 @@ import java.io.OutputStream;
 
 import android.util.Log;
 import uk.me.grambo.syncro.pb.Handshake;
+import uk.me.grambo.syncro.responsehandlers.PBResponseHandler;
 
 public class HandshakeHandler implements PBResponseHandler {
 	

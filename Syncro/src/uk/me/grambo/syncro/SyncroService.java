@@ -46,6 +46,11 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.helpers.DefaultHandler;
 
 import uk.me.grambo.syncro.pb.Binarydata;
+import uk.me.grambo.syncro.pb.Folders;
+import uk.me.grambo.syncro.responsehandlers.FileHashResponseHandler;
+import uk.me.grambo.syncro.responsehandlers.FileResponseHandler;
+import uk.me.grambo.syncro.responsehandlers.FolderListResponseHandler;
+import uk.me.grambo.syncro.responsehandlers.UploadResponseHandler;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -277,32 +282,18 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return false;
 	}
 	
-	protected boolean GetFolderList(Socket inoSock,SQLiteStatement inoInsertStatement) throws IOException {
-		DataInputStream oInput = new DataInputStream( inoSock.getInputStream() );
-		DataOutputStream oOutput = new DataOutputStream( inoSock.getOutputStream() );
-		OutputStreamWriter oWriter = new OutputStreamWriter( inoSock.getOutputStream() );
-		
-		String sRequest = "GET_FOLDER_LIST";
-		oOutput.write( XML_REQUEST_FIRST_BYTE );
-		int nSendSize = sRequest.length() + 1 + 4; 
-		oOutput.writeInt( nSendSize );
-		oOutput.flush();
-		oWriter.write( sRequest );
-		oWriter.flush();
-		int nSize;
-		if( oInput.read() != XML_RESPONSE_FIRST_BYTE ) {
-			return false;
-		}
-		nSize = oInput.readInt();
-		if( nSize > 5 ) {
-			byte aData[] = new byte[nSize - 5];
-			/*if( oInput.read(aData) != (nSize-5) ) {
-				return false;
-			}*/
-			oInput.readFully(aData);
-			Log.i("Syncro",new String(aData) );
-			ProcessXML(new ByteArrayInputStream(aData), new FolderListXMLHandler(inoInsertStatement));
-		}
+	protected boolean GetFolderList(Socket inoSock,SQLiteStatement inoInsertStatement) throws Exception {
+		Folders.FolderListRequest request = Folders.FolderListRequest.newBuilder()
+			.setSearchString("")
+			.build();
+		m_oPBInterface.SendObject( 
+				inoSock.getOutputStream(), 
+				PBSocketInterface.RequestTypes.FOLDER_LIST_REQUEST, 
+				request
+				);
+		FolderListResponseHandler handler = new FolderListResponseHandler(inoInsertStatement);
+		m_oPBInterface.addResponseHandler( handler );
+		m_oPBInterface.HandleResponse( inoSock.getInputStream() );
 		return true;
 	}
 	

@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.responsehandlers;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -25,6 +25,8 @@ import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import uk.me.grambo.syncro.PBSocketInterface;
+import uk.me.grambo.syncro.PBSocketInterface.ResponseTypes;
 import uk.me.grambo.syncro.pb.Binarydata;
 
 public class UploadResponseHandler implements PBResponseHandler {

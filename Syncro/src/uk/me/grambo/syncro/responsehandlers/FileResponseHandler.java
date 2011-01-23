@@ -15,12 +15,14 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.responsehandlers;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import uk.me.grambo.syncro.PBSocketInterface;
+import uk.me.grambo.syncro.PBSocketInterface.ResponseTypes;
 import uk.me.grambo.syncro.pb.Binarydata;
 
 import android.util.Log;

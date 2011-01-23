@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.responsehandlers;
 
 import java.io.IOException;
 import java.io.InputStream;

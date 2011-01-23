@@ -30,6 +30,7 @@ import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessageLite;
 import uk.me.grambo.syncro.pb.Header;
+import uk.me.grambo.syncro.responsehandlers.PBResponseHandler;
 
 public class PBSocketInterface {
 	private static final byte PB_REQUEST_FIRST_BYTE = 105;
@@ -38,12 +39,13 @@ public class PBSocketInterface {
 	private ArrayList<PBResponseHandler> m_aResponseHandlers;
 	
 	public static class RequestTypes {
-		public static final int BINARY_REQUEST = 1;
-		public static final int BINARY_CONTINUE = 2;
-		public static final int HANDSHAKE_REQUEST = 4;
+		public static final int BINARY_REQUEST 			= 1;
+		public static final int BINARY_CONTINUE 		= 2;
+		public static final int HANDSHAKE_REQUEST 		= 4;
 		public static final int BINARY_INCOMING_REQUEST = 6;
-		public static final int BINARY_INCOMING_DATA = 8;
-		public static final int FILE_HASH_REQUEST = 16;
+		public static final int BINARY_INCOMING_DATA 	= 8;
+		public static final int FOLDER_LIST_REQUEST		= 12;
+		public static final int FILE_HASH_REQUEST 		= 16;
 		public static String Str(int Type)
 		{
 			switch(Type)
@@ -58,6 +60,8 @@ public class PBSocketInterface {
 				return "Binary Incoming Request";
 			case BINARY_INCOMING_DATA:
 				return "Binary Incoming Data";
+			case FOLDER_LIST_REQUEST:
+				return "Folder List Request";
 			case FILE_HASH_REQUEST:
 				return "File Hash Request";
 			}
@@ -66,11 +70,12 @@ public class PBSocketInterface {
 	};
 	
 	public static class ResponseTypes {
-		public static final int BINARY_RESPONSE = 3;
-		public static final int HANDSHAKE_RESPONSE = 5;
-		public static final int BINARY_INCOMING_RESPONSE = 7;
-		public static final int BINARY_INCOMING_DATA_ACK = 9;
-		public static final int FILE_HASH_RESPONSE = 17;
+		public static final int BINARY_RESPONSE 			= 3;
+		public static final int HANDSHAKE_RESPONSE 			= 5;
+		public static final int BINARY_INCOMING_RESPONSE 	= 7;
+		public static final int BINARY_INCOMING_DATA_ACK 	= 9;
+		public static final int FOLDER_LIST_RESPONSE		= 13;
+		public static final int FILE_HASH_RESPONSE 			= 17;
 		public static String Str(int Type)
 		{
 			switch(Type)
@@ -83,6 +88,8 @@ public class PBSocketInterface {
 				return "Binary Incoming Response";
 			case BINARY_INCOMING_DATA_ACK:
 				return "Binary Incoming Data Ack";
+			case FOLDER_LIST_RESPONSE:
+				return "Folder List Response";
 			case FILE_HASH_RESPONSE:
 				return "File Hash Response";
 			}
