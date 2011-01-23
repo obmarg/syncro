@@ -1,9 +1,0 @@
-
-VariantDir( 'build', '.' )
-sources = [ "tinyxml.cpp", "tinyxmlparser.cpp", "tinyxmlerror.cpp", "tinystr.cpp" ]
-
-env = Environment()
-
-output = env.StaticLibrary( target = 'tinyxml', source = sources )
-
-env.Install( '../bin/', output )
