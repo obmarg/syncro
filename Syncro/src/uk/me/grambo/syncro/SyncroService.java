@@ -1,3 +1,20 @@
+/*  This file is part of Syncro. 
+	Copyright (c) Graeme Coupar <grambo@grambo.me.uk>
+
+	Syncro is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Syncro is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package uk.me.grambo.syncro;
 
 import java.io.ByteArrayInputStream;
@@ -394,7 +411,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 	}
 	
 	protected boolean GetFiles(Socket inoSock) throws Exception,IOException {
-		//android.os.Debug.startMethodTracing("syncro");
+		//android.os.Debug.startMethodTracing("syncro-download");
 		boolean fOK = false;
 		int nPrevFolderId = -1;
 		m_oProgressNotification.setTotalNumFiles( m_aFilesToDownload.size() );
@@ -583,6 +600,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 
 	
 	protected boolean SendFiles(Socket inoSock,int innServerID,SQLiteDatabase inoDB) throws IOException,Exception {
+		//android.os.Debug.startMethodTracing("syncro-upload");
 		String args[] = { Integer.valueOf(innServerID).toString() };
 		Cursor results = inoDB.rawQuery(
 				"SELECT ID,IDOnServer,LocalPath " +
@@ -603,7 +621,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 					m_sCurrentLocalPath.concat( File.separator );
 			SendFolder( inoSock, results.getInt(1), folder );
 		}
-		
+		//android.os.Debug.stopMethodTracing();
 		return true;
 	}
 	
