@@ -24,6 +24,7 @@ public:
 				pb::FolderInfo* info = m_response.add_folders();
 				info->set_folder_id( folder.Id );
 				info->set_folder_name( folder.Name );
+				info->set_folder_path( folder.Path );
 			}
 		}
 	}
