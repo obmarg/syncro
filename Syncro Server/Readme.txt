@@ -5,7 +5,8 @@ Boost
 Crypto++ 5.6.1 (others may work)
 Google Protocol Buffers 2.3.0
 Sqlite 3.7.2
-Tinyxml 
+Tinyxml
+scons
 
 
 Building on windows

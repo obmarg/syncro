@@ -94,6 +94,7 @@
     <None Include="..\..\Messages\folders.proto" />
     <None Include="..\..\Messages\handshake.proto" />
     <None Include="..\..\Messages\header.proto" />
+    <None Include="..\Readme.txt" />
     <None Include="SConstruct" />
     <None Include="src\SConscript" />
   </ItemGroup>

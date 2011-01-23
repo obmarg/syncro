@@ -48,6 +48,7 @@
     <None Include="src\SConscript">
       <Filter>Build Files</Filter>
     </None>
+    <None Include="..\Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\AdminCommandHandler.h">

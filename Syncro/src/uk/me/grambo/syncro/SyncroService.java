@@ -656,6 +656,9 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 			throw new Exception("File is too big to send");
 		}
 		
+		Log.i("Syncro","Sending file: " + filename);
+		Log.i("Syncro","File Size: " + Long.toString( totalFileSize ) );
+		
 		Binarydata.BinaryDataRequest oInitialRequest = Binarydata.BinaryDataRequest.newBuilder()
 			.setFileName( sendFilename )
 			.setFolderId( inFolderId )
@@ -699,6 +702,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 					firstPass = false;
 					if( responseHandler.getSizeOnServer() > 0 )
 					{
+						Log.i("Syncro","File is already on server.  Checking Resume");
 						RemoteFileHandler.RemoteFileData fileData = new RemoteFileHandler.RemoteFileData();
 						fileData.Filename = sendFilename;
 						fileData.FolderId = inFolderId;
@@ -715,7 +719,16 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 						if( resume )
 						{
 							totalSizeRead = responseHandler.getSizeOnServer();
+							Log.i(
+									"Syncro",
+									"Hash Check OK.  Starting send from " + 
+									Long.toString(totalSizeRead)
+									);
 							fileStream.skip( totalSizeRead );
+						}
+						else
+						{
+							Log.i( "Syncro", "Hash Check Failed.  Sending whole file" );
 						}
 					}
 				}
@@ -761,6 +774,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				finishedSending = true;
 			}
 		} while( !finishedSending );
+		Log.i("Syncro", "Finished sending file (" + Long.toString(totalSizeRead) + "bytes)" );
 		//Need to manually remove the response handler here,
 		//as it doesn't know that we're done with the file
 		m_oPBInterface.removeResponseHandler(responseHandler);

@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Protocol Buffers">
       <UniqueIdentifier>{0af10237-09fc-4177-a7bf-639b1a6f9669}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Build Files">
+      <UniqueIdentifier>{b86ca7ec-7679-4671-885b-48f63d824929}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\connection.cpp">
@@ -83,5 +86,10 @@
     <ClInclude Include="include\libsyncro\stringutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SConstruct">
+      <Filter>Build Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

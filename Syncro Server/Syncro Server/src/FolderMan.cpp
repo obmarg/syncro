@@ -247,13 +247,14 @@ CFolderMan::IncomingFile(
 		//TODO: Need to ensure that the prefix has a trailing slash
 		destFileName += prefix;
 	}
-	boost::filesystem::path path( destFileName );
-	if( !boost::filesystem::exists( path ) )
-	{
-		boost::filesystem::create_directories( path );
-	}
 	destFileName += fileData.GetFilename();
 	boost::filesystem::path destFile( destFileName );
+	boost::filesystem::path destDir( destFile );
+	destDir.remove_filename();
+	if( !boost::filesystem::exists( destDir ) )
+	{
+		boost::filesystem::create_directories( destDir );
+	}
 	details.m_filename = destFile.native_file_string();
 	//TODO: Add support for folder path in here. for now doesn't matter
 	//		can possibly remove the parameter if it turns out just the

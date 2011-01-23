@@ -127,7 +127,7 @@ public class PBSocketInterface {
 		oHeader.writeTo(inoStream);
 		inoMessage.writeTo(inoStream);
 		inoStream.flush();
-		Log.d("Syncro","Finished sending");
+		//Log.d("Syncro","Finished sending");
 	}
 	
 	public void SendObjectAndData( 
@@ -156,7 +156,7 @@ public class PBSocketInterface {
 		inoMessage.writeTo( inoStream );
 		inoStream.write( inoData, 0, inDataSize );
 		inoStream.flush();
-		Log.d("Syncro","Finished sending");
+		//Log.d("Syncro","Finished sending");
 	}
 	
 	public void HandleResponse(InputStream inoStream) throws Exception,IOException {

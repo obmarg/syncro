@@ -124,7 +124,10 @@ void CBinaryIncomingData::StartFile(int64_t startOffset)
 	}	
 
 	m_oFile.open( m_filename.c_str(), openMode );
-	m_oFile.seekp( startOffset );
+	if( startOffset > 0 )
+	{
+		m_oFile.seekp( startOffset );
+	}
 	if( m_oFile.fail() )
 	{
 		throw std::runtime_error( 
