@@ -1,11 +1,31 @@
 #
 #
 
-cpppath = [ "include", "../../kode/include/", "../../libsyncro/include/", "../../libsyncro/include/libsyncro/protocol_buffers", "../../../Dependencies/protobuf-2.3.0/include", "../../../Dependencies/sqlite/" ] #, "../../../Dependencies/tinyxml/" ] 
+cpppath = [ 
+	"include", 
+	"../../kode/include/", 
+	"../../libsyncro/include/", 
+	"../../libsyncro/include/libsyncro/protocol_buffers" 
+	] 
 
-libpath = [ "../../kode/", "../../libsyncro/" ] #"../../../Dependencies/bin/" ] 
+libpath = [ 
+	"../../kode/", 
+	"../../libsyncro/" 
+	] 
 
-libs = [ 'syncro', 'kode', 'tinyxml', 'sqlite3', 'boost_system', 'boost_thread', 'boost_filesystem', 'boost_regex', 'boost_date_time', 'protobuf-lite', 'crypto++' ]
+libs = [ 
+	'syncro', 
+	'kode', 
+	'tinyxml', 
+	'sqlite3', 
+	'boost_system', 
+	'boost_thread', 
+	'boost_filesystem', 
+	'boost_regex', 
+	'boost_date_time', 
+	'protobuf-lite', 
+	'crypto++' 
+	]
 
 cppdefines = [ "_LINUX" ];
 ccflags = [];
