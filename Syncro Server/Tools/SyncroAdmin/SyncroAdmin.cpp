@@ -4,8 +4,10 @@
 #include <libsyncro/connection.h>
 #include <libsyncro/scanner.h>
 #include <kode/net.h>
+#include <kode/utils.h>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
 
 namespace po = boost::program_options;
@@ -18,6 +20,7 @@ int main( int argc, char* argv[] )
 	desc.add_options()
 	( "help,h", "produce help message" )
 	( "scan,s", "scan for servers" )
+	( "list,l", "list folders" )
 	( "addfolder,a", po::value< std::string >(), "add folder" )
 	( "uploadfile,u", po::value< std::string >(), "upload file" )
 	( "folderid,f", po::value< int >(), "folder id to use for upload/download" )
@@ -70,7 +73,22 @@ int main( int argc, char* argv[] )
 			{
 				Connection::StringMap params;
 				params.insert( std::make_pair( "path", folderName ) );
+				params.insert( std::make_pair( "name", path.native_file_string() ) );
 				conn.SendAdminCommand( "AddFolder", params );
+			}
+		}
+		if( vm.count( "list" ) )
+		{
+			syncro::FolderList list;
+			conn.GetFolderList( list );
+			
+			int nNum = 0;
+			std::cout << "Folders:\n";
+			BOOST_FOREACH( const syncro::FolderInfo& folder, list )
+			{
+				std::cout << nNum << ": " << folder.Name 
+					<< " ( " << folder.Path << " )\n";
+				nNum++;
 			}
 		}
 		if( vm.count( "uploadfile" ) )
