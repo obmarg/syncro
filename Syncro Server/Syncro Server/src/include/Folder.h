@@ -43,6 +43,8 @@ public:
 	};
 
 	typedef std::vector< sFileData > TFileList;
+	typedef boost::shared_ptr< CFolder > TPointer;
+	typedef std::vector< TPointer > TFolderList;
 
 	CFolder( const std::string& insPath, const std::string& name );
 	~CFolder();

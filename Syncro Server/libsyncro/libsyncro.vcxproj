@@ -35,6 +35,24 @@
     <ClInclude Include="include\libsyncro\stringutils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Messages\admin.proto">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\Messages\binarydata.proto">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\Messages\build.bat">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\Messages\folders.proto">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\Messages\handshake.proto">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\Messages\header.proto">
+      <FileType>Document</FileType>
+    </None>
     <None Include="SConstruct" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

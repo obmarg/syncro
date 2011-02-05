@@ -13,35 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Message Files">
-      <UniqueIdentifier>{16774950-0089-4583-a193-aa6075182812}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\PB Handlers">
       <UniqueIdentifier>{f807332e-605e-47ba-a260-313fa7c56b7f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Build Files">
       <UniqueIdentifier>{5b483e9c-0595-4870-a4a6-98f3b27732b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\PB Handlers">
+      <UniqueIdentifier>{2fbf50d6-10dd-4ded-9c3a-017f800aa7bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Messages\binarydata.proto">
-      <Filter>Message Files</Filter>
-    </None>
-    <None Include="..\..\Messages\header.proto">
-      <Filter>Message Files</Filter>
-    </None>
-    <None Include="..\..\Messages\handshake.proto">
-      <Filter>Message Files</Filter>
-    </None>
-    <None Include="..\..\Messages\admin.proto">
-      <Filter>Message Files</Filter>
-    </None>
-    <None Include="..\..\Messages\build.bat">
-      <Filter>Message Files</Filter>
-    </None>
-    <None Include="..\..\Messages\folders.proto">
-      <Filter>Message Files</Filter>
-    </None>
     <None Include="SConstruct">
       <Filter>Build Files</Filter>
     </None>
@@ -117,9 +99,6 @@
     <ClInclude Include="src\include\SyncroServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\VectorPBResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\XMLBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -129,8 +108,14 @@
     <ClInclude Include="src\include\FileHashHandlers.h">
       <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\FolderContentsHandlers.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\VectorPBResponse.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
     <ClInclude Include="src\include\SimplePBResponse.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,7 +183,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FileHashHandlers.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FolderContentsHandlers.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VectorPBResponse.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

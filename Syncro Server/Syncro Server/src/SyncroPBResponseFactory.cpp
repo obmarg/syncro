@@ -27,6 +27,7 @@
 #include "AdminCommandHandler.h"
 #include "FolderListHandlers.h"
 #include "FileHashHandlers.h"
+#include "FolderContentsHandlers.h"
 #include <libsyncro/packet_types.h>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/bind.hpp>
@@ -167,6 +168,14 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 				this,
 				_1, _2
 				)
+			);
+		return request.GetResponse();
+	}
+	case packet_types::FolderContentsRequest:
+	{
+		pbHandlers::FolderContentsRequest request(
+			inaInputStreams,
+			*m_pFolderMan
 			);
 		return request.GetResponse();
 	}

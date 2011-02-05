@@ -63,6 +63,10 @@ std::string Str( ePBPacketTypes type )
 		return "File Hash Request";
 	case FileHashResponse:
 		return "File Hash Response";
+	case FolderContentsRequest:
+		return "Folder Contents Request";
+	case FolderContentsResponse:
+		return "Folder Contents Response";
 	default:
 		return "Unknown (" + boost::lexical_cast<std::string>( type ) + ")";
 	}

@@ -15,36 +15,46 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _VECTOR_PB_RESPONSE_H_
-#define _VECTOR_PB_RESPONSE_H_
+#ifndef SYNCRO_FOLDER_CONTENTS_HANDLERS_H_
+#define SYNCRO_FOLDER_CONTENTS_HANDLERS_H_
 
 #include "common.h"
 #include "BasePBResponse.h"
+#include <boost/shared_ptr.hpp>
 
 namespace syncro
 {
 
-class CVectorPBResponse : public CBasePBResponse
+class CFolderMan;
+class CFolder;
+
+namespace pb {
+class FolderContents;
+}
+
+namespace pbHandlers
+{
+
+class FolderContentsRequest
 {
 public:
-
-	virtual uint32_t GetSubpacketSize(uint32_t subpacket);
-	virtual unsigned int GetSubpacketCount();
-
-	virtual void WriteSubpacket( 
-		int inSubpacketIndex, 
-		google::protobuf::io::ZeroCopyOutputStream& stream 
+	FolderContentsRequest( 
+		TInputStreamList& inaInputStreams,
+		CFolderMan& folderMan
 		);
 
-protected:
-	CVectorPBResponse() {};
-	~CVectorPBResponse() {};
+	CBasePBResponse::TPointer GetResponse();
 
-	typedef boost::shared_ptr<TCharBuffer::TBuff> TSubpacketPtr;
-	typedef std::vector<TSubpacketPtr> TSubpacketList;
-	TSubpacketList m_aSubpackets;
+private:
+	typedef boost::shared_ptr<CFolder> CFolderPtr;
+
+	void ProcessFolder( pb::FolderContents* pb, const CFolderPtr folder );
+
+private:
+	CFolderPtr m_rootFolder;
 };
 
-};		//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro
 
 #endif

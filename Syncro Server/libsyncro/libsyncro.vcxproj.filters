@@ -22,6 +22,9 @@
     <Filter Include="Build Files">
       <UniqueIdentifier>{b86ca7ec-7679-4671-885b-48f63d824929}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Message Files">
+      <UniqueIdentifier>{bc2b8987-24a7-42d1-8db6-b0efac099b7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\connection.cpp">
@@ -90,6 +93,24 @@
   <ItemGroup>
     <None Include="SConstruct">
       <Filter>Build Files</Filter>
+    </None>
+    <None Include="..\..\Messages\admin.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\binarydata.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\build.bat">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\folders.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\handshake.proto">
+      <Filter>Message Files</Filter>
+    </None>
+    <None Include="..\..\Messages\header.proto">
+      <Filter>Message Files</Filter>
     </None>
   </ItemGroup>
 </Project>

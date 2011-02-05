@@ -37,3 +37,19 @@ message FolderList {
 	repeated FolderInfo folders = 1;
 	optional bool empty = 2;
 };
+
+message FolderContentsRequest {
+	optional int32 folder_id = 1;
+}
+
+message FileInfo {
+	optional string name = 1;
+	optional string path = 2;
+	optional int64 size = 3;
+}
+
+message FolderContents {
+	optional string name = 1;
+	repeated FileInfo files = 2;
+	repeated FolderContents subfolders = 3;
+}

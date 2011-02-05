@@ -88,12 +88,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\..\Messages\admin.proto" />
-    <None Include="..\..\Messages\binarydata.proto" />
-    <None Include="..\..\Messages\build.bat" />
-    <None Include="..\..\Messages\folders.proto" />
-    <None Include="..\..\Messages\handshake.proto" />
-    <None Include="..\..\Messages\header.proto" />
     <None Include="..\Readme.txt" />
     <None Include="SConstruct" />
     <None Include="src\SConscript" />
@@ -113,6 +107,7 @@
     <ClInclude Include="src\include\FileHashHandlers.h" />
     <ClInclude Include="src\include\FileSendData.h" />
     <ClInclude Include="src\include\Folder.h" />
+    <ClInclude Include="src\include\FolderContentsHandlers.h" />
     <ClInclude Include="src\include\FolderListHandlers.h" />
     <ClInclude Include="src\include\FolderMan.h" />
     <ClInclude Include="src\include\HandshakeHandlers.h" />
@@ -138,6 +133,7 @@
     <ClCompile Include="src\FileHashHandlers.cpp" />
     <ClCompile Include="src\FileSendData.cpp" />
     <ClCompile Include="src\Folder.cpp" />
+    <ClCompile Include="src\FolderContentsHandlers.cpp" />
     <ClCompile Include="src\FolderListHandlers.cpp" />
     <ClCompile Include="src\FolderMan.cpp" />
     <ClCompile Include="src\HandshakeHandlers.cpp" />
@@ -148,6 +144,7 @@
     <ClCompile Include="src\SyncroDB.cpp" />
     <ClCompile Include="src\SyncroPBResponseFactory.cpp" />
     <ClCompile Include="src\SyncroServer.cpp" />
+    <ClCompile Include="src\VectorPBResponse.cpp" />
     <ClCompile Include="src\XMLBuilder.cpp" />
     <ClCompile Include="src\XMLHandlers.cpp" />
   </ItemGroup>

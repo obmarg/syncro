@@ -45,7 +45,9 @@ enum ePBPacketTypes
 	SaltRequest,				// 14
 	SaltResponse,				// 15
 	FileHashRequest,			// 16
-	FileHashResponse			// 17
+	FileHashResponse,			// 17
+	FolderContentsRequest,		// 18
+	FolderContentsResponse,		// 19
 };
 
 extern std::string Str( ePBPacketTypes );
