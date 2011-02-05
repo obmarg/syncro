@@ -21,8 +21,8 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"SyncroServer.cpp",
 		"XMLBuilder.cpp",
 		"XMLHandlers.cpp",
-		"FileHashHandlers.cpp"
-		"VectorPBResponse.cpp"
+		"FileHashHandlers.cpp",
+		"VectorPBResponse.cpp",
 		"FolderContentsHandlers.cpp" ]
 
 output = env.Program( target = 'syncro', source = sources )
