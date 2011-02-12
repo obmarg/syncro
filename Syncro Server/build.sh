@@ -4,3 +4,5 @@ cd ../libsyncro/
 scons
 cd ../Syncro\ Server/
 scons
+cd ../test/system/
+scons

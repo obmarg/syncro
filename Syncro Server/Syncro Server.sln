@@ -32,6 +32,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinAdmin", "Tools\WinAdmin\
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{75DCF5D4-1BCC-443F-8820-113154A777BF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "System Test", "test\system\system.vcxproj", "{D581884C-FADD-471F-9D07-ACB51A084C11}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DBE52E2B-7915-4645-9017-32596A46EC9F} = {DBE52E2B-7915-4645-9017-32596A46EC9F}
+		{2635E2D6-2097-46B8-8237-46A4450C4019} = {2635E2D6-2097-46B8-8237-46A4450C4019}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -66,6 +72,10 @@ Global
 		{C4C2908A-0747-494F-AD39-2346569485D2}.Release|Win32.Build.0 = Release|Win32
 		{75DCF5D4-1BCC-443F-8820-113154A777BF}.Debug|Win32.ActiveCfg = Debug
 		{75DCF5D4-1BCC-443F-8820-113154A777BF}.Release|Win32.ActiveCfg = Release
+		{D581884C-FADD-471F-9D07-ACB51A084C11}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D581884C-FADD-471F-9D07-ACB51A084C11}.Debug|Win32.Build.0 = Debug|Win32
+		{D581884C-FADD-471F-9D07-ACB51A084C11}.Release|Win32.ActiveCfg = Release|Win32
+		{D581884C-FADD-471F-9D07-ACB51A084C11}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

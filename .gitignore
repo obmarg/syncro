@@ -2,14 +2,6 @@ bin/
 gen/
 local.properties
 *.sdf
-Release/
-Release_STL/
-Debug/
-Debug_STL/
-tinyXmlTest___Win32_Release/
-tinyXmlTest___Win32_Debug/
-tinyXmlTestSTL___Win32_Release/
-tinyXmlTestSTL___Win32_Debug/
 ipch/
 enc_temp_folder/
 temp.xml
@@ -33,3 +25,10 @@ build_release/
 protocol_buffers/
 pb/
 cryptopp/
+!responsehandlers/pb
+cppunit-1.12.1/
+protobuf-2.3.0/
+tinyxml/
+sqlite/
+Debug/
+Release/
