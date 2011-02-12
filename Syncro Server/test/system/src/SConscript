@@ -1,0 +1,7 @@
+Import( 'env', 'libs' )
+
+sources = [ "main.cpp", "SystemTest.cpp" ]
+
+output = env.Program( target = 'SystemTest', source = sources )
+
+env.Install( '../bin/', output )
