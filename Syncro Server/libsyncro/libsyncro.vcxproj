@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\libsyncro\connection.h" />
+    <ClInclude Include="include\libsyncro\filelist.h" />
     <ClInclude Include="include\libsyncro\folderlist.h" />
     <ClInclude Include="include\libsyncro\packet_types.h" />
     <ClInclude Include="include\libsyncro\protocol_buffers\admin.pb.h" />

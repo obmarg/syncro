@@ -40,6 +40,7 @@ int main( int argc, char* argv[] )
 	( "list,l", "list folders" )
 	( "addfolder,a", po::value< std::string >(), "add folder" )
 	( "uploadfile,u", po::value< std::string >(), "upload file" )
+	( "contents,c", "get contents of specified folder" )
 	( "folderid,f", po::value< int >(), "folder id to use for upload/download" )
 	( "oneshot,o", "upload file as one shot file" );
 
@@ -103,9 +104,25 @@ int main( int argc, char* argv[] )
 			std::cout << "Folders:\n";
 			BOOST_FOREACH( const syncro::FolderInfo& folder, list )
 			{
-				std::cout << nNum << ": " << folder.Name 
+				std::cout << folder.Id << ": " << folder.Name 
 					<< " ( " << folder.Path << " )\n";
 				nNum++;
+			}
+		}
+		if( vm.count( "contents" ) )
+		{
+			if( !vm.count( "folderid" ) )
+			{
+				throw std::runtime_error( 
+					"Please provide a folder id to get content list from" 
+					);
+			}
+			syncro::FileList list;
+			conn.GetFolderContents( vm["folderid"].as<int>(), list );
+			std::cout << "File List:\n";
+			BOOST_FOREACH( const syncro::FileInfo& file, list )
+			{
+				std::cout << file.name << std::endl;
 			}
 		}
 		if( vm.count( "uploadfile" ) )

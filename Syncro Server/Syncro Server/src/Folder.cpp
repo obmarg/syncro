@@ -45,7 +45,7 @@ CFolder::CFolder( const string& insPath, const string& name ) :
 			boost::shared_ptr<CFolder> folder(
 			    new CFolder(
 			        pItem->path().directory_string(),
-			        pItem->path().directory_string()
+			        pItem->path().filename()
 			    )
 			);
 			m_oChildren.push_back( folder );

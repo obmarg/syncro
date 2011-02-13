@@ -56,7 +56,7 @@ CBasePBResponse::TPointer FolderContentsRequest::GetResponse()
 	CBasePBResponse::TPointer rv;
 	rv.reset(
 		new SimplePBResponse(
-			comms::packet_types::FileHashResponse,
+			comms::packet_types::FolderContentsResponse,
 			msg
 			)
 		);
@@ -80,6 +80,7 @@ void FolderContentsRequest::ProcessFolder(
 	BOOST_FOREACH( const CFolderPtr& child, children )
 	{
 		pb::FolderContents* pbChild = pb->add_subfolders();
+		pbChild->set_name( child->GetName() );
 		ProcessFolder( pbChild, child );
 	}
 }

@@ -20,6 +20,7 @@
 
 #include <libsyncro/comms.h>
 #include <libsyncro/folderlist.h>
+#include <libsyncro/filelist.h>
 #include <kode/tcpconnection.h>
 #include <boost/noncopyable.hpp>
 #include <boost/asio.hpp>
@@ -159,10 +160,12 @@ public:
 	}
 
 	void GetFolderList( FolderList& list );
-
+	void GetFolderContents( int folderId, FileList& contents );
+	
 	void UploadFile( const UploadFileDetails& details );
 
 	void SendAdminCommand( const std::string& command, const StringMap& params );
+
 protected:
 
 	void DoHandshake();

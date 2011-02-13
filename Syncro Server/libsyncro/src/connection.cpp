@@ -385,9 +385,9 @@ void Connection::DoHandshake()
 
 	SendProtocolBuffer( comms::packet_types::HandshakeRequest , oRequest );
 
-	TRecvPacketPtr responsePacket = RecvProtocolBuffer(
-	                                    comms::packet_types::HandshakeResponse, 1
-	                                );
+	TRecvPacketPtr responsePacket = 
+		RecvProtocolBuffer( comms::packet_types::HandshakeResponse, 1 );
+
 	pb::HandshakeResponse response;
 	response.ParsePartialFromZeroCopyStream( responsePacket->ReadSubpacket( 0 ).get() );
 	if( !response.has_magic() || response.magic().compare( comms::HANDSHAKE_RESPONSE_MAGIC ) != 0 )
@@ -427,7 +427,54 @@ void Connection::GetFolderList( FolderList& list )
 		if( folder.has_can_read() ) {};
 		if( folder.has_can_write() ) {};
 	}
-	//return const_cast<const FolderList>(rv);
+}
+
+//TODO: Probably want to replace this with a better implementation at some
+//		point
+static void ProcessFolder( 
+	const pb::FolderContents& contents, 
+	FileList& fileList,
+	const std::string& pathSoFar
+	)
+{
+	fileList.reserve( fileList.size() + contents.files_size() );
+	for( int fileNum = 0; fileNum < contents.files_size(); fileNum++ )
+	{
+		const pb::FileInfo &file = contents.files(fileNum);
+		fileList.push_back(
+			FileInfo( pathSoFar + file.name(), file.size() )
+			);
+	}
+	for( 
+		int folderNum = 0; 
+		folderNum < contents.subfolders_size(); 
+		folderNum++ 
+		)
+	{
+		const pb::FolderContents& subfolder = 
+			contents.subfolders( folderNum );
+
+		std::string newPath = pathSoFar + subfolder.name() + "/";
+		ProcessFolder( subfolder, fileList, newPath	);
+	}
+}
+
+void Connection::GetFolderContents( int folderId, FileList& contents )
+{
+	pb::FolderContentsRequest request;
+	request.set_folder_id( folderId );
+
+	SendProtocolBuffer( comms::packet_types::FolderContentsRequest, request );
+
+	TRecvPacketPtr responsePacket = 
+		RecvProtocolBuffer( comms::packet_types::FolderContentsResponse, 1 );
+
+	pb::FolderContents response;
+	response.ParseFromZeroCopyStream( 
+		responsePacket->ReadSubpacket( 0 ).get() 
+		);
+
+	ProcessFolder( response, contents, "" );
 }
 
 void Connection::SendAdminCommand( const std::string& command, const StringMap& params )
