@@ -4,7 +4,7 @@ sources = [
 	"main.cpp", 
 	"SystemTest.cpp",
 	"TestDatabase.cpp",
-	"../../../../Syncro Server/src/SyncroDB.cpp"
+	"../../../Syncro Server/src/SyncroDB.cpp"
 	]
 
 output = env.Program( target = 'SystemTest', source = sources )
