@@ -18,7 +18,10 @@
 package uk.me.grambo.syncro;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -35,15 +38,34 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import uk.me.grambo.syncro.FolderFilterSettings;
 
-public class ServerConfig extends Activity {
+public class ServerConfig extends Activity  {
 	
+	private class FolderListUpdateReceiver extends BroadcastReceiver {
+		private ServerConfig m_parent;
+		
+		public FolderListUpdateReceiver(ServerConfig parent)
+		{
+			m_parent = parent;
+		}
+		
+		public void onReceive(Context context, Intent intent) {
+			//TODO: at some point, check the contents of the intent.
+			//		for now, just update the folder list.
+			m_parent.setupUI();
+		}
+	}
+	
+	private FolderListUpdateReceiver m_broadcastReceiver;	
 	private int m_nServerID;
 	private String m_aServerDetails[];
 	
 	private String m_aFolders[];
 	private int m_aFolderIDs[];
+	
+
 
 	public ServerConfig() {
+		m_broadcastReceiver = new FolderListUpdateReceiver(this);
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,9 +110,17 @@ public class ServerConfig extends Activity {
 	
 	public void onResume() {
 		super.onResume();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("uk.me.grambo.syncro.ui.FOLDER_LIST_UPDATE");
+		registerReceiver( m_broadcastReceiver, filter );
 		//setupUI();
 		//TODO: setupUI etc.
 		//TODO: find out what method this stuff should be done in.  needs to be done fast + only once ideally
+	}
+	
+	public void onPause() {
+		super.onPause();
+		unregisterReceiver(m_broadcastReceiver);
 	}
 	
 	protected void setupUI() {

@@ -39,7 +39,7 @@
     			<action android:name="uk.me.grambo.syncro.SYNCRO_SYNC"></action>
 			</intent-filter>
 		</service>
-		<receiver android:name="Receiver">
+		<receiver android:name="StartServerReceiver">
 			<intent-filter>
 				<action android:name="uk.me.grambo.syncro.START_SERVICE"></action>
 			</intent-filter>

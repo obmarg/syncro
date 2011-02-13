@@ -204,7 +204,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 				DBHelper oHelper = new DBHelper( this );
 	        	SQLiteDatabase oDB = oHelper.getReadableDatabase();	
 	        	SQLiteStatement oInsertStatement = oDB.compileStatement("INSERT INTO folders(IDOnServer,ServerID,Name,ServerPath,LocalPath) VALUES(?," + innServerID + ",?,?,'/mnt/sdcard/Syncro/')");
-				GetFolderList(oSock,oInsertStatement);
+				GetFolderList( oSock, oInsertStatement, true );
 				GetFolderContents(oSock,innServerID,oDB);
 				SendFiles(oSock,innServerID,oDB);
 				oDB.close();
@@ -282,7 +282,7 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		return false;
 	}
 	
-	protected boolean GetFolderList(Socket inoSock,SQLiteStatement inoInsertStatement) throws Exception {
+	protected boolean GetFolderList(Socket inoSock,SQLiteStatement inoInsertStatement, boolean sendBroadcast) throws Exception {
 		Folders.FolderListRequest request = Folders.FolderListRequest.newBuilder()
 			.setSearchString("")
 			.build();
@@ -294,6 +294,16 @@ public class SyncroService extends IntentService implements RemoteFileHandler{
 		FolderListResponseHandler handler = new FolderListResponseHandler(inoInsertStatement);
 		m_oPBInterface.addResponseHandler( handler );
 		m_oPBInterface.HandleResponse( inoSock.getInputStream() );
+		
+		if( sendBroadcast )
+		{
+			Intent broadcast = new Intent();
+			broadcast.setAction("uk.me.grambo.syncro.ui.FOLDER_LIST_UPDATE");
+			//TODO: Uncomment this next line and add in data to send the folder id
+			//broadcast.setData("syncro://folderid=");
+			sendBroadcast( broadcast );
+		}
+		
 		return true;
 	}
 	

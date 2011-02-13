@@ -27,9 +27,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-public class Receiver extends BroadcastReceiver {
+public class StartServerReceiver extends BroadcastReceiver {
 
-	public Receiver() {
+	public StartServerReceiver() {
 		// TODO Auto-generated constructor stub
 	}
 
