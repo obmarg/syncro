@@ -21,6 +21,7 @@
 #include <libsyncro/connection.h>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <string>
 
 namespace syncro {
 
@@ -60,8 +61,12 @@ public:
 		)
 	{ m_serverDetails = details; }
 
+	static void SetServerPrepared( bool prepared )
+	{ m_serverPrepared = prepared; }
+
 private:
-	static client::ConnectionDetails m_serverDetails;
+	static client::ConnectionDetails	m_serverDetails;
+	static bool							m_serverPrepared;
 
 private:
 	void Connect();

@@ -55,13 +55,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0501;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Dependencies\protobuf-2.3.0\include\;..\..\kode\include\;..\..\libsyncro\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Dependencies\sqlite\;..\..\..\Dependencies\protobuf-2.3.0\include\;..\..\kode\include\;..\..\libsyncro\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>cppunitd.lib;cryptlib.lib;kode.lib;libprotobuf.lib;libsyncro.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Debug;..\..\..\Dependencies\protobuf-2.3.0\lib\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sqlite3.lib;cppunitd.lib;cryptlib.lib;kode.lib;libprotobuf.lib;libsyncro.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Debug;..\..\..\Dependencies\protobuf-2.3.0\lib\Debug;..\..\..\Dependencies\sqlite\Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,23 +73,31 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0501;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Dependencies\protobuf-2.3.0\include\;..\..\kode\include\;..\..\libsyncro\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependencies\sqlite\;..\..\..\Dependencies\protobuf-2.3.0\include\;..\..\kode\include\;..\..\libsyncro\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>cppunit.lib;cryptlib.lib;kode.lib;libprotobuf.lib;libsyncro.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Release;..\..\..\Dependencies\protobuf-2.3.0\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sqlite3.lib;cppunit.lib;cryptlib.lib;kode.lib;libprotobuf.lib;libsyncro.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Release;..\..\..\Dependencies\protobuf-2.3.0\lib\Release;..\..\..\Dependencies\sqlite\Release</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Syncro Server\src\SyncroDB.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\SystemTest.cpp" />
+    <ClCompile Include="src\TestDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Syncro Server\src\include\SyncroDB.h" />
     <ClInclude Include="src\SystemTest.h" />
+    <ClInclude Include="src\TestDatabase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SConstruct" />
+    <None Include="src\SConscript" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

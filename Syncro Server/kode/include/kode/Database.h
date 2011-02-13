@@ -217,7 +217,7 @@ private:
 protected:
 	void clearResult();
 
-	Database( std::string file );
+	Database( const std::string& file );
 	virtual ~Database();
 };
 

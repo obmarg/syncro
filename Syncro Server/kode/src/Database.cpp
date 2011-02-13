@@ -31,7 +31,7 @@ int callback( void*, int, char**, char** );
 
 void stringToLower( sqlite3_context* db, int argc, sqlite3_value** argv );
 
-Database::Database( std::string file )
+Database::Database( const std::string& file )
 {
 #ifndef SQLITE_SINGLE_THREADED
 	if( !sqlite3_threadsafe() )

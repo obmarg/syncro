@@ -15,12 +15,17 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef SYNCRO_SERVER
+#include "../../Syncro Server/src/include/SyncroDB.h"
+#else
 #include "SyncroDB.h"
+#endif
 
 namespace syncro
 {
 
-const int CSyncroDB::EXPECTED_DB_VERSION = 11;
+const int	CSyncroDB::EXPECTED_DB_VERSION	= 11;
+std::string	CSyncroDB::DEFAULT_DB_NAME		= "syncro.db";
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE =
@@ -72,7 +77,10 @@ const std::string DEFAULT_USER_CREATE =
 
 //TODO: Move the database versioning stuff out into kode probably, then subclass that here.
 
-CSyncroDB::CSyncroDB( std::string insFilename ) : Database( insFilename )
+CSyncroDB::CSyncroDB( 
+	const std::string& insFilename 
+	) : 
+Database( insFilename )
 {
 	int nCurrentVersion = runScalar<int>( "PRAGMA user_version;" );
 

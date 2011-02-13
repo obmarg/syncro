@@ -16,9 +16,40 @@
 */
 
 #include "SyncroServer.h"
+#include "SyncroDB.h"
+#include <boost/program_options.hpp>
+#include <iostream>
+#include <string>
+
+namespace po = boost::program_options;
 
 int main( int argc, char** argv )
 {
+	po::options_description desc( "Allowed options" );
+	desc.add_options()
+		( "help,h", "produce help message" )
+		( 
+			"database,d", 
+			po::value<std::string>(), 
+			"use specified database file" 
+			);
+
+	po::variables_map vm;
+	po::store( po::parse_command_line( argc, argv, desc ), vm );
+	po::notify( vm );
+
+	if( vm.count( "help" ) )
+	{
+		std::cout << desc;
+		return 1;
+	}
+	if( vm.count( "database" ) )
+	{
+		syncro::CSyncroDB::SetDefaultFilename( 
+									vm[ "database" ].as< std::string >() 
+									);
+	}
+
 	syncro::CSyncroServer oServer;
 	bool fOK = oServer.Run();
 	return fOK ? 0 : 1;

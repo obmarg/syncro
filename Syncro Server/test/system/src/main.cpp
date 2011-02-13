@@ -16,15 +16,69 @@
 */
 
 #include "SystemTest.h"
+#include "TestDatabase.h"
 #include <libsyncro/connection.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
+#include <boost/program_options.hpp>
+
+namespace po = boost::program_options;
 
 int main( int argc, char** argv )
 {
+	using namespace syncro::test;
+
+	po::options_description desc( "Allowed options" );
+	desc.add_options()
+		( "help,h", "produce help message" )
+		( "prepared", "server is using prepared database" )
+		( "server,s", po::value< std::string >(), "server address/ip" )
+		( "port,p", po::value< uint32_t >(), "server port" )
+		( 
+			"createdatabase,c", 
+			po::value< std::string >(), 
+			"create a test db with the given filename" 
+			);
+
+	po::variables_map vm;
+	po::store( po::parse_command_line( argc, argv, desc ), vm );
+	po::notify( vm );
+
+	if( vm.count("help") )
+	{
+		std::cout << desc << "\n";
+		return 1;
+	}
+
+	if( vm.count("createdatabase") )
+	{
+		TestDatabase db( vm["createdatabase"].as<std::string>() );
+		db.Create();
+		//TODO: Catch exceptions, check return value etc.
+		return 0;
+	}
+
+	if( vm.count( "prepared" ) )
+	{
+		SystemTest::SetServerPrepared( true );
+	}
+
 	syncro::client::ConnectionDetails details;
-	details.SetHostname( "localhost" );
-	syncro::test::SystemTest::SetConnectionDetails( details );
+	if( vm.count( "server" ) )
+	{
+		details.SetHostname( vm["server"].as<std::string>() );
+	}
+	else
+	{
+		std::cout << "No hostname supplied, using localhost" << std::endl;
+		details.SetHostname( "localhost" );
+	}
+	if( vm.count( "port" ) )
+	{
+		details.SetPort( vm["port"].as< uint32_t >() );
+	}
+
+	SystemTest::SetConnectionDetails( details );
 
 	std::string tests = "All Tests";
 	CppUnit::TextUi::TestRunner runner;
@@ -32,7 +86,7 @@ int main( int argc, char** argv )
 		CppUnit::TestFactoryRegistry::getRegistry( tests );
 
 	runner.addTest( registry.makeTest() );
-	runner.run();
+	bool success = runner.run();
 
-	return 0;
+	return !success;
 }

@@ -1,6 +1,11 @@
 Import( 'env', 'libs' )
 
-sources = [ "main.cpp", "SystemTest.cpp" ]
+sources = [ 
+	"main.cpp", 
+	"SystemTest.cpp",
+	"TestDatabase.cpp",
+	"../../../../Syncro Server/src/SyncroDB.cpp"
+	]
 
 output = env.Program( target = 'SystemTest', source = sources )
 

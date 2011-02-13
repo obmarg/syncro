@@ -25,7 +25,8 @@ namespace test {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest );
 
-client::ConnectionDetails SystemTest::m_serverDetails;
+client::ConnectionDetails	SystemTest::m_serverDetails;
+bool						SystemTest::m_serverPrepared;
 
 void SystemTest::setUp()
 {
@@ -66,14 +67,38 @@ void SystemTest::FolderListTest()
 		m_connection->GetFolderList( list )
 		);
 
-	//TODO: Need to make this actually check the output etc.
+	if( m_serverPrepared )
+	{
+		//TODO: Add testing for readable and writable
+		CPPUNIT_ASSERT( list.size() == 3 );
+
+		CPPUNIT_ASSERT( list[0].Id == 1 );
+		CPPUNIT_ASSERT( list[0].Name == "Test1" );
+		CPPUNIT_ASSERT( 
+			list[0].Path == "Test1/" || list[0].Path == "Test1\\"
+			);
+		CPPUNIT_ASSERT( list[0].UploadPrefix == "" );
+
+		CPPUNIT_ASSERT( list[1].Id == 65539 );
+		CPPUNIT_ASSERT( list[1].Name == "Test2" );
+		CPPUNIT_ASSERT( 
+			list[1].Path == "Test2/" || list[1].Path == "Test2\\"
+			);
+		CPPUNIT_ASSERT( list[1].UploadPrefix == "" );
+
+		CPPUNIT_ASSERT( list[2].Id == 1280012 );
+		CPPUNIT_ASSERT( list[2].Name == "Test3" );
+		CPPUNIT_ASSERT( 
+			list[2].Path == "Test3/" || list[2].Path == "Test3\\"
+			);
+		CPPUNIT_ASSERT( list[2].UploadPrefix == "" );
+	}
 }
 
 void SystemTest::FolderContentsTest()
 {
 	Connect();
 
-	//TODO: Add some actual test code....
 }
 
 }	// namespace test

@@ -1,6 +1,9 @@
 /*  This file is part of Syncro. 
 	Copyright (c) Graeme Coupar <grambo@grambo.me.uk>
 
+	This file defines TestDatabase, a class responsible for creating 
+	a syncro database for use in the system test
+
 	Syncro is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
@@ -15,42 +18,26 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __SYNCRO_DB_H_
-#define __SYNCRO_DB_H_
+#ifndef SYNCRO_TEST_DATABASE_H_
+#define SYNCRO_TEST_DATABASE_H_
 
-#include <kode/Database.h>
+#include "../../Syncro Server/src/include/SyncroDB.h"
 #include <string>
 
-namespace syncro
-{
+namespace syncro {
+namespace test {
 
-class CSyncroDB : public kode::db::Database, boost::noncopyable
+class TestDatabase
 {
 public:
-	static Database::TPointer OpenDB(
-		const std::string& file=DEFAULT_DB_NAME
-		)
-	{
-		Database::TPointer pDatabase( new CSyncroDB( file ) );
-		return pDatabase;
-	}
+	TestDatabase( const std::string& database );
 
-	virtual ~CSyncroDB();
-
-public:
-	static void	SetDefaultFilename( const std::string& name )
-	{ DEFAULT_DB_NAME = name; }
-
+	void Create();
 private:
-	static const int	EXPECTED_DB_VERSION;
-	static std::string	DEFAULT_DB_NAME;
-
-	CSyncroDB( const std::string& insFile );
-
-	bool CreateDatabase();
-	bool UpgradeDatabase( int nCurrentVersion );
+	std::string		m_filename;
 };
 
-};		//namespace syncro
+}	// namespace test
+}	// namespace syncro
 
 #endif
