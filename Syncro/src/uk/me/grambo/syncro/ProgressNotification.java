@@ -17,6 +17,8 @@
 
 package uk.me.grambo.syncro;
 
+import uk.me.grambo.syncro.comms.RemoteFileData;
+import uk.me.grambo.syncro.ui.ServerBrowser;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -73,7 +75,7 @@ public class ProgressNotification {
 		//		check it out etc.
 	}
 	
-	public void setCurrentFileDetails(RemoteFileHandler.RemoteFileData inoFile, int innFileNum) {
+	public void setCurrentFileDetails(RemoteFileData inoFile, int innFileNum) {
 		m_nFilename = inoFile.Filename;
 		//TODO: Progress bar won't work for massive files - fix it
 		m_nCurrentTotalSize = (int)inoFile.Size;

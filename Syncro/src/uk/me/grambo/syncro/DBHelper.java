@@ -60,7 +60,7 @@ public class DBHelper extends SQLiteOpenHelper {
     			"FilenameType INTEGER NOT NULL DEFAULT 0);";
     
 
-    DBHelper(Context context) {
+    public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

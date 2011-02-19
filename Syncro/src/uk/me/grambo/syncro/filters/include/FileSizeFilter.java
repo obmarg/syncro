@@ -20,7 +20,7 @@ package uk.me.grambo.syncro.filters.include;
 import java.io.File;
 
 import uk.me.grambo.syncro.IncludeFilter;
-import uk.me.grambo.syncro.RemoteFileHandler.RemoteFileData;
+import uk.me.grambo.syncro.comms.RemoteFileData;
 
 public class FileSizeFilter implements IncludeFilter {
 

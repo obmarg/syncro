@@ -15,15 +15,15 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.comms.responsehandlers;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.util.Log;
-import uk.me.grambo.syncro.pb.Handshake;
-import uk.me.grambo.syncro.responsehandlers.PBResponseHandler;
+import uk.me.grambo.syncro.comms.PBSocketInterface;
+import uk.me.grambo.syncro.comms.pb.Handshake;
 
 public class HandshakeHandler implements PBResponseHandler {
 	
@@ -45,19 +45,17 @@ public class HandshakeHandler implements PBResponseHandler {
 	}
 
 	@Override
-	public boolean handleResponse(int[] nSubpacketSizes, InputStream inoStream)
-			throws Exception, IOException {
-		if( nSubpacketSizes.length != 1 )
+	public boolean handleResponse(
+			int[] subpacketSizes,
+			PBSocketInterface pbInterface
+			) throws Exception, IOException 
+	{
+		if( subpacketSizes.length != 1 )
 			throw new Exception("Invalid number of subpackets sent in handshake response");
 		
-		byte[] aBuffer = new byte[ nSubpacketSizes[0] ];
-		Log.d("Syncro", "Reading first subpacket: " + nSubpacketSizes[0]);
-		inoStream.read(aBuffer);
-		//TODO: figure out how to use CodedInputStream
-		
-		
 		Handshake.HandshakeResponse.Builder oResponse = Handshake.HandshakeResponse.newBuilder();
-		oResponse.mergeFrom(aBuffer);
+		pbInterface.ReadMessage( oResponse, subpacketSizes[0] );
+		
 		if( ( !oResponse.hasMagic() ) || (oResponse.getMagic().compareTo(MAGIC_RESPONSE_STRING) != 0) ) {
 			throw new Exception("Invalid magic!");
 		}

@@ -9,29 +9,29 @@
     
     <application android:label="@string/app_name" 
     			android:icon="@drawable/icon">
-        <activity android:name="ServerBrowser"
+        <activity android:name=".ui.ServerBrowser"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="FindServer"
+        <activity android:name=".ui.FindServer"
         	android:label="@string/app_name">
         </activity>
-        <activity android:name="ServerConfig"
+        <activity android:name=".ui.ServerConfig"
         	android:label="@string/app_name">
         </activity>
-        <activity android:name="FolderGeneralSettings"
+        <activity android:name=".ui.FolderGeneralSettings"
         	android:label="@string/app_name">
         </activity>
-        <activity android:name="FolderFilterSettings"
+        <activity android:name=".ui.FolderFilterSettings"
         	android:label="@string/app_name">
         </activity>
-        <activity android:name="FolderSyncSettings"
+        <activity android:name=".ui.FolderSyncSettings"
         	android:label="@string/app_name">
         </activity>
-        <activity android:name="FolderConfig"
+        <activity android:name=".ui.FolderConfig"
         	android:label="@string/app_name">
         </activity>
     	<service android:name="SyncroService">

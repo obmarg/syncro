@@ -15,8 +15,11 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.ui;
 
+import uk.me.grambo.syncro.R;
+import uk.me.grambo.syncro.R.drawable;
+import uk.me.grambo.syncro.R.layout;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;

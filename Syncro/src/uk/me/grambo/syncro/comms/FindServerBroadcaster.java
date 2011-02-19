@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.comms;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -31,6 +31,8 @@ import android.util.Log;
 import java.net.*;
 import java.util.ArrayList;
 import java.io.*;
+
+import uk.me.grambo.syncro.ui.FindServer;
 import android.os.*;
 
 public class FindServerBroadcaster extends AsyncTask< Void, Void, ArrayList<FindServerBroadcaster.ServerInfo> > {
