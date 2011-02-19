@@ -72,7 +72,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 		m_includeFilters = new ArrayList<IncludeFilter>();
 		m_filenameFilters = new ArrayList<FilenameFilter>();
 		m_oFilterFactory = new FilterFactory(this);
-		m_conn = new Connection();
+		m_conn = new Connection(this);
 	}
 
 	@Override

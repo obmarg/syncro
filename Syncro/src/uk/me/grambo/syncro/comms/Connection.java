@@ -61,8 +61,9 @@ public class Connection {
 	/**
 	 * Constructor for Connection object.
 	 */
-	public Connection() {
+	public Connection(Context context) {
 		m_pbInterface = new PBSocketInterface();
+		m_context = context;
 	}
 	
 	public boolean Connect( ConnectionDetails details )
@@ -219,14 +220,13 @@ public class Connection {
 				e.printStackTrace();
 			}
 			oFile.close();
-			/* TODO: Re-locate this code elsewhere (into progress handler presumably)
-			if( destinationFilename.endsWith(".mp3") )
+			// TODO: Re-locate this code elsewhere (into progress handler presumably)
+			if( destFilename.endsWith(".mp3") )
 			{
 				//HACK: Media client any mp3s
 				//TODO: Fix this so it does things much better, rather than this crude filename hack.
-				MediaScannerConnection.scanFile(this, new String[]{ destinationFilename }, null, null);
+				MediaScannerConnection.scanFile(m_context, new String[]{ destFilename }, null, null);
 			}
-			*/
 		}
 		return fOK;
 	}
