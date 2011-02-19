@@ -99,12 +99,6 @@
     <ClInclude Include="src\include\SyncroServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\XMLBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\include\XMLHandlers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\FileHashHandlers.h">
       <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
@@ -174,12 +168,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SyncroServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\XMLBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\XMLHandlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FileHashHandlers.cpp">

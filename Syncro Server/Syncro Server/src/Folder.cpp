@@ -17,7 +17,6 @@
 
 #include <string>
 #include "Folder.h"
-#include <tinyxml.h>
 #include <boost/filesystem.hpp>
 
 namespace syncro

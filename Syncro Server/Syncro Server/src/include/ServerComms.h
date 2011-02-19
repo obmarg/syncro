@@ -114,16 +114,16 @@ private:
 	CSendHandler::TPointer m_pSendHandler;
 };
 
-class CAcceptHandler
+class BaseAcceptHandler
 {
 public:
-	typedef boost::shared_ptr<CAcceptHandler> TPointer;
+	typedef boost::shared_ptr<BaseAcceptHandler> TPointer;
 
-	CAcceptHandler( int innPriority ) : m_nPriority( innPriority ) {};
-	virtual ~CAcceptHandler() {};
+	BaseAcceptHandler( int innPriority ) : m_nPriority( innPriority ) {};
+	virtual ~BaseAcceptHandler() {};
 
 	virtual bool HandleAccept( CTCPConnection::TPointer inpNewConnection ) = 0;
-	bool operator<( const CAcceptHandler& inoRHS )
+	bool operator<( const BaseAcceptHandler& inoRHS )
 	{
 		if( m_nPriority < inoRHS.m_nPriority )
 			return true;
@@ -134,18 +134,18 @@ protected:
 	int m_nPriority;
 };
 
-class CServerComms
+class ServerComms
 {
 public:
-	CServerComms( boost::asio::io_service& inoIOService );
-	~CServerComms();
+	ServerComms( boost::asio::io_service& inoIOService );
+	~ServerComms();
 
-	void AddAcceptHandler( CAcceptHandler::TPointer inoAcceptHandler );
+	void AddAcceptHandler( BaseAcceptHandler::TPointer inoAcceptHandler );
 private:
-	CServerComms( const CServerComms& inoServerComms );
+	ServerComms( const ServerComms& inoServerComms );
 	boost::asio::ip::tcp::acceptor m_oAcceptor;
 
-	typedef std::multiset<CAcceptHandler::TPointer, kode::utils::CPointerLessThan> TAcceptHandlerMap;
+	typedef std::multiset<BaseAcceptHandler::TPointer, kode::utils::CPointerLessThan> TAcceptHandlerMap;
 	TAcceptHandlerMap m_oAcceptHandlers;
 
 	void StartAccept();

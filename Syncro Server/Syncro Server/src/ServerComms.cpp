@@ -30,25 +30,25 @@ using std::cout;
 
 const int DEFAULT_RECV_BUFFER = 1000;
 
-CServerComms::CServerComms( io_service& inoIOService ) :
+ServerComms::ServerComms( io_service& inoIOService ) :
 	m_oAcceptor( inoIOService, tcp::endpoint( tcp::v4(), comms::SERVER_PORT ) )
 {
 	StartAccept();
 }
 
-CServerComms::~CServerComms()
+ServerComms::~ServerComms()
 {
 
 }
 
 
-void CServerComms::StartAccept()
+void ServerComms::StartAccept()
 {
 	CTCPConnection::TPointer oNewConn = CTCPConnection::CreateConnection( m_oAcceptor.io_service() );
-	m_oAcceptor.async_accept( oNewConn->GetSocket(), boost::bind( &CServerComms::HandleAccept, this, oNewConn, boost::asio::placeholders::error ) );
+	m_oAcceptor.async_accept( oNewConn->GetSocket(), boost::bind( &ServerComms::HandleAccept, this, oNewConn, boost::asio::placeholders::error ) );
 }
 
-void CServerComms::HandleAccept( CTCPConnection::TPointer inoNewConn, const boost::system::error_code& inoError )
+void ServerComms::HandleAccept( CTCPConnection::TPointer inoNewConn, const boost::system::error_code& inoError )
 {
 	if( !inoError )
 	{
@@ -66,7 +66,7 @@ void CServerComms::HandleAccept( CTCPConnection::TPointer inoNewConn, const boos
 	}
 }
 
-void CServerComms::AddAcceptHandler( CAcceptHandler::TPointer inoAcceptHandler )
+void ServerComms::AddAcceptHandler( BaseAcceptHandler::TPointer inoAcceptHandler )
 {
 	m_oAcceptHandlers.insert( inoAcceptHandler );
 }

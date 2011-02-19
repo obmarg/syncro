@@ -18,19 +18,24 @@
 #ifndef _SYNCRO_SERVER_H_
 #define _SYNCRO_SERVER_H_
 
-#include "FolderMan.h"
 #include <boost/thread.hpp>
+#include "ServerComms.h"
+#include <boost/enable_shared_from_this.hpp>
 
 namespace syncro
 {
 
-class CSyncroServer
+class SyncroServer : 
+	public BaseAcceptHandler, 
+	public boost::enable_shared_from_this<SyncroServer>
 {
 public:
-	CSyncroServer();
-	~CSyncroServer();
+	SyncroServer();
+	~SyncroServer();
 
 	bool Run();
+
+	virtual bool HandleAccept( CTCPConnection::TPointer inpNewConnection );
 private:
 	boost::thread m_oBroadcastThread;
 };

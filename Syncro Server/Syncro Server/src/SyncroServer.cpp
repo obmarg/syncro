@@ -23,15 +23,13 @@
 #include <iostream>
 #include <fstream>
 #include <iterator>
-#include "tinyxml.h"
 #include "FolderMan.h"
 #include <memory>
 #include <boost/lexical_cast.hpp>
 #include "BroadcastThread.h"
 #include "ServerComms.h"
 #include <boost/asio.hpp>
-#include "XMLHandlers.h"
-#include "HandshakeHandlers.h"
+#include "PBRequestHandler.h"
 #include "SyncroPBResponseFactory.h"
 #include "SyncroDB.h"
 
@@ -41,7 +39,8 @@ namespace syncro
 using namespace std;
 using boost::shared_ptr;
 
-CSyncroServer::CSyncroServer() :
+SyncroServer::SyncroServer() :
+	BaseAcceptHandler( 1 ),
 	m_oBroadcastThread( CBroadcastThread() )
 {
 	//Create a DB object.  to ensure the db file is created
@@ -49,23 +48,34 @@ CSyncroServer::CSyncroServer() :
 	CSyncroDB::OpenDB();
 }
 
-CSyncroServer::~CSyncroServer()
+SyncroServer::~SyncroServer()
 {
 }
 
-bool
-CSyncroServer::Run()
+bool SyncroServer::Run()
 {
 	using boost::asio::io_service;
 
 	io_service oIO;
 
-	CServerComms oComms( oIO );
-	//TODO: Rename CXMLAcceptHandler (it's not really an xml accepter anymore is it?)
-	CXMLAcceptHandler* pXMLAH = new CXMLAcceptHandler();
-	oComms.AddAcceptHandler( boost::shared_ptr<CAcceptHandler>(( pXMLAH ) ) );
+	ServerComms oComms( oIO );
+	oComms.AddAcceptHandler( shared_from_this() );
 	oIO.run();
 
+	return true;
+}
+
+bool SyncroServer::HandleAccept( 
+	CTCPConnection::TPointer inpNewConnection 
+	)
+{
+	CReceiveHandler::TPointer oPointer = 
+		CPBRequestHandler::Create( 
+			inpNewConnection, 
+			CSyncroPBResponseFactory::Create() 
+			);
+
+	inpNewConnection->StartRecv( 0 );
 	return true;
 }
 

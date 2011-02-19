@@ -16,7 +16,6 @@ libpath = [
 libs = [ 
 	'syncro', 
 	'kode', 
-	'tinyxml', 
 	'sqlite3', 
 	'boost_system', 
 	'boost_thread', 

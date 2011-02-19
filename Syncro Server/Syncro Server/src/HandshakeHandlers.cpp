@@ -19,7 +19,6 @@
 #define _SCL_SECURE_NO_WARNINGS
 
 #include "HandshakeHandlers.h"
-#include "XMLHandlers.h"
 #include "PBRequestHandler.h"
 #include "SyncroPBResponseFactory.h"
 

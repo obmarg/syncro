@@ -19,8 +19,6 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"SyncroDB.cpp",
 		"SyncroPBResponseFactory.cpp",
 		"SyncroServer.cpp",
-		"XMLBuilder.cpp",
-		"XMLHandlers.cpp",
 		"FileHashHandlers.cpp",
 		"VectorPBResponse.cpp",
 		"FolderContentsHandlers.cpp" ]

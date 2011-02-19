@@ -50,7 +50,7 @@ int main( int argc, char** argv )
 									);
 	}
 
-	syncro::CSyncroServer oServer;
+	syncro::SyncroServer oServer;
 	bool fOK = oServer.Run();
 	return fOK ? 0 : 1;
 }
