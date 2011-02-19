@@ -48,6 +48,7 @@ enum ePBPacketTypes
 	FileHashResponse,			// 17
 	FolderContentsRequest,		// 18
 	FolderContentsResponse,		// 19
+	BinaryRequestRejected,		// 20
 };
 
 extern std::string Str( ePBPacketTypes );
