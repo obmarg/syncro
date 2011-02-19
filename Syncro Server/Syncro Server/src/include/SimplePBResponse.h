@@ -33,6 +33,12 @@ class SimplePBResponse : public CBasePBResponse
 public:
 	typedef boost::shared_ptr< google::protobuf::MessageLite > MessagePtr;
 
+	SimplePBResponse( unsigned int messageType ) :
+		m_messageType( messageType )
+	{
+
+	}
+	
 	SimplePBResponse( unsigned int messageType, MessagePtr message ) :
 		m_messageType( messageType ),
 		m_message( message )
@@ -43,19 +49,37 @@ public:
 
 	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
-		assert( subpacket == 0 );
-		return m_message->ByteSize();
+		if( m_message )
+		{
+			if( subpacket != 0 )
+				throw std::logic_error( 
+					"Subpacket size requested for invalid subpacket in "
+					"SimplePBResponse"
+					);
+			return m_message->ByteSize();
+		}
+		throw std::logic_error(
+			"Subpacket size requested for SimplePBResponse with "
+			"no associated data"
+			);
 	}
 
 	virtual unsigned int GetSubpacketCount()
 	{
-		return 1;
+		return ( m_message ? 1 : 0 );
 	};
 
 	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
 	{
+		if( !m_message )
+			throw std::logic_error(
+				"Write Subpacket called on SimplePBResponse with no "
+				"associated data"
+			);
 		if( inSubpacketIndex != 0 )
-			throw std::logic_error( "Invalid subpacket index in SimplePBResponse::WriteSubpacket" );
+			throw std::logic_error( 
+				"Invalid subpacket index in SimplePBResponse::WriteSubpacket" 
+				);
 		WriteMessage( *m_message, stream );
 	}
 

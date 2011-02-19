@@ -28,6 +28,7 @@
 #include "FolderListHandlers.h"
 #include "FileHashHandlers.h"
 #include "FolderContentsHandlers.h"
+#include "SimplePBResponse.h"
 #include <libsyncro/packet_types.h>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/bind.hpp>
@@ -78,7 +79,17 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 		bool fAccept = m_pFolderMan->FileRequested( oRequest, details );
 		if( !fAccept )
 		{
-			break;
+#ifdef _DEBUG
+			//TODO: Maybe remove this once finished debugging
+			std::cout << "Binary Request Rejected.\n" <<
+				"FolderId: " <<		oRequest.GetFolderId()		<< "\n" <<
+				"Filename: " <<	oRequest.GetFilename().c_str()	<< "\n" <<
+				"Filesize: " <<		oRequest.GetFileSize()		<< "\n" <<
+				"Start Offset:" <<	oRequest.GetStartOffset()	<< "\n";
+#endif
+			return CBasePBResponse::TPointer(
+				new SimplePBResponse( packet_types::BinaryRequestRejected )
+				);
 		}
 		m_pCurrentSendData.reset(
 		    new CFileSendData(
@@ -86,8 +97,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 		        oRequest.GetBufferSize(),
 		        details.CompletionCallback(),
 		        oRequest.GetStartOffset()
-		    )
-		);
+		    )	);
 	}
 	//Fall through
 	case packet_types::BinaryContinue:
