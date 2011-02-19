@@ -15,13 +15,14 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.comms;
 
-import uk.me.grambo.syncro.comms.RemoteFileData;
 
-public interface IncludeFilter {
-	public boolean shouldInclude(RemoteFileData inoFile);
-	public boolean shouldInclude(RemoteFileData inoFile, String insDestinationFilename);
-	public boolean shouldEndList();
-	public boolean needsFilename();
+/**
+ * Interface to recieve folder contents from server
+ * @author Grambo <grambo@grambo.me.uk>
+ *
+ */
+public interface FolderContentsHandler {
+	public void handleRemoteFile(RemoteFileData inoFile);
 }

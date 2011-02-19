@@ -15,13 +15,20 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.comms.responsehandlers;
 
-import uk.me.grambo.syncro.comms.RemoteFileData;
+import java.io.IOException;
+import java.io.InputStream;
 
-public interface IncludeFilter {
-	public boolean shouldInclude(RemoteFileData inoFile);
-	public boolean shouldInclude(RemoteFileData inoFile, String insDestinationFilename);
-	public boolean shouldEndList();
-	public boolean needsFilename();
+import uk.me.grambo.syncro.comms.PBSocketInterface;
+
+public interface PBResponseHandler {
+	public boolean canHandleResponse(int innType);
+	
+	public boolean handleResponse(
+			int subpacketSizes[],
+			PBSocketInterface pbInterface
+			) throws Exception,IOException;
+	
+	public boolean canRemove();
 }

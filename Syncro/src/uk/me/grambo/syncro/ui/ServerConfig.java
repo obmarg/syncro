@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.ui;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -36,7 +36,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import uk.me.grambo.syncro.FolderFilterSettings;
+import uk.me.grambo.syncro.DBHelper;
+import uk.me.grambo.syncro.R;
+import uk.me.grambo.syncro.SyncroService;
+import uk.me.grambo.syncro.R.id;
+import uk.me.grambo.syncro.R.layout;
 
 public class ServerConfig extends Activity  {
 	

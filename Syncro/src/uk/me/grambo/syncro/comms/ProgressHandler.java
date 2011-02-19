@@ -15,13 +15,9 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.comms;
 
-public interface RemoteFileHandler {
-	public class RemoteFileData {
-		public String Filename;
-		public int FolderId;
-		public long Size;
-	}
-	public void HandleRemoteFile(RemoteFileData inoFile);
+public interface ProgressHandler {
+	public void setTotalProgress( long total );
+	public void setCurrentProgress( long progress );
 }

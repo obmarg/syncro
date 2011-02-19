@@ -15,8 +15,12 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
+package uk.me.grambo.syncro.ui;
 
+import uk.me.grambo.syncro.DBHelper;
+import uk.me.grambo.syncro.R;
+import uk.me.grambo.syncro.R.id;
+import uk.me.grambo.syncro.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;

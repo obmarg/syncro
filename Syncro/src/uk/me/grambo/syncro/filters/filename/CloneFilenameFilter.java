@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 
 import uk.me.grambo.syncro.FilenameFilter;
-import uk.me.grambo.syncro.RemoteFileHandler.RemoteFileData;
+import uk.me.grambo.syncro.comms.RemoteFileData;
 
 public class CloneFilenameFilter implements FilenameFilter {
 

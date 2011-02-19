@@ -16,7 +16,7 @@
 
 package syncro.pb;
 
-option java_package = "uk.me.grambo.syncro.pb";
+option java_package = "uk.me.grambo.syncro.comms.pb";
 option optimize_for = LITE_RUNTIME;
 
 message SaltRequest {

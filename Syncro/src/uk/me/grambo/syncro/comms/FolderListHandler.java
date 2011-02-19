@@ -15,13 +15,34 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro;
 
-import uk.me.grambo.syncro.comms.RemoteFileData;
+package uk.me.grambo.syncro.comms;
 
-public interface IncludeFilter {
-	public boolean shouldInclude(RemoteFileData inoFile);
-	public boolean shouldInclude(RemoteFileData inoFile, String insDestinationFilename);
-	public boolean shouldEndList();
-	public boolean needsFilename();
-}
+import uk.me.grambo.syncro.comms.pb.Folders;
+
+/**
+ * An interface used to receive folder list information
+ * @author Grambo <grambo@grambo.me.uk>
+ *
+ */
+public interface FolderListHandler {
+	void handlerFolder( FolderInfo folder );
+	
+	public class FolderInfo {
+		public int			Id;
+		public String		Name;
+		public String		Path;
+		public boolean		Writable;
+		public boolean		Readable;
+		
+		public FolderInfo() {};
+		public FolderInfo( Folders.FolderInfo other )
+		{
+			Id 			= other.getFolderId();
+			Name 		= other.getFolderName();
+			Path		= other.getFolderPath();
+			Writable 	= other.getCanWrite();
+			Readable	= other.getCanRead();
+		}
+	}
+};

@@ -15,13 +15,24 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro.responsehandlers;
+package uk.me.grambo.syncro.comms;
 
-import java.io.IOException;
-import java.io.InputStream;
+import uk.me.grambo.syncro.comms.pb.Folders;
 
-public interface PBResponseHandler {
-	public boolean canHandleResponse(int innType);
-	public boolean handleResponse(int nSubpacketSizes[],InputStream inoStream) throws Exception,IOException;
-	public boolean canRemove();
+/**
+ * Class to store information on each remote file
+ * @author Grambo <grambo@grambo.me.uk>
+ *
+ */
+public class RemoteFileData {
+	public String Filename;
+	public int FolderId;
+	public long Size;
+	public RemoteFileData() {};
+	public RemoteFileData( Folders.FileInfo info, int folderId )
+	{
+		Filename = 	info.getName();
+		FolderId = 	folderId;
+		Size	 = 	info.getSize();
+	}
 }

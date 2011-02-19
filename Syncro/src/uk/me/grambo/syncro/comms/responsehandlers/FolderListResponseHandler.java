@@ -15,24 +15,25 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro.responsehandlers;
+package uk.me.grambo.syncro.comms.responsehandlers;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import android.database.sqlite.SQLiteStatement;
 
-import uk.me.grambo.syncro.PBSocketInterface;
-import uk.me.grambo.syncro.pb.Folders;
-import uk.me.grambo.syncro.pb.Folders.FolderList;
+import uk.me.grambo.syncro.comms.FolderListHandler;
+import uk.me.grambo.syncro.comms.PBSocketInterface;
+import uk.me.grambo.syncro.comms.pb.Folders;
+import uk.me.grambo.syncro.comms.pb.Folders.FolderList;
 
 public class FolderListResponseHandler implements PBResponseHandler {
 	
-	private SQLiteStatement m_insertStatement;
+	private FolderListHandler m_dataHandler;
 
-	public FolderListResponseHandler(SQLiteStatement insertStatement)
+	public FolderListResponseHandler(FolderListHandler dataHandler)
 	{
-		m_insertStatement = insertStatement;
+		m_dataHandler = dataHandler;
 	}
 	
 	@Override
@@ -44,27 +45,26 @@ public class FolderListResponseHandler implements PBResponseHandler {
 	}
 
 	@Override
-	public boolean handleResponse(int[] nSubpacketSizes, InputStream inoStream)
-			throws Exception, IOException 
+	public boolean handleResponse(
+			int[] subpacketSizes, 
+			PBSocketInterface pbInterface
+			) throws Exception, IOException 
 	{
-		if( nSubpacketSizes.length != 1 )
+		if( subpacketSizes.length != 1 )
 			throw new Exception("Invalid number of subpackets");
-		byte[] buffer = new byte[ nSubpacketSizes[0] ];
-		int read = 0;
-		do
-		{
-			read += inoStream.read(buffer, read, buffer.length - read );
-		}while( read != buffer.length );
-		FolderList list = FolderList.parseFrom( buffer );
+		FolderList.Builder builder = FolderList.newBuilder();
+		pbInterface.ReadMessage( 
+				builder,
+				subpacketSizes[0]
+				);
+		FolderList list = builder.build();
 		for( int folderNum = 0; folderNum < list.getFoldersCount(); folderNum++ )
-		{
-			Folders.FolderInfo folder = list.getFolders( folderNum );
-			m_insertStatement.bindLong( 1, folder.getFolderId() );
-			m_insertStatement.bindString( 2,  folder.getFolderName() );
-			m_insertStatement.bindString( 3,  folder.getFolderPath() );
-			m_insertStatement.executeInsert();
-			//TODO: Should probably add some pruning logic etc. in here
-			//		for folders no longer on the server
+		{ 
+			m_dataHandler.handlerFolder( 
+					new FolderListHandler.FolderInfo( 
+							list.getFolders( folderNum ) 
+							) 
+					);
 		}
 		
 		return true;

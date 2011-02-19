@@ -15,15 +15,12 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro.responsehandlers;
+package uk.me.grambo.syncro.comms.responsehandlers;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import uk.me.grambo.syncro.PBSocketInterface;
-import uk.me.grambo.syncro.PBSocketInterface.ResponseTypes;
-import uk.me.grambo.syncro.pb.Binarydata;
+import uk.me.grambo.syncro.comms.PBSocketInterface;
+import uk.me.grambo.syncro.comms.pb.Binarydata;
 
 public class FileHashResponseHandler implements PBResponseHandler { 
 	
@@ -38,20 +35,25 @@ public class FileHashResponseHandler implements PBResponseHandler {
 			return true;
 		return false;
 	}
-
+	
 	@Override
-	public boolean handleResponse(int[] nSubpacketSizes, InputStream inoStream)
-			throws Exception, IOException {
-		DataInputStream input = new DataInputStream( inoStream );
-		if( nSubpacketSizes.length != 1 )
+	public boolean handleResponse(
+			int[] subpacketSizes,
+			PBSocketInterface pbInterface
+			) throws Exception, IOException 
+	{
+		if( subpacketSizes.length != 1 )
 			throw new Exception( "Invalid number of subpackets" );
-		byte[] aBuffer = new byte[ nSubpacketSizes[0] ];
 		
-		input.readFully(aBuffer);
-		Binarydata.FileHashResponse.Builder oBuilder = Binarydata.FileHashResponse.newBuilder();
-		oBuilder.mergeFrom(aBuffer);
-		if( oBuilder.hasOk() )
-			m_hashOk = oBuilder.getOk();
+		Binarydata.FileHashResponse.Builder message = 
+			Binarydata.FileHashResponse.newBuilder();
+		pbInterface.ReadMessage(
+				message,
+				subpacketSizes[0]
+				);
+		
+		if( message.hasOk() )
+			m_hashOk = message.getOk();
 		
 		return true;
 	}
@@ -67,4 +69,5 @@ public class FileHashResponseHandler implements PBResponseHandler {
 	}
 
 	private boolean m_hashOk;
+
 }

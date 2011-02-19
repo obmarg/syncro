@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.me.grambo.syncro.responsehandlers;
+package uk.me.grambo.syncro.comms.responsehandlers;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -25,9 +25,9 @@ import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import uk.me.grambo.syncro.PBSocketInterface;
-import uk.me.grambo.syncro.PBSocketInterface.ResponseTypes;
-import uk.me.grambo.syncro.pb.Binarydata;
+import uk.me.grambo.syncro.comms.PBSocketInterface;
+import uk.me.grambo.syncro.comms.PBSocketInterface.ResponseTypes;
+import uk.me.grambo.syncro.comms.pb.Binarydata;
 
 public class UploadResponseHandler implements PBResponseHandler {
 	
@@ -55,52 +55,48 @@ public class UploadResponseHandler implements PBResponseHandler {
 		}
 		return false;
 	}
-
+	
 	@Override
-	public boolean handleResponse(int[] nSubpacketSizes, InputStream inoStream)
-			throws Exception, IOException {
+	public boolean handleResponse(
+			int[] subpacketSizes,
+			PBSocketInterface pbInterface
+			) throws Exception, IOException 
+	{
 		switch( m_lastType )
 		{
 		case PBSocketInterface.ResponseTypes.BINARY_INCOMING_RESPONSE:
-			return handleIncomingResponse(nSubpacketSizes,inoStream);
+			return handleIncomingResponse( subpacketSizes, pbInterface );
 		case PBSocketInterface.ResponseTypes.BINARY_INCOMING_DATA_ACK:
-			return handleIncomingDataAck(nSubpacketSizes,inoStream);
+			return handleIncomingDataAck( subpacketSizes, pbInterface );
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean canRemove() {
 		// TODO Auto-generated method stub
 		return m_finished;
 	}
-	
-	public void checkBuffer(int nSubpacketSize)
-	{
-		if( (m_buffer == null) || m_buffer.length < nSubpacketSize )
-		{
-			m_buffer = new byte[nSubpacketSize];
-		}
-	}
 
-	public boolean handleIncomingResponse(int[] nSubpacketSizes, InputStream inoStream) throws Exception
+	public boolean handleIncomingResponse(
+			int[] subpacketSizes, 
+			PBSocketInterface pbInterface
+			) throws Exception
 	{
-		DataInputStream oInput = new DataInputStream(inoStream);
-		if( nSubpacketSizes.length != 1 )
+		if( subpacketSizes.length != 1 )
 		{
 			throw new Exception("Invalid number of subpackets sent in binary incoming response packet");
 		}
-		checkBuffer( nSubpacketSizes[0] );
-		oInput.readFully( m_buffer, 0, nSubpacketSizes[0] );
 		
-		Binarydata.BinaryIncomingResponse.Builder oPacketInfo = Binarydata.BinaryIncomingResponse.newBuilder();
-		oPacketInfo.mergeFrom( m_buffer, 0, nSubpacketSizes[0] );
-		if( oPacketInfo.getAccepted() )
+		Binarydata.BinaryIncomingResponse.Builder response = 
+			Binarydata.BinaryIncomingResponse.newBuilder();
+		pbInterface.ReadMessage( response, subpacketSizes[0] );
+		if( response.getAccepted() )
 		{
-			m_maxPacketSize = oPacketInfo.getMaxPacketSize();
-			if( oPacketInfo.hasCurrentFileSize() )
+			m_maxPacketSize = response.getMaxPacketSize();
+			if( response.hasCurrentFileSize() )
 			{
-				m_sizeOnServer = oPacketInfo.getCurrentFileSize();
+				m_sizeOnServer = response.getCurrentFileSize();
 			}
 			//Log.d("Syncro", "Incoming Response: Accepted");
 			//Log.d("Syncro", "Packet Size: " + m_maxPacketSize);
@@ -108,27 +104,27 @@ public class UploadResponseHandler implements PBResponseHandler {
 		} 
 		else
 		{
-			
 			//Log.d("Syncro", "Incoming Response: Not Accepted");
 		}
 		m_finished = true;
 		return false;
 	}
 
-	public boolean handleIncomingDataAck(int[] nSubpacketSizes, InputStream inoStream) throws Exception
+	public boolean handleIncomingDataAck(
+			int[] subpacketSizes,
+			PBSocketInterface pbInterface
+			) throws Exception
 	{
-		DataInputStream oInput = new DataInputStream(inoStream);
-		if( nSubpacketSizes.length != 1 )
+		if( subpacketSizes.length != 1 )
 		{
 			throw new Exception("Invalid number of subpackets sent in binary incoming response packet");
 		}
-		checkBuffer( nSubpacketSizes[0] );
-		oInput.readFully( m_buffer, 0, nSubpacketSizes[0] );
 		
-		Binarydata.BinaryIncomingAck.Builder oPacketInfo = 
+		Binarydata.BinaryIncomingAck.Builder response = 
 			Binarydata.BinaryIncomingAck.newBuilder(); 
-		oPacketInfo.mergeFrom( m_buffer, 0, nSubpacketSizes[0] );
-		if( oPacketInfo.getOk() )
+		pbInterface.ReadMessage( response, subpacketSizes[0] );
+		
+		if( response.getOk() )
 		{
 			return true;
 		}

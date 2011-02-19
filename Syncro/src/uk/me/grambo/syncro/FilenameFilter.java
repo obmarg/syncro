@@ -17,7 +17,9 @@
 
 package uk.me.grambo.syncro;
 
+import uk.me.grambo.syncro.comms.RemoteFileData;
+
 public interface FilenameFilter {
-	public boolean canHandle(RemoteFileHandler.RemoteFileData inoFile);
-	public String getDestinationFilename(RemoteFileHandler.RemoteFileData inoFile);
+	public boolean canHandle(RemoteFileData inoFile);
+	public String getDestinationFilename(RemoteFileData inoFile);
 }
