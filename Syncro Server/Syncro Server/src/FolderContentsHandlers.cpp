@@ -80,7 +80,7 @@ void FolderContentsRequest::ProcessFolder(
 	BOOST_FOREACH( const CFolderPtr& child, children )
 	{
 		pb::FolderContents* pbChild = pb->add_subfolders();
-		pbChild->set_name( child->GetName() );
+		pbChild->set_name( child->GetPath() );
 		ProcessFolder( pbChild, child );
 	}
 }

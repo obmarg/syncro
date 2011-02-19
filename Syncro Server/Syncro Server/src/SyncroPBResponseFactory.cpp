@@ -32,6 +32,7 @@
 #include <libsyncro/packet_types.h>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/bind.hpp>
+#include <sstream>
 
 namespace syncro
 {
@@ -191,7 +192,13 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 	}
 	};
 
-	throw std::runtime_error( "Invalid pb request passed to response factory" );
+	std::stringstream err;
+	err << "Invalid pb request passed to response factory: "
+		<< innPacketType;
+
+	//TODO: Currently this throw causes the entire app to quit.
+	//	Which isn't really ideal, so fix it sometime
+	throw std::runtime_error( err.str().c_str() );
 }
 
 void CSyncroPBResponseFactory::HashOkCallback( 
