@@ -22,6 +22,7 @@
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <libsyncro/packet_types.h>
 #include <kode/base64.h>
+#include <kode/hashutils.h>
 #include <cryptopp/sha.h>
 #include <boost/numeric/conversion/cast.hpp>
 #include <fstream>
@@ -63,61 +64,20 @@ FileHashRequest::FileHashRequest(
 	{
 		return;
 	}
-	CryptoPP::SHA hashObject;
-	std::ifstream file(
-	    fileDetails.Filename().c_str(),
-	    std::ios::binary | std::ios::in
-	);
-	if( file.fail() )
-	{
-		return;
-	}
-	file.seekg( 0, std::ios::end );
-	int64_t fileSize = file.tellg();
-	file.seekg( 0, std::ios::beg );
 
-	if( hashRequest.has_data_size() )
-	{
-		if( fileSize < hashRequest.data_size() )
-		{
-			return;
-		}
-		fileSize = hashRequest.data_size();
-	}
-
-	std::vector<unsigned char> buffer( 1024 );
-	do
-	{
-		int64_t sizeLeft = fileSize - file.tellg();
-		if( sizeLeft == 0 )
-			break;
-
-		if( sizeLeft < buffer.size() )
-			buffer.resize(
-			    boost::numeric_cast< size_t >( sizeLeft )
-			);
-		file.read(
-		    reinterpret_cast< char* >( &buffer[0] ),
-		    buffer.size()
-		);
-
-		hashObject.Update( &buffer[0], buffer.size() );
-	}
-	while( !file.eof() );
-
-	unsigned char hashBuffer[ CryptoPP::SHA::DIGESTSIZE ];
-	hashObject.Final( hashBuffer );
+	kode::HashPtr hashObj = 
+		kode::HashFile< CryptoPP::SHA >( fileDetails.Filename().c_str() );
 
 	std::string hash = kode::base64::Encode(
-	                       hashBuffer,
-	                       sizeof( hashBuffer )
+	                       hashObj->GetHash(),
+	                       hashObj->Size()
 	                   );
 
 	m_ok = ( hash == hashRequest.hash() );
 
 	if( m_ok && callback )
 	{
-		callback( fileDetails.Filename(), fileSize );
+		callback( fileDetails.Filename(), hashRequest.data_size() );
 	}
 }
 
