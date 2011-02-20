@@ -135,7 +135,7 @@ int main( int argc, char* argv[] )
 			boost::filesystem::path path( filename );
 
 			conn.UploadFile(
-			    UploadFileDetails()
+			    FileTransferDetails()
 			    .SetFolderId( vm["folderid"].as<int>() )
 			    .SetLocalPath( filename )
 			    .SetRemotePath( path.filename() )

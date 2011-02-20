@@ -61,7 +61,12 @@ public:
 	}
 	virtual TRecvStream ReadSubpacket( unsigned int num )
 	{
-		return TRecvStream( new google::protobuf::io::ArrayInputStream( m_buffers[ num ].buffer.get(), m_buffers[ num ].size ) );
+		return TRecvStream( 
+			new google::protobuf::io::ArrayInputStream( 
+				m_buffers[ num ].buffer.get(), 
+				m_buffers[ num ].size 
+				) 
+			);
 	}
 	virtual unsigned int GetPacketType()
 	{
@@ -509,7 +514,7 @@ void Connection::SendAdminCommand( const std::string& command, const StringMap& 
 	}
 }
 
-void Connection::UploadFile( const UploadFileDetails& details )
+void Connection::UploadFile( const FileTransferDetails& details )
 {
 	pb::BinaryDataRequest request;
 	request.set_file_name( details.m_remotePath );
@@ -595,6 +600,53 @@ void Connection::UploadFile( const UploadFileDetails& details )
 	}
 	else
 		throw std::runtime_error( "File was rejected by server" );
+}
+
+void Connection::DownloadFile( const FileTransferDetails& details )
+{
+	
+	pb::BinaryDataRequest request;
+	request.set_folder_id( details.m_folderId );
+	request.set_file_name( details.m_remotePath );
+	request.set_recv_buffer_size( 1024 * 51 );
+	request.set_direction( 
+		pb::BinaryDataRequest_TransferDirection_Download 
+		);
+	request.set_start_offset( 0 );
+	//TODO: Implement resume support
+
+	if( boost::filesystem::exists( details.m_localPath ) )
+		throw std::runtime_error( "Destination file already exists" );
+	std::ofstream fileOut( details.m_localPath );
+
+	SendProtocolBuffer( comms::packet_types::BinaryRequest, request );
+
+	//TODO: Add support for BinaryRejection packets
+	pb::BinaryPacketHeader response;
+	bool done = false;
+	while( !done )
+	{
+		TRecvPacketPtr responsePackets = 
+			RecvProtocolBuffer( 
+				comms::packet_types::BinaryResponse, 
+				2 
+				);
+		response.ParseFromZeroCopyStream( 
+			responsePackets->ReadSubpacket( 0 ).get()
+			);
+		TRecvStream dataStream( responsePackets->ReadSubpacket( 1 ) );
+		const char *data;
+		int size;
+		while( dataStream->Next( (const void**)&data, &size ) )
+		{
+			fileOut.write( data, size );
+		}
+		if( response.binary_packet_type() == pb::BinaryPacketHeader_SectionType_END )
+		{
+			done = true;
+		}
+	}
+	fileOut.close();
 }
 
 

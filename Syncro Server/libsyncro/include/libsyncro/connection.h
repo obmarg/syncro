@@ -86,27 +86,27 @@ private:
 	void HashPassword( const std::string& password );
 };
 
-class UploadFileDetails
+class FileTransferDetails
 {
 	friend class Connection;
 public:
-	UploadFileDetails() {};
-	UploadFileDetails& SetFolderId( int folderId )
+	FileTransferDetails() {};
+	FileTransferDetails& SetFolderId( int folderId )
 	{
 		m_folderId = folderId;
 		return ( *this );
 	}
-	UploadFileDetails& SetRemotePath( std::string remotePath )
+	FileTransferDetails& SetRemotePath( std::string remotePath )
 	{
 		m_remotePath = remotePath;
 		return ( *this );
 	}
-	UploadFileDetails& SetLocalPath( std::string localPath )
+	FileTransferDetails& SetLocalPath( std::string localPath )
 	{
 		m_localPath = localPath;
 		return ( *this );
 	}
-	UploadFileDetails& SetOneShot( bool oneShot )
+	FileTransferDetails& SetOneShot( bool oneShot )
 	{
 		m_oneShot = oneShot;
 		return ( *this );
@@ -162,7 +162,8 @@ public:
 	void GetFolderList( FolderList& list );
 	void GetFolderContents( int folderId, FileList& contents );
 	
-	void UploadFile( const UploadFileDetails& details );
+	void UploadFile( const FileTransferDetails& details );
+	void DownloadFile( const FileTransferDetails& details );
 
 	void SendAdminCommand( const std::string& command, const StringMap& params );
 

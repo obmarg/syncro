@@ -21,7 +21,7 @@
 
 void UploadThread::Create(
     const syncro::client::ConnectionDetails& connDetails,
-    const syncro::client::UploadFileDetails& uploadDetails
+    const syncro::client::FileTransferDetails& uploadDetails
 )
 {
 	boost::thread thread(
@@ -35,7 +35,7 @@ void UploadThread::Create(
 
 void UploadThread::ThreadFunc(
     const syncro::client::ConnectionDetails& connDetails,
-    const syncro::client::UploadFileDetails& uploadDetails
+    const syncro::client::FileTransferDetails& uploadDetails
 )
 {
 	try
@@ -51,7 +51,7 @@ void UploadThread::ThreadFunc(
 
 UploadThread::UploadThread(
     const syncro::client::ConnectionDetails& connDetails,
-    const syncro::client::UploadFileDetails& uploadDetails
+    const syncro::client::FileTransferDetails& uploadDetails
 ) :
 	m_conn( connDetails ),
 	m_uploadDetails( uploadDetails )
