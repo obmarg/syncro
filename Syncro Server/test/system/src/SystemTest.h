@@ -43,6 +43,7 @@ public:
 	CPPUNIT_TEST( ConnectionTest );
 	CPPUNIT_TEST( FolderListTest );
 	CPPUNIT_TEST( FolderContentsTest );
+	CPPUNIT_TEST( FileTransferTest );
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -54,6 +55,7 @@ public:
 	void ConnectionTest();
 	void FolderListTest();
 	void FolderContentsTest();
+	void FileTransferTest();
 
 public:
 	static void SetConnectionDetails( 
@@ -64,9 +66,13 @@ public:
 	static void SetServerPrepared( bool prepared )
 	{ m_serverPrepared = prepared; }
 
+	static void SetTransferTestFilename( const std::string& name )
+	{ m_transferTestFileName = name; }
+
 private:
 	static client::ConnectionDetails	m_serverDetails;
 	static bool							m_serverPrepared;
+	static std::string					m_transferTestFileName;
 
 private:
 	void Connect();

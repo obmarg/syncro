@@ -34,6 +34,7 @@ int main( int argc, char** argv )
 		( "prepared", "server is using prepared database" )
 		( "server,s", po::value< std::string >(), "server address/ip" )
 		( "port,p", po::value< uint32_t >(), "server port" )
+		( "file,f", po::value< std::string >(), "file to transfer" )
 		( 
 			"createdatabase,c", 
 			po::value< std::string >(), 
@@ -41,8 +42,16 @@ int main( int argc, char** argv )
 			);
 
 	po::variables_map vm;
-	po::store( po::parse_command_line( argc, argv, desc ), vm );
-	po::notify( vm );
+	try {
+		po::store( po::parse_command_line( argc, argv, desc ), vm );
+		po::notify( vm );
+	}
+	catch( const std::exception& e )
+	{
+		std::cout << "Error: " << e.what() << "\n\n" 
+			<< desc << "\n";
+		return 1;
+	}
 
 	if( vm.count("help") )
 	{
@@ -61,6 +70,10 @@ int main( int argc, char** argv )
 	if( vm.count( "prepared" ) )
 	{
 		SystemTest::SetServerPrepared( true );
+	}
+	if( vm.count( "file" ) )
+	{
+		SystemTest::SetTransferTestFilename( vm["file"].as<std::string>() );
 	}
 
 	syncro::client::ConnectionDetails details;

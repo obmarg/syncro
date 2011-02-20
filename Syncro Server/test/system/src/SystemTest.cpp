@@ -19,6 +19,10 @@
 */
 
 #include "SystemTest.h"
+#include <kode/hashutils.h>
+#include <cryptopp/sha.h>
+#include <boost/filesystem.hpp>
+#include <fstream>
 
 namespace syncro {
 namespace test {
@@ -27,6 +31,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest );
 
 client::ConnectionDetails	SystemTest::m_serverDetails;
 bool						SystemTest::m_serverPrepared;
+std::string					SystemTest::m_transferTestFileName =
+											"TransferTemp.txt";
+
+static const std::string TRANSFER_FILE_CONTENTS = "Testing.txt";
 
 void SystemTest::setUp()
 {
@@ -100,6 +108,75 @@ void SystemTest::FolderContentsTest()
 	Connect();
 
 }
+
+void SystemTest::FileTransferTest()
+{
+	using namespace syncro::client;
+	Connect();
+
+	bool fileCreated = false;
+	if( !boost::filesystem::exists( m_transferTestFileName ) )
+	{
+		fileCreated = true;
+		std::ofstream fileOut( m_transferTestFileName );
+		fileOut << TRANSFER_FILE_CONTENTS;
+		fileOut.close();
+	}
+	FileTransferDetails details;
+	details
+		.SetFolderId( 1 )
+		.SetLocalPath( m_transferTestFileName )
+		.SetOneShot( false )
+		.SetRemotePath( m_transferTestFileName );
+
+	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+		"Upload file threw exception",
+		m_connection->UploadFile( details ) 
+		);
+
+	FileList filesOnServer;
+	CPPUNIT_ASSERT_NO_THROW_MESSAGE( 
+		"Get File Contents threw Exception",
+		m_connection->GetFolderContents( 1, filesOnServer ) 
+		);
+
+	bool foundFile = false;
+	BOOST_FOREACH( const syncro::FileInfo& file, filesOnServer )
+	{
+		if( file.name == m_transferTestFileName )
+		{
+			foundFile = true;
+			break;
+		}
+	}
+	CPPUNIT_ASSERT_MESSAGE( "Could not find file after upload", foundFile );
+
+	details.SetLocalPath( "temp.dat" );
+	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+		"File Download Threw Exception",
+		m_connection->DownloadFile( details ) 
+		);
+
+	CPPUNIT_ASSERT( boost::filesystem::exists( "temp.dat" ) );
+
+	kode::HashPtr originalHash = 
+		kode::HashFile< CryptoPP::SHA >( m_transferTestFileName );
+	kode::HashPtr downloadHash = 
+		kode::HashFile< CryptoPP::SHA >( "temp.dat" );
+	CPPUNIT_ASSERT_MESSAGE(
+		"Downloaded file hash does not match original hash",
+		(*originalHash) == (*downloadHash) 
+		);
+
+	boost::filesystem::remove( "temp.dat" );
+	if( fileCreated )
+	{
+		boost::filesystem::remove( m_transferTestFileName );
+	}
+}
+
+
+
 
 }	// namespace test
 }	// namespace syncro
