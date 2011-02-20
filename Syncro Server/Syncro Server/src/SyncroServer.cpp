@@ -69,12 +69,13 @@ bool SyncroServer::HandleAccept(
 	CTCPConnection::TPointer inpNewConnection 
 	)
 {
-	CReceiveHandler::TPointer oPointer = 
+	CReceiveHandler::TPointer recvHandler = 
 		CPBRequestHandler::Create( 
 			inpNewConnection, 
 			CSyncroPBResponseFactory::Create() 
 			);
 
+	inpNewConnection->AddRecvHandler( recvHandler, 1 );
 	inpNewConnection->StartRecv( 0 );
 	return true;
 }

@@ -50,7 +50,8 @@ int main( int argc, char** argv )
 									);
 	}
 
-	syncro::SyncroServer oServer;
-	bool fOK = oServer.Run();
+	boost::shared_ptr< syncro::SyncroServer > server;
+	server.reset( new syncro::SyncroServer );
+	bool fOK = server->Run();
 	return fOK ? 0 : 1;
 }
