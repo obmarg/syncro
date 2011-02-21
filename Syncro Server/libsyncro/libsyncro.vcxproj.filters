@@ -94,9 +94,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct">
-      <Filter>Build Files</Filter>
-    </None>
     <None Include="..\..\Messages\admin.proto">
       <Filter>Message Files</Filter>
     </None>
@@ -114,6 +111,9 @@
     </None>
     <None Include="..\..\Messages\header.proto">
       <Filter>Message Files</Filter>
+    </None>
+    <None Include="SConscript">
+      <Filter>Build Files</Filter>
     </None>
   </ItemGroup>
 </Project>

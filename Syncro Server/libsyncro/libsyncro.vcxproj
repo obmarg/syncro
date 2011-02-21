@@ -54,7 +54,7 @@
     <None Include="..\..\Messages\header.proto">
       <FileType>Document</FileType>
     </None>
-    <None Include="SConstruct" />
+    <None Include="SConscript" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2635E2D6-2097-46B8-8237-46A4450C4019}</ProjectGuid>

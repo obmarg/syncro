@@ -55,7 +55,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct">
+    <None Include="SConscript">
       <Filter>Build Files</Filter>
     </None>
   </ItemGroup>

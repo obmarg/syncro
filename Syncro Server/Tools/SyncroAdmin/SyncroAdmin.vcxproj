@@ -87,7 +87,7 @@
     <ClCompile Include="SyncroAdmin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct" />
+    <None Include="SConscript" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

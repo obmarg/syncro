@@ -218,7 +218,7 @@ void CCSyncroExtension::ServerListCallback(
 			    kode::utils::wstring( folder.Name ) + folderPostfix;
 			AppendMenu( m_sendFileMenu, MF_STRING, m_menuItems.size() , itemText.c_str() );
 
-			syncro::client::UploadFileDetails upload;
+			syncro::client::FileTransferDetails upload;
 			upload.SetFolderId( folder.Id )
 			.SetOneShot( true )
 			.SetLocalPath( m_currentFile )
@@ -249,7 +249,7 @@ void CCSyncroExtension::ServerListCallback(
 				std::wstring itemText = kode::utils::wstring( folder.Name );
 				AppendMenu( serverMenu, MF_STRING, m_menuItems.size(), itemText.c_str() );
 
-				syncro::client::UploadFileDetails upload;
+				syncro::client::FileTransferDetails upload;
 				upload.SetFolderId( folder.Id )
 				.SetOneShot( true )
 				.SetLocalPath( m_currentFile )

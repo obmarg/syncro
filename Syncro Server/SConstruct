@@ -92,7 +92,7 @@ SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )
 #
 alltargets = [
 	'libs',
-	'bins'
+	'bin'
 	]
 
 

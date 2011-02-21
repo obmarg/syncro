@@ -96,7 +96,6 @@
     <ClInclude Include="src\TestDatabase.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct" />
     <None Include="src\SConscript" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

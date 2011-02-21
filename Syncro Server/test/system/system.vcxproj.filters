@@ -43,9 +43,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct">
-      <Filter>Build Files</Filter>
-    </None>
     <None Include="src\SConscript">
       <Filter>Build Files</Filter>
     </None>

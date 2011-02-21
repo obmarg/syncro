@@ -24,13 +24,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct">
-      <Filter>Build Files</Filter>
-    </None>
     <None Include="src\SConscript">
       <Filter>Build Files</Filter>
     </None>
     <None Include="..\Readme.txt" />
+    <None Include="..\SConstruct">
+      <Filter>Build Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\AdminCommandHandler.h">

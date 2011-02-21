@@ -50,7 +50,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\kode\;..\..\Dependencies\sqlite</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\..\Dependencies\sqlite</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;_WIN32_WINNT=0x0501;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -64,7 +64,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WIN32;_WIN32_WINNT=0x0501;;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include\kode\;..\..\Dependencies\sqlite</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\..\Dependencies\sqlite</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -88,7 +88,7 @@
     <ClInclude Include="include\kode\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SConstruct" />
+    <None Include="SConscript" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
