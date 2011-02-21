@@ -1,0 +1,9 @@
+Import( 'libs', 'env', 'installdir' )
+
+output = env.Program( 
+	target = 'SyncroAdmin',
+	source = ['SyncroAdmin.cpp'],
+	LIBS=libs
+	)
+
+env.Install( installdir, output )

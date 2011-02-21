@@ -24,6 +24,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <fstream>
 
 namespace kode {
 
@@ -69,7 +70,7 @@ HashPtr HashFile( const std::string& filename, unsigned int sizeToHash=0 )
 
 	tHash hashObject;
 	std::ifstream file(
-		filename,
+		filename.c_str(),
 		std::ios::binary | std::ios::in
 		);
 	if( file.fail() )

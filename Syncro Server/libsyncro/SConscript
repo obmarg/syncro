@@ -1,0 +1,21 @@
+Import( 'env', 'libsyncrodirs', 'libtargetdir' )
+
+myenv = env.Clone()
+
+myenv.Append( CPPPATH=libsyncrodirs )
+
+sources = [ 
+	'src/scanner.cpp',
+	'src/packet_types.cpp',
+	'src/connection.cpp',
+	'src/stringutils.cpp',
+	'src/protocol_buffers/binarydata.pb.cc',
+	'src/protocol_buffers/handshake.pb.cc',
+	'src/protocol_buffers/header.pb.cc',
+	'src/protocol_buffers/folders.pb.cc',
+	'src/protocol_buffers/admin.pb.cc'
+	]
+
+output = myenv.StaticLibrary( 'syncro', sources )
+
+myenv.Install( libtargetdir, output )

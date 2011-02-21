@@ -1,0 +1,7 @@
+
+subdirs = [
+	'SyncroAdmin',
+	]
+
+for dir in subdirs:
+	SConscript( dir + '/SConscript' )

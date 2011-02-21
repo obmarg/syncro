@@ -1,4 +1,6 @@
-Import( 'env', 'libs' )
+Import( 'env', 'libs', 'installdir' )
+
+mylibs = libs + [ 'cppunit' ]
 
 sources = [ 
 	"main.cpp", 
@@ -7,6 +9,11 @@ sources = [
 	"../../../Syncro Server/src/SyncroDB.cpp"
 	]
 
-output = env.Program( target = 'SystemTest', source = sources )
+output = env.Program( 
+	target = 'SystemTest',
+	source = sources,
+	LIBS=mylibs
+	)
 
-env.Install( '../bin/', output )
+#TODO: Fix this install statement, may not work as i want...
+env.Install( installdir, output )

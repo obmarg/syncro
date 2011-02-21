@@ -15,8 +15,8 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "scanner.h"
-#include "comms.h"
+#include "libsyncro/scanner.h"
+#include "libsyncro/comms.h"
 #include <kode/net.h>
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>

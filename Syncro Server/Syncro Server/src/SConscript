@@ -1,4 +1,4 @@
-Import('env', 'libs')
+Import( 'env', 'libs', 'installdir' )
 
 sources = [ 	"AdminCommandHandler.cpp",
 		"AdminCommandManager.cpp",
@@ -23,6 +23,6 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"VectorPBResponse.cpp",
 		"FolderContentsHandlers.cpp" ]
 
-output = env.Program( target = 'syncro', source = sources )
+output = env.Program( 'syncro', source = sources, LIBS=libs )
 
-env.Install( '../bin/', output )
+env.Install( installdir, output )

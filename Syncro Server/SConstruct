@@ -1,0 +1,103 @@
+import subprocess
+import os
+
+
+try:
+	os.mkdir( "../../Messages/gen" )
+except OSError:
+	pass
+try:
+	os.mkdir( "libsyncro/src/protocol_buffers" )
+except OSError:
+	pass
+
+try:
+	os.mkdir( "libsyncro/include/libsyncro/protocol_buffers/" )
+except OSError:
+	pass
+
+subprocess.call( ["./build.sh",""], shell=True, cwd="../Messages" )
+
+debug = ARGUMENTS.get( 'debug', 0 )
+
+installdir = Dir( 'bin' )
+
+builddir='x86_release'
+
+ccflags = []
+cppdefines = [ "_LINUX" ]
+
+if int(debug):
+	cppdefines += [ '_DEBUG' ]
+	ccflags += [ '-g' ]
+	builddir='x86_debug'
+
+cpppath = [
+	"include" ]
+
+cppdirs = [
+	Dir( "kode/include/" ), 
+	Dir( "libsyncro/include/" ), 
+	] 
+
+libsyncrodirs = [
+	Dir( "libsyncro/include/libsyncro/" ),
+	Dir( "libsyncro/include/libsyncro/protocol_buffers" )
+	]
+
+libtargetdir = Dir( "lib/" + builddir )
+
+libpath = [ 
+	libtargetdir
+	] 
+
+libs = [ 
+	'syncro', 
+	'kode', 
+	'sqlite3', 
+	'boost_system', 
+	'boost_thread', 
+	'boost_filesystem', 
+	'boost_regex', 
+	'boost_date_time', 
+	'boost_program_options',
+	'protobuf-lite', 
+	'crypto++' 
+	]
+
+
+env = Environment()
+
+
+env.Append( 
+	CPPPATH = cpppath, 
+	LIBPATH=libpath, 
+	CPPDEFINES=cppdefines,
+	CCFLAGS=ccflags
+	)
+env.Append( CPPPATH= cppdirs )
+
+Export(
+	'env',
+	'libs',
+	'libsyncrodirs',
+	'libtargetdir',
+	'installdir',
+	)
+
+SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )
+
+#
+# Targets
+#
+alltargets = [
+	'libs',
+	'bins'
+	]
+
+
+env.Alias( 'libs', libtargetdir )
+env.Alias( 'bin', installdir )
+env.Alias( 'all', alltargets )
+
+Default( 'all' )

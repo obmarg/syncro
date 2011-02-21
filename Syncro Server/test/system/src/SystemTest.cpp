@@ -118,7 +118,7 @@ void SystemTest::FileTransferTest()
 	if( !boost::filesystem::exists( m_transferTestFileName ) )
 	{
 		fileCreated = true;
-		std::ofstream fileOut( m_transferTestFileName );
+		std::ofstream fileOut( m_transferTestFileName.c_str() );
 		fileOut << TRANSFER_FILE_CONTENTS;
 		fileOut.close();
 	}

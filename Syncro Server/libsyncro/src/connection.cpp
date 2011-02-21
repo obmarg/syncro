@@ -15,9 +15,9 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "connection.h"
-#include "comms.h"
-#include "packet_types.h"
+#include "libsyncro/connection.h"
+#include "libsyncro/comms.h"
+#include "libsyncro/packet_types.h"
 #include "protocol_buffers/handshake.pb.h"
 #include "protocol_buffers/header.pb.h"
 #include "protocol_buffers/folders.pb.h"
@@ -617,7 +617,7 @@ void Connection::DownloadFile( const FileTransferDetails& details )
 
 	if( boost::filesystem::exists( details.m_localPath ) )
 		throw std::runtime_error( "Destination file already exists" );
-	std::ofstream fileOut( details.m_localPath );
+	std::ofstream fileOut( details.m_localPath.c_str() );
 
 	SendProtocolBuffer( comms::packet_types::BinaryRequest, request );
 

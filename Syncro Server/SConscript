@@ -1,0 +1,11 @@
+
+subdirs = [
+	'kode',
+	'libsyncro',
+	'Syncro Server',
+	'Tools',
+	'test'
+	]
+
+for dir in subdirs:
+	SConscript( dir + '/SConscript' )

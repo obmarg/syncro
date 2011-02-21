@@ -15,8 +15,8 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "tcpconnection.h"
-#include "net.h"
+#include "kode/tcpconnection.h"
+#include "kode/net.h"
 #include <boost/lexical_cast.hpp>
 
 namespace kode

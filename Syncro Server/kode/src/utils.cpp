@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "utils.h"
+#include "kode/utils.h"
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/numeric/conversion/cast.hpp>

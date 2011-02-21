@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "packet_types.h"
+#include "libsyncro/packet_types.h"
 #include <boost/lexical_cast.hpp>
 
 namespace syncro

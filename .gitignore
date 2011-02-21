@@ -18,7 +18,6 @@ temp.xml
 *.log
 *.db
 *.dblite
-bin/
 build/
 build_debug/
 build_release/
@@ -32,3 +31,6 @@ tinyxml/
 sqlite/
 Debug/
 Release/
+lib/
+x86_release/
+x86_debug/

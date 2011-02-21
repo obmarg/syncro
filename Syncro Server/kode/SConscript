@@ -1,0 +1,12 @@
+Import( 'env', 'libtargetdir' )
+
+sources = [ 
+	'src/Database.cpp', 
+	'src/utils.cpp', 
+	'src/tcpconnection.cpp', 
+	'src/stopwatch.cpp'
+	 ]
+
+output = env.StaticLibrary( 'kode', sources )
+
+env.Install( libtargetdir ,output )

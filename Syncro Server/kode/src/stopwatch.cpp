@@ -15,7 +15,7 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stopwatch.h"
+#include "kode/stopwatch.h"
 
 namespace kode
 {
