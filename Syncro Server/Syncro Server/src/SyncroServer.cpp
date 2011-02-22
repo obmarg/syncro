@@ -40,10 +40,15 @@ namespace syncro
 using namespace std;
 using boost::shared_ptr;
 
-SyncroServer::SyncroServer( unsigned int port ) :
-	BaseAcceptHandler( 1 ),
-	m_oBroadcastThread( CBroadcastThread() ),
-	m_port( port )
+SyncroServer::SyncroServer( 
+	unsigned int port,
+       	bool broadcastThread
+	) :
+BaseAcceptHandler( 1 ),
+m_oBroadcastThread( 
+	CBroadcastThread( broadcastThread ) 
+	),
+m_port( port )
 {
 	if( port == 0 )
 		m_port = comms::SERVER_PORT;

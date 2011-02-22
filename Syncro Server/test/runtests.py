@@ -30,7 +30,15 @@ pid = 0
 try:
 	pid = os.fork()
 	if not pid:
-		os.execl( "./syncro", "./syncro", "-d", "test.db", "-p", "9981" )
+		os.execl( 
+			"./syncro",
+			"./syncro",
+			"-d",
+			"test.db",
+			"-p",
+			"9981",
+			"--nobroadcast"
+			)
 except OSError:
 	print "Error: Could not fork\n"
 	sys.exit( 1 )

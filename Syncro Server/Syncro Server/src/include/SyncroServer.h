@@ -30,7 +30,7 @@ class SyncroServer :
 	public boost::enable_shared_from_this<SyncroServer>
 {
 public:
-	SyncroServer( unsigned int port=0 );
+	SyncroServer( unsigned int port=0, bool broadcastThread=true );
 	~SyncroServer();
 
 	bool Run();

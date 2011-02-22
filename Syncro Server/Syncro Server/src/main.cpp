@@ -31,6 +31,7 @@ int main( int argc, char** argv )
 	desc.add_options()
 		( "help,h", "produce help message" )
 		( "port,p", po::value<unsigned int>(), "port to run server on" )
+		( "nobroadcast,b", "disable udb broadcast receiver" )
 		( 
 			"database,d", 
 			po::value<std::string>(), 
@@ -58,10 +59,15 @@ int main( int argc, char** argv )
 		port = vm[ "port" ].as< unsigned int >();
 		std::cout << "Using port: " << port << "\n";
 	}
+	bool broadcast = true;
+	if( vm.count( "nobroadcast" ) )
+	{
+		broadcast = false;
+	}
 
 	boost::shared_ptr< syncro::SyncroServer > server;
 	server.reset( 
-		new syncro::SyncroServer( port )
+		new syncro::SyncroServer( port, broadcast )
 		);
 	bool fOK = server->Run();
 	return fOK ? 0 : 1;

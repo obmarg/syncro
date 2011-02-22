@@ -26,12 +26,13 @@ namespace syncro
 class CBroadcastThread
 {
 public:
-	CBroadcastThread();
+	CBroadcastThread( bool run=true );
 	~CBroadcastThread();
 
 	void operator()();
 private:
 	std::string m_sServerName;
+	bool m_run;
 };
 
 };	//namespace syncro
