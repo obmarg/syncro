@@ -26,25 +26,33 @@ try:
 except OSError:
 	pass
 
-pid = 0
+pidfilename = "syncro.test.pid"
+
 try:
-	pid = os.fork()
-	if not pid:
-		os.execl( 
-			"./syncro",
-			"./syncro",
-			"-d",
-			"test.db",
-			"-p",
-			"9981",
-			"--nobroadcast"
-			)
-except OSError:
-	print "Error: Could not fork\n"
+	subprocess.call( [
+		"./syncro",
+		"./syncro",
+		"-d",
+		"test.db",
+		"-p",
+		"9981",
+		"--nobroadcast",
+		"--daemon",
+		pidfilename ]
+		)
+except:
+	print "Error: Could not execute syncro\n"
 	sys.exit( 1 )
 
 # Wait 5 seconds to give server time to start
 time.sleep( 3 )
+
+try:
+	pidfile = open( pidfilename, "r" )
+	pid = int( pidfile.readline() )
+	pidfile.close()
+except:
+	print "Could not get pid from " + pidfilename + "\n"
 
 try:
 	subprocess.check_call( [ "./SystemTest", "-p", "9981", "--prepared" ] )

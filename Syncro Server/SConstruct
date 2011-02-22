@@ -27,7 +27,7 @@ builddir='x86_release'
 testdir = Dir( 'test_' + builddir )
 
 ccflags = []
-cppdefines = [ "_LINUX" ]
+cppdefines = [ "_LINUX", "LINUX" ]
 
 if int(debug):
 	cppdefines += [ '_DEBUG' ]

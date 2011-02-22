@@ -19,7 +19,13 @@
 #include "SyncroDB.h"
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <fstream>
 #include <string>
+
+#ifdef LINUX
+#include <sys/types.h>
+#include <unistd.h>
+#endif
 
 namespace po = boost::program_options;
 
@@ -32,6 +38,11 @@ int main( int argc, char** argv )
 		( "help,h", "produce help message" )
 		( "port,p", po::value<unsigned int>(), "port to run server on" )
 		( "nobroadcast,b", "disable udb broadcast receiver" )
+		( 
+			"daemon", 
+			po::value< std::string >()->implicit_value( "" ),
+		       	"run as daemon (linux only)" 
+			)
 		( 
 			"database,d", 
 			po::value<std::string>(), 
@@ -63,6 +74,29 @@ int main( int argc, char** argv )
 	if( vm.count( "nobroadcast" ) )
 	{
 		broadcast = false;
+	}
+	if( vm.count( "daemon" ) )
+	{
+#ifndef LINUX
+		//throw std::logic_error( "Daemon not implemented on win32" )
+		std::cout << "Daemon not implemented on win32\n";
+		return 1;
+#else
+		if( daemon( true, false ) == -1 )
+		{
+			std::cout << "Could not run as daemon\n";
+			return 1;	
+		}
+		std::string pidFilename = 
+			vm[ "daemon" ].as< std::string >();
+		pid_t pid = getpid();
+		if( pidFilename != "" )
+		{
+			std::ofstream pidFile( pidFilename.c_str() );
+			pidFile << pid;
+			pidFile.close();
+		}
+#endif
 	}
 
 	boost::shared_ptr< syncro::SyncroServer > server;
