@@ -16,22 +16,23 @@
 */
 
 #include "SyncroServer.h"
-#include <iostream>
+#include "FolderMan.h"
+#include "BroadcastThread.h"
+#include "ServerComms.h"
+#include "PBRequestHandler.h"
+#include "SyncroPBResponseFactory.h"
+#include "SyncroDB.h"
+#include "libsyncro/comms.h"
+#include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+#include <iterator>
+#include <iostream>
+#include <memory>
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <iterator>
-#include "FolderMan.h"
-#include <memory>
-#include <boost/lexical_cast.hpp>
-#include "BroadcastThread.h"
-#include "ServerComms.h"
-#include <boost/asio.hpp>
-#include "PBRequestHandler.h"
-#include "SyncroPBResponseFactory.h"
-#include "SyncroDB.h"
 
 namespace syncro
 {
@@ -39,10 +40,13 @@ namespace syncro
 using namespace std;
 using boost::shared_ptr;
 
-SyncroServer::SyncroServer() :
+SyncroServer::SyncroServer( unsigned int port ) :
 	BaseAcceptHandler( 1 ),
-	m_oBroadcastThread( CBroadcastThread() )
+	m_oBroadcastThread( CBroadcastThread() ),
+	m_port( port )
 {
+	if( port == 0 )
+		m_port = comms::SERVER_PORT;
 	//Create a DB object.  to ensure the db file is created
 	//if it doesn't already exist
 	CSyncroDB::OpenDB();
@@ -58,7 +62,7 @@ bool SyncroServer::Run()
 
 	io_service oIO;
 
-	ServerComms oComms( oIO );
+	ServerComms oComms( oIO, m_port );
 	oComms.AddAcceptHandler( shared_from_this() );
 	oIO.run();
 

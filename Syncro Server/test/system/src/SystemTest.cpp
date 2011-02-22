@@ -19,6 +19,7 @@
 */
 
 #include "SystemTest.h"
+#include <libsyncro/comms.h>
 #include <kode/hashutils.h>
 #include <cryptopp/sha.h>
 #include <boost/filesystem.hpp>

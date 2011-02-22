@@ -30,7 +30,7 @@ class SyncroServer :
 	public boost::enable_shared_from_this<SyncroServer>
 {
 public:
-	SyncroServer();
+	SyncroServer( unsigned int port=0 );
 	~SyncroServer();
 
 	bool Run();
@@ -38,6 +38,7 @@ public:
 	virtual bool HandleAccept( CTCPConnection::TPointer inpNewConnection );
 private:
 	boost::thread m_oBroadcastThread;
+	unsigned int m_port;
 };
 
 };		//namespace syncro

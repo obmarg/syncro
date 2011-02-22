@@ -24,6 +24,8 @@ installdir = Dir( 'bin' )
 
 builddir='x86_release'
 
+testdir = Dir( 'test_' + builddir )
+
 ccflags = []
 cppdefines = [ "_LINUX" ]
 
@@ -83,6 +85,7 @@ Export(
 	'libsyncrodirs',
 	'libtargetdir',
 	'installdir',
+	'testdir'
 	)
 
 SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )
@@ -92,12 +95,14 @@ SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )
 #
 alltargets = [
 	'libs',
-	'bin'
+	'bin',
+	'test'
 	]
 
 
 env.Alias( 'libs', libtargetdir )
 env.Alias( 'bin', installdir )
+env.Alias( 'test', testdir )
 env.Alias( 'all', alltargets )
 
 Default( 'all' )

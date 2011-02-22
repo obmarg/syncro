@@ -1,1 +1,6 @@
+Import( 'testdir', 'env' )
+
 SConscript( 'src/SConscript' )
+
+env.Install( testdir, 'setuptestenv.py' )
+env.Install( testdir, 'shutdowntestenv.py' )

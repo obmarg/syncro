@@ -137,7 +137,7 @@ protected:
 class ServerComms
 {
 public:
-	ServerComms( boost::asio::io_service& inoIOService );
+	ServerComms( boost::asio::io_service& inoIOService, unsigned int port );
 	~ServerComms();
 
 	void AddAcceptHandler( BaseAcceptHandler::TPointer inoAcceptHandler );

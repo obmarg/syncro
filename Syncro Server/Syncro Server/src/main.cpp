@@ -28,6 +28,7 @@ int main( int argc, char** argv )
 	po::options_description desc( "Allowed options" );
 	desc.add_options()
 		( "help,h", "produce help message" )
+		( "port,p", po::value<unsigned int>(), "port to run server on" )
 		( 
 			"database,d", 
 			po::value<std::string>(), 
@@ -49,9 +50,16 @@ int main( int argc, char** argv )
 									vm[ "database" ].as< std::string >() 
 									);
 	}
+	unsigned int port = 0;
+	if( vm.count("port") )
+	{
+		port = vm[ "port" ].as< unsigned int >();
+	}
 
 	boost::shared_ptr< syncro::SyncroServer > server;
-	server.reset( new syncro::SyncroServer );
+	server.reset( 
+		new syncro::SyncroServer( port )
+		);
 	bool fOK = server->Run();
 	return fOK ? 0 : 1;
 }

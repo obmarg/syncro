@@ -30,8 +30,8 @@ using std::cout;
 
 const int DEFAULT_RECV_BUFFER = 1000;
 
-ServerComms::ServerComms( io_service& inoIOService ) :
-	m_oAcceptor( inoIOService, tcp::endpoint( tcp::v4(), comms::SERVER_PORT ) )
+ServerComms::ServerComms( io_service& inoIOService, unsigned int port ) :
+	m_oAcceptor( inoIOService, tcp::endpoint( tcp::v4(), port ) )
 {
 	StartAccept();
 }

@@ -1,4 +1,4 @@
-Import( 'env', 'libs', 'installdir' )
+Import( 'env', 'libs', 'testdir' )
 
 mylibs = libs + [ 'cppunit' ]
 
@@ -15,4 +15,4 @@ output = env.Program(
 	LIBS=mylibs
 	)
 
-env.Install( installdir, output )
+env.Install( testdir, output )

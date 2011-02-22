@@ -20,7 +20,9 @@
 #include <libsyncro/connection.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
+#include <cppunit/XmlOutputter.h>
 #include <boost/program_options.hpp>
+#include <fstream>
 
 namespace po = boost::program_options;
 
@@ -97,6 +99,16 @@ int main( int argc, char** argv )
 	CppUnit::TextUi::TestRunner runner;
 	CppUnit::TestFactoryRegistry &registry = 
 		CppUnit::TestFactoryRegistry::getRegistry( tests );
+	
+	std::ofstream resultFile("result.xml");
+	// Specify XML output and inform the test runner of this format (optional)
+        CppUnit::XmlOutputter* outputter =
+		new CppUnit::XmlOutputter(
+				&runner.result(),
+			       	resultFile,
+			       	std::string( "ISO-8859-1" )
+				);
+    	runner.setOutputter(outputter);
 
 	runner.addTest( registry.makeTest() );
 	bool success = runner.run();
