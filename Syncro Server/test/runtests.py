@@ -40,7 +40,7 @@ time.sleep( 3 )
 
 try:
 	subprocess.check_call( [ "./SystemTest", "-p", "9981", "--prepared" ] )
-except CalledProcessError:
+except:
 	print( "Error in SystemTest\n" )
 	pass	# TODO: Could handle this
 
