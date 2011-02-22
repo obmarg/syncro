@@ -1,3 +1,4 @@
+Import( 'env', 'testdir' )
 
 subdirs = [
 	'system',
@@ -5,3 +6,5 @@ subdirs = [
 
 for dir in subdirs:
 	SConscript( dir + '/SConscript' )
+
+env.Install( testdir, 'runtests.py' )

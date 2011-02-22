@@ -25,6 +25,8 @@ namespace po = boost::program_options;
 
 int main( int argc, char** argv )
 {
+	using namespace syncro;
+
 	po::options_description desc( "Allowed options" );
 	desc.add_options()
 		( "help,h", "produce help message" )
@@ -46,14 +48,15 @@ int main( int argc, char** argv )
 	}
 	if( vm.count( "database" ) )
 	{
-		syncro::CSyncroDB::SetDefaultFilename( 
-									vm[ "database" ].as< std::string >() 
-									);
+		std::string databaseFile( vm[ "database" ].as< std::string >() );
+		std::cout << "Using database file: " << databaseFile << "\n";
+		CSyncroDB::SetDefaultFilename( databaseFile );
 	}
 	unsigned int port = 0;
 	if( vm.count("port") )
 	{
 		port = vm[ "port" ].as< unsigned int >();
+		std::cout << "Using port: " << port << "\n";
 	}
 
 	boost::shared_ptr< syncro::SyncroServer > server;
