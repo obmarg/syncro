@@ -30,8 +30,9 @@ namespace client {
 class Connection;
 
 }	// namespace client
+}	// namespace syncro
 
-namespace test {
+using namespace syncro;
 
 class SystemTest : public CppUnit::TestFixture
 {
@@ -82,5 +83,3 @@ private:
 	bool m_ok;
 };
 
-}
-}

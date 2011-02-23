@@ -25,9 +25,6 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 
-namespace syncro {
-namespace test {
-
 CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest );
 
 client::ConnectionDetails	SystemTest::m_serverDetails;
@@ -176,8 +173,3 @@ void SystemTest::FileTransferTest()
 	}
 }
 
-
-
-
-}	// namespace test
-}	// namespace syncro
