@@ -255,9 +255,9 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 				m_db = null;
 			}	
 			m_conn.Disconnect();
+			m_progressNotification.stop();
+			wl.release();
 		}
-		wl.release();
-		m_progressNotification.stop();
 		return !retry;
 	}
 	
