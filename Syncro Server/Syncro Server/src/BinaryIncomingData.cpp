@@ -44,7 +44,7 @@ CBinaryIncomingData::~CBinaryIncomingData()
 }
 
 void
-CBinaryIncomingData::HandlePacket( TInputStreamList& inaInputStreams )
+CBinaryIncomingData::HandlePacket( InputStreamList& inaInputStreams )
 {
 	using boost::numeric_cast;
 

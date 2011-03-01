@@ -56,7 +56,7 @@ protected:
 };
 
 
-CAdminCommandHandler::CAdminCommandHandler( TInputStreamList& inaInputStreams,  const CAuthToken& inUserAuth, CAdminCommandManager& commandManager )
+CAdminCommandHandler::CAdminCommandHandler( InputStreamList& inaInputStreams,  const CAuthToken& inUserAuth, CAdminCommandManager& commandManager )
 {
 	pb::GenericAdminCommand oCommand;
 	oCommand.ParseFromZeroCopyStream( inaInputStreams[0] );

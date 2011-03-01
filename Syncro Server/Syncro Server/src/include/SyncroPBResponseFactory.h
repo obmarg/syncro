@@ -27,6 +27,7 @@
 #include "AdminCommandManager.h"
 #include "AuthManager.h"
 #include <libsyncro/packet_types.h>
+#include <kode/variantresponsefactory.h>
 
 namespace syncro
 {
@@ -38,6 +39,80 @@ struct sSubpackets
 	TSizeList Sizes;
 	const TCharBuffer::TBuff& Buffer;
 };
+
+namespace server
+{
+
+typedef boost::function< 
+	CBasePBResponse::TPointer ( InputStreamListPtr ) 
+> BasicResponseFunction;
+
+typedef boost::function< 
+	CBasePBResponse::TPointer ( InputStreamListPtr, int ) 
+> MultiResponseFunction;
+
+typedef boost::variant<
+	BasicResponseFunction,
+	MultiResponseFunction
+> ResponseFunctionTypes;
+
+class PBResponseFactory;
+
+typedef kode::VariantResponseFactory< 
+	ResponseFunctionTypes, 
+	syncro::server::PBResponseFactory,
+	InputStreamListPtr,
+	CBasePBResponse::TPointer 
+> PBResponseFactoryBase;
+
+typedef kode::ResponseRegister< 
+	PBResponseFactoryBase, 
+	BasicResponseFunction 
+> RegisterBasicResponse;
+
+typedef kode::ResponseRegister< 
+	PBResponseFactoryBase, 
+	MultiResponseFunction 
+> RegisterMultiResponse;
+	
+
+//TODO: Move all this shit about at some point?
+//		Also, remove the old syncro pb response factory once i've finished
+//		The new one
+class PBResponseFactory : 
+	public PBResponseFactoryBase,
+	public boost::static_visitor<CBasePBResponse::TPointer>
+{
+public:
+	PBResponseFactory() {};
+	
+	virtual PBResponseFactory& GetVisitor()
+	{
+		return (*this);
+	}
+
+	virtual void SetInputData( InputStreamListPtr inputData )
+	{ m_inputData = inputData; }
+
+	virtual void ClearInputData( )
+	{ m_inputData = 0; }
+
+	CBasePBResponse::TPointer
+	operator()(const BasicResponseFunction& input)
+	{
+		return input( m_inputData );
+	}
+
+	CBasePBResponse::TPointer
+	operator()(const MultiResponseFunction& input)
+	{
+		return input( m_inputData, m_packetType );
+	}
+private:
+	InputStreamListPtr m_inputData;
+};
+
+}	// namespace server
 
 class CSyncroPBResponseFactory : public CBasePBResponseFactory
 {
@@ -53,7 +128,7 @@ public:
 		return CBasePBResponseFactory::TPointer( new CSyncroPBResponseFactory() );
 	};
 
-	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, TInputStreamList& inaInputStreams );
+	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, InputStreamList& inaInputStreams );
 private:
 	CSyncroPBResponseFactory();
 

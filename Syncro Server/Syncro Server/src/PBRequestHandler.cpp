@@ -27,7 +27,14 @@ namespace syncro
 using std::string;
 using kode::utils::FromJavaEndian;
 
-CPBRequestHandler::CPBRequestHandler( CTCPConnection::TPointer inpConn, CBasePBResponseFactory::TPointer inpResponseFactory ) : m_pConn( inpConn ), m_pResponseFactory( inpResponseFactory )
+CPBRequestHandler::CPBRequestHandler( 
+	CTCPConnection::TPointer inpConn, 
+	CBasePBResponseFactory::TPointer inpResponseFactory, 
+	ResponseCallback responseCallback
+	) : 
+m_pConn( inpConn ), 
+m_pResponseFactory( inpResponseFactory ),
+m_getResponse( responseCallback )
 {
 	m_fCloseConnection = false;
 	m_pSendHandler = CPBResponseSendHandler::Create( m_pConn );
@@ -91,23 +98,31 @@ bool CPBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 
 	int numSubpackets = m_oHeader.subpacket_sizes_size();
 
-	TInputStreamList aSubpackets( numSubpackets );
+	InputStreamList subpackets( numSubpackets );
 	vector< shared_ptr<ArrayInputStream> > aMemoryManSubpackets( numSubpackets );
 	int nCurrentPosition = m_nBufferReadSoFar;
 	shared_ptr<ArrayInputStream> pAIS;
-	for( int nSubpacket = 0; nSubpacket < m_oHeader.subpacket_sizes_size(); nSubpacket++ )
+	for( int subpacketNum = 0; subpacketNum < m_oHeader.subpacket_sizes_size(); subpacketNum++ )
 	{
-		int nSize = m_oHeader.subpacket_sizes( nSubpacket );
+		int nSize = m_oHeader.subpacket_sizes( subpacketNum );
 		pAIS.reset( new ArrayInputStream( &inoBuffer.aBuffer[nCurrentPosition], nSize ) );
 		nCurrentPosition += nSize;
-		aMemoryManSubpackets[ nSubpacket ] = pAIS;
-		aSubpackets[ nSubpacket ] = pAIS.get();
+		aMemoryManSubpackets[ subpacketNum ] = pAIS;
+		subpackets[ subpacketNum ] = pAIS.get();
 	}
 
 	try
 	{
+#if 0
 		CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
-		dynamic_cast<CPBResponseSendHandler&>( *m_pSendHandler ).SetPBResponse( pResponse );
+#endif
+		CBasePBResponse::TPointer response = 
+			m_getResponse( m_oHeader.packet_type(), &subpackets );
+
+		dynamic_cast< CPBResponseSendHandler& >( 
+			*m_pSendHandler 
+			).SetPBResponse( response );
+
 		m_pConn->Send( m_pSendHandler );
 	}
 	catch( const authentication_exception& )

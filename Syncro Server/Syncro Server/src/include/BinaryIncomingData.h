@@ -34,7 +34,7 @@ public:
 	);
 	~CBinaryIncomingData();
 
-	void HandlePacket( TInputStreamList& inaInputStreams );
+	void HandlePacket( InputStreamList& inaInputStreams );
 
 	void ShouldResume(int64_t resumePoint);
 

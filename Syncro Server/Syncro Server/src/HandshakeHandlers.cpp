@@ -39,7 +39,7 @@ namespace syncro
 using std::vector;
 using std::string;
 
-CPBHandshakeRequest::CPBHandshakeRequest( TInputStreamList& inaInputStreams )
+CPBHandshakeRequest::CPBHandshakeRequest( InputStreamList& inaInputStreams )
 {
 	pb::HandshakeRequest oRequest;
 	if( inaInputStreams.size() == 1 )

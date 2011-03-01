@@ -20,9 +20,10 @@
 
 #include "common.h"
 #include "ServerComms.h"
-#include <libsyncro/protocol_buffers/header.pb.h>
-#include <iterator>
 #include "BasePBResponse.h"
+#include <libsyncro/protocol_buffers/header.pb.h>
+#include <boost/function.hpp>
+#include <iterator>
 
 namespace syncro
 {
@@ -30,6 +31,10 @@ namespace syncro
 class CPBRequestHandler : public CReceiveHandler
 {
 public:
+	typedef boost::function< 
+		CBasePBResponse::TPointer (	const unsigned int, InputStreamListPtr )
+	> ResponseCallback;
+
 	virtual ~CPBRequestHandler() {};
 
 	virtual bool CanHandleReceive( const TCharBuffer& inoBuffer );
@@ -39,22 +44,40 @@ public:
 		return m_fCloseConnection;
 	};
 
-	static CReceiveHandler::TPointer Create( CTCPConnection::TPointer inpConn, CBasePBResponseFactory::TPointer inpResponseFactory )
+	static CReceiveHandler::TPointer Create( 
+		CTCPConnection::TPointer inpConn, 
+		CBasePBResponseFactory::TPointer inpResponseFactory, 
+		ResponseCallback responseCallback 
+		)
 	{
-		return CReceiveHandler::TPointer( static_cast<CReceiveHandler*>( new CPBRequestHandler( inpConn, inpResponseFactory ) ) );
+		return CReceiveHandler::TPointer( 
+			static_cast<CReceiveHandler*>( 
+				new CPBRequestHandler( 
+					inpConn, 
+					inpResponseFactory, 
+					responseCallback 
+					) 
+				) 
+			);
 	}
 protected:
 	bool m_fCloseConnection;
 
 	CTCPConnection::TPointer m_pConn;
+	//TODO: Remove this response factory sometime
 	CBasePBResponseFactory::TPointer m_pResponseFactory;
+	ResponseCallback m_getResponse;
 
 	CSendHandler::TPointer m_pSendHandler;
 
 	pb::PacketHeader m_oHeader;
 	unsigned int m_nBufferReadSoFar;
 
-	CPBRequestHandler( CTCPConnection::TPointer inpConn, CBasePBResponseFactory::TPointer inpResponseFactory );
+	CPBRequestHandler( 
+		CTCPConnection::TPointer inpConn, 
+		CBasePBResponseFactory::TPointer inpResponseFactory,
+		ResponseCallback responseCallback
+		);
 
 	void ResetVariables();
 };

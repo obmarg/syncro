@@ -40,7 +40,7 @@ public:
 
 	}
 
-	CBinaryDataRequest( TInputStreamList& inaInputStreams )
+	CBinaryDataRequest( InputStreamList& inaInputStreams )
 	{
 		pb::BinaryDataRequest oRequest;
 		if( inaInputStreams.size() == 1 )

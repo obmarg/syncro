@@ -33,7 +33,7 @@ namespace pbHandlers
 {
 
 FileHashRequest::FileHashRequest(
-    TInputStreamList& inaInputStreams,
+    InputStreamList& inaInputStreams,
     CFolderMan&	folderMan,
 	HashOkCallback callback
 ) :

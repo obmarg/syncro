@@ -30,7 +30,7 @@ namespace syncro
 class CPBHandshakeRequest
 {
 public:
-	CPBHandshakeRequest( TInputStreamList& inaInputStreams );
+	CPBHandshakeRequest( InputStreamList& inaInputStreams );
 	const int GetMajorVersion() const
 	{
 		return m_nMajorVersion;

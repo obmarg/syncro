@@ -102,13 +102,13 @@ int main( int argc, char** argv )
 	
 	std::ofstream resultFile("result.xml");
 	// Specify XML output and inform the test runner of this format (optional)
-        CppUnit::XmlOutputter* outputter =
+    CppUnit::XmlOutputter* outputter =
 		new CppUnit::XmlOutputter(
 				&runner.result(),
 			       	resultFile,
 			       	std::string( "ISO-8859-1" )
 				);
-    	runner.setOutputter(outputter);
+	runner.setOutputter(outputter);
 
 	runner.addTest( registry.makeTest() );
 	bool success = runner.run();

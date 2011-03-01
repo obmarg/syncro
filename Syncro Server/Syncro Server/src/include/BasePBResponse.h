@@ -60,9 +60,7 @@ public:
 
 	typedef boost::shared_ptr<CBasePBResponseFactory> TPointer;
 
-	//virtual CBasePBResponse::TPointer CreateResponse(const pb::PacketHeader& inoPacketHeader,const TCharBuffer::TBuff& inoSubpackets)=0;
-	//TODO: Re-implement things in terms of ZeroCopyInputBuffers etc.
-	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, TInputStreamList& inaInputStreams ) = 0;
+	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, InputStreamList& inaInputStreams ) = 0;
 protected:
 	CBasePBResponseFactory() {};
 };

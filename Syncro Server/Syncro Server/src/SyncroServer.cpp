@@ -40,6 +40,8 @@ namespace syncro
 using namespace std;
 using boost::shared_ptr;
 
+typedef boost::shared_ptr< server::PBResponseFactory > ResponseFactoryPtr;
+
 SyncroServer::SyncroServer( 
 	unsigned int port,
        	bool broadcastThread
@@ -78,10 +80,17 @@ bool SyncroServer::HandleAccept(
 	CTCPConnection::TPointer inpNewConnection 
 	)
 {
+	ResponseFactoryPtr factory( new server::PBResponseFactory() );
+
 	CReceiveHandler::TPointer recvHandler = 
 		CPBRequestHandler::Create( 
 			inpNewConnection, 
-			CSyncroPBResponseFactory::Create() 
+			CSyncroPBResponseFactory::Create(),
+			boost::bind(
+				&server::PBResponseFactory::CreateResponse,
+				factory,
+				_1, _2 
+				)
 			);
 
 	inpNewConnection->AddRecvHandler( recvHandler, 1 );

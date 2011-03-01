@@ -71,7 +71,7 @@ private:
 	pb::FolderList m_response;
 };
 
-FolderListRequestHandler::FolderListRequestHandler( TInputStreamList& inaInputStreams )
+FolderListRequestHandler::FolderListRequestHandler( InputStreamList& inaInputStreams )
 {
 	pb::FolderListRequest request;
 	request.ParseFromZeroCopyStream( inaInputStreams[0] );

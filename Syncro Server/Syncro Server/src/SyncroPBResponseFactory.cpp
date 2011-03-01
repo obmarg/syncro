@@ -49,7 +49,7 @@ CSyncroPBResponseFactory::CSyncroPBResponseFactory()
 	m_pAdminCommandMan.reset( new CAdminCommandManager() );
 }
 
-CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsigned int innPacketType, TInputStreamList& inaInputStreams )
+CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsigned int innPacketType, InputStreamList& inaInputStreams )
 {
 	using namespace comms;
 	using boost::numeric_cast;

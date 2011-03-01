@@ -27,7 +27,7 @@ namespace syncro
 class FolderListRequestHandler
 {
 public:
-	FolderListRequestHandler( TInputStreamList& inaInputStreams );
+	FolderListRequestHandler( InputStreamList& inaInputStreams );
 
 	CBasePBResponse::TPointer GetResponse();
 };

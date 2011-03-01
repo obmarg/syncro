@@ -27,7 +27,7 @@ namespace syncro {
 namespace pbHandlers {
 
 FolderContentsRequest::FolderContentsRequest( 
-	TInputStreamList& inaInputStreams,
+	InputStreamList& inaInputStreams,
 	CFolderMan& folderMan
 	)
 {

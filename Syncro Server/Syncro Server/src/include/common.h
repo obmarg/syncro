@@ -112,7 +112,8 @@ private:
 
 using google::protobuf::io::ZeroCopyInputStream;
 
-typedef std::vector<ZeroCopyInputStream*> TInputStreamList;
+typedef std::vector<ZeroCopyInputStream*> InputStreamList;
+typedef const InputStreamList* InputStreamListPtr;
 
 typedef boost::function< void () > VoidCallback;
 
