@@ -21,6 +21,8 @@
 #include "HandshakeHandlers.h"
 #include "PBRequestHandler.h"
 #include "SyncroPBResponseFactory.h"
+#include "ResponseFunctions.h"
+#include "UserSession.h"
 
 #include <vector>
 #include <string>
@@ -39,7 +41,46 @@ namespace syncro
 using std::vector;
 using std::string;
 
-CPBHandshakeRequest::CPBHandshakeRequest( InputStreamList& inaInputStreams )
+static CBasePBResponse::TPointer HandleHandshake(
+	InputStreamListPtr inputStreams,
+	server::UserSession& session
+	)
+{
+	CPBHandshakeRequest oRequest( *inputStreams );
+	CBasePBResponse::TPointer pResponse = oRequest.GetResponse();
+	if( oRequest.HasAuthDetails() )
+	{
+		session.Authenticate( oRequest.GetUsername(), oRequest.GetPassword() );
+	}
+	else
+	{
+		session.DefaultAuth();
+	}
+	//if we've got this far and haven't thrown, we're authed
+	return pResponse;
+}
+
+static CBasePBResponse::TPointer HandleSalt(
+	InputStreamListPtr inputStreams,
+	server::UserSession& session
+	)
+{
+	return CSaltResponse::Create( session.GetSalt() );
+}
+
+static const server::RegisterSessionResponse handshakeRegister(
+	comms::packet_types::HandshakeRequest,
+	&HandleHandshake
+	);
+
+static const server::RegisterSessionResponse saltRegister(
+	comms::packet_types::SaltRequest,
+	&HandleSalt
+	);
+
+CPBHandshakeRequest::CPBHandshakeRequest( 
+	const InputStreamList& inaInputStreams 
+	)
 {
 	pb::HandshakeRequest oRequest;
 	if( inaInputStreams.size() == 1 )
@@ -126,7 +167,7 @@ void CPBHandshakeResponse::WriteSubpacket( int inSubpacketIndex, google::protobu
 	WriteMessage( m_oMessage, stream );
 }
 
-CSaltResponse::CSaltResponse( std::string salt )
+CSaltResponse::CSaltResponse( const std::string& salt )
 {
 	m_aSubpackets.resize( 1 );
 	m_aSubpackets[0].reset( new TCharBuffer::TBuff() );

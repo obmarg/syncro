@@ -15,39 +15,41 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _AUTH_MANAGER_H_
-#define _AUTH_MANAGER_H_
+#include "UserSession.h"
+#include "SyncroDB.h"
+#include "FolderMan.h"
+#include "AuthManager.h"
+#include "FileSendData.h"
+#include "BinaryIncomingData.h"
 
-#include "common.h"
-#include <kode/Database.h>
-#include <cryptopp/sha.h>
-#include <boost/shared_ptr.hpp>
-#include <stdint.h>
+namespace syncro {
+namespace server {
 
-namespace syncro
+UserSession::UserSession() :
+m_db( CSyncroDB::OpenDB( ) ),
+m_folderMan( new CFolderMan( m_db ) )
 {
-
-class CAuthManager
-{
-public:
-	CAuthManager();
-	~CAuthManager();
-
-	bool NeedsAuth();
-	const CAuthToken Authenticate( const std::string& username, const std::string& password, const std::string& ip );
-	const std::string& Salt() const
-	{
-		return m_saltString;
-	};
-
-	const CAuthToken DefaultAuth();
-
-private:
-	kode::db::DatabasePtr m_pDB;
-	kode::db::StatementPtr m_pCheckLoginStatement;
-	std::string m_saltString;
-	unsigned char m_salt[ CryptoPP::SHA::DIGESTSIZE ];
-};
 
 }
-#endif
+
+void UserSession::Authenticate( 
+	const std::string& username, 
+	const std::string& password
+	)
+{
+	m_authToken = m_authMan.Authenticate( username, password, "" );
+	m_authenticated = true;
+}
+
+void UserSession::DefaultAuth()
+{
+	m_authToken = m_authMan.DefaultAuth();
+}
+
+const std::string& UserSession::GetSalt() const
+{
+	return m_authMan.Salt();
+}
+
+}
+}	// namespace syncro

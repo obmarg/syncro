@@ -113,11 +113,13 @@
     <ClInclude Include="src\include\HandshakeHandlers.h" />
     <ClInclude Include="src\include\PBRequestHandler.h" />
     <ClInclude Include="src\include\PBResponseSendHandler.h" />
+    <ClInclude Include="src\include\ResponseFunctions.h" />
     <ClInclude Include="src\include\ServerComms.h" />
     <ClInclude Include="src\include\SimplePBResponse.h" />
     <ClInclude Include="src\include\SyncroDB.h" />
     <ClInclude Include="src\include\SyncroPBResponseFactory.h" />
     <ClInclude Include="src\include\SyncroServer.h" />
+    <ClInclude Include="src\include\UserSession.h" />
     <ClInclude Include="src\include\VectorPBResponse.h" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +144,7 @@
     <ClCompile Include="src\SyncroDB.cpp" />
     <ClCompile Include="src\SyncroPBResponseFactory.cpp" />
     <ClCompile Include="src\SyncroServer.cpp" />
+    <ClCompile Include="src\UserSession.cpp" />
     <ClCompile Include="src\VectorPBResponse.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

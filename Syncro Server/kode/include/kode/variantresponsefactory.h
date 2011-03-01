@@ -61,7 +61,9 @@ public:
 
 		if( handlerIt == m_handlers.end() )
 		{
-			//TODO: Throw exception 
+			throw std::runtime_error( 
+				"Invalid input packet in VariantResponseFactory::CreateResponse"
+				);
 		}
 		m_packetType = packetType;
 		SetInputData( inputData );
@@ -88,6 +90,7 @@ template<class Type,class Visitor,class InputData,class OutputData>
 template<class Factory,class Handler>
 class ResponseRegister
 {
+public:
 	ResponseRegister( unsigned int packetType, Handler handler )
 	{
 		Factory::AddStaticHandler( packetType, handler );

@@ -165,10 +165,12 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 		FolderListRequestHandler request( inaInputStreams );
 		return request.GetResponse();
 	}
+#if 0
 	case packet_types::SaltRequest:
 	{
 		return CSaltResponse::Create( m_authMan.Salt() );
 	}
+#endif
 	case packet_types::FileHashRequest:
 	{
 		pbHandlers::FileHashRequest request( 

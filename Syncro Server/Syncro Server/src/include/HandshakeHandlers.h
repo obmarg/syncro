@@ -30,7 +30,7 @@ namespace syncro
 class CPBHandshakeRequest
 {
 public:
-	CPBHandshakeRequest( InputStreamList& inaInputStreams );
+	CPBHandshakeRequest( const InputStreamList& inaInputStreams );
 	const int GetMajorVersion() const
 	{
 		return m_nMajorVersion;
@@ -84,7 +84,7 @@ private:
 class CSaltResponse : public CVectorPBResponse
 {
 public:
-	static CBasePBResponse::TPointer Create( std::string salt )
+	static CBasePBResponse::TPointer Create( const std::string& salt )
 	{
 		CBasePBResponse::TPointer pointer( new CSaltResponse( salt ) );
 		return pointer;
@@ -92,7 +92,7 @@ public:
 	unsigned int GetPacketType();
 
 private:
-	CSaltResponse( std::string salt );
+	CSaltResponse( const std::string& salt );
 };
 
 };	//namespace syncro

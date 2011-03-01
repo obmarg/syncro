@@ -111,6 +111,12 @@
     <ClInclude Include="src\include\SimplePBResponse.h">
       <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\UserSession.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ResponseFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AdminCommandHandler.cpp">
@@ -178,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="src\VectorPBResponse.cpp">
       <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UserSession.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

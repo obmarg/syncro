@@ -21,13 +21,14 @@
 #include "common.h"
 #include "BasePBResponse.h"
 #include "FileSendData.h"
-#include <boost/scoped_ptr.hpp>
 #include "FolderMan.h"
 #include "BinaryIncomingData.h"
 #include "AdminCommandManager.h"
 #include "AuthManager.h"
+#include "ResponseFunctions.h"
 #include <libsyncro/packet_types.h>
 #include <kode/variantresponsefactory.h>
+#include <boost/scoped_ptr.hpp>
 
 namespace syncro
 {
@@ -41,44 +42,16 @@ struct sSubpackets
 };
 
 namespace server
-{
-
-typedef boost::function< 
-	CBasePBResponse::TPointer ( InputStreamListPtr ) 
-> BasicResponseFunction;
-
-typedef boost::function< 
-	CBasePBResponse::TPointer ( InputStreamListPtr, int ) 
-> MultiResponseFunction;
-
-typedef boost::variant<
-	BasicResponseFunction,
-	MultiResponseFunction
-> ResponseFunctionTypes;
-
-class PBResponseFactory;
-
-typedef kode::VariantResponseFactory< 
-	ResponseFunctionTypes, 
-	syncro::server::PBResponseFactory,
-	InputStreamListPtr,
-	CBasePBResponse::TPointer 
-> PBResponseFactoryBase;
-
-typedef kode::ResponseRegister< 
-	PBResponseFactoryBase, 
-	BasicResponseFunction 
-> RegisterBasicResponse;
-
-typedef kode::ResponseRegister< 
-	PBResponseFactoryBase, 
-	MultiResponseFunction 
-> RegisterMultiResponse;
-	
+{	
 
 //TODO: Move all this shit about at some point?
 //		Also, remove the old syncro pb response factory once i've finished
 //		The new one
+
+//
+//	\brief	Implements the syncro protocol buffer response factory
+//			by inheriting from a VariantResponseFactory
+//
 class PBResponseFactory : 
 	public PBResponseFactoryBase,
 	public boost::static_visitor<CBasePBResponse::TPointer>
@@ -108,8 +81,21 @@ public:
 	{
 		return input( m_inputData, m_packetType );
 	}
+
+	CBasePBResponse::TPointer
+	operator()(const SessionResponseFunction& input)
+	{
+		return input( m_inputData, m_session );
+	}
+	
+	CBasePBResponse::TPointer
+	operator()(const SessionMultiResponseFunction& input)
+	{
+		return input( m_inputData, m_session, m_packetType );
+	}
 private:
-	InputStreamListPtr m_inputData;
+	InputStreamListPtr	m_inputData;
+	UserSession			m_session;
 };
 
 }	// namespace server
