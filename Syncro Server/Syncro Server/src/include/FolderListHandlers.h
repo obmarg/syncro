@@ -20,18 +20,41 @@
 
 #include "common.h"
 #include "BasePBResponse.h"
+#include <libsyncro/packet_types.h>
+#include <libsyncro/folderlist.h>
+#include <libsyncro/protocol_buffers/folders.pb.h>
 
-namespace syncro
-{
+namespace syncro {
 
-class FolderListRequestHandler
+namespace pbHandlers {
+
+class FolderListResponse : public CBasePBResponse
 {
 public:
-	FolderListRequestHandler( InputStreamList& inaInputStreams );
+	FolderListResponse( const FolderList& list );
 
-	CBasePBResponse::TPointer GetResponse();
+	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
+	{
+		assert( subpacket == 0 );
+		return m_response.ByteSize();
+	}
+	virtual unsigned int GetSubpacketCount()
+	{ return 1; };
+
+	virtual unsigned int GetPacketType()
+	{ return comms::packet_types::FolderListResponse; }
+
+	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
+	{
+		if( inSubpacketIndex != 0 )
+			throw std::logic_error( "Attempted to write imaginary subpacket in FolderListResponse::WriteSubpacket" );
+		WriteMessage( m_response, stream );
+	}
+private:
+	pb::FolderList m_response;
 };
 
+}	// namespace pbHandlers
 }	// namespace syncro
 
 #endif

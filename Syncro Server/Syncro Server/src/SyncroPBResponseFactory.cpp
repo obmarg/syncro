@@ -25,7 +25,7 @@
 #include "AuthManager.h"
 #include "AdminCommandManager.h"
 #include "AdminCommandHandler.h"
-#include "FolderListHandlers.h"
+//#include "FolderListHandlers.h"
 #include "FileHashHandlers.h"
 #include "FolderContentsHandlers.h"
 #include "SimplePBResponse.h"
@@ -160,12 +160,12 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 		CAdminCommandHandler oHandler( inaInputStreams, m_oAuthToken, ( *m_pAdminCommandMan ) );
 		return oHandler.GetResponse();
 	}
+#if 0
 	case packet_types::FolderListRequest:
 	{
 		FolderListRequestHandler request( inaInputStreams );
 		return request.GetResponse();
 	}
-#if 0
 	case packet_types::SaltRequest:
 	{
 		return CSaltResponse::Create( m_authMan.Salt() );

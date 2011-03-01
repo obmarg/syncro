@@ -51,6 +51,9 @@ public:
 
 	const std::string& GetSalt() const;
 
+	const CFolderMan& GetFolderMan()
+	{ return (*m_folderMan); }
+
 	void Authenticate( 
 		const std::string& username, 
 		const std::string& password

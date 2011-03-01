@@ -72,13 +72,7 @@
     <ClInclude Include="src\include\Folder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\FolderListHandlers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\FolderMan.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\include\HandshakeHandlers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\PBRequestHandler.h">
@@ -117,6 +111,12 @@
     <ClInclude Include="src\include\ResponseFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\HandshakeHandlers.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\FolderListHandlers.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AdminCommandHandler.cpp">
@@ -146,13 +146,7 @@
     <ClCompile Include="src\Folder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FolderListHandlers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\FolderMan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\HandshakeHandlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
@@ -187,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="src\UserSession.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FolderListHandlers.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HandshakeHandlers.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
