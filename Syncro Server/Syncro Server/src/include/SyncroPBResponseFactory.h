@@ -58,43 +58,16 @@ class PBResponseFactory :
 {
 public:
 	PBResponseFactory() {};
-	
-	virtual PBResponseFactory& GetVisitor()
+
+	virtual CBasePBResponse::TPointer CallHandler(
+		const SessionResponseFunction& function,
+		InputStreamListPtr input
+		)
 	{
-		return (*this);
-	}
-
-	virtual void SetInputData( InputStreamListPtr inputData )
-	{ m_inputData = inputData; }
-
-	virtual void ClearInputData( )
-	{ m_inputData = 0; }
-
-	CBasePBResponse::TPointer
-	operator()(const BasicResponseFunction& input)
-	{
-		return input( m_inputData );
-	}
-
-	CBasePBResponse::TPointer
-	operator()(const MultiResponseFunction& input)
-	{
-		return input( m_inputData, m_packetType );
-	}
-
-	CBasePBResponse::TPointer
-	operator()(const SessionResponseFunction& input)
-	{
-		return input( m_inputData, m_session );
+		function( input, m_session );
 	}
 	
-	CBasePBResponse::TPointer
-	operator()(const SessionMultiResponseFunction& input)
-	{
-		return input( m_inputData, m_session, m_packetType );
-	}
 private:
-	InputStreamListPtr	m_inputData;
 	UserSession			m_session;
 };
 

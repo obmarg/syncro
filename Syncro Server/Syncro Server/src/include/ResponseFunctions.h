@@ -24,25 +24,11 @@
 #include "UserSession.h"
 #include "BasePBResponse.h"
 #include "common.h"
-#include <kode/variantresponsefactory.h>
+#include <kode/responsefactory.h>
 #include <boost/function.hpp>
 
 namespace syncro {
 namespace server {
-
-//
-//	\brief	A response function taking just some packets.
-//
-typedef boost::function< 
-	CBasePBResponse::TPointer ( InputStreamListPtr ) 
-> BasicResponseFunction;
-
-//
-//	\brief	A response function taking multiple possible packet types
-//
-typedef boost::function< 
-	CBasePBResponse::TPointer ( InputStreamListPtr, int ) 
-> MultiResponseFunction;
 
 //
 //	\brief	A response function taking some user data
@@ -52,52 +38,13 @@ typedef boost::function<
 > SessionResponseFunction;
 
 //
-//	\brief	A response function taking some user data with multiple possible
-//			packet types
-//
-typedef boost::function<
-	CBasePBResponse::TPointer ( InputStreamListPtr, UserSession&, int )
-> SessionMultiResponseFunction;
-
-
-//
-//	\brief	A variant of all the types of functions PBResponseFactory
-//			deals with
-//
-typedef boost::variant<
-	BasicResponseFunction,
-	MultiResponseFunction,
-	SessionResponseFunction,
-	SessionMultiResponseFunction
-> ResponseFunctionTypes;
-
-class PBResponseFactory;
-
-//
 //	\brief	The base class for our PBResponseFactory
 //
-typedef kode::VariantResponseFactory< 
-	ResponseFunctionTypes, 
-	syncro::server::PBResponseFactory,
+typedef kode::ResponseFactory< 
+	SessionResponseFunction, 
 	InputStreamListPtr,
 	CBasePBResponse::TPointer 
 > PBResponseFactoryBase;
-
-//
-//	\brief	Registers a BasicResponseFunction with a ResponseFactory
-//
-typedef kode::ResponseRegister< 
-	PBResponseFactoryBase, 
-	BasicResponseFunction 
-> RegisterBasicResponse;
-
-//
-//	\brief Registers a MultiResponseFunction with a ResponseFactory
-//
-typedef kode::ResponseRegister< 
-	PBResponseFactoryBase, 
-	MultiResponseFunction 
-> RegisterMultiResponse;
 
 //
 //	\brief Registers a SessionResponseFunction with a ResponseFactory
@@ -106,15 +53,6 @@ typedef kode::ResponseRegister<
 	PBResponseFactoryBase, 
 	SessionResponseFunction 
 > RegisterSessionResponse;
-
-//
-//	\brief Registers a SessionMultiResponseFunction with a ResponseFactory
-//
-typedef kode::ResponseRegister< 
-	PBResponseFactoryBase, 
-	SessionMultiResponseFunction 
-> RegisterSessionMultiResponse;
-
 
 }	// namespace server
 }	// namespace syncro

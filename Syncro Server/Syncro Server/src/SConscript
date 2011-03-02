@@ -3,7 +3,8 @@ Import( 'env', 'libs', 'installdir', 'testdir' )
 sources = [ 	"AdminCommandHandler.cpp",
 		"AdminCommandManager.cpp",
 		"AuthManager.cpp",
-		"BinaryDataResponse.cpp",
+		"BinaryOutgoingHandler.cpp",
+		"BinaryDataRequest.cpp",
 		"BinaryIncomingData.cpp",
 		"BroadcastListener.cpp",
 		"BroadcastThread.cpp",
@@ -21,7 +22,9 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"SyncroServer.cpp",
 		"FileHashHandlers.cpp",
 		"VectorPBResponse.cpp",
-		"FolderContentsHandlers.cpp" ]
+		"FolderContentsHandlers.cpp",
+		"UserSession.cpp"
+		]
 
 output = env.Program( 'syncro', source = sources, LIBS=libs )
 

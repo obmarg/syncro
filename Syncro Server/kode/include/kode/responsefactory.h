@@ -15,10 +15,9 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KODE_VARIANT_RESPONSE_FACTORY
-#define KODE_VARIANT_RESPONSE_FACTORY
+#ifndef KODE_RESPONSE_FACTORY
+#define KODE_RESPONSE_FACTORY
 
-#include <boost/variant.hpp>
 #include <map>
 
 namespace kode {
@@ -28,14 +27,16 @@ namespace kode {
 	//		a pb factory typedef, then a variant factory template on top
 	//		of that?
 	//TODO: move stuff out of syncro...
-template<class Type,class Visitor,class InputData,class OutputData>
-class VariantResponseFactory
+template<class Type,class InputData,class OutputData>
+class ResponseFactory
 {
+private:
+	typedef std::map<unsigned int,Type> HandlerMap;
 public:
-	VariantResponseFactory()
+	ResponseFactory()
 		:m_handlers( ms_handlers )
 	{ }
-	~VariantResponseFactory() { };
+	~ResponseFactory() { };
 
 	void AddHandler( unsigned int messageId, Type handler )
 	{
@@ -66,26 +67,29 @@ public:
 				);
 		}
 		m_packetType = packetType;
-		SetInputData( inputData );
-		OutputData rv = 
-			boost::apply_visitor( GetVisitor(), handlerIt->second );
-		ClearInputData();
-		return rv;
+		return CallHandler( handlerIt->second, inputData );
 	}
-	virtual Visitor&	GetVisitor()=0;
-	virtual void		SetInputData( InputData inputData )=0;
-	virtual	void		ClearInputData() {};
+	virtual OutputData CallHandler( const Type& handler, InputData data )=0;
 protected:
 	unsigned int m_packetType;
 private:
-	typedef std::map<unsigned int,Type> HandlerMap;
 	HandlerMap m_handlers;
 
 	static HandlerMap ms_handlers;
 };
-template<class Type,class Visitor,class InputData,class OutputData>
-	typename VariantResponseFactory< Type,Visitor,InputData,OutputData >::HandlerMap
-		VariantResponseFactory< Type,Visitor,InputData,OutputData >::ms_handlers;
+template<class Type,class InputData,class OutputData>
+	typename ResponseFactory< Type,InputData,OutputData >::HandlerMap
+		ResponseFactory< Type,InputData,OutputData >::ms_handlers;
+
+template<class Factory,class Handler>
+class ResponseRegister
+{
+public:
+	ResponseRegister( unsigned int packetType, Handler handler )
+	{
+		Factory::AddStaticHandler( packetType, handler );
+	}
+};
 
 }	// namespace kode
 
