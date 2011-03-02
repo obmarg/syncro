@@ -25,8 +25,8 @@
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <libsyncro/packet_types.h>
 
-namespace syncro
-{
+namespace syncro {
+namespace pbHandlers {
 
 class CBinaryDataResponse : public CBasePBResponse
 {
@@ -48,6 +48,7 @@ protected:
 	CFileSendData& m_oFileData;
 };
 
-};		//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro
 
 #endif

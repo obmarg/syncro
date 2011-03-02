@@ -48,9 +48,6 @@
     <ClInclude Include="src\include\BinaryDataRequest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\BinaryDataResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\BinaryIncomingData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,6 +114,9 @@
     <ClInclude Include="src\include\FolderListHandlers.h">
       <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\BinaryOutgoingHandler.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AdminCommandHandler.cpp">
@@ -126,9 +126,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AuthManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BinaryDataResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BinaryIncomingData.cpp">
@@ -186,6 +183,12 @@
       <Filter>Source Files\PB Handlers</Filter>
     </ClCompile>
     <ClCompile Include="src\HandshakeHandlers.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryDataRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryOutgoingHandler.cpp">
       <Filter>Source Files\PB Handlers</Filter>
     </ClCompile>
   </ItemGroup>

@@ -39,7 +39,7 @@ class FolderContentsRequest
 {
 public:
 	FolderContentsRequest( 
-		InputStreamList& inaInputStreams,
+		const InputStreamList& inaInputStreams,
 		CFolderMan& folderMan
 		);
 

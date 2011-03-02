@@ -19,6 +19,8 @@
 #include "FolderMan.h"
 #include "Folder.h"
 #include "SimplePBResponse.h"
+#include "UserSession.h"
+#include "SyncroPBResponseFactory.h"
 #include "libsyncro/packet_types.h"
 #include "libsyncro/protocol_buffers/folders.pb.h"
 #include <boost/foreach.hpp>
@@ -26,8 +28,28 @@
 namespace syncro {
 namespace pbHandlers {
 
+class FolderContentsHandler {
+public:
+	CBasePBResponse::TPointer operator()(
+		InputStreamListPtr inputStreams,
+		server::UserSession& session
+		)
+	{
+		pbHandlers::FolderContentsRequest request(
+			*inputStreams,
+			session.GetFolderMan()
+			);
+		return request.GetResponse();
+	}
+};
+
+static const server::RegisterSessionResponse registerFolderContentsHandler(
+	comms::packet_types::FolderContentsRequest,
+	FolderContentsHandler()
+	);
+
 FolderContentsRequest::FolderContentsRequest( 
-	InputStreamList& inaInputStreams,
+	const InputStreamList& inaInputStreams,
 	CFolderMan& folderMan
 	)
 {

@@ -51,7 +51,10 @@ public:
 
 	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
 
-	bool FileRequested( const CBinaryDataRequest& fileData, FileTransferDetails& details );
+	bool FileRequested( 
+		const CBinaryDataRequest& fileData, 
+		FileTransferDetails& details 
+		);
 
 	bool IncomingFile( const CBinaryDataRequest& fileData, FileTransferDetails& details );
 

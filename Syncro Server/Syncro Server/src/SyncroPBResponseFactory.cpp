@@ -16,7 +16,6 @@
 */
 
 #include "SyncroPBResponseFactory.h"
-#include "BinaryDataResponse.h"
 #include "BinaryDataRequest.h"
 #include "BinaryIncomingResponse.h"
 #include "BinaryIncomingData.h"
@@ -25,7 +24,6 @@
 #include "AuthManager.h"
 #include "AdminCommandManager.h"
 #include "AdminCommandHandler.h"
-//#include "FolderListHandlers.h"
 #include "FileHashHandlers.h"
 #include "FolderContentsHandlers.h"
 #include "SimplePBResponse.h"
@@ -73,6 +71,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 #endif
 	switch( innPacketType )
 	{
+#if 0
 	case packet_types::BinaryRequest:
 	{
 		CBinaryDataRequest oRequest( inaInputStreams );
@@ -119,6 +118,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 		m_fAuthenticated = true;
 		return pResponse;
 	}
+#endif
 	case packet_types::BinaryIncomingRequest:
 	{
 		CBinaryDataRequest oRequest( inaInputStreams );
@@ -184,6 +184,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 			);
 		return request.GetResponse();
 	}
+#if 0
 	case packet_types::FolderContentsRequest:
 	{
 		pbHandlers::FolderContentsRequest request(
@@ -192,6 +193,7 @@ CBasePBResponse::TPointer CSyncroPBResponseFactory::CreateResponse( const unsign
 			);
 		return request.GetResponse();
 	}
+#endif
 	};
 
 	std::stringstream err;

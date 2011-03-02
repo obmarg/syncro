@@ -51,7 +51,7 @@ public:
 
 	const std::string& GetSalt() const;
 
-	const CFolderMan& GetFolderMan()
+	CFolderMan& GetFolderMan()
 	{ return (*m_folderMan); }
 
 	void Authenticate( 

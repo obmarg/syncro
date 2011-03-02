@@ -98,7 +98,7 @@
     <ClInclude Include="src\include\AuthManager.h" />
     <ClInclude Include="src\include\BasePBResponse.h" />
     <ClInclude Include="src\include\BinaryDataRequest.h" />
-    <ClInclude Include="src\include\BinaryDataResponse.h" />
+    <ClInclude Include="src\include\BinaryOutgoingHandler.h" />
     <ClInclude Include="src\include\BinaryIncomingData.h" />
     <ClInclude Include="src\include\BinaryIncomingResponse.h" />
     <ClInclude Include="src\include\BroadcastListener.h" />
@@ -126,7 +126,8 @@
     <ClCompile Include="src\AdminCommandHandler.cpp" />
     <ClCompile Include="src\AdminCommandManager.cpp" />
     <ClCompile Include="src\AuthManager.cpp" />
-    <ClCompile Include="src\BinaryDataResponse.cpp" />
+    <ClCompile Include="src\BinaryDataRequest.cpp" />
+    <ClCompile Include="src\BinaryOutgoingHandler.cpp" />
     <ClCompile Include="src\BinaryIncomingData.cpp" />
     <ClCompile Include="src\BroadcastListener.cpp" />
     <ClCompile Include="src\BroadcastThread.cpp" />

@@ -15,10 +15,77 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BinaryDataResponse.h"
+#include "BinaryDataRequest.h"
+#include "BinaryOutgoingHandler.h"
+#include "SimplePBResponse.h"
+#include <libsyncro/packet_types.h>
 
-namespace syncro
+namespace syncro {
+namespace pbHandlers {
+
+class BinaryDataHandler
 {
+public:
+	CBasePBResponse::TPointer operator()(
+		InputStreamListPtr inputStreams,
+		server::UserSession& session
+		)
+	{
+		return CBasePBResponse::TPointer( 
+			new CBinaryDataResponse( *( session.GetCurrentSendData() ) ) 
+			);
+	}
+};
+
+class BinaryRequestHandler
+{
+public:
+	CBasePBResponse::TPointer operator()(
+		InputStreamListPtr inputStreams,
+		server::UserSession& session
+		)
+	{
+		CBinaryDataRequest oRequest( *inputStreams );
+		FileTransferDetails details;
+		bool fAccept = 
+			session.GetFolderMan().FileRequested( oRequest, details );
+		if( !fAccept )
+		{
+#ifdef _DEBUG
+			//TODO: Maybe remove this once finished debugging
+			std::cout << "Binary Request Rejected.\n" <<
+				"FolderId: " <<		oRequest.GetFolderId()		<< "\n" <<
+				"Filename: " <<	oRequest.GetFilename().c_str()	<< "\n" <<
+				"Filesize: " <<		oRequest.GetFileSize()		<< "\n" <<
+				"Start Offset:" <<	oRequest.GetStartOffset()	<< "\n";
+#endif
+			return CBasePBResponse::TPointer(
+				new SimplePBResponse( 
+					comms::packet_types::BinaryRequestRejected 
+					)
+				);
+		}
+		session.GetCurrentSendData().reset(
+			new CFileSendData(
+				details.Filename(),
+				oRequest.GetBufferSize(),
+				details.CompletionCallback(),
+				oRequest.GetStartOffset()
+				)	
+			);
+		return BinaryDataHandler()( 0, session );
+	}
+};
+
+static const server::RegisterSessionResponse binaryRequestRegister(
+	comms::packet_types::BinaryRequest,
+	BinaryRequestHandler()
+	);
+
+static const server::RegisterSessionResponse binaryDataRegister(
+	comms::packet_types::BinaryContinue,
+	BinaryDataHandler()
+	);
 
 CBinaryDataResponse::CBinaryDataResponse( CFileSendData& inoFileData )
 	: m_oFileData( inoFileData )
@@ -59,8 +126,6 @@ uint32_t CBinaryDataResponse::GetSubpacketSize( uint32_t subpacket )
 	throw std::exception();
 }
 
-
-
 void CBinaryDataResponse::WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
 {
 	if( inSubpacketIndex == 0 )
@@ -71,4 +136,5 @@ void CBinaryDataResponse::WriteSubpacket( int inSubpacketIndex, google::protobuf
 	}
 }
 
-};		//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro

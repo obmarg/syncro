@@ -19,7 +19,6 @@
 #define _BINARY_DATA_REQUEST_H_
 
 #include "common.h"
-#include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <stdint.h>
 
 
@@ -29,67 +28,28 @@ namespace syncro
 class CBinaryDataRequest
 {
 public:
-	CBinaryDataRequest( int folderId, const std::string& filename ) :
-		m_sFilename( filename ),
-		m_nFolderId( folderId ),
-		m_nBufferSize( 0 ),
-		m_nFileSize( -1 ),
-		m_oneShot( false ),
-		m_startOffset( 0 )
-	{
-
-	}
-
-	CBinaryDataRequest( InputStreamList& inaInputStreams )
-	{
-		pb::BinaryDataRequest oRequest;
-		if( inaInputStreams.size() == 1 )
-		{
-			if( !oRequest.ParseFromZeroCopyStream( inaInputStreams[0] ) )
-				throw std::runtime_error( "CBinaryDataRequestHandler: invalid BinaryRequestData packet passed in" );
-			m_sFilename = oRequest.file_name();
-			m_nFolderId = oRequest.folder_id();
-			m_nBufferSize = 0;
-			if( oRequest.has_recv_buffer_size() )
-				m_nBufferSize = oRequest.recv_buffer_size();
-			if( oRequest.has_file_size() )
-				m_nFileSize = oRequest.file_size();
-			else
-				m_nFileSize = -1;
-			m_oneShot = false;
-			if( oRequest.has_one_shot() )
-				m_oneShot = oRequest.one_shot();
-			m_startOffset = 0;
-			if( oRequest.has_start_offset() )
-				m_startOffset = oRequest.start_offset();
-			//TODO: Add upload direction at some point?
-		}
-	}
+	CBinaryDataRequest( int folderId, const std::string& filename );
+	CBinaryDataRequest( const InputStreamList& inaInputStreams );
 	~CBinaryDataRequest() {};
+
 	const std::string& GetFilename() const
-	{
-		return m_sFilename;
-	};
+	{ return m_sFilename; }
+
 	const int GetFolderId() const
-	{
-		return m_nFolderId;
-	};
+	{ return m_nFolderId; }
+
 	const int GetBufferSize() const
-	{
-		return m_nBufferSize;
-	};
+	{ return m_nBufferSize; }
+
 	const int64_t GetFileSize() const
-	{
-		return m_nFileSize;
-	};
+	{ return m_nFileSize; }
+
 	const bool IsOneShot() const
-	{
-		return m_oneShot;
-	};
+	{ return m_oneShot; };
+
 	const int64_t GetStartOffset() const
-	{
-		return m_startOffset;
-	}
+	{ return m_startOffset; }
+
 private:
 	std::string m_sFilename;
 	int m_nFolderId;
