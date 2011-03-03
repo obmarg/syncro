@@ -34,7 +34,7 @@ private:
 	typedef std::map<unsigned int,Type> HandlerMap;
 public:
 	ResponseFactory()
-		:m_handlers( ms_handlers )
+		:m_handlers( GetStaticHandlers() )
 	{ }
 	~ResponseFactory() { };
 
@@ -46,7 +46,7 @@ public:
 	}
 	static void AddStaticHandler( unsigned int messageId, Type handler )
 	{
-		ms_handlers.insert(
+		GetStaticHandlers().insert(
 			std::make_pair( messageId, handler )
 			);
 	}
@@ -63,7 +63,7 @@ public:
 		if( handlerIt == m_handlers.end() )
 		{
 			throw std::runtime_error( 
-				"Invalid input packet in VariantResponseFactory::CreateResponse"
+				"Invalid input packet in VariantResponseFactory::CreateResponse:"
 				);
 		}
 		m_packetType = packetType;
@@ -74,12 +74,12 @@ protected:
 	unsigned int m_packetType;
 private:
 	HandlerMap m_handlers;
-
-	static HandlerMap ms_handlers;
+	static HandlerMap& GetStaticHandlers()
+	{
+		static HandlerMap handlerMap;
+		return handlerMap;
+	}
 };
-template<class Type,class InputData,class OutputData>
-	typename ResponseFactory< Type,InputData,OutputData >::HandlerMap
-		ResponseFactory< Type,InputData,OutputData >::ms_handlers;
 
 template<class Factory,class Handler>
 class ResponseRegister

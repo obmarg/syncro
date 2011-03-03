@@ -53,8 +53,7 @@ namespace server
 //			by inheriting from a VariantResponseFactory
 //
 class PBResponseFactory : 
-	public PBResponseFactoryBase,
-	public boost::static_visitor<CBasePBResponse::TPointer>
+	public PBResponseFactoryBase
 {
 public:
 	PBResponseFactory() {};
