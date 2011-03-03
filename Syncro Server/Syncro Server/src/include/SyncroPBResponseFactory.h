@@ -64,7 +64,7 @@ public:
 		InputStreamListPtr input
 		)
 	{
-		function( input, m_session );
+		return function( input, m_session );
 	}
 	
 private:
