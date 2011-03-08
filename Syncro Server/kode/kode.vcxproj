@@ -83,6 +83,7 @@
     <ClInclude Include="include\kode\Database.h" />
     <ClInclude Include="include\kode\hashutils.h" />
     <ClInclude Include="include\kode\net.h" />
+    <ClInclude Include="include\kode\responsefactory.h" />
     <ClInclude Include="include\kode\variantresponsefactory.h" />
     <ClInclude Include="include\kode\stopwatch.h" />
     <ClInclude Include="include\kode\tcpconnection.h" />

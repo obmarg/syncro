@@ -19,19 +19,17 @@
 #define _BINARY_INCOMING_RESPONSE_H_
 
 #include "common.h"
-#include "VectorPBResponse.h"
-#include "SyncroPBResponseFactory.h"
 #include "FileSendData.h"
+#include "BasePBResponse.h"
+#include <libsyncro/packet_types.h>
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <boost/scoped_ptr.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <vector>
 
-namespace syncro
-{
+namespace syncro {
+namespace pbHandlers {
 
-class CBinaryIncomingResponse : public CBasePBResponse
+class BinaryIncomingResponse : public BasePBResponse
 {
 public:
 
@@ -41,13 +39,13 @@ public:
 		eResponseType_Ack
 	};
 
-	static CBasePBResponse::TPointer Create( eResponseType eType, bool infValue, int64_t currentSize=0 )
+	static BasePBResponse::TPointer Create( eResponseType eType, bool infValue, int64_t currentSize=0 )
 	{
-		CBasePBResponse::TPointer oPointer( new CBinaryIncomingResponse( eType, infValue, currentSize ) );
+		BasePBResponse::TPointer oPointer( new BinaryIncomingResponse( eType, infValue, currentSize ) );
 		return oPointer;
 	}
 
-	virtual ~CBinaryIncomingResponse() {};
+	virtual ~BinaryIncomingResponse() {};
 
 	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
@@ -59,7 +57,10 @@ public:
 		return 1;
 	}
 
-	virtual void WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
+	virtual void WriteSubpacket( 
+		int inSubpacketIndex, 
+		google::protobuf::io::ZeroCopyOutputStream& stream 
+		)
 	{
 		if( inSubpacketIndex != 0 )
 			throw std::logic_error( "BinaryIncomingResponse::WriteSubpacket called with imaginary subpacket index" );
@@ -84,8 +85,12 @@ public:
 	}
 protected:
 
-	CBinaryIncomingResponse( eResponseType eType, bool infValue, int64_t currentSize=0 ) :
-		m_recvBufferSize( 0 )
+	BinaryIncomingResponse( 
+		eResponseType eType, 
+		bool infValue, 
+		int64_t currentSize=0 
+		) :
+	m_recvBufferSize( 0 )
 	{
 		m_eType = eType;
 		switch( eType )
@@ -117,5 +122,6 @@ protected:
 	int32_t m_recvBufferSize;
 };
 
-};
+}	// namespace pbHandlers
+}	// namespace syncro
 #endif

@@ -30,7 +30,7 @@ namespace pbHandlers {
 
 class FolderContentsHandler {
 public:
-	CBasePBResponse::TPointer operator()(
+	BasePBResponse::TPointer operator()(
 		InputStreamListPtr inputStreams,
 		server::UserSession& session
 		)
@@ -65,7 +65,7 @@ FolderContentsRequest::FolderContentsRequest(
 	m_rootFolder = folderMan.GetFolder( request.folder_id() );
 }
 
-CBasePBResponse::TPointer FolderContentsRequest::GetResponse()
+BasePBResponse::TPointer FolderContentsRequest::GetResponse()
 {
 	SimplePBResponse::MessagePtr msg;
 	msg.reset( new pb::FolderContents );
@@ -75,7 +75,7 @@ CBasePBResponse::TPointer FolderContentsRequest::GetResponse()
 
 	ProcessFolder( ptr, m_rootFolder );
 
-	CBasePBResponse::TPointer rv;
+	BasePBResponse::TPointer rv;
 	rv.reset(
 		new SimplePBResponse(
 			comms::packet_types::FolderContentsResponse,

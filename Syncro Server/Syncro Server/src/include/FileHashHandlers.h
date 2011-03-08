@@ -37,11 +37,11 @@ public:
 		HashOkCallback;
 public:
 	FileHashRequest(
-	    InputStreamList& inaInputStreams,
+	    const InputStreamList& inaInputStreams,
 	    CFolderMan& folderMan,
 		HashOkCallback callback=HashOkCallback()
 	);
-	CBasePBResponse::TPointer GetResponse();
+	BasePBResponse::TPointer GetResponse();
 private:
 	bool m_ok;
 };

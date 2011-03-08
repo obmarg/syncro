@@ -18,8 +18,8 @@
 #ifndef _SYNCRO_SERVER_H_
 #define _SYNCRO_SERVER_H_
 
-#include <boost/thread.hpp>
 #include "ServerComms.h"
+#include <boost/thread.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 namespace syncro

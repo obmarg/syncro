@@ -127,6 +127,7 @@
     <ClCompile Include="src\AdminCommandManager.cpp" />
     <ClCompile Include="src\AuthManager.cpp" />
     <ClCompile Include="src\BinaryDataRequest.cpp" />
+    <ClCompile Include="src\BinaryIncomingHandler.cpp" />
     <ClCompile Include="src\BinaryOutgoingHandler.cpp" />
     <ClCompile Include="src\BinaryIncomingData.cpp" />
     <ClCompile Include="src\BroadcastListener.cpp" />
@@ -143,7 +144,6 @@
     <ClCompile Include="src\PBResponseSendHandler.cpp" />
     <ClCompile Include="src\ServerComms.cpp" />
     <ClCompile Include="src\SyncroDB.cpp" />
-    <ClCompile Include="src\SyncroPBResponseFactory.cpp" />
     <ClCompile Include="src\SyncroServer.cpp" />
     <ClCompile Include="src\UserSession.cpp" />
     <ClCompile Include="src\VectorPBResponse.cpp" />

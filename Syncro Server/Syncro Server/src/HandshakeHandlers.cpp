@@ -19,35 +19,32 @@
 #define _SCL_SECURE_NO_WARNINGS
 
 #include "HandshakeHandlers.h"
-#include "PBRequestHandler.h"
 #include "SyncroPBResponseFactory.h"
 #include "ResponseFunctions.h"
 #include "UserSession.h"
-
+#include "SyncroDB.h"
+#include <libsyncro/comms.h>
+#include <libsyncro/packet_types.h>
+#include <kode/utils.h>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 #include <vector>
 #include <string>
 #include <iterator>
 
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include "SyncroDB.h"
-
-#include <libsyncro/comms.h>
-#include <kode/utils.h>
-
-namespace syncro
-{
+namespace syncro {
+namespace pbHandlers {
 
 using std::vector;
 using std::string;
 
-static CBasePBResponse::TPointer HandleHandshake(
+static BasePBResponse::TPointer HandleHandshake(
 	InputStreamListPtr inputStreams,
 	server::UserSession& session
 	)
 {
-	CPBHandshakeRequest oRequest( *inputStreams );
-	CBasePBResponse::TPointer pResponse = oRequest.GetResponse();
+	HandshakeRequest oRequest( *inputStreams );
+	BasePBResponse::TPointer pResponse = oRequest.GetResponse();
 	if( oRequest.HasAuthDetails() )
 	{
 		session.Authenticate( oRequest.GetUsername(), oRequest.GetPassword() );
@@ -60,7 +57,7 @@ static CBasePBResponse::TPointer HandleHandshake(
 	return pResponse;
 }
 
-static CBasePBResponse::TPointer HandleSalt(
+static BasePBResponse::TPointer HandleSalt(
 	InputStreamListPtr inputStreams,
 	server::UserSession& session
 	)
@@ -78,7 +75,7 @@ static const server::RegisterSessionResponse saltRegister(
 	&HandleSalt
 	);
 
-CPBHandshakeRequest::CPBHandshakeRequest( 
+HandshakeRequest::HandshakeRequest( 
 	const InputStreamList& inaInputStreams 
 	)
 {
@@ -112,13 +109,13 @@ CPBHandshakeRequest::CPBHandshakeRequest(
 	}
 }
 
-CBasePBResponse::TPointer CPBHandshakeRequest::GetResponse()
+BasePBResponse::TPointer HandshakeRequest::GetResponse()
 {
-	CBasePBResponse::TPointer pResponse( new CPBHandshakeResponse() );
+	BasePBResponse::TPointer pResponse( new HandshakeResponse() );
 	return pResponse;
 }
 
-CPBHandshakeResponse::CPBHandshakeResponse()
+HandshakeResponse::HandshakeResponse()
 {
 	m_oMessage.Clear();
 	//TODO: move this string to a static const or something
@@ -151,18 +148,18 @@ CPBHandshakeResponse::CPBHandshakeResponse()
 	m_oMessage.set_uuid( sUUID );
 }
 
-uint32_t CPBHandshakeResponse::GetSubpacketSize(uint32_t subpacket)
+uint32_t HandshakeResponse::GetSubpacketSize(uint32_t subpacket)
 {
 	assert( subpacket == 0 );
 	return m_oMessage.ByteSize();
 }
 
-unsigned int CPBHandshakeResponse::GetPacketType()
+unsigned int HandshakeResponse::GetPacketType()
 {
 	return comms::packet_types::HandshakeResponse;
 }
 
-void CPBHandshakeResponse::WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
+void HandshakeResponse::WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
 {
 	WriteMessage( m_oMessage, stream );
 }
@@ -183,4 +180,5 @@ unsigned int CSaltResponse::GetPacketType()
 	return comms::packet_types::SaltResponse;
 }
 
-};		//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro

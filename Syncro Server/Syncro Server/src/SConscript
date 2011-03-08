@@ -18,12 +18,12 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"PBResponseSendHandler.cpp",
 		"ServerComms.cpp",
 		"SyncroDB.cpp",
-		"SyncroPBResponseFactory.cpp",
 		"SyncroServer.cpp",
 		"FileHashHandlers.cpp",
 		"VectorPBResponse.cpp",
 		"FolderContentsHandlers.cpp",
-		"UserSession.cpp"
+		"UserSession.cpp",
+		"BinaryIncomingHandler.cpp"
 		]
 
 output = env.Program( 'syncro', source = sources, LIBS=libs )

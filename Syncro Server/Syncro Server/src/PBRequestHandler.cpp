@@ -29,11 +29,9 @@ using kode::utils::FromJavaEndian;
 
 CPBRequestHandler::CPBRequestHandler( 
 	CTCPConnection::TPointer inpConn, 
-	CBasePBResponseFactory::TPointer inpResponseFactory, 
 	ResponseCallback responseCallback
 	) : 
 m_pConn( inpConn ), 
-m_pResponseFactory( inpResponseFactory ),
 m_getResponse( responseCallback )
 {
 	m_fCloseConnection = false;
@@ -113,10 +111,15 @@ bool CPBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 
 	try
 	{
-#if 0
-		CBasePBResponse::TPointer pResponse = m_pResponseFactory->CreateResponse( m_oHeader.packet_type(), aSubpackets );
+#ifdef PB_PACKET_DEBUG
+		packet_types::ePBPacketTypes packetType =
+			numeric_cast< packet_types::ePBPacketTypes >( innPacketType );
+		std::cout <<
+			"Received " <<
+			packet_types::Str( packetType ) <<
+			" packet\n";
 #endif
-		CBasePBResponse::TPointer response = 
+		BasePBResponse::TPointer response = 
 			m_getResponse( m_oHeader.packet_type(), &subpackets );
 
 		dynamic_cast< CPBResponseSendHandler& >( 

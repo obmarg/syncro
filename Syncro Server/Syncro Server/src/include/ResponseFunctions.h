@@ -34,7 +34,7 @@ namespace server {
 //	\brief	A response function taking some user data
 //
 typedef boost::function<
-	CBasePBResponse::TPointer ( InputStreamListPtr, UserSession& )
+	BasePBResponse::TPointer ( InputStreamListPtr, UserSession& )
 > SessionResponseFunction;
 
 //
@@ -43,7 +43,7 @@ typedef boost::function<
 typedef kode::ResponseFactory< 
 	SessionResponseFunction, 
 	InputStreamListPtr,
-	CBasePBResponse::TPointer 
+	BasePBResponse::TPointer 
 > PBResponseFactoryBase;
 
 //

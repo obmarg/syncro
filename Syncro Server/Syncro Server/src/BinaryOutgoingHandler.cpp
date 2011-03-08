@@ -26,12 +26,12 @@ namespace pbHandlers {
 class BinaryDataHandler
 {
 public:
-	CBasePBResponse::TPointer operator()(
+	BasePBResponse::TPointer operator()(
 		InputStreamListPtr inputStreams,
 		server::UserSession& session
 		)
 	{
-		return CBasePBResponse::TPointer( 
+		return BasePBResponse::TPointer( 
 			new CBinaryDataResponse( *( session.GetCurrentSendData() ) ) 
 			);
 	}
@@ -40,12 +40,12 @@ public:
 class BinaryRequestHandler
 {
 public:
-	CBasePBResponse::TPointer operator()(
+	BasePBResponse::TPointer operator()(
 		InputStreamListPtr inputStreams,
 		server::UserSession& session
 		)
 	{
-		CBinaryDataRequest oRequest( *inputStreams );
+		BinaryDataRequest oRequest( *inputStreams );
 		FileTransferDetails details;
 		bool fAccept = 
 			session.GetFolderMan().FileRequested( oRequest, details );
@@ -59,7 +59,7 @@ public:
 				"Filesize: " <<		oRequest.GetFileSize()		<< "\n" <<
 				"Start Offset:" <<	oRequest.GetStartOffset()	<< "\n";
 #endif
-			return CBasePBResponse::TPointer(
+			return BasePBResponse::TPointer(
 				new SimplePBResponse( 
 					comms::packet_types::BinaryRequestRejected 
 					)

@@ -161,7 +161,7 @@ CFolderMan::GetFolder( int nFolderID )
 
 bool
 CFolderMan::FileRequested(
-    const CBinaryDataRequest& requestData,
+    const BinaryDataRequest& requestData,
     FileTransferDetails& details
 )
 {
@@ -225,7 +225,7 @@ CFolderMan::FileRequested(
 
 bool
 CFolderMan::IncomingFile(
-    const CBinaryDataRequest& fileData,
+    const BinaryDataRequest& fileData,
     FileTransferDetails& details
 )
 {

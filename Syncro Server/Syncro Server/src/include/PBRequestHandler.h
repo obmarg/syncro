@@ -32,7 +32,7 @@ class CPBRequestHandler : public CReceiveHandler
 {
 public:
 	typedef boost::function< 
-		CBasePBResponse::TPointer (	const unsigned int, InputStreamListPtr )
+		BasePBResponse::TPointer (	const unsigned int, InputStreamListPtr )
 	> ResponseCallback;
 
 	virtual ~CPBRequestHandler() {};
@@ -46,7 +46,6 @@ public:
 
 	static CReceiveHandler::TPointer Create( 
 		CTCPConnection::TPointer inpConn, 
-		CBasePBResponseFactory::TPointer inpResponseFactory, 
 		ResponseCallback responseCallback 
 		)
 	{
@@ -54,7 +53,6 @@ public:
 			static_cast<CReceiveHandler*>( 
 				new CPBRequestHandler( 
 					inpConn, 
-					inpResponseFactory, 
 					responseCallback 
 					) 
 				) 
@@ -64,8 +62,6 @@ protected:
 	bool m_fCloseConnection;
 
 	CTCPConnection::TPointer m_pConn;
-	//TODO: Remove this response factory sometime
-	CBasePBResponseFactory::TPointer m_pResponseFactory;
 	ResponseCallback m_getResponse;
 
 	CSendHandler::TPointer m_pSendHandler;
@@ -75,7 +71,6 @@ protected:
 
 	CPBRequestHandler( 
 		CTCPConnection::TPointer inpConn, 
-		CBasePBResponseFactory::TPointer inpResponseFactory,
 		ResponseCallback responseCallback
 		);
 

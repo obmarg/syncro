@@ -16,23 +16,15 @@
 */
 
 #include "SyncroServer.h"
-#include "FolderMan.h"
 #include "BroadcastThread.h"
 #include "ServerComms.h"
 #include "PBRequestHandler.h"
 #include "SyncroPBResponseFactory.h"
 #include "SyncroDB.h"
-#include "libsyncro/comms.h"
+#include <libsyncro/comms.h>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <iterator>
-#include <iostream>
-#include <memory>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <fstream>
 
 namespace syncro
 {
@@ -85,7 +77,6 @@ bool SyncroServer::HandleAccept(
 	CReceiveHandler::TPointer recvHandler = 
 		CPBRequestHandler::Create( 
 			inpNewConnection, 
-			CSyncroPBResponseFactory::Create(),
 			boost::bind(
 				&server::PBResponseFactory::CreateResponse,
 				factory,

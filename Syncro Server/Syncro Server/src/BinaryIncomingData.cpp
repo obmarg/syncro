@@ -23,7 +23,7 @@
 namespace syncro
 {
 
-CBinaryIncomingData::CBinaryIncomingData(
+BinaryIncomingData::BinaryIncomingData(
     const std::string insFilename,
     VoidCallback completedCallback
 ) :
@@ -34,7 +34,7 @@ CBinaryIncomingData::CBinaryIncomingData(
 {
 }
 
-CBinaryIncomingData::~CBinaryIncomingData()
+BinaryIncomingData::~BinaryIncomingData()
 {
 	if( m_oFile.is_open() )
 	{
@@ -44,7 +44,7 @@ CBinaryIncomingData::~CBinaryIncomingData()
 }
 
 void
-CBinaryIncomingData::HandlePacket( InputStreamList& inaInputStreams )
+BinaryIncomingData::HandlePacket( const InputStreamList& inaInputStreams )
 {
 	using boost::numeric_cast;
 
@@ -84,12 +84,18 @@ CBinaryIncomingData::HandlePacket( InputStreamList& inaInputStreams )
 	}
 }
 
-void CBinaryIncomingData::ShouldResume(int64_t resumePoint)
+void BinaryIncomingData::ShouldResume(
+	const std::string& filename,
+	int64_t resumePoint
+	)
 {
-	StartFile( resumePoint );
+	if( filename == m_filename )
+	{
+		StartFile( resumePoint );
+	}
 }
 
-void CBinaryIncomingData::StartFile(int64_t startOffset) 
+void BinaryIncomingData::StartFile(int64_t startOffset) 
 {
 	if( m_started )
 	{

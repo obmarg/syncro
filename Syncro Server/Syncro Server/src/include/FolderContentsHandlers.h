@@ -43,7 +43,7 @@ public:
 		CFolderMan& folderMan
 		);
 
-	CBasePBResponse::TPointer GetResponse();
+	BasePBResponse::TPointer GetResponse();
 
 private:
 	typedef boost::shared_ptr<CFolder> CFolderPtr;

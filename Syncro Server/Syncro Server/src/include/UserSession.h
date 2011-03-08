@@ -20,23 +20,25 @@
 
 #include "common.h"
 #include "AuthManager.h"
+#include "FolderMan.h"
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace syncro {
 
 class CFileSendData;
-class CBinaryIncomingData;
+class BinaryIncomingData;
 class CFolderMan;
-class CAdminCommandManager;
+class AdminCommandManager;
 
 namespace server {
 
 class UserSession
 {
 public:
-	typedef boost::scoped_ptr<CFileSendData>		SendDataPtr;
-	typedef boost::scoped_ptr<CBinaryIncomingData>	RecvDataPtr;
+	typedef boost::shared_ptr<CFileSendData>		SendDataPtr;
+	typedef boost::shared_ptr<BinaryIncomingData>	RecvDataPtr;
+	typedef boost::shared_ptr<AdminCommandManager> AdminCommandManPtr;
 
 	UserSession();
 	
@@ -48,6 +50,9 @@ public:
 
 	const CAuthToken& GetAuthToken() const
 	{ return m_authToken; }
+
+	AdminCommandManPtr& GetAdminCommandMan()
+	{ return m_adminCommandMan; }
 
 	const std::string& GetSalt() const;
 
@@ -61,11 +66,13 @@ public:
 	void DefaultAuth();
 
 private:
-	SendDataPtr m_currentSendData;
-	RecvDataPtr m_currentRecvData;
+	SendDataPtr			m_currentSendData;
+	RecvDataPtr			m_currentRecvData;
+
+	AdminCommandManPtr	m_adminCommandMan;
 
 	boost::shared_ptr< kode::db::Database >	m_db;
-	boost::scoped_ptr<CFolderMan>			m_folderMan;
+	boost::scoped_ptr< CFolderMan >			m_folderMan;
 
 	bool					m_authenticated;
 	CAuthToken				m_authToken;

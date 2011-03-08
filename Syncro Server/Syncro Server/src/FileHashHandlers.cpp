@@ -19,12 +19,16 @@
 #include "SimplePBResponse.h"
 #include "BinaryDataRequest.h"
 #include "FolderMan.h"
+#include "UserSession.h"
+#include "BinaryIncomingData.h"
+#include "ResponseFunctions.h"
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <libsyncro/packet_types.h>
 #include <kode/base64.h>
 #include <kode/hashutils.h>
 #include <cryptopp/sha.h>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/bind.hpp>
 #include <fstream>
 
 namespace syncro
@@ -32,8 +36,34 @@ namespace syncro
 namespace pbHandlers
 {
 
+class FileHashRequestHandler
+{
+public:
+	BasePBResponse::TPointer operator()(
+		InputStreamListPtr inputStreams,
+		server::UserSession& session
+		)
+	{
+		pbHandlers::FileHashRequest request( 
+			( *inputStreams ), 
+			session.GetFolderMan(),
+			boost::bind( 
+				&BinaryIncomingData::ShouldResume,
+				session.GetCurrentRecvData(),
+				_1, _2
+				)
+			);
+		return request.GetResponse();
+	}
+};
+
+static const server::RegisterSessionResponse registerFileHashRequestHandler(
+	comms::packet_types::FileHashRequest,
+	FileHashRequestHandler()
+	);
+
 FileHashRequest::FileHashRequest(
-    InputStreamList& inaInputStreams,
+    const InputStreamList& inaInputStreams,
     CFolderMan&	folderMan,
 	HashOkCallback callback
 ) :
@@ -55,7 +85,7 @@ FileHashRequest::FileHashRequest(
 	}
 
 	FileTransferDetails fileDetails;
-	CBinaryDataRequest fileRequest(
+	BinaryDataRequest fileRequest(
 	    hashRequest.folder_id(),
 	    hashRequest.file_name()
 	);
@@ -81,7 +111,7 @@ FileHashRequest::FileHashRequest(
 	}
 }
 
-CBasePBResponse::TPointer
+BasePBResponse::TPointer
 FileHashRequest::GetResponse()
 {
 	SimplePBResponse::MessagePtr msg;
@@ -91,7 +121,7 @@ FileHashRequest::GetResponse()
 	    static_cast< pb::FileHashResponse* >( msg.get() );
 	ptr->set_ok( m_ok );
 
-	CBasePBResponse::TPointer rv;
+	BasePBResponse::TPointer rv;
 	rv.reset(
 	    new SimplePBResponse(
 	        syncro::comms::packet_types::FileHashResponse,

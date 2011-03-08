@@ -51,10 +51,10 @@ private:
 	int m_nErrorCode;
 };
 
-class CAdminCommandManager : boost::noncopyable
+class AdminCommandManager : boost::noncopyable
 {
 public:
-	CAdminCommandManager();
+	AdminCommandManager();
 
 	void HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth );
 

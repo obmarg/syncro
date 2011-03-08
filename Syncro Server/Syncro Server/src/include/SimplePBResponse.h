@@ -28,7 +28,7 @@
 namespace syncro
 {
 
-class SimplePBResponse : public CBasePBResponse
+class SimplePBResponse : public BasePBResponse
 {
 public:
 	typedef boost::shared_ptr< google::protobuf::MessageLite > MessagePtr;

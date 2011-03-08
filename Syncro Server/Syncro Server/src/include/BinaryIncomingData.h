@@ -25,18 +25,18 @@
 namespace syncro
 {
 
-class CBinaryIncomingData
+class BinaryIncomingData
 {
 public:
-	CBinaryIncomingData(
+	BinaryIncomingData(
 	    const std::string sFilename,
 	    VoidCallback completedCallback
 	);
-	~CBinaryIncomingData();
+	~BinaryIncomingData();
 
-	void HandlePacket( InputStreamList& inaInputStreams );
+	void HandlePacket( const InputStreamList& inaInputStreams );
 
-	void ShouldResume(int64_t resumePoint);
+	void ShouldResume(const std::string& filename, int64_t resumePoint);
 
 	std::string Filename() const
 	{ return m_filename; };

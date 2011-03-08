@@ -33,9 +33,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\AdminCommandHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\AdminCommandManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -49,9 +46,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\BinaryIncomingData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\include\BinaryIncomingResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\BroadcastListener.h">
@@ -117,11 +111,14 @@
     <ClInclude Include="src\include\BinaryOutgoingHandler.h">
       <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\AdminCommandHandler.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\BinaryIncomingResponse.h">
+      <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AdminCommandHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\AdminCommandManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -161,9 +158,6 @@
     <ClCompile Include="src\SyncroDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SyncroPBResponseFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SyncroServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -189,6 +183,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BinaryOutgoingHandler.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AdminCommandHandler.cpp">
+      <Filter>Source Files\PB Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryIncomingHandler.cpp">
       <Filter>Source Files\PB Handlers</Filter>
     </ClCompile>
   </ItemGroup>

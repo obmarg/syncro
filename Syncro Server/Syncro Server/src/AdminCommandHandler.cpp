@@ -22,12 +22,36 @@
 #include <libsyncro/protocol_buffers/admin.pb.h>
 #include <libsyncro/packet_types.h>
 
-namespace syncro
-{
+namespace syncro {
+namespace pbHandlers {
 
-class CAdminCommandResponse : public CBasePBResponse
+class AdminCommandHandler 
 {
-	friend class CAdminCommandHandler;
+public:
+	BasePBResponse::TPointer operator()(
+		InputStreamListPtr inputStreams,
+		server::UserSession& session
+		)
+	{
+		//TODO: Would be good to sort out the reference/pointer situation
+		//		sometime
+		AdminCommand oHandler( 
+			( *inputStreams ), 
+			session.GetAuthToken(), 
+			( *session.GetAdminCommandMan() )
+			);
+		return oHandler.GetResponse();
+	}
+};
+
+static const server::RegisterSessionResponse registerAdminCommandHandler(
+	comms::packet_types::AdminGenericCommand,
+	AdminCommandHandler()
+	);
+
+class AdminCommandResponse : public BasePBResponse
+{
+	friend class AdminCommand;
 public:
 	virtual uint32_t GetSubpacketSize(uint32_t subpacket)
 	{
@@ -50,13 +74,16 @@ public:
 		m_pMessage->SerializeToZeroCopyStream( &stream );
 	}
 protected:
-	CAdminCommandResponse( bool fOK, int nErrorCode = 0 );
+	AdminCommandResponse( bool fOK, int nErrorCode = 0 );
 
 	boost::scoped_ptr< google::protobuf::MessageLite > m_pMessage;
 };
 
 
-CAdminCommandHandler::CAdminCommandHandler( InputStreamList& inaInputStreams,  const CAuthToken& inUserAuth, CAdminCommandManager& commandManager )
+AdminCommand::AdminCommand( 
+	const InputStreamList& inaInputStreams,  
+	const CAuthToken& inUserAuth, 
+	AdminCommandManager& commandManager )
 {
 	pb::GenericAdminCommand oCommand;
 	oCommand.ParseFromZeroCopyStream( inaInputStreams[0] );
@@ -81,20 +108,20 @@ CAdminCommandHandler::CAdminCommandHandler( InputStreamList& inaInputStreams,  c
 		}
 
 		commandManager.HandleCommand( oCommand.command(), map, inUserAuth );
-		m_pResponse.reset( new CAdminCommandResponse( true ) );
+		m_pResponse.reset( new AdminCommandResponse( true ) );
 	}
 	catch( const admin_command_exception& ex )
 	{
-		m_pResponse.reset( new CAdminCommandResponse( false, ex.GetErrorCode() ) );
+		m_pResponse.reset( new AdminCommandResponse( false, ex.GetErrorCode() ) );
 	}
 }
 
-CAdminCommandHandler::~CAdminCommandHandler()
+AdminCommand::~AdminCommand()
 {
 
 }
 
-CAdminCommandResponse::CAdminCommandResponse( bool fOK, int nErrorCode )
+AdminCommandResponse::AdminCommandResponse( bool fOK, int nErrorCode )
 {
 	m_pMessage.reset( new pb::AdminAck() );
 	pb::AdminAck* pMessage = dynamic_cast< pb::AdminAck* >( m_pMessage.get() );
@@ -103,9 +130,10 @@ CAdminCommandResponse::CAdminCommandResponse( bool fOK, int nErrorCode )
 		pMessage->set_error_code( nErrorCode );
 }
 
-unsigned int CAdminCommandResponse::GetPacketType()
+unsigned int AdminCommandResponse::GetPacketType()
 {
 	return comms::packet_types::AdminAck;
 }
 
-}
+}	// namespace pbHandlers
+}	// namespace syncro

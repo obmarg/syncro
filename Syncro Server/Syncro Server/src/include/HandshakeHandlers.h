@@ -24,13 +24,13 @@
 #include "VectorPBResponse.h"
 #include <libsyncro/protocol_buffers/handshake.pb.h>
 
-namespace syncro
-{
+namespace syncro {
+namespace pbHandlers {
 
-class CPBHandshakeRequest
+class HandshakeRequest
 {
 public:
-	CPBHandshakeRequest( const InputStreamList& inaInputStreams );
+	HandshakeRequest( const InputStreamList& inaInputStreams );
 	const int GetMajorVersion() const
 	{
 		return m_nMajorVersion;
@@ -52,7 +52,7 @@ public:
 		return m_Password;
 	};
 
-	CBasePBResponse::TPointer GetResponse();
+	BasePBResponse::TPointer GetResponse();
 private:
 	int m_nMajorVersion;
 	int m_nMinorVersion;
@@ -63,10 +63,10 @@ private:
 	const static std::string m_sRecvString;
 };
 
-class CPBHandshakeResponse : public CBasePBResponse
+class HandshakeResponse : public BasePBResponse
 {
 public:
-	CPBHandshakeResponse();
+	HandshakeResponse();
 
 	virtual uint32_t GetSubpacketSize(uint32_t subpacket);
 	virtual unsigned int GetSubpacketCount()
@@ -84,9 +84,9 @@ private:
 class CSaltResponse : public CVectorPBResponse
 {
 public:
-	static CBasePBResponse::TPointer Create( const std::string& salt )
+	static BasePBResponse::TPointer Create( const std::string& salt )
 	{
-		CBasePBResponse::TPointer pointer( new CSaltResponse( salt ) );
+		BasePBResponse::TPointer pointer( new CSaltResponse( salt ) );
 		return pointer;
 	}
 	unsigned int GetPacketType();
@@ -95,6 +95,7 @@ private:
 	CSaltResponse( const std::string& salt );
 };
 
-};	//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro
 
 #endif

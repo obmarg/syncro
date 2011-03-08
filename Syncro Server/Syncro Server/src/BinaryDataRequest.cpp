@@ -20,7 +20,7 @@
 
 namespace syncro {
 
-CBinaryDataRequest::CBinaryDataRequest( 
+BinaryDataRequest::BinaryDataRequest( 
 	int folderId, 
 	const std::string& filename 
 	) :
@@ -34,7 +34,7 @@ m_startOffset( 0 )
 
 }
 
-CBinaryDataRequest::CBinaryDataRequest( 
+BinaryDataRequest::BinaryDataRequest( 
 	const InputStreamList& inaInputStreams 
 	)
 {

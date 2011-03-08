@@ -40,7 +40,7 @@ public:
 	}
 };
 
-CAdminCommandManager::CAdminCommandManager() : m_aCommands( eAdminCommand_Total )
+AdminCommandManager::AdminCommandManager() : m_aCommands( eAdminCommand_Total )
 {
 	m_aCommands[ eAdminCommand_AddFolder ].Set( "AddFolder", CAuthToken::AccessLevel_Admin );
 	m_aCommands[ eAdminCommand_DelFolder ].Set( "DelFolder", CAuthToken::AccessLevel_Admin );
@@ -51,7 +51,7 @@ CAdminCommandManager::CAdminCommandManager() : m_aCommands( eAdminCommand_Total 
 	//TODO: Set up m_addLocalFile;
 }
 
-void CAdminCommandManager::HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth )
+void AdminCommandManager::HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth )
 {
 	eAdminCommand command = FindCommand( sName );
 	if(( !insAuth.IsInitialised() ) || m_aCommands[ command ].AuthLevel > insAuth.GetAccessLevel() )
@@ -86,7 +86,7 @@ void CAdminCommandManager::HandleCommand( const std::string& sName, const String
 	}
 }
 
-eAdminCommand CAdminCommandManager::FindCommand( const std::string& name ) const
+eAdminCommand AdminCommandManager::FindCommand( const std::string& name ) const
 {
 	int nRV = eAdminCommand_AddFolder;
 	BOOST_FOREACH( const sAdminCommand & command, m_aCommands )
@@ -98,7 +98,7 @@ eAdminCommand CAdminCommandManager::FindCommand( const std::string& name ) const
 	throw admin_command_exception( -3 );
 }
 
-std::string CAdminCommandManager::GetParam(
+std::string AdminCommandManager::GetParam(
     const StringMap& params,
     const std::string& name
 ) const
@@ -110,7 +110,7 @@ std::string CAdminCommandManager::GetParam(
 	return it->second;
 };
 
-void CAdminCommandManager::AddFolder(
+void AdminCommandManager::AddFolder(
     const StringMap& params
 )
 {
@@ -131,14 +131,14 @@ void CAdminCommandManager::AddFolder(
 	}
 }
 
-void CAdminCommandManager::DelFolder( unsigned int Id )
+void AdminCommandManager::DelFolder( unsigned int Id )
 {
 	kode::db::AutoReset ar( m_delFolder );
 	m_delFolder->Bind( 1, Id );
 	m_delFolder->GetNextRow();
 }
 
-void CAdminCommandManager::AddLocalFile( const std::string& path )
+void AdminCommandManager::AddLocalFile( const std::string& path )
 {
 
 }

@@ -29,7 +29,7 @@
 namespace syncro {
 namespace pbHandlers {
 
-static CBasePBResponse::TPointer GetFolderListResponse(
+static BasePBResponse::TPointer GetFolderListResponse(
 	InputStreamListPtr inputStreams,
 	server::UserSession& session
 	)
@@ -40,7 +40,7 @@ static CBasePBResponse::TPointer GetFolderListResponse(
 	//		for now we just ignore everything
 
 	const FolderList& folders = session.GetFolderMan().GetFoldersInfo();
-	CBasePBResponse::TPointer rv( new FolderListResponse( folders ) );
+	BasePBResponse::TPointer rv( new FolderListResponse( folders ) );
 	return rv;
 }
 

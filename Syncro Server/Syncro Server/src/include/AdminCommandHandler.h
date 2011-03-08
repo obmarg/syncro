@@ -24,26 +24,32 @@
 #include <boost/scoped_ptr.hpp>
 #include <google/protobuf/message_lite.h>
 
-namespace syncro
-{
+namespace syncro {
 
 class CAuthToken;
-class CAdminCommandManager;
+class AdminCommandManager;
 
-class CAdminCommandHandler
+namespace pbHandlers {
+
+class AdminCommand
 {
 public:
-	CAdminCommandHandler( InputStreamList& inaInputStreams, const CAuthToken& inUserAuth, CAdminCommandManager& commandManager );
-	~CAdminCommandHandler();
+	AdminCommand( 
+		const InputStreamList& inaInputStreams, 
+		const CAuthToken& inUserAuth, 
+		AdminCommandManager& commandManager 
+		);
+	~AdminCommand();
 
-	CBasePBResponse::TPointer GetResponse()
+	BasePBResponse::TPointer GetResponse()
 	{
 		return m_pResponse;
 	}
 private:
-	CBasePBResponse::TPointer m_pResponse;
+	BasePBResponse::TPointer m_pResponse;
 };
 
-};
+}	// namespace pbHandlers
+}	// namespace syncro
 
 #endif

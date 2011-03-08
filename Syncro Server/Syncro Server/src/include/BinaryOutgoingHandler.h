@@ -28,7 +28,7 @@
 namespace syncro {
 namespace pbHandlers {
 
-class CBinaryDataResponse : public CBasePBResponse
+class CBinaryDataResponse : public BasePBResponse
 {
 public:
 	CBinaryDataResponse( CFileSendData& inoFileData );

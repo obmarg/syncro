@@ -20,33 +20,12 @@
 
 #include "common.h"
 #include "BasePBResponse.h"
-#include "FileSendData.h"
-#include "FolderMan.h"
-#include "BinaryIncomingData.h"
-#include "AdminCommandManager.h"
-#include "AuthManager.h"
 #include "ResponseFunctions.h"
-#include <libsyncro/packet_types.h>
 #include <kode/variantresponsefactory.h>
 #include <boost/scoped_ptr.hpp>
 
-namespace syncro
-{
-
-struct sSubpackets
-{
-	typedef std::vector<unsigned int> TSizeList;
-	unsigned int Count;
-	TSizeList Sizes;
-	const TCharBuffer::TBuff& Buffer;
-};
-
-namespace server
-{	
-
-//TODO: Move all this shit about at some point?
-//		Also, remove the old syncro pb response factory once i've finished
-//		The new one
+namespace syncro {
+namespace server {	
 
 //
 //	\brief	Implements the syncro protocol buffer response factory
@@ -58,7 +37,7 @@ class PBResponseFactory :
 public:
 	PBResponseFactory() {};
 
-	virtual CBasePBResponse::TPointer CallHandler(
+	virtual BasePBResponse::TPointer CallHandler(
 		const SessionResponseFunction& function,
 		InputStreamListPtr input
 		)
@@ -71,38 +50,6 @@ private:
 };
 
 }	// namespace server
+}	//namespace syncro
 
-class CSyncroPBResponseFactory : public CBasePBResponseFactory
-{
-public:
-	CSyncroPBResponseFactory( const CSyncroPBResponseFactory& inoOther )
-	{
-		//TODO: Implement copying of stuff (or make uncopyable?)
-	}
-	virtual ~CSyncroPBResponseFactory() {};
-
-	static CBasePBResponseFactory::TPointer Create()
-	{
-		return CBasePBResponseFactory::TPointer( new CSyncroPBResponseFactory() );
-	};
-
-	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, InputStreamList& inaInputStreams );
-private:
-	CSyncroPBResponseFactory();
-
-	void HashOkCallback( const std::string& filename, int64_t sizeHashed );
-
-	typedef boost::scoped_ptr<CFileSendData> TFileSendDataPtr;
-	TFileSendDataPtr m_pCurrentSendData;
-	boost::scoped_ptr<CFolderMan> m_pFolderMan;
-	typedef boost::scoped_ptr<CBinaryIncomingData> TFileRecvDataPtr;
-	TFileRecvDataPtr m_pCurrentRecvData;
-	boost::scoped_ptr<CAdminCommandManager> m_pAdminCommandMan;
-
-	bool m_fAuthenticated;
-	CAuthToken m_oAuthToken;
-	CAuthManager m_authMan;
-};
-
-}; //namespace syncro
 #endif

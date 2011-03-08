@@ -21,11 +21,13 @@
 #include "AuthManager.h"
 #include "FileSendData.h"
 #include "BinaryIncomingData.h"
+#include "AdminCommandManager.h"
 
 namespace syncro {
 namespace server {
 
 UserSession::UserSession() :
+m_adminCommandMan( new AdminCommandManager() ),
 m_db( CSyncroDB::OpenDB( ) ),
 m_folderMan( new CFolderMan( m_db ) )
 {

@@ -31,7 +31,7 @@
 namespace syncro
 {
 
-class CBinaryDataRequest;
+class BinaryDataRequest;
 class FileTransferDetails;
 class UploadFinishDetails;
 class DownloadFinishDetails;
@@ -52,11 +52,11 @@ public:
 	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
 
 	bool FileRequested( 
-		const CBinaryDataRequest& fileData, 
+		const BinaryDataRequest& fileData, 
 		FileTransferDetails& details 
 		);
 
-	bool IncomingFile( const CBinaryDataRequest& fileData, FileTransferDetails& details );
+	bool IncomingFile( const BinaryDataRequest& fileData, FileTransferDetails& details );
 
 private:
 	FolderList m_folders;

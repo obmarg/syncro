@@ -28,7 +28,7 @@ namespace syncro {
 
 namespace pbHandlers {
 
-class FolderListResponse : public CBasePBResponse
+class FolderListResponse : public BasePBResponse
 {
 public:
 	FolderListResponse( const FolderList& list );

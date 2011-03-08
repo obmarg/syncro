@@ -36,7 +36,7 @@ public:
 		return CSendHandler::TPointer( new CPBResponseSendHandler( inpConn ) );
 	}
 
-	void SetPBResponse( CBasePBResponse::TPointer inpResponse )
+	void SetPBResponse( BasePBResponse::TPointer inpResponse )
 	{
 		m_pResponse = inpResponse;
 	}
@@ -46,7 +46,7 @@ protected:
 
 	CTCPConnection::TPointer m_pConn;
 
-	CBasePBResponse::TPointer m_pResponse;
+	BasePBResponse::TPointer m_pResponse;
 
 	CPBResponseSendHandler( CTCPConnection::TPointer inpConn );
 };

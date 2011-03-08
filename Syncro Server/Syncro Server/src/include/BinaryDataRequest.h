@@ -25,12 +25,12 @@
 namespace syncro
 {
 
-class CBinaryDataRequest
+class BinaryDataRequest
 {
 public:
-	CBinaryDataRequest( int folderId, const std::string& filename );
-	CBinaryDataRequest( const InputStreamList& inaInputStreams );
-	~CBinaryDataRequest() {};
+	BinaryDataRequest( int folderId, const std::string& filename );
+	BinaryDataRequest( const InputStreamList& inaInputStreams );
+	~BinaryDataRequest() {};
 
 	const std::string& GetFilename() const
 	{ return m_sFilename; }

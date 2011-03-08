@@ -24,7 +24,7 @@
 namespace syncro
 {
 
-class CVectorPBResponse : public CBasePBResponse
+class CVectorPBResponse : public BasePBResponse
 {
 public:
 

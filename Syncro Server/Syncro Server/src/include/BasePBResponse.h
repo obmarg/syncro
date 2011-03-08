@@ -27,13 +27,13 @@
 namespace syncro
 {
 
-class CBasePBResponse
+class BasePBResponse
 {
 public:
-	typedef boost::shared_ptr<CBasePBResponse> TPointer;
+	typedef boost::shared_ptr<BasePBResponse> TPointer;
 
-	CBasePBResponse() {};
-	virtual ~CBasePBResponse() {};
+	BasePBResponse() {};
+	virtual ~BasePBResponse() {};
 
 	virtual uint32_t GetSubpacketSize(uint32_t subpacket) = 0;
 	virtual unsigned int GetSubpacketCount() = 0;
@@ -60,7 +60,7 @@ public:
 
 	typedef boost::shared_ptr<CBasePBResponseFactory> TPointer;
 
-	virtual CBasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, InputStreamList& inaInputStreams ) = 0;
+	virtual BasePBResponse::TPointer CreateResponse( const unsigned int innPacketType, InputStreamList& inaInputStreams ) = 0;
 protected:
 	CBasePBResponseFactory() {};
 };
