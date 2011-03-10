@@ -24,8 +24,8 @@
 namespace syncro
 {
 
-const int	CSyncroDB::EXPECTED_DB_VERSION	= 11;
-std::string	CSyncroDB::DEFAULT_DB_NAME		= "syncro.db";
+const int	SyncroDB::EXPECTED_DB_VERSION	= 11;
+std::string	SyncroDB::DEFAULT_DB_NAME		= "syncro.db";
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
 const std::string FOLDERS_TABLE_CREATE =
@@ -77,7 +77,7 @@ const std::string DEFAULT_USER_CREATE =
 
 //TODO: Move the database versioning stuff out into kode probably, then subclass that here.
 
-CSyncroDB::CSyncroDB( 
+SyncroDB::SyncroDB( 
 	const std::string& insFilename 
 	) : 
 Database( insFilename )
@@ -100,12 +100,12 @@ Database( insFilename )
 	}
 }
 
-CSyncroDB::~CSyncroDB()
+SyncroDB::~SyncroDB()
 {
 
 }
 
-bool CSyncroDB::CreateDatabase()
+bool SyncroDB::CreateDatabase()
 {
 	//TODO: possibly add a new function to database that doesn' return a result set
 	run( FOLDERS_TABLE_CREATE );
@@ -118,7 +118,7 @@ bool CSyncroDB::CreateDatabase()
 	return true;
 }
 
-bool CSyncroDB::UpgradeDatabase( int nCurrentVersion )
+bool SyncroDB::UpgradeDatabase( int nCurrentVersion )
 {
 	if( nCurrentVersion == 1 )
 		run( SERVER_ID_TABLE_CREATE );

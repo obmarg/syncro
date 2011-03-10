@@ -40,7 +40,7 @@ SyncroServer::SyncroServer(
 	) :
 BaseAcceptHandler( 1 ),
 m_oBroadcastThread( 
-	CBroadcastThread( broadcastThread ) 
+	BroadcastThread( broadcastThread ) 
 	),
 m_port( port )
 {
@@ -48,7 +48,7 @@ m_port( port )
 		m_port = comms::SERVER_PORT;
 	//Create a DB object.  to ensure the db file is created
 	//if it doesn't already exist
-	CSyncroDB::OpenDB();
+	SyncroDB::OpenDB();
 }
 
 SyncroServer::~SyncroServer()
@@ -69,13 +69,13 @@ bool SyncroServer::Run()
 }
 
 bool SyncroServer::HandleAccept( 
-	CTCPConnection::TPointer inpNewConnection 
+	TCPConnection::TPointer inpNewConnection 
 	)
 {
 	ResponseFactoryPtr factory( new server::PBResponseFactory() );
 
-	CReceiveHandler::TPointer recvHandler = 
-		CPBRequestHandler::Create( 
+	ReceiveHandler::TPointer recvHandler = 
+		PBRequestHandler::Create( 
 			inpNewConnection, 
 			boost::bind(
 				&server::PBResponseFactory::CreateResponse,

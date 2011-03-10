@@ -18,6 +18,7 @@
 #include "VectorPBResponse.h"
 
 namespace syncro {
+namespace pbHandlers {
 
 uint32_t CVectorPBResponse::GetSubpacketSize(uint32_t subpacket)
 {
@@ -62,4 +63,5 @@ void CVectorPBResponse::WriteSubpacket(
 	//TODO: Handle errors?
 }
 
-}	//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro

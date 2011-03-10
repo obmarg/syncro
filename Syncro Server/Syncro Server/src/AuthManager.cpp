@@ -25,9 +25,9 @@
 namespace syncro
 {
 
-CAuthManager::CAuthManager()
+AuthManager::AuthManager()
 {
-	m_pDB = CSyncroDB::OpenDB();
+	m_pDB = SyncroDB::OpenDB();
 	m_pCheckLoginStatement = m_pDB->prepare( "SELECT ID,Password FROM Users WHERE UserName=@Username" );
 	std::string uuid = kode::utils::GenerateUUID();
 
@@ -41,17 +41,17 @@ CAuthManager::CAuthManager()
 	std::cout << "Salt: " << m_saltString << "\n";
 }
 
-CAuthManager::~CAuthManager()
+AuthManager::~AuthManager()
 {
 
 }
 
-bool CAuthManager::NeedsAuth()
+bool AuthManager::NeedsAuth()
 {
 	return false;
 }
 
-const CAuthToken CAuthManager::Authenticate( const std::string& username, const std::string& password, const std::string& ip )
+const CAuthToken AuthManager::Authenticate( const std::string& username, const std::string& password, const std::string& ip )
 {
 	kode::db::AutoReset autoReset( m_pCheckLoginStatement );
 
@@ -83,7 +83,7 @@ const CAuthToken CAuthManager::Authenticate( const std::string& username, const 
 	throw authentication_exception( "Invalid username or password" );
 }
 
-const CAuthToken CAuthManager::DefaultAuth()
+const CAuthToken AuthManager::DefaultAuth()
 {
 	if( NeedsAuth() )
 		throw authentication_exception( "Authentication required but no details provided" );

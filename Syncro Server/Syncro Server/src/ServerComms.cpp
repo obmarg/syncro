@@ -44,11 +44,11 @@ ServerComms::~ServerComms()
 
 void ServerComms::StartAccept()
 {
-	CTCPConnection::TPointer oNewConn = CTCPConnection::CreateConnection( m_oAcceptor.io_service() );
+	TCPConnection::TPointer oNewConn = TCPConnection::CreateConnection( m_oAcceptor.io_service() );
 	m_oAcceptor.async_accept( oNewConn->GetSocket(), boost::bind( &ServerComms::HandleAccept, this, oNewConn, boost::asio::placeholders::error ) );
 }
 
-void ServerComms::HandleAccept( CTCPConnection::TPointer inoNewConn, const boost::system::error_code& inoError )
+void ServerComms::HandleAccept( TCPConnection::TPointer inoNewConn, const boost::system::error_code& inoError )
 {
 	if( !inoError )
 	{
@@ -71,12 +71,12 @@ void ServerComms::AddAcceptHandler( BaseAcceptHandler::TPointer inoAcceptHandler
 	m_oAcceptHandlers.insert( inoAcceptHandler );
 }
 
-CTCPConnection::CTCPConnection( io_service& inoIOService ) : m_oSocket( inoIOService )
+TCPConnection::TCPConnection( io_service& inoIOService ) : m_oSocket( inoIOService )
 {
 
 }
 
-void CTCPConnection::StartRecv( int inBytes )
+void TCPConnection::StartRecv( int inBytes )
 {
 
 	using namespace boost::asio;
@@ -89,11 +89,11 @@ void CTCPConnection::StartRecv( int inBytes )
 
 //	m_nWaitingRecv = inBytes;
 	async_read( m_oSocket, buffer( m_aBuffer ),
-	            bind( &CTCPConnection::IsRecvFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
-	            bind( &CTCPConnection::FinishedRecv, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
+	            bind( &TCPConnection::IsRecvFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
+	            bind( &TCPConnection::FinishedRecv, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
 }
 
-bool CTCPConnection::IsRecvFinished( const boost::system::error_code& inoError, std::size_t innBytesSoFar )
+bool TCPConnection::IsRecvFinished( const boost::system::error_code& inoError, std::size_t innBytesSoFar )
 {
 	if( inoError )
 	{
@@ -116,7 +116,7 @@ bool CTCPConnection::IsRecvFinished( const boost::system::error_code& inoError, 
 	return false;
 }
 
-void CTCPConnection::FinishedRecv( const boost::system::error_code& inoError, std::size_t innBytes )
+void TCPConnection::FinishedRecv( const boost::system::error_code& inoError, std::size_t innBytes )
 {
 	bool fatalError = false;
 	if( inoError )
@@ -163,7 +163,7 @@ void CTCPConnection::FinishedRecv( const boost::system::error_code& inoError, st
 	}
 }
 
-void CTCPConnection::Send( CSendHandler::TPointer inpSendHandler )
+void TCPConnection::Send( SendHandler::TPointer inpSendHandler )
 {
 	using namespace boost::asio;
 	using boost::bind;
@@ -176,13 +176,13 @@ void CTCPConnection::Send( CSendHandler::TPointer inpSendHandler )
 		m_pSendHandler = inpSendHandler;
 
 		async_write( m_oSocket, buffer( inpSendHandler->GetBuffer().aBuffer ),
-		             bind( &CTCPConnection::IsSendFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
-		             bind( &CTCPConnection::FinishedSend, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
+		             bind( &TCPConnection::IsSendFinished, shared_from_this(), placeholders::error, placeholders::bytes_transferred ),
+		             bind( &TCPConnection::FinishedSend, shared_from_this(), placeholders::error, placeholders::bytes_transferred ) );
 	}
 };
 
 bool
-CTCPConnection::IsSendFinished( const boost::system::error_code& inoError, std::size_t innBytesSoFar )
+TCPConnection::IsSendFinished( const boost::system::error_code& inoError, std::size_t innBytesSoFar )
 {
 	if( inoError )
 	{
@@ -194,7 +194,7 @@ CTCPConnection::IsSendFinished( const boost::system::error_code& inoError, std::
 }
 
 void
-CTCPConnection::FinishedSend( const boost::system::error_code& inoError, std::size_t innBytes )
+TCPConnection::FinishedSend( const boost::system::error_code& inoError, std::size_t innBytes )
 {
 	if( inoError )
 	{
@@ -202,7 +202,7 @@ CTCPConnection::FinishedSend( const boost::system::error_code& inoError, std::si
 		cout << inoError.message() << "\n";
 		return;
 	}
-	CSendHandler::TPointer pHandler = m_pSendHandler;
+	SendHandler::TPointer pHandler = m_pSendHandler;
 	m_pSendHandler.reset();
 	pHandler->SendDone( innBytes );
 
@@ -212,7 +212,7 @@ CTCPConnection::FinishedSend( const boost::system::error_code& inoError, std::si
 }
 
 std::string
-CTCPConnection::ClientIP()
+TCPConnection::ClientIP()
 {
 	boost::system::error_code error;
 	std::string rv(	m_oSocket.remote_endpoint().address().to_string( error ) );
@@ -222,7 +222,7 @@ CTCPConnection::ClientIP()
 		return rv;
 }
 
-const TCharBuffer CSendHandler::GetBuffer()
+const TCharBuffer SendHandler::GetBuffer()
 {
 	return TCharBuffer( m_aBuffer, m_aBuffer.size() );
 }

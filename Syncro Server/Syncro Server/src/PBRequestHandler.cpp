@@ -27,25 +27,25 @@ namespace syncro
 using std::string;
 using kode::utils::FromJavaEndian;
 
-CPBRequestHandler::CPBRequestHandler( 
-	CTCPConnection::TPointer inpConn, 
+PBRequestHandler::PBRequestHandler( 
+	TCPConnection::TPointer inpConn, 
 	ResponseCallback responseCallback
 	) : 
 m_pConn( inpConn ), 
 m_getResponse( responseCallback )
 {
 	m_fCloseConnection = false;
-	m_pSendHandler = CPBResponseSendHandler::Create( m_pConn );
+	m_pSendHandler = PBResponseSendHandler::Create( m_pConn );
 	ResetVariables();		//don't know if this is needed, but can't hurt much
 }
 
-void CPBRequestHandler::ResetVariables()
+void PBRequestHandler::ResetVariables()
 {
 	m_oHeader.Clear();
 	m_nBufferReadSoFar = 0;
 }
 
-bool CPBRequestHandler::CanHandleReceive( const TCharBuffer& inoBuffer )
+bool PBRequestHandler::CanHandleReceive( const TCharBuffer& inoBuffer )
 {
 	unsigned int nHeadSize = comms::PacketHeader::BYTE_SIZE;
 	//TODO: Make this stuff use libsyncro's PacketHeader stuff at some point
@@ -88,7 +88,7 @@ bool CPBRequestHandler::CanHandleReceive( const TCharBuffer& inoBuffer )
 	return false;
 }
 
-bool CPBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
+bool PBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 {
 	using std::vector;
 	using google::protobuf::io::ArrayInputStream;
@@ -122,7 +122,7 @@ bool CPBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 		BasePBResponse::TPointer response = 
 			m_getResponse( m_oHeader.packet_type(), &subpackets );
 
-		dynamic_cast< CPBResponseSendHandler& >( 
+		dynamic_cast< PBResponseSendHandler& >( 
 			*m_pSendHandler 
 			).SetPBResponse( response );
 

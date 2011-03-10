@@ -45,7 +45,7 @@ AdminCommandManager::AdminCommandManager() : m_aCommands( eAdminCommand_Total )
 	m_aCommands[ eAdminCommand_AddFolder ].Set( "AddFolder", CAuthToken::AccessLevel_Admin );
 	m_aCommands[ eAdminCommand_DelFolder ].Set( "DelFolder", CAuthToken::AccessLevel_Admin );
 	m_aCommands[ eAdminCommand_AddLocalFile ].Set( "AddLocalFile", CAuthToken::AccessLevel_Normal );
-	m_db = CSyncroDB::OpenDB();
+	m_db = SyncroDB::OpenDB();
 	m_addFolder = m_db->prepare( "INSERT INTO Folders(Name,Path) VALUES (?,?);" );
 	m_delFolder = m_db->prepare( "DELETE FROM Folders WHERE ID=?;" );
 	//TODO: Set up m_addLocalFile;

@@ -50,7 +50,7 @@ static const server::RegisterSessionResponse registerFolderContentsHandler(
 
 FolderContentsRequest::FolderContentsRequest( 
 	const InputStreamList& inaInputStreams,
-	CFolderMan& folderMan
+	FolderMan& folderMan
 	)
 {
 	if( inaInputStreams.size() != 1 )
@@ -91,14 +91,14 @@ void FolderContentsRequest::ProcessFolder(
 	const CFolderPtr folder 
 	)
 {
-	const CFolder::TFileList& files = folder->GetFiles();
-	BOOST_FOREACH( const CFolder::sFileData& fileInfo, files )
+	const Folder::TFileList& files = folder->GetFiles();
+	BOOST_FOREACH( const Folder::sFileData& fileInfo, files )
 	{
 		pb::FileInfo* pbFileInfo = pb->add_files();
 		pbFileInfo->set_name( fileInfo.name );
 		pbFileInfo->set_size( fileInfo.size );
 	}
-	const CFolder::TFolderList& children = folder->GetChildren();
+	const Folder::TFolderList& children = folder->GetChildren();
 	BOOST_FOREACH( const CFolderPtr& child, children )
 	{
 		pb::FolderContents* pbChild = pb->add_subfolders();

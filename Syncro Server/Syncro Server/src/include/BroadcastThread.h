@@ -23,11 +23,11 @@
 namespace syncro
 {
 
-class CBroadcastThread
+class BroadcastThread
 {
 public:
-	CBroadcastThread( bool run=true );
-	~CBroadcastThread();
+	BroadcastThread( bool run=true );
+	~BroadcastThread();
 
 	void operator()();
 private:

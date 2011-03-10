@@ -21,8 +21,8 @@
 #include "common.h"
 #include "BasePBResponse.h"
 
-namespace syncro
-{
+namespace syncro {
+namespace pbHandlers {
 
 class CVectorPBResponse : public BasePBResponse
 {
@@ -45,6 +45,7 @@ protected:
 	TSubpacketList m_aSubpackets;
 };
 
-};		//namespace syncro
+}	// namespace pbHandlers
+}	// namespace syncro
 
 #endif

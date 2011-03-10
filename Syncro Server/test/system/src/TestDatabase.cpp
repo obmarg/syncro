@@ -45,7 +45,7 @@ void TestDatabase::Create()
 {
 	boost::filesystem::remove( m_filename );
 
-	CSyncroDB::TPointer db( CSyncroDB::OpenDB( m_filename ) );
+	SyncroDB::TPointer db( SyncroDB::OpenDB( m_filename ) );
 	db->run( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA1 );
 	db->run( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA2 );
 	db->run( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA3 );

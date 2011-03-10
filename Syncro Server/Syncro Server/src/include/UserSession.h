@@ -26,9 +26,9 @@
 
 namespace syncro {
 
-class CFileSendData;
+class FileSendData;
 class BinaryIncomingData;
-class CFolderMan;
+class FolderMan;
 class AdminCommandManager;
 
 namespace server {
@@ -36,7 +36,7 @@ namespace server {
 class UserSession
 {
 public:
-	typedef boost::shared_ptr<CFileSendData>		SendDataPtr;
+	typedef boost::shared_ptr<FileSendData>		SendDataPtr;
 	typedef boost::shared_ptr<BinaryIncomingData>	RecvDataPtr;
 	typedef boost::shared_ptr<AdminCommandManager> AdminCommandManPtr;
 
@@ -56,7 +56,7 @@ public:
 
 	const std::string& GetSalt() const;
 
-	CFolderMan& GetFolderMan()
+	FolderMan& GetFolderMan()
 	{ return (*m_folderMan); }
 
 	void Authenticate( 
@@ -72,11 +72,11 @@ private:
 	AdminCommandManPtr	m_adminCommandMan;
 
 	boost::shared_ptr< kode::db::Database >	m_db;
-	boost::scoped_ptr< CFolderMan >			m_folderMan;
+	boost::scoped_ptr< FolderMan >			m_folderMan;
 
 	bool					m_authenticated;
 	CAuthToken				m_authToken;
-	CAuthManager			m_authMan;
+	AuthManager			m_authMan;
 };
 
 }	// namespace server

@@ -25,15 +25,15 @@
 namespace syncro
 {
 
-class CPBResponseSendHandler : public CSendHandler
+class PBResponseSendHandler : public SendHandler
 {
 public:
-	virtual ~CPBResponseSendHandler();
+	virtual ~PBResponseSendHandler();
 	virtual bool SendStarting();	//Want to override this definetly (i think)
 
-	static CSendHandler::TPointer Create( CTCPConnection::TPointer inpConn )
+	static SendHandler::TPointer Create( TCPConnection::TPointer inpConn )
 	{
-		return CSendHandler::TPointer( new CPBResponseSendHandler( inpConn ) );
+		return SendHandler::TPointer( new PBResponseSendHandler( inpConn ) );
 	}
 
 	void SetPBResponse( BasePBResponse::TPointer inpResponse )
@@ -44,11 +44,11 @@ public:
 	virtual void SendDone( int innSent );
 protected:
 
-	CTCPConnection::TPointer m_pConn;
+	TCPConnection::TPointer m_pConn;
 
 	BasePBResponse::TPointer m_pResponse;
 
-	CPBResponseSendHandler( CTCPConnection::TPointer inpConn );
+	PBResponseSendHandler( TCPConnection::TPointer inpConn );
 };
 
 } //namespace syncro;

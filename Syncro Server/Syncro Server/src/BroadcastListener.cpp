@@ -27,20 +27,20 @@ using std::string;
 
 const std::string RESPOND_MESSAGE = "SyncroHELLO";
 
-CBroadcastListener::CBroadcastListener( boost::asio::io_service& inoIOService, const std::string& insServerName )
+BroadcastListener::BroadcastListener( boost::asio::io_service& inoIOService, const std::string& insServerName )
 	: m_oSocket( inoIOService, udp::endpoint( udp::v4(), comms::BROADCAST_SERVER_PORT ) ),
 	  m_sServerName( insServerName )
 {
 	StartRecieve();
 }
 
-CBroadcastListener::~CBroadcastListener()
+BroadcastListener::~BroadcastListener()
 {
 
 }
 
 void
-CBroadcastListener::HandleReceive( const boost::system::error_code& error, std::size_t innSize )
+BroadcastListener::HandleReceive( const boost::system::error_code& error, std::size_t innSize )
 {
 	bool fOK = false;
 	if( innSize >= RESPOND_MESSAGE.length() )
@@ -61,11 +61,11 @@ CBroadcastListener::HandleReceive( const boost::system::error_code& error, std::
 }
 
 void
-CBroadcastListener::StartRecieve()
+BroadcastListener::StartRecieve()
 {
 	m_oSocket.async_receive_from(
 	    boost::asio::buffer( m_aRecvBuff ), m_oEndpoint,
-	    boost::bind( &CBroadcastListener::HandleReceive, this,
+	    boost::bind( &BroadcastListener::HandleReceive, this,
 	                 boost::asio::placeholders::error,
 	                 boost::asio::placeholders::bytes_transferred ) );
 }

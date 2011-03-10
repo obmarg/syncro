@@ -27,7 +27,7 @@ using boost::shared_ptr;
 
 using namespace std;
 
-CFolder::CFolder( const string& insPath, const string& name ) :
+Folder::Folder( const string& insPath, const string& name ) :
 	m_sFolderName( name )
 {
 	using boost::filesystem::path;
@@ -41,8 +41,8 @@ CFolder::CFolder( const string& insPath, const string& name ) :
 	{
 		if( is_directory( pItem->status() ) )
 		{
-			boost::shared_ptr<CFolder> folder(
-			    new CFolder(
+			boost::shared_ptr<Folder> folder(
+			    new Folder(
 			        pItem->path().directory_string(),
 			        pItem->path().filename()
 			    )
@@ -58,13 +58,13 @@ CFolder::CFolder( const string& insPath, const string& name ) :
 	}
 }
 
-CFolder::~CFolder( )
+Folder::~Folder( )
 {
 
 }
 
 void
-CFolder::AddFile( const std::string& name, unsigned int size )
+Folder::AddFile( const std::string& name, unsigned int size )
 {
 	m_oFiles.push_back( sFileData( name, size ) );
 }

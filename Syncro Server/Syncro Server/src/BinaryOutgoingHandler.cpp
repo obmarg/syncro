@@ -66,7 +66,7 @@ public:
 				);
 		}
 		session.GetCurrentSendData().reset(
-			new CFileSendData(
+			new FileSendData(
 				details.Filename(),
 				oRequest.GetBufferSize(),
 				details.CompletionCallback(),
@@ -87,7 +87,7 @@ static const server::RegisterSessionResponse binaryDataRegister(
 	BinaryDataHandler()
 	);
 
-CBinaryDataResponse::CBinaryDataResponse( CFileSendData& inoFileData )
+CBinaryDataResponse::CBinaryDataResponse( FileSendData& inoFileData )
 	: m_oFileData( inoFileData )
 {
 	m_oPacketHeader.set_file_offset( m_oFileData.GetFilePosition() );

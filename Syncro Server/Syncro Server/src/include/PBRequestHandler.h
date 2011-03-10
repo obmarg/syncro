@@ -28,14 +28,14 @@
 namespace syncro
 {
 
-class CPBRequestHandler : public CReceiveHandler
+class PBRequestHandler : public ReceiveHandler
 {
 public:
 	typedef boost::function< 
 		BasePBResponse::TPointer (	const unsigned int, InputStreamListPtr )
 	> ResponseCallback;
 
-	virtual ~CPBRequestHandler() {};
+	virtual ~PBRequestHandler() {};
 
 	virtual bool CanHandleReceive( const TCharBuffer& inoBuffer );
 	virtual bool HandleReceive( const TCharBuffer& inoBuffer );
@@ -44,14 +44,14 @@ public:
 		return m_fCloseConnection;
 	};
 
-	static CReceiveHandler::TPointer Create( 
-		CTCPConnection::TPointer inpConn, 
+	static ReceiveHandler::TPointer Create( 
+		TCPConnection::TPointer inpConn, 
 		ResponseCallback responseCallback 
 		)
 	{
-		return CReceiveHandler::TPointer( 
-			static_cast<CReceiveHandler*>( 
-				new CPBRequestHandler( 
+		return ReceiveHandler::TPointer( 
+			static_cast<ReceiveHandler*>( 
+				new PBRequestHandler( 
 					inpConn, 
 					responseCallback 
 					) 
@@ -61,16 +61,16 @@ public:
 protected:
 	bool m_fCloseConnection;
 
-	CTCPConnection::TPointer m_pConn;
+	TCPConnection::TPointer m_pConn;
 	ResponseCallback m_getResponse;
 
-	CSendHandler::TPointer m_pSendHandler;
+	SendHandler::TPointer m_pSendHandler;
 
 	pb::PacketHeader m_oHeader;
 	unsigned int m_nBufferReadSoFar;
 
-	CPBRequestHandler( 
-		CTCPConnection::TPointer inpConn, 
+	PBRequestHandler( 
+		TCPConnection::TPointer inpConn, 
 		ResponseCallback responseCallback
 		);
 

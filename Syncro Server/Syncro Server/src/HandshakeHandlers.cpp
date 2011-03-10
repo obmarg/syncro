@@ -121,7 +121,7 @@ HandshakeResponse::HandshakeResponse()
 	//TODO: move this string to a static const or something
 	m_oMessage.set_magic( comms::HANDSHAKE_RESPONSE_MAGIC );
 
-	kode::db::Database::TPointer oDB = CSyncroDB::OpenDB();
+	kode::db::Database::TPointer oDB = SyncroDB::OpenDB();
 	std::string sUUID;
 	vector<unsigned char> aUUID( 16 );
 	try

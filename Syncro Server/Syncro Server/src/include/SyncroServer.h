@@ -35,7 +35,7 @@ public:
 
 	bool Run();
 
-	virtual bool HandleAccept( CTCPConnection::TPointer inpNewConnection );
+	virtual bool HandleAccept( TCPConnection::TPointer inpNewConnection );
 private:
 	boost::thread m_oBroadcastThread;
 	unsigned int m_port;

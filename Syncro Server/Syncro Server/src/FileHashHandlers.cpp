@@ -64,7 +64,7 @@ static const server::RegisterSessionResponse registerFileHashRequestHandler(
 
 FileHashRequest::FileHashRequest(
     const InputStreamList& inaInputStreams,
-    CFolderMan&	folderMan,
+    FolderMan&	folderMan,
 	HashOkCallback callback
 ) :
 	m_ok( false )

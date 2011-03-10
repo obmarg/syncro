@@ -24,18 +24,18 @@
 namespace syncro
 {
 
-class CSyncroDB : public kode::db::Database, boost::noncopyable
+class SyncroDB : public kode::db::Database, boost::noncopyable
 {
 public:
 	static Database::TPointer OpenDB(
 		const std::string& file=DEFAULT_DB_NAME
 		)
 	{
-		Database::TPointer pDatabase( new CSyncroDB( file ) );
+		Database::TPointer pDatabase( new SyncroDB( file ) );
 		return pDatabase;
 	}
 
-	virtual ~CSyncroDB();
+	virtual ~SyncroDB();
 
 public:
 	static void	SetDefaultFilename( const std::string& name )
@@ -45,7 +45,7 @@ private:
 	static const int	EXPECTED_DB_VERSION;
 	static std::string	DEFAULT_DB_NAME;
 
-	CSyncroDB( const std::string& insFile );
+	SyncroDB( const std::string& insFile );
 
 	bool CreateDatabase();
 	bool UpgradeDatabase( int nCurrentVersion );

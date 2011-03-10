@@ -23,7 +23,7 @@
 namespace syncro
 {
 
-CBroadcastThread::CBroadcastThread(
+BroadcastThread::BroadcastThread(
 	bool run
 	) :
 m_run( run )
@@ -32,18 +32,18 @@ m_run( run )
 	m_sServerName = boost::asio::ip::host_name();
 }
 
-CBroadcastThread::~CBroadcastThread()
+BroadcastThread::~BroadcastThread()
 {
 
 }
 
 void
-CBroadcastThread::operator()()
+BroadcastThread::operator()()
 {
 	if( !m_run )
 		return;
 	boost::asio::io_service oIOService;
-	CBroadcastListener oListener( oIOService, m_sServerName );
+	BroadcastListener oListener( oIOService, m_sServerName );
 	oIOService.run();
 }
 

@@ -81,7 +81,7 @@ public:
 	int fileId;
 };
 
-CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
+FolderMan::FolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
 {
 	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path,UploadPrefix FROM Folders" );
 	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
@@ -108,12 +108,12 @@ CFolderMan::CFolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
 	}
 }
 
-CFolderMan::~CFolderMan()
+FolderMan::~FolderMan()
 {
 
 }
 
-const FolderInfo& CFolderMan::FindFolder( int nFolderId )
+const FolderInfo& FolderMan::FindFolder( int nFolderId )
 {
 	foreach( const FolderInfo & oInfo, m_folders )
 	{
@@ -126,12 +126,12 @@ const FolderInfo& CFolderMan::FindFolder( int nFolderId )
 }
 
 
-boost::shared_ptr<CFolder>
-CFolderMan::GetFolder( int nFolderID )
+boost::shared_ptr<Folder>
+FolderMan::GetFolder( int nFolderID )
 {
 	const FolderInfo& info = FindFolder( nFolderID );
-	boost::shared_ptr<CFolder> rv(
-	    new CFolder( info.Path, info.Name )
+	boost::shared_ptr<Folder> rv(
+	    new Folder( info.Path, info.Name )
 	);
 	//TODO: handle exception here or elsewhere?
 
@@ -160,7 +160,7 @@ CFolderMan::GetFolder( int nFolderID )
 }
 
 bool
-CFolderMan::FileRequested(
+FolderMan::FileRequested(
     const BinaryDataRequest& requestData,
     FileTransferDetails& details
 )
@@ -215,7 +215,7 @@ CFolderMan::FileRequested(
 	    )
 	);
 	details.m_callback = boost::bind(
-	                         &CFolderMan::FileDownloadFinished,
+	                         &FolderMan::FileDownloadFinished,
 	                         this,
 	                         finishDetails
 	                     );
@@ -224,7 +224,7 @@ CFolderMan::FileRequested(
 }
 
 bool
-CFolderMan::IncomingFile(
+FolderMan::IncomingFile(
     const BinaryDataRequest& fileData,
     FileTransferDetails& details
 )
@@ -269,7 +269,7 @@ CFolderMan::IncomingFile(
 	    )
 	);
 	details.m_callback = boost::bind(
-	                         &CFolderMan::FileUploadFinished,
+	                         &FolderMan::FileUploadFinished,
 	                         this,
 	                         finishDetails
 	                     );
@@ -314,7 +314,7 @@ CFolderMan::IncomingFile(
 	return accept;
 }
 
-void CFolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
+void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 {
 	if( details->oneShot )
 	{
@@ -360,7 +360,7 @@ void CFolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 	//		delete anything that's not in the list...
 }
 
-void CFolderMan::FileDownloadFinished( DownloadFinishDetailsPtr details )
+void FolderMan::FileDownloadFinished( DownloadFinishDetailsPtr details )
 {
 	if( details->oneShot )
 	{

@@ -31,7 +31,7 @@ namespace pbHandlers {
 class CBinaryDataResponse : public BasePBResponse
 {
 public:
-	CBinaryDataResponse( CFileSendData& inoFileData );
+	CBinaryDataResponse( FileSendData& inoFileData );
 	virtual ~CBinaryDataResponse();
 
 	virtual uint32_t GetSubpacketSize(uint32_t subpacket);
@@ -45,7 +45,7 @@ public:
 	};
 protected:
 	pb::BinaryPacketHeader m_oPacketHeader;
-	CFileSendData& m_oFileData;
+	FileSendData& m_oFileData;
 };
 
 }	// namespace pbHandlers

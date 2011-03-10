@@ -29,17 +29,17 @@
 namespace syncro
 {
 
-class CFileSendData : boost::noncopyable
+class FileSendData : boost::noncopyable
 {
 public:
-	CFileSendData(
+	FileSendData(
 	    const std::string& insFilename,
 	    int innRequestedBufferSize = 0,
 	    const VoidCallback& completionCallback = VoidCallback(),
 	    int64_t fileStartOffset = 0
 	);
 
-	~CFileSendData();
+	~FileSendData();
 
 	void FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream );
 	unsigned int GetChunkSize();

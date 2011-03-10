@@ -25,8 +25,8 @@
 namespace syncro
 {
 
-class CFolderMan;
-class CFolder;
+class FolderMan;
+class Folder;
 
 namespace pb {
 class FolderContents;
@@ -40,13 +40,13 @@ class FolderContentsRequest
 public:
 	FolderContentsRequest( 
 		const InputStreamList& inaInputStreams,
-		CFolderMan& folderMan
+		FolderMan& folderMan
 		);
 
 	BasePBResponse::TPointer GetResponse();
 
 private:
-	typedef boost::shared_ptr<CFolder> CFolderPtr;
+	typedef boost::shared_ptr<Folder> CFolderPtr;
 
 	void ProcessFolder( pb::FolderContents* pb, const CFolderPtr folder );
 

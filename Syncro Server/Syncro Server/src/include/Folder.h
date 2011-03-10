@@ -25,7 +25,7 @@
 namespace syncro
 {
 
-class CFolder
+class Folder
 {
 public:
 	struct sFileData
@@ -43,11 +43,11 @@ public:
 	};
 
 	typedef std::vector< sFileData > TFileList;
-	typedef boost::shared_ptr< CFolder > TPointer;
+	typedef boost::shared_ptr< Folder > TPointer;
 	typedef std::vector< TPointer > TFolderList;
 
-	CFolder( const std::string& insPath, const std::string& name );
-	~CFolder();
+	Folder( const std::string& insPath, const std::string& name );
+	~Folder();
 
 	std::string GetName()
 	{
@@ -61,7 +61,7 @@ public:
 	{
 		return m_oFiles;
 	};
-	std::vector< boost::shared_ptr<CFolder> >& GetChildren()
+	std::vector< boost::shared_ptr<Folder> >& GetChildren()
 	{
 		return m_oChildren;
 	}
@@ -71,7 +71,7 @@ public:
 private:
 	std::string m_sPath;
 	std::string m_sFolderName;
-	std::vector< boost::shared_ptr<CFolder> > m_oChildren;
+	std::vector< boost::shared_ptr<Folder> > m_oChildren;
 	TFileList m_oFiles;
 };
 

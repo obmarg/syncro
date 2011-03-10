@@ -23,11 +23,11 @@
 namespace syncro
 {
 
-class CBroadcastListener
+class BroadcastListener
 {
 public:
-	CBroadcastListener( boost::asio::io_service& inoIOService, const std::string& insServerName );
-	~CBroadcastListener();
+	BroadcastListener( boost::asio::io_service& inoIOService, const std::string& insServerName );
+	~BroadcastListener();
 
 private:
 	boost::asio::ip::udp::socket m_oSocket;

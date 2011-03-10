@@ -27,11 +27,11 @@
 namespace syncro
 {
 
-class CAuthManager
+class AuthManager
 {
 public:
-	CAuthManager();
-	~CAuthManager();
+	AuthManager();
+	~AuthManager();
 
 	bool NeedsAuth();
 	const CAuthToken Authenticate( const std::string& username, const std::string& password, const std::string& ip );

@@ -28,8 +28,8 @@ namespace server {
 
 UserSession::UserSession() :
 m_adminCommandMan( new AdminCommandManager() ),
-m_db( CSyncroDB::OpenDB( ) ),
-m_folderMan( new CFolderMan( m_db ) )
+m_db( SyncroDB::OpenDB( ) ),
+m_folderMan( new FolderMan( m_db ) )
 {
 
 }

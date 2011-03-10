@@ -35,21 +35,21 @@ class BinaryDataRequest;
 class FileTransferDetails;
 class UploadFinishDetails;
 class DownloadFinishDetails;
-class CFolder;
+class Folder;
 
-class CFolderMan
+class FolderMan
 {
 public:
 
-	CFolderMan( kode::db::Database::TPointer inpDB );
-	~CFolderMan();
+	FolderMan( kode::db::Database::TPointer inpDB );
+	~FolderMan();
 
 	const FolderList& GetFoldersInfo() const
 	{
 		return m_folders;
 	};
 
-	boost::shared_ptr<CFolder> GetFolder( int nFolderID );
+	boost::shared_ptr<Folder> GetFolder( int nFolderID );
 
 	bool FileRequested( 
 		const BinaryDataRequest& fileData, 
@@ -82,7 +82,7 @@ private:
 
 class FileTransferDetails
 {
-	friend class CFolderMan;
+	friend class FolderMan;
 public:
 	FileTransferDetails() :
 	m_currentSize(0)

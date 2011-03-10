@@ -25,7 +25,6 @@
 #include <libsyncro/protocol_buffers/folders.pb.h>
 
 namespace syncro {
-
 namespace pbHandlers {
 
 class FolderListResponse : public BasePBResponse

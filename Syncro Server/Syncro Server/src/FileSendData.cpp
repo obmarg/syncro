@@ -30,7 +30,7 @@ const unsigned char FILE_SEND_FIRST_BYTE = 11;
 const unsigned char FILE_SECTION_FIRST_BYTE = 16;
 const unsigned char FILE_LAST_SECTION_FIRST_BYTE = 20;
 
-CFileSendData::CFileSendData(
+FileSendData::FileSendData(
     const std::string& insFilename,
     const int innRequestedBufferSize,
     const VoidCallback& completionCallback,
@@ -45,12 +45,12 @@ CFileSendData::CFileSendData(
 	OpenFile( fileStartOffset );
 }
 
-CFileSendData::~CFileSendData()
+FileSendData::~FileSendData()
 {
 
 }
 
-void CFileSendData::OpenFile( int64_t fileStartOffset )
+void FileSendData::OpenFile( int64_t fileStartOffset )
 {
 	using namespace std;
 	
@@ -75,7 +75,7 @@ void CFileSendData::OpenFile( int64_t fileStartOffset )
 		throw std::runtime_error( "CFileSendData called on non existant file" );
 }
 
-void CFileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream )
+void FileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream )
 {
 	int nReadAmount = GetChunkSize();
 
@@ -96,7 +96,7 @@ void CFileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stre
 	}
 }
 
-unsigned int CFileSendData::GetChunkSize()
+unsigned int FileSendData::GetChunkSize()
 {
 	int nBufferSize = DEFAULT_FILE_SEND_BUFFER_SIZE;
 	if( m_nRequestedBufferSize != 0 )
@@ -113,14 +113,14 @@ unsigned int CFileSendData::GetChunkSize()
 	return boost::numeric_cast<unsigned int>( rv );
 }
 
-bool CFileSendData::IsStartFile()
+bool FileSendData::IsStartFile()
 {
 	if( m_oFile.tellg() == ( std::streamoff )0 )
 		return true;
 	return false;
 }
 
-bool CFileSendData::IsFileFinished()
+bool FileSendData::IsFileFinished()
 {
 
 	if( m_oFile.tellg() == m_nFileSize || m_oFile.eof() )
@@ -132,12 +132,12 @@ bool CFileSendData::IsFileFinished()
 	return false;
 }
 
-std::istream::pos_type CFileSendData::GetFilePosition()
+std::istream::pos_type FileSendData::GetFilePosition()
 {
 	return m_oFile.tellg();
 }
 
-bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize )
+bool FileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize )
 {
 	std::streamoff nNextTell = m_oFile.tellg() + ( std::streamoff )inNextChunkSize;
 	if( nNextTell == m_nFileSize )
@@ -148,7 +148,7 @@ bool CFileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize )
 	return false;
 }
 
-void CFileSendData::CallCompletionCallback()
+void FileSendData::CallCompletionCallback()
 {
 	using boost::numeric_cast;
 

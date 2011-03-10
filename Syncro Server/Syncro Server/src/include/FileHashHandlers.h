@@ -22,10 +22,9 @@
 #include "BasePBResponse.h"
 #include <boost/function.hpp>
 
-namespace syncro
-{
+namespace syncro {
 
-class CFolderMan;
+class FolderMan;
 
 namespace pbHandlers
 {
@@ -38,7 +37,7 @@ public:
 public:
 	FileHashRequest(
 	    const InputStreamList& inaInputStreams,
-	    CFolderMan& folderMan,
+	    FolderMan& folderMan,
 		HashOkCallback callback=HashOkCallback()
 	);
 	BasePBResponse::TPointer GetResponse();

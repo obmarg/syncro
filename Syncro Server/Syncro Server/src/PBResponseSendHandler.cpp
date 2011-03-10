@@ -29,17 +29,17 @@ namespace syncro
 // Uncomment to enable PB packet debug output
 //#define PB_PACKET_DEBUG
 
-CPBResponseSendHandler::CPBResponseSendHandler( CTCPConnection::TPointer inpConn ) : m_pConn( inpConn )
+PBResponseSendHandler::PBResponseSendHandler( TCPConnection::TPointer inpConn ) : m_pConn( inpConn )
 {
 
 };
 
-CPBResponseSendHandler::~CPBResponseSendHandler()
+PBResponseSendHandler::~PBResponseSendHandler()
 {
 
 }
 
-bool CPBResponseSendHandler::SendStarting()
+bool PBResponseSendHandler::SendStarting()
 {
 	using std::vector;
 	using boost::numeric_cast;
@@ -94,7 +94,7 @@ bool CPBResponseSendHandler::SendStarting()
 	return true;
 }
 
-void CPBResponseSendHandler::SendDone( int innSent )
+void PBResponseSendHandler::SendDone( int innSent )
 {
 	//TODO: maybe don't start recv if there are no current recv handlers.  add checks for this
 

@@ -39,9 +39,6 @@
     <ClInclude Include="src\include\AuthManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\BasePBResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\BinaryDataRequest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,9 +90,6 @@
     <ClInclude Include="src\include\VectorPBResponse.h">
       <Filter>Header Files\PB Handlers</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\SimplePBResponse.h">
-      <Filter>Header Files\PB Handlers</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\UserSession.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -116,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="src\include\BinaryIncomingResponse.h">
       <Filter>Header Files\PB Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\BasePBResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\SimplePBResponse.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

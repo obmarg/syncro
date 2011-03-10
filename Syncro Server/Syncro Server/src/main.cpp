@@ -62,7 +62,7 @@ int main( int argc, char** argv )
 	{
 		std::string databaseFile( vm[ "database" ].as< std::string >() );
 		std::cout << "Using database file: " << databaseFile << "\n";
-		CSyncroDB::SetDefaultFilename( databaseFile );
+		SyncroDB::SetDefaultFilename( databaseFile );
 	}
 	unsigned int port = 0;
 	if( vm.count("port") )
