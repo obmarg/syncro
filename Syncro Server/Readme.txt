@@ -5,7 +5,7 @@ Boost
 Crypto++ 5.6.1 (others may work)
 Google Protocol Buffers 2.3.0
 Sqlite 3.7.2
-Tinyxml
+cppunit (for testing)
 scons
 
 
@@ -19,4 +19,10 @@ Open the Syncro Server solution in VS2010, and configure the include/library pat
 Building on linux
 -------------
 Ensure you have all the neccesary dependencies installed.
-Run build.sh in Syncro Server
+
+On debian based systems, this command should install the dependencies:
+
+apt-get install build-essential libboost-all-dev libsqlite3-dev scons libcrypto++-dev libprotobuf-dev protobuf-compiler libcppunit-dev
+
+Then just run scons from the Syncro Server directory
+Binaries will be generated in the bin folder

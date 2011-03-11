@@ -39,8 +39,9 @@ int main( int argc, char* argv[] )
 	( "scan,s", "scan for servers" )
 	( "list,l", "list folders" )
 	( "addfolder,a", po::value< std::string >(), "add folder" )
+	( "delfolder,d", po::value< int >(), "delete specified folder id" )
 	( "uploadfile,u", po::value< std::string >(), "upload file" )
-	( "contents,c", "get contents of specified folder" )
+	( "contents,c", po::value< int >(), "get contents of specified folder" )
 	( "folderid,f", po::value< int >(), "folder id to use for upload/download" )
 	( "oneshot,o", "upload file as one shot file" );
 
@@ -95,6 +96,14 @@ int main( int argc, char* argv[] )
 				conn.SendAdminCommand( "AddFolder", params );
 			}
 		}
+	   	else if( vm.count( "delfolder" ) )
+		{
+			int folderId = vm[ "delfolder" ].as< int >();
+			std::string folderIdStr = boost::lexical_cast< std::string >( folderId );
+			Connection::StringMap params;
+			params.insert( std::make_pair( "id", folderIdStr ) );
+			conn.SendAdminCommand( "DelFolder", params );
+		}
 		if( vm.count( "list" ) )
 		{
 			syncro::FolderList list;
@@ -111,14 +120,8 @@ int main( int argc, char* argv[] )
 		}
 		if( vm.count( "contents" ) )
 		{
-			if( !vm.count( "folderid" ) )
-			{
-				throw std::runtime_error( 
-					"Please provide a folder id to get content list from" 
-					);
-			}
 			syncro::FileList list;
-			conn.GetFolderContents( vm["folderid"].as<int>(), list );
+			conn.GetFolderContents( vm[ "contents" ].as< int >(), list );
 			std::cout << "File List:\n";
 			BOOST_FOREACH( const syncro::FileInfo& file, list )
 			{
@@ -143,16 +146,6 @@ int main( int argc, char* argv[] )
 			);
 
 		}
-
-
-		/*	syncro::FolderList list;
-
-			conn.GetFolderList( list );
-
-			conn.SendAdminCommand("AddFolder","C:\\temp\\");
-
-			int i = 0;
-			i += 1;*/
 	}
 	catch( const kode::net::NetworkException& ex )
 	{
