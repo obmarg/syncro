@@ -37,7 +37,7 @@ public class ProgressNotification {
 	private Context m_oContext;
 	
 	private int m_nCurrentTotalSize;
-	private String m_nFilename;
+	private String m_filename;
 	private int m_nProgress;
 	private boolean m_fHaveFile;
 	
@@ -56,7 +56,7 @@ public class ProgressNotification {
 	protected ProgressNotification(Context inoContext) {
 		m_oContext = inoContext;
 		m_fHaveFile = false;
-		m_nFilename = "";
+		m_filename = "";
 		m_nCurrentTotalSize = 0;
 		m_nFileNum = 0;
 		m_nTotalFiles = 0;
@@ -76,7 +76,7 @@ public class ProgressNotification {
 	}
 	
 	public void setCurrentFileDetails(RemoteFileData inoFile, int innFileNum) {
-		m_nFilename = inoFile.Filename;
+		m_filename = inoFile.Filename;
 		//TODO: Progress bar won't work for massive files - fix it
 		m_nCurrentTotalSize = (int)inoFile.Size;
 		m_fHaveFile = true;
@@ -87,7 +87,7 @@ public class ProgressNotification {
 	
 	public void setCurrentFileDetails(String insFilename, int inFileSize, int innFileNum )
 	{
-		m_nFilename = insFilename;
+		m_filename = insFilename;
 		m_nCurrentTotalSize = inFileSize;
 		m_fHaveFile = true;
 		m_nFileNum = innFileNum;
@@ -150,9 +150,14 @@ public class ProgressNotification {
 		} else {
 			String sRate = "";
 			if( m_fShowRate ) {
-				sRate = "(" + Integer.toString( new Float(m_flCurrentRate).intValue() ) + " kb/s)";
+				sRate = Integer.toString( new Float(m_flCurrentRate).intValue() ) + " kb/s";
 			}
-			contentView.setTextViewText(R.id.progress_notification_text, "Syncro: Syncing File " + m_nFileNum + " of " + m_nTotalFiles + sRate);
+			contentView.setTextViewText(
+					R.id.progress_notification_text, 
+					"Syncing " + m_filename + 
+					" (" + m_nFileNum + "/" + m_nTotalFiles + ")\n" +
+					sRate
+					);
 		}
 		contentView.setProgressBar(R.id.progress_notification_progress, m_nCurrentTotalSize, m_nProgress, !m_fHaveFile);
 		m_oNotification.contentView = contentView;
