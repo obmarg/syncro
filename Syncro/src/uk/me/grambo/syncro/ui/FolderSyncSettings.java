@@ -17,6 +17,7 @@
 
 package uk.me.grambo.syncro.ui;
 
+import uk.me.grambo.syncro.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,9 +39,7 @@ public class FolderSyncSettings extends Activity {
 		m_nServerID = parameterIntent.getExtras().getInt("uk.me.grambo.syncro.server_id");
 		m_nFolderID = parameterIntent.getExtras().getInt("uk.me.grambo.syncro.folder_id");
 
-        TextView textview = new TextView(this);
-        textview.setText("This is the Folder Sync Settings tab");
-        setContentView(textview);
+        setContentView(R.layout.folder_sync_settings);
     }
 
 }

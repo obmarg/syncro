@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Network Preferences">
+        <CheckBoxPreference android:title="Only sync on wifi" android:summaryOn="Syncro will only sync when wifi is connected" android:summaryOff="Syncro will sync on any connection" android:key="syncOnWifi" android:defaultValue="1"></CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Anonymous Usage Reporting">
+        <CheckBoxPreference android:summaryOn="Syncro will send anonymous usage statistics" android:summaryOff="Syncro will not send any usage data" android:key="sendUsageData" android:title="Send Usage Data" android:defaultValue="0"></CheckBoxPreference>
+    </PreferenceCategory>
+</PreferenceScreen>

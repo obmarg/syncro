@@ -154,6 +154,26 @@ public class ServerBrowser extends Activity
     	return oOutDialog;
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.server_list_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.sl_menu_preferences:
+            Intent i = new Intent( this, GlobalPreferences.class );
+            startActivity(i);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
     public void AddServer() {
     	EditText oServerNameEditText = (EditText)m_oAddServerDialog.findViewById(R.id.dialog_addserver_servername);
     	EditText oAddressEditText = (EditText)m_oAddServerDialog.findViewById(R.id.dialog_addserver_address);

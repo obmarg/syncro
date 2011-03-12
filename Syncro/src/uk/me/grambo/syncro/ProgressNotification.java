@@ -152,6 +152,7 @@ public class ProgressNotification {
 			if( m_fShowRate ) {
 				sRate = Integer.toString( new Float(m_flCurrentRate).intValue() ) + " kb/s";
 			}
+			//TODO: need to limit filename size to stop it pushing progress bar out of view
 			contentView.setTextViewText(
 					R.id.progress_notification_text, 
 					"Syncing " + m_filename + 
