@@ -157,7 +157,6 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 		
 		m_serverId = innServerID;
 		
-		//TODO: probably want to move innServerID into a member variable or something
 		m_progressNotification = new ProgressNotification(this);
 		m_progressNotification.setShowRate(true);
 
@@ -264,7 +263,6 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	//
 	//	Remote file/folder handler callbacks
 	//
-	
 	@Override
 	public void handleRemoteFile(RemoteFileData inoFile) {
 		if( CheckIncludeFilters(inoFile) )

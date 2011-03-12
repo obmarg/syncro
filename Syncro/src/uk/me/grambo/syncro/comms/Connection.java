@@ -83,16 +83,20 @@ public class Connection {
 		catch( IOException e )
 		{
 			Log.e("Syncro","Couldn't connect to server");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 	}
 	
 	public void Disconnect()
 	{
-		try {
-			//TODO: Notify the client we are disconnecting if possible
-			m_sock.close();
+		try 
+		{
+			if( m_sock != null )
+			{
+				//	TODO: Notify the client we are disconnecting if possible
+				m_sock.close();
+			}
 		}
 		catch( IOException e )
 		{
