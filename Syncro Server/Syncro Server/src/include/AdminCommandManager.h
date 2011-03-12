@@ -21,19 +21,12 @@
 #include "common.h"
 #include <kode/Database.h>
 #include <boost/noncopyable.hpp>
+#include <boost/function.hpp>
 #include <stdexcept>
 #include <vector>
 
 namespace syncro
 {
-
-enum eAdminCommand
-{
-	eAdminCommand_AddFolder,
-	eAdminCommand_DelFolder,
-	eAdminCommand_AddLocalFile,
-	eAdminCommand_Total
-};
 
 class admin_command_exception : public std::runtime_error
 {
@@ -56,33 +49,55 @@ class AdminCommandManager : boost::noncopyable
 public:
 	AdminCommandManager();
 
-	void HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth );
+	void HandleCommand( 
+		const std::string& sName, 
+		const StringMap& params, 
+		const AuthToken& insAuth 
+		);
 
 private:
-	struct sAdminCommand
+	typedef boost::function< void (const StringMap& params) >
+		CommandCallback;
+
+	struct AdminCommand
 	{
-		void Set( std::string inName, CAuthToken::AccessLevel inAuthLevel )
+		void Set( 
+			std::string inName, 
+			AuthToken::AccessLevel inAuthLevel,
+			const CommandCallback& callback
+			)
 		{
 			Name = inName;
 			AuthLevel = inAuthLevel;
+			Callback = callback;
 		};
 		std::string Name;
-		CAuthToken::AccessLevel AuthLevel;
+		AuthToken::AccessLevel AuthLevel;
+		CommandCallback Callback;
 	};
-	std::vector<sAdminCommand> m_aCommands;
+	std::vector<AdminCommand> m_aCommands;
 
-	eAdminCommand FindCommand( const std::string& sName ) const;
+	const AdminCommand& FindCommand( const std::string& sName ) const;
 
 	std::string GetParam( const StringMap& params, const std::string& name ) const;
 
 	void AddFolder( const StringMap& params );
-	void DelFolder( unsigned int Id );
-	void AddLocalFile( const std::string& path );
+	void DelFolder( const StringMap& params );
+	void AddLocalFile( const StringMap& params );
+	void AddUser( const StringMap& params );
+	void DelUser( const StringMap& params );
+	void ChangePassword( const StringMap& params );
+	void ChangeUserPassword( const StringMap& params );
+
+	void CreateChangePasswordStatement();
 
 	kode::db::DatabasePtr m_db;
 	kode::db::StatementPtr m_addFolder;
 	kode::db::StatementPtr m_delFolder;
 	kode::db::StatementPtr m_addLocalFile;
+	kode::db::StatementPtr m_addUser;
+	kode::db::StatementPtr m_delUser;
+	kode::db::StatementPtr m_changePassword;
 };
 
 };

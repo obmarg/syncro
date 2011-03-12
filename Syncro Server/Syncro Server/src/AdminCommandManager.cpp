@@ -20,10 +20,23 @@
 #include "SyncroDB.h"
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/bind.hpp>
 #include <iostream>
 
 namespace syncro
 {
+
+enum AdminCommandId
+{
+	AddFolderCommandId,
+	DelFolderCommandId,
+	AddLocalFileCommandId,
+	AddUserCommandId,
+	DelUserCommandId,
+	ChangePasswordCommandId,
+	ChangeUserPasswordCommandId,
+	AdminCommandIdTotal
+};
 
 class MissingParamException : public std::runtime_error
 {
@@ -40,43 +53,85 @@ public:
 	}
 };
 
-AdminCommandManager::AdminCommandManager() : m_aCommands( eAdminCommand_Total )
+AdminCommandManager::AdminCommandManager() : m_aCommands( AdminCommandIdTotal )
 {
-	m_aCommands[ eAdminCommand_AddFolder ].Set( "AddFolder", CAuthToken::AccessLevel_Admin );
-	m_aCommands[ eAdminCommand_DelFolder ].Set( "DelFolder", CAuthToken::AccessLevel_Admin );
-	m_aCommands[ eAdminCommand_AddLocalFile ].Set( "AddLocalFile", CAuthToken::AccessLevel_Normal );
+	m_aCommands[ AddFolderCommandId ].Set( 
+									"AddFolder", 
+									AuthToken::AccessLevel_Admin,
+									boost::bind(
+										&AdminCommandManager::AddFolder,
+										this, _1
+										)
+									);
+
+	m_aCommands[ DelFolderCommandId ].Set( 
+									"DelFolder", 
+									AuthToken::AccessLevel_Admin,
+									boost::bind(
+										&AdminCommandManager::DelFolder,
+										this, _1
+										)
+									);
+	m_aCommands[ AddLocalFileCommandId ].Set( 
+									"AddLocalFile", 
+									AuthToken::AccessLevel_Normal, 
+									boost::bind(
+										&AdminCommandManager::AddLocalFile,
+										this, _1
+										)
+									);
+	m_aCommands[ AddUserCommandId ].Set(
+									"AddUser",
+									AuthToken::AccessLevel_Admin,
+									boost::bind(
+										&AdminCommandManager::AddUser,
+										this, _1
+										)
+									);
+	m_aCommands[ DelUserCommandId ].Set(
+									"DelUser",
+									AuthToken::AccessLevel_Admin,
+									boost::bind(
+										&AdminCommandManager::DelUser,
+										this, _1
+										)
+									);
+	m_aCommands[ ChangePasswordCommandId ].Set(
+									"ChangePassword",
+									AuthToken::AccessLevel_Normal,
+									boost::bind(
+										&AdminCommandManager::ChangePassword,
+										this, _1
+										)
+									);
+	m_aCommands[ ChangeUserPasswordCommandId ].Set(
+									"ChangeUserPassword",
+									AuthToken::AccessLevel_Admin,
+									boost::bind(
+										&AdminCommandManager::ChangeUserPassword,
+										this, _1
+										)
+									);
 	m_db = SyncroDB::OpenDB();
-	m_addFolder = m_db->prepare( "INSERT INTO Folders(Name,Path) VALUES (?,?);" );
-	m_delFolder = m_db->prepare( "DELETE FROM Folders WHERE ID=?;" );
 	//TODO: Set up m_addLocalFile;
 }
 
-void AdminCommandManager::HandleCommand( const std::string& sName, const StringMap& params, const CAuthToken& insAuth )
+void AdminCommandManager::HandleCommand( 
+	const std::string& sName, 
+	const StringMap& params, 
+	const AuthToken& insAuth 
+	)
 {
-	eAdminCommand command = FindCommand( sName );
-	if(( !insAuth.IsInitialised() ) || m_aCommands[ command ].AuthLevel > insAuth.GetAccessLevel() )
-		throw admin_command_exception( -1 );
-
-	try
-	{
-		switch( command )
+	try {
+		const AdminCommand& command = FindCommand( sName );
+		if(
+			( !insAuth.IsInitialised() ) || 
+			command.AuthLevel > insAuth.GetAccessLevel() 
+			)
 		{
-		case eAdminCommand_AddFolder:
-			AddFolder( params );
-			break;
-		case eAdminCommand_DelFolder:
-			DelFolder(
-			    boost::lexical_cast<unsigned int>(
-			        GetParam( params, "id" )
-			    )
-			);
-			break;
-		case eAdminCommand_AddLocalFile:
-			AddLocalFile( GetParam( params, "filename" ) );
-			break;
-		default:
-			throw admin_command_exception( -2 );
+			throw admin_command_exception( -1 );
 		}
+		command.Callback( params );
 	}
 	catch( const MissingParamException& ex )
 	{
@@ -86,14 +141,15 @@ void AdminCommandManager::HandleCommand( const std::string& sName, const StringM
 	}
 }
 
-eAdminCommand AdminCommandManager::FindCommand( const std::string& name ) const
+const AdminCommandManager::AdminCommand& 
+AdminCommandManager::FindCommand( 
+	const std::string& name 
+	) const
 {
-	int nRV = eAdminCommand_AddFolder;
-	BOOST_FOREACH( const sAdminCommand & command, m_aCommands )
+	BOOST_FOREACH( const AdminCommand & command, m_aCommands )
 	{
 		if( command.Name.compare( name ) == 0 )
-			return static_cast<eAdminCommand>( nRV );
-		++nRV;
+			return command;
 	}
 	throw admin_command_exception( -3 );
 }
@@ -119,6 +175,12 @@ void AdminCommandManager::AddFolder(
 	boost::filesystem::path folder( folderPath );
 	if( boost::filesystem::exists( folder ) )
 	{
+		if( !m_addFolder )
+		{
+			m_addFolder = m_db->prepare( 
+				"INSERT INTO Folders(Name,Path) VALUES (?,?);" 
+				);
+		}
 		kode::db::AutoReset ar( m_addFolder );
 		m_addFolder->Bind( 1, GetParam( params, "name" ) );
 		m_addFolder->Bind( 2, folderPath );
@@ -131,15 +193,55 @@ void AdminCommandManager::AddFolder(
 	}
 }
 
-void AdminCommandManager::DelFolder( unsigned int Id )
+void AdminCommandManager::DelFolder( const StringMap& params )
 {
+	if( !m_delFolder )
+	{
+		m_delFolder = m_db->prepare( "DELETE FROM Folders WHERE ID=?;" );
+	}
 	kode::db::AutoReset ar( m_delFolder );
-	m_delFolder->Bind( 1, Id );
+	m_delFolder->Bind( 
+		1, 
+		boost::lexical_cast<int>( GetParam( params, "id" ) ) 
+		);
 	m_delFolder->GetNextRow();
 }
 
-void AdminCommandManager::AddLocalFile( const std::string& path )
+void AdminCommandManager::AddLocalFile( const StringMap& params )
 {
+	std::string filename = GetParam( params, "filename" );
+}
+
+void AdminCommandManager::AddUser( const StringMap& params )
+{
+	
+}
+
+void AdminCommandManager::DelUser( const StringMap& params )
+{
+
+}
+
+void AdminCommandManager::CreateChangePasswordStatement()
+{
+	if( !m_changePassword )
+	{
+		//TODO: Fill this in
+		//m_changePassword = m_db->prepare(
+		//	""
+		//	)
+	}
+}
+
+void AdminCommandManager::ChangePassword( const StringMap& params )
+{
+	CreateChangePasswordStatement();
+
+}
+
+void AdminCommandManager::ChangeUserPassword( const StringMap& params )
+{
+	CreateChangePasswordStatement();
 
 }
 

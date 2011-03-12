@@ -51,7 +51,7 @@ bool AuthManager::NeedsAuth()
 	return false;
 }
 
-const CAuthToken AuthManager::Authenticate( const std::string& username, const std::string& password, const std::string& ip )
+const AuthToken AuthManager::Authenticate( const std::string& username, const std::string& password, const std::string& ip )
 {
 	kode::db::AutoReset autoReset( m_pCheckLoginStatement );
 
@@ -78,16 +78,16 @@ const CAuthToken AuthManager::Authenticate( const std::string& username, const s
 
 		if( hmac != password )
 			throw authentication_exception( "Invalid username or password" );
-		return CAuthToken( username, nID, CAuthToken::AccessLevel_Admin );
+		return AuthToken( username, nID, AuthToken::AccessLevel_Admin );
 	}
 	throw authentication_exception( "Invalid username or password" );
 }
 
-const CAuthToken AuthManager::DefaultAuth()
+const AuthToken AuthManager::DefaultAuth()
 {
 	if( NeedsAuth() )
 		throw authentication_exception( "Authentication required but no details provided" );
-	return CAuthToken( "default", -1, CAuthToken::AccessLevel_Normal );
+	return AuthToken( "default", -1, AuthToken::AccessLevel_Normal );
 }
 
 }

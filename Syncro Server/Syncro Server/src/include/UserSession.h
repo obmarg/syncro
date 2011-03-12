@@ -48,7 +48,7 @@ public:
 	RecvDataPtr& GetCurrentRecvData()
 	{ return m_currentRecvData; }
 
-	const CAuthToken& GetAuthToken() const
+	const AuthToken& GetAuthToken() const
 	{ return m_authToken; }
 
 	AdminCommandManPtr& GetAdminCommandMan()
@@ -75,7 +75,7 @@ private:
 	boost::scoped_ptr< FolderMan >			m_folderMan;
 
 	bool					m_authenticated;
-	CAuthToken				m_authToken;
+	AuthToken				m_authToken;
 	AuthManager			m_authMan;
 };
 

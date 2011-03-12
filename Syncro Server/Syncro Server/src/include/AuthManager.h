@@ -34,13 +34,13 @@ public:
 	~AuthManager();
 
 	bool NeedsAuth();
-	const CAuthToken Authenticate( const std::string& username, const std::string& password, const std::string& ip );
+	const AuthToken Authenticate( const std::string& username, const std::string& password, const std::string& ip );
 	const std::string& Salt() const
 	{
 		return m_saltString;
 	};
 
-	const CAuthToken DefaultAuth();
+	const AuthToken DefaultAuth();
 
 private:
 	kode::db::DatabasePtr m_pDB;

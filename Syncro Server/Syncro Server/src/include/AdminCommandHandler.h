@@ -26,7 +26,7 @@
 
 namespace syncro {
 
-class CAuthToken;
+class AuthToken;
 class AdminCommandManager;
 
 namespace pbHandlers {
@@ -36,7 +36,7 @@ class AdminCommand
 public:
 	AdminCommand( 
 		const InputStreamList& inaInputStreams, 
-		const CAuthToken& inUserAuth, 
+		const AuthToken& inUserAuth, 
 		AdminCommandManager& commandManager 
 		);
 	~AdminCommand();

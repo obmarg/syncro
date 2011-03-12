@@ -82,7 +82,7 @@ protected:
 
 AdminCommand::AdminCommand( 
 	const InputStreamList& inaInputStreams,  
-	const CAuthToken& inUserAuth, 
+	const AuthToken& inUserAuth, 
 	AdminCommandManager& commandManager )
 {
 	pb::GenericAdminCommand oCommand;

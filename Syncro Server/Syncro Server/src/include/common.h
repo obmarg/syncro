@@ -63,7 +63,7 @@ public:
 	authentication_exception( const char* inpError ) : runtime_error( inpError ) {};
 };
 
-class CAuthToken
+class AuthToken
 {
 public:
 	enum AccessLevel
@@ -72,11 +72,11 @@ public:
 		AccessLevel_Normal
 	};
 
-	CAuthToken() :
+	AuthToken() :
 		m_fInitialised( false )
 	{};
 
-	CAuthToken( const std::string sUsername, const int innID, const AccessLevel innAccessLevel ) :
+	AuthToken( const std::string sUsername, const int innID, const AccessLevel innAccessLevel ) :
 		m_sUsername( sUsername ),
 		m_nUserID( innID ),
 		m_eAccessLevel( innAccessLevel ),
