@@ -46,10 +46,20 @@ int main( int argc, char* argv[] )
 	( "oneshot,o", "upload file as one shot file" );
 
 	po::variables_map vm;
-	po::store( po::parse_command_line( argc, argv, desc ), vm );
-	po::notify( vm );
+	bool parsedOk = true;
+	try 
+	{
+		po::store( po::parse_command_line( argc, argv, desc ), vm );
+		po::notify( vm );
+	}
+	catch( const std::exception& ex )
+	{
+		parsedOk = false;
+		std::cout << "Invalid parameters\n";
+		std::cout << "What: " << ex.what() << "\n\n";
+	}
 
-	if( vm.count( "help" ) )
+	if( !parsedOk || vm.count( "help" ) )
 	{
 		std::cout << desc << "\n";
 		return 1;
