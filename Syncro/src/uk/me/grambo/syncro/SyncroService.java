@@ -60,6 +60,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	
 	private Connection		m_conn;
 	
+	private ArrayList<Integer> m_currentFolderIDs;
 	
 	String m_sCurrentLocalPath;
 	
@@ -73,6 +74,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 		m_filenameFilters = new ArrayList<FilenameFilter>();
 		m_oFilterFactory = new FilterFactory(this);
 		m_conn = new Connection(this);
+		m_currentFolderIDs = new ArrayList<Integer>(30);
 	}
 
 	@Override
@@ -184,7 +186,10 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	        				"(IDOnServer,ServerID,Name,ServerPath,LocalPath) " +
 	        				"VALUES(?," + innServerID + ",?,?,'/mnt/sdcard/Syncro/')"
 	        				);
+	        	m_currentFolderIDs.clear();
 	        	m_conn.GetFolderList( this );
+	        	MarkMissingFoldersAsDeleted();
+	        	m_currentFolderIDs.clear();
 	        	
 	        	//
 	        	//	Send a folder list update broadcast to update the UI
@@ -199,23 +204,6 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	        	PerformUploads( );
 	        	
 			}
-			
-			//
-			// TEMPORARY HACK: Start a timer to make us sync again in a bit
-			//					( but only if we've not crashed or anything )
-			//
-			//TODO: Replace this shit with some user preference controlled thing
-/*			AlarmManager alarmMan = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-			Intent i = new Intent( this, SyncroService.class );
-			i.setAction("uk.me.grambo.syncro.SYNCRO_SYNC");
-			i.setData( Uri.parse( "syncroid://" + innServerID ) );
-			PendingIntent pendingIntent = PendingIntent.getService(this, 0, i, 0);
-			alarmMan.setInexactRepeating(
-					AlarmManager.ELAPSED_REALTIME, 
-					System.currentTimeMillis() + 60000, 
-					AlarmManager.INTERVAL_HOUR, 
-					pendingIntent
-					);*/
 		} 
 		catch ( SocketException e )
 		{
@@ -261,6 +249,33 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	}
 	
 	//
+	// Marks any folders for this server not contained in
+	// m_currentFolderIDs as deleted
+	//
+	private void MarkMissingFoldersAsDeleted() {
+		// TODO Auto-generated method stub
+		String query = 
+			"UPDATE folders SET Deleted=1 WHERE " +
+			"ServerID=" + m_serverId +  
+			" AND IDOnServer NOT IN (";
+		boolean first = true;
+		for( Integer id : m_currentFolderIDs )
+		{
+			if( first )
+			{
+				first = false;
+			}
+			else
+			{
+				query += ", ";
+			}
+			query += String.valueOf( id );
+		}
+		query += ");";
+		m_db.execSQL( query );
+	}
+
+	//
 	//	Remote file/folder handler callbacks
 	//
 	@Override
@@ -275,8 +290,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 		m_folderInsertStatement.bindString( 2,  folder.Name );
 		m_folderInsertStatement.bindString( 3,  folder.Path );
 		m_folderInsertStatement.executeInsert();
-		//TODO: Should probably add some pruning logic etc. in here
-		//		for folders no longer on the server
+		m_currentFolderIDs.add( folder.Id );
 	}
 	
 	//
@@ -304,15 +318,16 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	 */
 	protected void PerformDownloads() throws Exception
 	{
-		String[] aArgs = new String[1];
+		String[] queryArgs = new String[1];
 		
-		aArgs[0] = String.valueOf( m_serverId );
+		queryArgs[0] = String.valueOf( m_serverId );
 		Cursor folders = 
 			m_db.rawQuery(
 					"SELECT IDOnServer,LocalPath " +
 					"FROM folders WHERE ServerID=? " +
-					"AND SyncToPhone=1", 
-					aArgs
+					"AND SyncToPhone=1 " +
+					"AND Deleted=0", 
+					queryArgs
 					);
 		folders.moveToFirst();
 		while (folders.isAfterLast() == false) {
@@ -338,9 +353,21 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 			}
 		
 			//TODO: Tidy up excess clears sometime?
+			//		(if there are any)
 			m_filesToDownload.clear();
 			m_includeFilters.clear();
 			m_filenameFilters.clear();
+			
+			queryArgs = new String[3];
+			queryArgs[0] = String.valueOf( System.currentTimeMillis() );
+			queryArgs[1] = String.valueOf( m_serverId );
+			queryArgs[2] = String.valueOf( folderId );
+			
+			m_db.rawQuery(
+				"UPDATE folders SET LastSyncTime=? " +
+				"WHERE ServerID=? AND IDOnServer=?;",
+				queryArgs
+				);
 		
 			folders.moveToNext();
 		}

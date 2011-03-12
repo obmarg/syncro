@@ -162,7 +162,13 @@ public class ServerConfig extends Activity  {
 	
     protected void fillFolderList(SQLiteDatabase inoDB,ListView inoList) {
     	String[] aArgs = { (new Integer(m_nServerID).toString()) };
-    	Cursor oResults = inoDB.rawQuery("SELECT Name,ID From folders where ServerID=?", aArgs);
+    	Cursor oResults = 
+    		inoDB.rawQuery(
+    			"SELECT Name,ID From folders " +
+    			"WHERE ServerID=? AND " +
+    			"Deleted=0", 
+    			aArgs
+    			);
         int nResults = oResults.getCount();
         if( nResults > 0 ) {
         	m_aFolders = new String[nResults];

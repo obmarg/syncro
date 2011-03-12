@@ -22,7 +22,7 @@ import android.content.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 18;
     private static final String DATABASE_NAME="SyncroDB";
     private static final String SERVERS_TABLE_NAME = "servers";
     private static final String SERVERS_TABLE_CREATE =
@@ -31,10 +31,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 "Name TEXT, " +
                 "IP TEXT, " + 
                 "Port INTEGER, " +
+                "Username TEXT, " + 
+                "Password TEXT, " +
                 "CONSTRAINT IP_NAME_UNIQUE UNIQUE (Name,IP) ON CONFLICT FAIL);";
     
-    private static final String SERVERS_TABLE_UPGRADE_V2 =
-    			"DROP TABLE IF EXISTS " + SERVERS_TABLE_NAME + " ;\n";
+    private static final String SERVERS_TABLE_UPGRADE_V16_V17 =
+    			"ALTER TABLE " + SERVERS_TABLE_NAME + 
+    			" ADD COLUMN Username TEXT;\n" +
+    			"ALTER TABLE " + SERVERS_TABLE_NAME + 
+    			" ADD COLUMN Password TEXT;\n";
     
     private static final String FOLDERS_TABLE_NAME = "folders";
     private static final String FOLDERS_TABLE_CREATE = 
@@ -46,8 +51,18 @@ public class DBHelper extends SQLiteOpenHelper {
     			"ServerPath TEXT, " +
     			"LocalPath TEXT," +
     			"SyncToPhone INTEGER CONSTRAINT SYNC_TO_PHONE_DEFAULT DEFAULT 0, " + 
-    			"SyncFromPhone INTEGER CONSTRAINT SYNC_FROM_PHONE_DEFAULT DEFAULT 0," + 
+    			"SyncFromPhone INTEGER CONSTRAINT SYNC_FROM_PHONE_DEFAULT DEFAULT 0," +
+    			"LastSyncTime INTEGER NOT NULL DEFAULT 0, " +
+    			"Deleted INTEGER NOT NULL DEFAULT 0, " +
     			"CONSTRAINT PK_FOLDERS UNIQUE (IDOnServer,ServerID) ON CONFLICT IGNORE);";
+    
+    private static final String FOLDERS_TABLE_UPGRADE_V16_V17 =
+    			"ALTER TABLE " + FOLDERS_TABLE_NAME +
+    			" ADD COLUMN LastSyncTime INTEGER NOT NULL DEFAULT 0;";
+    
+    private static final String FOLDERS_TABLE_UPGRADE_V17_V18 =
+    			"ALTER TABLE " + FOLDERS_TABLE_NAME +
+    			" ADD COLUMN Deleted INTEGER NOT NULL DEFAULT 0;";
     
     private static final String FILTERS_TABLE_NAME = "filters";
     private static final String FILTERS_TABLE_CREATE =
@@ -73,21 +88,22 @@ public class DBHelper extends SQLiteOpenHelper {
     
     @Override
     public void onUpgrade(SQLiteDatabase inDB,int nOldVer,int nNewVer) {
-    	if( nOldVer <= 5 ) {
-    		inDB.execSQL(SERVERS_TABLE_UPGRADE_V2);
-    		inDB.execSQL(SERVERS_TABLE_CREATE);
+    	if( nOldVer < 16 )
+    	{
+    		inDB.execSQL("DROP TABLE IF EXISTS " + SERVERS_TABLE_NAME + ";" );
+    		inDB.execSQL("DROP TABLE IF EXISTS " + FOLDERS_TABLE_NAME + ";" );
+    		inDB.execSQL("DROP TABLE IF EXISTS " + FILTERS_TABLE_NAME + ";" );
+    		onCreate(inDB);
+    		return;
     	}
-    	if( nOldVer <= 12 ) {
-    		inDB.execSQL("DROP TABLE IF EXISTS " + FOLDERS_TABLE_NAME + ";\n");
-    		inDB.execSQL(FOLDERS_TABLE_CREATE);
+    	if( nOldVer < 17 ) 
+    	{
+    		inDB.execSQL(SERVERS_TABLE_UPGRADE_V16_V17);
+    		inDB.execSQL(FOLDERS_TABLE_UPGRADE_V16_V17);
     	}
-    	if( nOldVer <= 13 ) {
-    		inDB.execSQL("UPDATE folders SET SyncToPhone=1");
-    		inDB.execSQL("UPDATE folders SET LocalPath='/mnt/sdcard/Syncro/'");
-    	}
-    	if( nOldVer < 16 ) {
-    		inDB.execSQL("DROP TABLE IF EXISTS " + FILTERS_TABLE_NAME + ";\n");
-    		inDB.execSQL(FILTERS_TABLE_CREATE);
+    	if( nOldVer < 18 )
+    	{
+    		inDB.execSQL(FOLDERS_TABLE_UPGRADE_V17_V18);
     	}
     }
 }

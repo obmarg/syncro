@@ -50,15 +50,15 @@ public class ServerBrowser extends Activity
         setContentView(R.layout.main);
         
         Button oFindServer = (Button)findViewById(R.id.findserver);
-        oFindServer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-            	Intent i = new Intent(ServerBrowser.this,FindServer.class);
-            	ServerBrowser.this.startActivity(i);
-            	//Toast.makeText(getApplicationContext(), "Hello!",
-                //        Toast.LENGTH_SHORT).show();
-                  }
-        });
+        oFindServer.setOnClickListener(
+        	new View.OnClickListener()
+	        {
+	            public void onClick(View v) 
+	            {
+	            	Intent i = new Intent(ServerBrowser.this,FindServer.class);
+	            	ServerBrowser.this.startActivity(i);
+	            }
+	        } );
         
         ListView oServerList = (ListView)findViewById(R.id.serverlist);
 
