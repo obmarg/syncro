@@ -81,20 +81,21 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	protected void onHandleIntent(Intent arg0) {
 		if( arg0.getAction().equals("uk.me.grambo.syncro.SYNCRO_SYNC") ) {
 			
-			//Temporary hack - only run on wifi.
-			//TODO: Make the logic of this better - check user preferences etc.
-			WifiManager wifiMan = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-			if( !wifiMan.isWifiEnabled() )
+			SyncroPreferences prefs = new SyncroPreferences(this);
+			if( prefs.OnlySyncOnWifi() )
 			{
-				return;
+				WifiManager wifiMan = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+				if( !wifiMan.isWifiEnabled() )
+				{
+					return;
+				}
+				WifiInfo wifiInfo = wifiMan.getConnectionInfo();
+				if( wifiInfo == null )
+					return;
+				String ssid = wifiInfo.getSSID(); 
+				if( ssid == null )
+					return;
 			}
-			WifiInfo wifiInfo = wifiMan.getConnectionInfo();
-			if( wifiInfo == null )
-				return;
-			String ssid = wifiInfo.getSSID(); 
-			if( ssid == null )
-				return;
-			//Otherwise, attempt to sync.
 			
 			Uri oURI = arg0.getData();
 			if( oURI != null ) {
