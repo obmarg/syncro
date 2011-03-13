@@ -22,7 +22,7 @@ import android.content.*;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
     private static final String DATABASE_NAME="SyncroDB";
     private static final String SERVERS_TABLE_NAME = "servers";
     private static final String SERVERS_TABLE_CREATE =
@@ -74,6 +74,13 @@ public class DBHelper extends SQLiteOpenHelper {
     			"IncludeType INTEGER NOT NULL DEFAULT 0," +
     			"FilenameType INTEGER NOT NULL DEFAULT 0);";
     
+    private static final String UPLOADS_TABLE_NAME = "uploads";
+    private static final String UPLOADS_TABLE_CREATE =
+    			"CREATE TABLE IF NOT EXISTS " + UPLOADS_TABLE_NAME + " (" +
+    			"ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    			"FolderID INTEGER CONSTRAINT UPLOADS_FOLDER_ID_FK REFERENCES " + FOLDERS_TABLE_NAME + "(ID) ON DELETE CASCADE ON UPDATE CASCADE, " +
+    			"Filename TEXT NOT NULL);";
+    
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -84,26 +91,31 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SERVERS_TABLE_CREATE);
         db.execSQL(FOLDERS_TABLE_CREATE);
         db.execSQL(FILTERS_TABLE_CREATE);
+        db.execSQL(UPLOADS_TABLE_CREATE);
     }
     
     @Override
-    public void onUpgrade(SQLiteDatabase inDB,int nOldVer,int nNewVer) {
+    public void onUpgrade(SQLiteDatabase db,int nOldVer,int nNewVer) {
     	if( nOldVer < 16 )
     	{
-    		inDB.execSQL("DROP TABLE IF EXISTS " + SERVERS_TABLE_NAME + ";" );
-    		inDB.execSQL("DROP TABLE IF EXISTS " + FOLDERS_TABLE_NAME + ";" );
-    		inDB.execSQL("DROP TABLE IF EXISTS " + FILTERS_TABLE_NAME + ";" );
-    		onCreate(inDB);
+    		db.execSQL("DROP TABLE IF EXISTS " + SERVERS_TABLE_NAME + ";" );
+    		db.execSQL("DROP TABLE IF EXISTS " + FOLDERS_TABLE_NAME + ";" );
+    		db.execSQL("DROP TABLE IF EXISTS " + FILTERS_TABLE_NAME + ";" );
+    		onCreate(db);
     		return;
     	}
     	if( nOldVer < 17 ) 
     	{
-    		inDB.execSQL(SERVERS_TABLE_UPGRADE_V16_V17);
-    		inDB.execSQL(FOLDERS_TABLE_UPGRADE_V16_V17);
+    		db.execSQL(SERVERS_TABLE_UPGRADE_V16_V17);
+    		db.execSQL(FOLDERS_TABLE_UPGRADE_V16_V17);
     	}
     	if( nOldVer < 18 )
     	{
-    		inDB.execSQL(FOLDERS_TABLE_UPGRADE_V17_V18);
+    		db.execSQL(FOLDERS_TABLE_UPGRADE_V17_V18);
+    	}
+    	if( nOldVer < 19 )
+    	{
+    		db.execSQL(UPLOADS_TABLE_CREATE);
     	}
     }
 }

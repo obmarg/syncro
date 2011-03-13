@@ -34,6 +34,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
@@ -78,8 +79,8 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	}
 
 	@Override
-	protected void onHandleIntent(Intent arg0) {
-		if( arg0.getAction().equals("uk.me.grambo.syncro.SYNCRO_SYNC") ) {
+	protected void onHandleIntent(Intent intent) {
+		if( intent.getAction().equals("uk.me.grambo.syncro.SYNCRO_SYNC") ) {
 			
 			SyncroPreferences prefs = new SyncroPreferences(this);
 			if( prefs.OnlySyncOnWifi() )
@@ -97,7 +98,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 					return;
 			}
 			
-			Uri oURI = arg0.getData();
+			Uri oURI = intent.getData();
 			if( oURI != null ) {
 				String oScheme = oURI.getScheme();
 				if( oScheme.equals("syncro") ) { 
@@ -505,17 +506,18 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 				m_sCurrentLocalPath = 
 					m_sCurrentLocalPath.concat( File.separator );
 			SendFolder( results.getInt(1), folder );
+			SendOneShotFiles( results.getInt(0) );
 		}
 		//android.os.Debug.stopMethodTracing();
 	}
-	
+
 	/**
 	 * Processes a folder, sending all it's contents to the server
-	 * @param folderId	The current folderID we're using
-	 * @param folder	The File object that represents this older
+	 * @param folderIdOnServer	The current folderID we're using
+	 * @param folder			The File object that represents this older
 	 * @throws Exception
 	 */
-	private void SendFolder(int folderId,File folder) throws Exception
+	private void SendFolder(int folderIdOnServer,File folder) throws Exception
 	{
 		File[] files = folder.listFiles();
 		
@@ -523,7 +525,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 		{
 			if( files[nFile].isDirectory() )
 			{
-				SendFolder( folderId, files[ nFile ] );
+				SendFolder( folderIdOnServer, files[ nFile ] );
 			}
 			else
 			{
@@ -537,13 +539,77 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 						1
 						);
 				m_conn.SendFile(
-						folderId, 
+						folderIdOnServer, 
 						files[ nFile ].getAbsolutePath(), 
 						sendPath, 
 						this 
 						);
 			}
 		}
+	}
+	
+	/**
+	 * Sends all the one shot files from db to server
+	 * @param The ID of the folder to upload files for
+	 * @throws Exception 
+	 */
+	private void SendOneShotFiles( int folderId ) throws Exception 
+	{	
+		try 
+		{
+			String[] args = { String.valueOf( folderId ) };
+			Cursor results = m_db.rawQuery(
+					"SELECT u.Filename,f.IDOnServer,u.ID FROM " +
+					"uploads AS u LEFT JOIN folders AS f ON " +
+					"u.FolderID=f.ID WHERE u.FolderID=?",
+					args
+					);
+			
+			if( !results.moveToFirst() )
+			{
+				results.close();
+				return;
+			}
+			
+			String deleteWhere = "(";
+			boolean first = true;
+			do
+			{
+				if( first )
+				{
+					first = false;
+				}
+				else
+				{
+					deleteWhere += ", ";
+				}
+				String fileName = results.getString( 0 );
+				int idOnServer = results.getInt( 1 );
+				deleteWhere += results.getInt( 2 );
+				File file = new File( fileName );
+				String sendFileName = file.getName();
+				m_progressNotification.setCurrentFileDetails(
+					sendFileName,
+					(int)file.length(),
+					1
+					);
+				m_conn.SendFile(
+					idOnServer, 
+					fileName, 
+					sendFileName, 
+					this
+					);
+			}while( results.moveToNext() );
+			m_db.execSQL(
+				"DELETE FROM uploads WHERE ID IN "
+				+ deleteWhere + " )"
+				);
+		}
+		catch( SQLException e )
+		{
+			e.printStackTrace();
+		}
+		
 	}
 	
 }
