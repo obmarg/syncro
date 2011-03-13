@@ -38,4 +38,5 @@ message HandshakeRequest {
 message HandshakeResponse {
 	required string magic = 1;
 	optional string uuid = 2;
+	optional bool windows = 3;
 };

@@ -120,6 +120,11 @@ HandshakeResponse::HandshakeResponse()
 	m_oMessage.Clear();
 	//TODO: move this string to a static const or something
 	m_oMessage.set_magic( comms::HANDSHAKE_RESPONSE_MAGIC );
+#ifdef _WIN32
+	m_oMessage.set_windows( true );
+#else
+	m_oMessage.set_windows( false );
+#endif
 
 	kode::db::Database::TPointer oDB = SyncroDB::OpenDB();
 	std::string sUUID;
