@@ -43,7 +43,8 @@ int main( int argc, char* argv[] )
 	( "uploadfile,u", po::value< std::string >(), "upload file" )
 	( "contents,c", po::value< int >(), "get contents of specified folder" )
 	( "folderid,f", po::value< int >(), "folder id to use for upload/download" )
-	( "oneshot,o", "upload file as one shot file" );
+	( "oneshot,o", "upload file as one shot file" )
+	( "server", po::value< std::string>(), "server to connect to" );
 
 	po::variables_map vm;
 	bool parsedOk = true;
@@ -85,11 +86,16 @@ int main( int argc, char* argv[] )
 
 	try
 	{
+		std::string serverHost = "localhost";
+		if( vm.count( "server" ) )
+		{
+			serverHost = vm[ "server" ].as< std::string >();
+		}
 		Connection conn(
 		    ConnectionDetails()
 		    .SetUsername( "admin" )
 		    .SetPassword( "password" )
-		    .SetHostname( "localhost" )
+		    .SetHostname( serverHost )
 		);
 
 		if( vm.count( "addfolder" ) )
