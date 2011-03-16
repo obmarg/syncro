@@ -7,4 +7,7 @@
     <PreferenceCategory android:title="Anonymous Usage Reporting">
         <CheckBoxPreference android:summaryOn="Syncro will send anonymous usage statistics" android:summaryOff="Syncro will not send any usage data" android:key="sendUsageData" android:title="Send Usage Data" android:defaultValue="0"></CheckBoxPreference>
     </PreferenceCategory>
+    <PreferenceCategory android:title="Help Dialogs">
+        <CheckBoxPreference android:key="showHelpDialogs" android:summaryOn="Explain each screen the first time it is shown" android:title="Show Help Dialogs" android:summaryOff="Don't explain syncro's usage"></CheckBoxPreference>
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -21,7 +21,9 @@ import uk.me.grambo.syncro.DBHelper;
 import uk.me.grambo.syncro.R;
 import uk.me.grambo.syncro.R.id;
 import uk.me.grambo.syncro.R.layout;
+import uk.me.grambo.syncro.SyncroPreferences;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.*;
@@ -36,6 +38,7 @@ import android.util.Log;
 public class ServerBrowser extends Activity
 {	
 	private static final int DIALOG_ADDSERVER = 0;
+	private static final int DIALOG_HELP = 1;
 	
 	
 	private Dialog m_oAddServerDialog;
@@ -79,6 +82,7 @@ public class ServerBrowser extends Activity
         });
         
         fillData();
+        ShowHelp();
     }
     
     public void onRestart() {
@@ -117,6 +121,38 @@ public class ServerBrowser extends Activity
         	inoListview.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, m_aServers ));
         }
         oResults.close();
+    }
+    
+    private void ShowHelp()
+    {
+    	SyncroPreferences preferences
+    		= new SyncroPreferences( this );
+    	if( preferences.ShowHelp( "ServerBrowser" ) )
+    	{
+    		//TODO: Could possibly move this all to external HelpDialog
+    		//		class.  Think about it when making next help dialogs
+    		AlertDialog.Builder builder = 
+    			new AlertDialog.Builder(this);
+    		AlertDialog dialog = builder.create();
+    		dialog.setMessage(
+    				"Welcome to Syncro\n\n" +
+    				"This is the server browser\n\n" +
+    				"To add servers, use the buttons at the top\n\n" +
+    				"Press menu for more options"
+    				);
+    		dialog.setButton( 
+    			AlertDialog.BUTTON_POSITIVE, 
+    			"Ok",
+    			new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				}
+    			);
+    		dialog.show();
+    	}
     }
     
     protected Dialog onCreateDialog(int innID) {

@@ -78,7 +78,10 @@ public class FindServer extends Activity
         		    oDB.close();
         		    
         		    Context context = getApplicationContext();
-        		    CharSequence text = "Added server: " + aArgs[0];
+        		    CharSequence text = 
+        		    	"Added Server: " + aArgs[0] + 
+        		    	"\nPress Back To Return To Server List";
+        		    //TODO: May want to pop up a dialog offering config options etc.
         		    int duration = Toast.LENGTH_SHORT;
         		    Toast toast = Toast.makeText(context, text, duration);
         		    toast.show();

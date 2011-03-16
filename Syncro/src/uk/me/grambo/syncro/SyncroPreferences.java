@@ -24,4 +24,33 @@ public class SyncroPreferences
 	{
 		return m_prefs.getBoolean( "sendUsageData", false );
 	}
+	
+	public boolean ShowHelpDialogs()
+	{
+		return m_prefs.getBoolean( "showHelpDialogs", true );
+	}
+	
+	public boolean ShowHelp(String dialogName)
+	{
+		boolean rv = false;
+		if( ShowHelpDialogs() )
+		{
+			String preferenceName = "showHelp" + dialogName;
+			rv = m_prefs.getBoolean( preferenceName, true );
+			SetPreference( preferenceName, false );
+			return rv;
+		}
+		return rv;		
+	}
+	
+	private void SetPreference(
+		String preferenceName, 
+		boolean value
+		)
+	{
+		SharedPreferences.Editor edit = 
+			m_prefs.edit();
+		edit.putBoolean( preferenceName, value );
+		edit.commit();
+	}
 }
