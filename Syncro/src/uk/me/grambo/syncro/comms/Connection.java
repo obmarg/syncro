@@ -468,7 +468,19 @@ public class Connection {
 			long fileLen 
 			) throws IOException,Exception
 	{
-		String hash = HashUtils.GetFileHash( inoFile, fileLen );
+		String hash; 
+		try 
+		{
+			hash = HashUtils.GetFileHash( inoFile, fileLen );
+		}
+		catch(HashUtils.HashException e)
+		{
+			Log.w(
+					"Syncro",
+					"Generating Hash Excepted in Connection::CheckResume"
+					);
+			return false;
+		}
 		
 		Binarydata.FileHashRequest request = Binarydata.FileHashRequest.newBuilder()
 			.setFileName( inoFileData.Filename )

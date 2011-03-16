@@ -26,13 +26,25 @@ import java.security.NoSuchAlgorithmException;
 import android.util.Base64;
 
 public class HashUtils {
+	public static class HashException extends Exception
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1574266974599641093L;
+		public HashException( String string )
+		{
+			super(string);
+		}
+	}
 	
-	public static String GetFileHash( File inoFile, long size ) throws Exception
+	
+	public static String GetFileHash( File inoFile, long size ) throws HashException
 	{
 		try {
 			if( size > inoFile.length() )
 			{
-				throw new Exception( "Invalid size passed to GetFileHash" );
+				throw new HashException( "Invalid size passed to GetFileHash" );
 			}
 			MessageDigest digester;
 			try {

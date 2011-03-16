@@ -60,7 +60,7 @@ public class FolderListResponseHandler implements PBResponseHandler {
 		FolderList list = builder.build();
 		for( int folderNum = 0; folderNum < list.getFoldersCount(); folderNum++ )
 		{ 
-			m_dataHandler.handlerFolder( 
+			m_dataHandler.handleFolder( 
 					new FolderListHandler.FolderInfo( 
 							list.getFolders( folderNum ) 
 							) 

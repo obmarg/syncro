@@ -60,6 +60,7 @@ public class SendFile extends Activity implements DialogInterface.OnClickListene
         }
         if( uri == null || !uri.getScheme().equals( "file" ) )
         {
+        	//TODO: Handle media uri's for photos etc.
         	ShowErrorDialog( "Syncro can not send this data" );
         	return;
         }

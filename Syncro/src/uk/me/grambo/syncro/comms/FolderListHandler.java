@@ -26,7 +26,7 @@ import uk.me.grambo.syncro.comms.pb.Folders;
  *
  */
 public interface FolderListHandler {
-	void handlerFolder( FolderInfo folder );
+	void handleFolder( FolderInfo folder );
 	
 	public class FolderInfo {
 		public int			Id;

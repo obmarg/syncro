@@ -287,7 +287,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 	}
 	
 	@Override
-	public void handlerFolder(FolderInfo folder) {
+	public void handleFolder(FolderInfo folder) {
 		m_folderInsertStatement.bindLong( 1, folder.Id );
 		m_folderInsertStatement.bindString( 2,  folder.Name );
 		m_folderInsertStatement.bindString( 3,  folder.Path );
