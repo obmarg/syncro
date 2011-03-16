@@ -30,147 +30,229 @@ import android.widget.RemoteViews;
 public class ProgressNotification {
 	
 	final static int PROGRESS_NOTIFICATION_ID = 1;
-	
 	final static int UPDATE_RATE = 500;
+	final static int CALCULATION_RATE = 2000;
+	final static int MAX_FILENAME_SIZE = 34;
 	
-	private Notification m_oNotification;
-	private Context m_oContext;
+	private Notification m_notification;
+	private Context m_context;
 	
-	private int m_nCurrentTotalSize;
 	private String m_filename;
-	private int m_nProgress;
-	private boolean m_fHaveFile;
+	private int m_currentTotalSize;
+	private int m_progress;
+	private boolean m_uploading;
+	private boolean m_haveFile;
 	
-	private int m_nTotalFiles;
-	private int m_nFileNum;
+	private int m_totalFiles;
+	private int m_fileNum;
 	
-	private boolean m_fShowRate;
-	private long m_nLastProgressUpdate;
-	private float m_flCurrentRate;
-	private float m_nDataSinceLast;
+	private boolean m_showRate;
+	private long m_lastProgressCalculation;
+	private float m_currentRate;
+	private String m_currentUnits;
+	private float m_dataSinceLast;
 	
-	private long m_nLastUpdateTime;
+	private long m_lastUpdateTime;
 	
 	private boolean m_downloading;
 	
 	protected ProgressNotification(Context inoContext) {
-		m_oContext = inoContext;
-		m_fHaveFile = false;
+		m_context = inoContext;
+		m_haveFile = false;
 		m_filename = "";
-		m_nCurrentTotalSize = 0;
-		m_nFileNum = 0;
-		m_nTotalFiles = 0;
-		m_nProgress = 0;
-		m_fShowRate = false;
-		m_nLastProgressUpdate = 0;
-		m_nLastUpdateTime = 0;
+		m_currentTotalSize = 0;
+		m_fileNum = 0;
+		m_totalFiles = 0;
+		m_progress = 0;
+		m_showRate = false;
+		m_lastProgressCalculation = 0;
+		m_lastUpdateTime = 0;
+		m_uploading = false;
 	}
 	
 	public void create(CharSequence tickerText) {
 		int icon = R.drawable.stat_sys_warning;
 		long when = System.currentTimeMillis();
-		m_oNotification = new Notification(icon, tickerText, when);
-		m_oNotification.flags = Notification.FLAG_ONGOING_EVENT;
+		m_notification = new Notification(icon, tickerText, when);
+		m_notification.flags = Notification.FLAG_ONGOING_EVENT;
 		//TODO: could possibly make the notification a foreground event notification, but that's api level 5 >
 		//		check it out etc.
 	}
 	
-	public void setCurrentFileDetails(RemoteFileData inoFile, int innFileNum) {
-		m_filename = inoFile.Filename;
+	public void setCurrentFileDetails(
+			RemoteFileData file, 
+			int fileNum,
+			boolean uploading
+			) 
+	{
+		setFilename( file.Filename );
 		//TODO: Progress bar won't work for massive files - fix it
-		m_nCurrentTotalSize = (int)inoFile.Size;
-		m_fHaveFile = true;
-		m_nFileNum = innFileNum;
-		// Set the clock so we'll update in 1 second
-		m_nLastProgressUpdate = SystemClock.uptimeMillis()-3000;
+		m_currentTotalSize = (int)file.Size;
+		m_haveFile = true;
+		m_fileNum = fileNum;
+		m_uploading = uploading;
+		resetTimes();
 	}
 	
-	public void setCurrentFileDetails(String insFilename, int inFileSize, int innFileNum )
+	public void setCurrentFileDetails(
+			String filename, 
+			int fileSize, 
+			int fileNum,
+			boolean uploading
+			)
 	{
-		m_filename = insFilename;
-		m_nCurrentTotalSize = inFileSize;
-		m_fHaveFile = true;
-		m_nFileNum = innFileNum;
-		// Set the clock so we'll update in 1 second
-		m_nLastProgressUpdate = SystemClock.uptimeMillis()-3000;
+		setFilename( filename );
+		m_currentTotalSize = fileSize;
+		m_haveFile = true;
+		m_fileNum = fileNum;
+		m_uploading = uploading;
+		resetTimes();
+	}
+	
+	private void setFilename( String filename )
+	{
+		//TODO: This could all be handled better, but it's getting late
+		int maxFilenameSize = MAX_FILENAME_SIZE;
+		maxFilenameSize -= getFileCountString().length();
+		if( filename.length() > maxFilenameSize )
+		{
+			m_filename = 
+				filename.substring( 0, maxFilenameSize ) + "...";
+		}
+		else
+		{
+			m_filename = filename;
+		}
+	}
+	
+	private void resetTimes()
+	{
+		// Set the clock so we'll update in 0.5 second
+		m_lastProgressCalculation = 
+			SystemClock.uptimeMillis() - CALCULATION_RATE + 500;
+		m_dataSinceLast = 0;
+		m_lastUpdateTime = 
+			SystemClock.uptimeMillis() - UPDATE_RATE + 510;
 	}
 	
 	public void clearFileDetails() {
-		m_fHaveFile = false;
+		m_haveFile = false;
 	}
 	
 	public void setTotalNumFiles(int innTotalFiles) {
-		m_nTotalFiles = innTotalFiles;
+		m_totalFiles = innTotalFiles;
 	}
 	
 	public void setProgress( int innProgress ) {
 		long nCurrentTime = SystemClock.uptimeMillis();
-		if( m_fShowRate ) {
-			m_nDataSinceLast += (innProgress - m_nProgress);
-			if( (m_nLastProgressUpdate == 0) || ( nCurrentTime > (m_nLastProgressUpdate+4000) ) ) {
-				float flDuration = (nCurrentTime - m_nLastProgressUpdate);
+		if( m_showRate ) {
+			m_dataSinceLast += (innProgress - m_progress);
+			if( 
+				(m_lastProgressCalculation == 0) || 
+				( nCurrentTime > (m_lastProgressCalculation+CALCULATION_RATE) ) 
+				) 
+			{
+				float flDuration = (nCurrentTime - m_lastProgressCalculation);
 				if( flDuration != 0 ) {
 					//Stop divide from 0 from happening
-					//TODO: support scaling from bytes > kb > mb depending on size
-					float flDataSinceLast = m_nDataSinceLast / 1024;
-					m_flCurrentRate = (flDataSinceLast / (flDuration/1000) );
+					float flDataSinceLast = m_dataSinceLast / 1000;
+					m_currentRate = (flDataSinceLast / (flDuration/1000) );
+					if( m_currentRate < 1 )
+					{
+						//Switch to bytes/s
+						m_currentRate = (m_dataSinceLast / (flDuration/1000) );
+						m_currentUnits = "Bps";
+					}
+					else if( m_currentRate > 1024 )
+					{
+						//Switch to MB/s
+						flDataSinceLast = flDataSinceLast / 1000;
+						m_currentRate = (flDataSinceLast / (flDuration/1000) );
+						m_currentUnits = "MBps";
+					}
+					else
+					{
+						m_currentUnits = "kBps";
+					}
 				}
-				m_nDataSinceLast = 0;
-				m_nLastProgressUpdate = nCurrentTime;
+				m_dataSinceLast = 0;
+				m_lastProgressCalculation = nCurrentTime;
 			}
-			if( m_flCurrentRate == 0 ) {
-				//TODO: We've probably just started, but don't want it sitting at 0kb/s for 4 seconds, so do something here
+			if( m_currentRate <= 0 ) {
+				m_lastProgressCalculation = 0;
+				m_currentRate = 0;
 			}
 		}
-		m_nProgress = innProgress;
-		if( nCurrentTime > (m_nLastUpdateTime + UPDATE_RATE) ) {
+		m_progress = innProgress;
+		if( nCurrentTime > (m_lastUpdateTime + UPDATE_RATE) ) {
 			update();
 		}
 	}
 	
 	public void setShowRate( boolean innShowRate ) {
-		m_fShowRate = innShowRate;
+		m_showRate = innShowRate;
 	}
 	
 	public void update() {
 		//TODO: remove most calls to update, and just call setprogress instead 
-		if( m_oNotification == null ) {
+		if( m_notification == null ) {
 			create("Syncro Syncing!");
 		}
-		Intent notificationIntent = new Intent(m_oContext, ServerBrowser.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(m_oContext, 0, notificationIntent, 0);
-		m_oNotification.contentIntent = contentIntent;
+		Intent notificationIntent = new Intent(m_context, ServerBrowser.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(m_context, 0, notificationIntent, 0);
+		m_notification.contentIntent = contentIntent;
 
 		//m_oProgressNotification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 		
-		RemoteViews contentView = new RemoteViews(m_oContext.getPackageName(), R.layout.progress_notification);
+		RemoteViews contentView = new RemoteViews(m_context.getPackageName(), R.layout.progress_notification);
 		contentView.setImageViewResource(R.id.progress_notification_icon, R.drawable.stat_sys_warning);
-		if( !m_fHaveFile ) {
+		if( !m_haveFile ) {
 			contentView.setTextViewText(R.id.progress_notification_text, "Syncro: Getting File Data");
 		} else {
 			String sRate = "";
-			if( m_fShowRate ) {
-				sRate = Integer.toString( new Float(m_flCurrentRate).intValue() ) + " kb/s";
+			if( m_showRate ) {
+				sRate = Integer.toString( new Float(m_currentRate).intValue() ) + m_currentUnits;
 			}
-			//TODO: need to limit filename size to stop it pushing progress bar out of view
+			String directionWord;
+			if( m_uploading )
+			{
+				directionWord = "Uploading ";
+			}
+			else
+			{
+				directionWord = "Downloading ";
+			}
+			String fileCount = getFileCountString();
 			contentView.setTextViewText(
 					R.id.progress_notification_text, 
-					"Syncing " + m_filename + 
-					" (" + m_nFileNum + "/" + m_nTotalFiles + ")\n" +
+					directionWord + m_filename +
+					fileCount + "\n" +
 					sRate
 					);
 		}
-		contentView.setProgressBar(R.id.progress_notification_progress, m_nCurrentTotalSize, m_nProgress, !m_fHaveFile);
-		m_oNotification.contentView = contentView;
+		contentView.setProgressBar(R.id.progress_notification_progress, m_currentTotalSize, m_progress, !m_haveFile);
+		m_notification.contentView = contentView;
 
-		NotificationManager oNM = (NotificationManager)m_oContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		oNM.notify(PROGRESS_NOTIFICATION_ID, m_oNotification);
-		m_nLastUpdateTime = SystemClock.uptimeMillis(); 
+		NotificationManager oNM = (NotificationManager)m_context.getSystemService(Context.NOTIFICATION_SERVICE);
+		oNM.notify(PROGRESS_NOTIFICATION_ID, m_notification);
+		m_lastUpdateTime = SystemClock.uptimeMillis(); 
 	}
 	
 	public void stop() {
-		NotificationManager oNM = (NotificationManager)m_oContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		NotificationManager oNM = (NotificationManager)m_context.getSystemService(Context.NOTIFICATION_SERVICE);
 		oNM.cancel(PROGRESS_NOTIFICATION_ID);
-		m_oNotification = null;
+		m_notification = null;
+	}
+	
+	private String getFileCountString()
+	{
+		if( m_totalFiles > 1 )
+		{
+			return " (" + m_fileNum + "/" + m_totalFiles + ")";
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

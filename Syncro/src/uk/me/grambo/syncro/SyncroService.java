@@ -405,7 +405,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 			if( CheckIncludeFilters(oFile,destFilename) ) {
 				//TODO: To get accurate total file numbers, need to run include filters etc. before this loop
 				//			but never mind for now...
-				m_progressNotification.setCurrentFileDetails( oFile, nFile );
+				m_progressNotification.setCurrentFileDetails( oFile, nFile, false );
 				m_progressNotification.setProgress( 0 );
 				fOK = m_conn.GetFile( oFile, destFilename, this );
 				if( !fOK )
@@ -536,7 +536,8 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 				m_progressNotification.setCurrentFileDetails(
 						sendPath, 
 						(int)files[ nFile ].length(), 
-						1
+						1,
+						true
 						);
 				m_conn.SendFile(
 						folderIdOnServer, 
@@ -591,7 +592,8 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 				m_progressNotification.setCurrentFileDetails(
 					sendFileName,
 					(int)file.length(),
-					1
+					1,
+					true
 					);
 				m_conn.SendFile(
 					idOnServer, 
