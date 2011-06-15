@@ -17,6 +17,7 @@
 
 #include "AuthManager.h"
 #include "SyncroDB.h"
+#include <kode/db/statement.h>
 #include <kode/base64.h>
 #include <cryptopp/hmac.h>
 #include <boost/foreach.hpp>

@@ -26,6 +26,7 @@
 #include <libsyncro/comms.h>
 #include <libsyncro/packet_types.h>
 #include <kode/utils.h>
+#include <kode/db/statement.h>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <vector>

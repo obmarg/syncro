@@ -16,13 +16,12 @@
 */
 
 #include "kode/Database.h"
+#include "kode/db/statement.h"
 //#include "Logger.h"
 #include <ctype.h>
 
-namespace kode
-{
-namespace db
-{
+namespace kode {
+namespace db {
 
 using std::string;
 

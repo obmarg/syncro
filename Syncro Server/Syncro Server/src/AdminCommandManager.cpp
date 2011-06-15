@@ -18,6 +18,7 @@
 #include "AdminCommandManager.h"
 #include "AuthManager.h"
 #include "SyncroDB.h"
+#include <kode/db/statement.h>
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/bind.hpp>

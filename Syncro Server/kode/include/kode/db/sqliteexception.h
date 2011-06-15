@@ -16,7 +16,7 @@
 */
 
 #ifndef KODE_DB_SQLITEEXCEPTION_H_
-#define KODE_DB_SQLITEEXCEPTION_H
+#define KODE_DB_SQLITEEXCEPTION_H_
 
 #include <stdexcept>
 #include <string>
@@ -38,4 +38,4 @@ private:
 }	// namespace db 
 } 	// namespace kode 
 
-#endif 	// KODE_DB_SQLITEEXCEPTION_H__
+#endif 	// KODE_DB_SQLITEEXCEPTION_H_

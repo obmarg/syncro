@@ -19,6 +19,7 @@
 #include "Folder.h"
 #include "BinaryDataRequest.h"
 #include <libsyncro/stringutils.h>
+#include <kode/db/statement.h>
 #include <kode/utils.h>
 #include <boost/filesystem.hpp>
 #include <boost/bind.hpp>
