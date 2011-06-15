@@ -4,7 +4,8 @@ sources = [
 	'src/Database.cpp', 
 	'src/utils.cpp', 
 	'src/tcpconnection.cpp', 
-	'src/stopwatch.cpp'
+	'src/stopwatch.cpp',
+	'src/db/utils.cpp'
 	 ]
 
 output = env.StaticLibrary( 'kode', sources )

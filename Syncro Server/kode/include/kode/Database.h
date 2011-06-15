@@ -21,54 +21,38 @@
 //#include "Logger.h"
 //extern CLogger Logger;
 
-#include <string>
+#include "kode/db/sqliteexception.h"
+#include "kode/db/sqliteops.h"
+#include "kode/utils.h"
 #include <sqlite3.h>
-
-#include <vector>
-#include <map>
-
-#include <time.h>
-
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
-
+#include <boost/scoped_ptr.hpp>
+#include <string>
+#include <vector>
+#include <map>
 #include <stdexcept>
-
-#include "utils.h"
+#include <time.h>
 
 #ifdef USING_PTHREADS
 #include <pthread.h>
 #endif
 
-namespace kode
-{
-namespace db
-{
-
-class SqlException : std::runtime_error
-{
-public:
-	SqlException( std::string sMessage, int nErrorCode ) : runtime_error( sMessage.c_str() )
-	{
-		m_nErrorCode = nErrorCode;
-	}
-private:
-	int m_nErrorCode;
-};
+namespace kode {
+namespace db {
 
 class Database;
 class Statement;
 typedef boost::shared_ptr<Database> DatabasePtr;
 typedef boost::shared_ptr<Statement> StatementPtr;
 
-
 class Database
 {
 public:
 	typedef boost::shared_ptr<Database> TPointer;
 
-	typedef std::map<std::string, std::string, utils::CStringLessThan> Row;
+	typedef std::map<std::string, std::string, kode::utils::CStringLessThan> Row;
 
 	class ResultSet
 	{
@@ -202,6 +186,7 @@ public:
 	StatementPtr prepare( std::string insSql );
 
 #ifdef _WIN32
+//TODO: Figure out if this is just illegal syntax, or if it's gcc being stupid
 	template<>
 	std::string runScalar<std::string>( std::string query );
 #endif
@@ -309,113 +294,69 @@ public:
 	}
 
 	template<class tData>
-	Statement& Bind( int innIndex, tData data )
-	{
-		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, boost::lexical_cast<std::string>( data ).c_str(), -1, SQLITE_TRANSIENT );
-		if( nErrorCode != SQLITE_OK )
-			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return ( *this );
-	}
+	Statement& Bind( int index, tData data );
 
 	template<class tData>
-	Statement& Bind( std::string parameter, tData data )
-	{
-		int nIndex = sqlite3_bind_parameter_index( m_handle, parameter.c_str() );
-		Bind( nIndex, data );
-		return ( *this );
-	}
-#ifdef _WIN32
-	template<>
-	Statement& Bind<std::string>( int innIndex, std::string data )
-	{
-		int nErrorCode = sqlite3_bind_text( m_handle, innIndex, data.c_str(), -1, SQLITE_TRANSIENT );
-		if( nErrorCode != SQLITE_OK )
-			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return ( *this );
-	}
+	Statement& Bind( std::string parameter, tData data );
 
-	template<>
-	Statement& Bind<int>( int innIndex, int innData )
-	{
-		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, innData );
-		if( nErrorCode != SQLITE_OK )
-			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return ( *this );
-	}
-
-	template<>
-	Statement& Bind<bool>( int innIndex, bool infData )
-	{
-		int nErrorCode = sqlite3_bind_int( m_handle, innIndex, ( infData ? 1 : 0 ) );
-		if( nErrorCode != SQLITE_OK )
-			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return ( *this );
-	}
-
-	template<>
-	Statement& Bind<unsigned int>( int innIndex, unsigned int innData )
-	{
-		int nErrorCode = sqlite3_bind_int64( m_handle, innIndex, innData );
-		if( nErrorCode != SQLITE_OK )
-			throw SqlException( "Statement::Bind failed", nErrorCode );
-		return ( *this );
-	}
-
-#endif
+//#ifdef _WIN32
+//TODO: FIgure out if moving shit from here works...
+//#endif
 
 	template<class tData>
-	tData GetColumn( int innIndex )
-	{
-		std::string sData = std::string(
-		                        reinterpret_cast<const char*>(
-		                            sqlite3_column_text( m_handle, innIndex )
-		                        )
-		                    );
-		return boost::lexical_cast<tData, std::string>( sData );
-	}
+	tData GetColumn( int index );
 
 	template<class tData>
-	tData GetColumn( std::string parameter )
-	{
-		if( !m_fFetchedNames )
-			FetchColumnNames();
+	tData GetColumn( std::string parameter );
 
-		int nIndex = FindColumn( parameter );
-		if( nIndex == -1 )
-			throw SqlException( "Invalid column passed to Statement::GetColumn: " + parameter, 0 );
-		return GetColumn<tData>( nIndex );
-	}
-
-#ifdef _WIN32
-	template<>
-	std::string GetColumn<std::string>( int innIndex )
-	{
-		return std::string( reinterpret_cast<const char*>( sqlite3_column_text( m_handle, innIndex ) ) );
-	}
-
-	template<>
-	int GetColumn<int>( int innIndex )
-	{
-		return sqlite3_column_int( m_handle, innIndex );
-	}
-	template<>
-	bool GetColumn<bool>( int innIndex )
-	{
-		return ( sqlite3_column_int( m_handle, innIndex ) == 1 );
-	}
-	template<>
-	unsigned int GetColumn<unsigned int>( int innIndex )
-	{
-		return static_cast<unsigned int>( sqlite3_column_int64( m_handle, innIndex ) );
-	}
-#endif
+//#ifdef _WIN32
+	//TODO: Figre out if I can just remove these statements from here...
+//#endif
 
 private:
-	sqlite3_stmt* m_handle;
-	std::vector<std::string> m_columnNames;
-	bool m_fFetchedNames;
+	sqlite3_stmt* 							m_handle;
+	std::vector<std::string> 				m_columnNames;
+	bool 									m_fFetchedNames;
 };
 
+template<class tData>
+Statement& Statement::Bind( int index, tData data )
+{
+	SqliteOps<tData>::Bind( m_handle, index, data );
+	return ( *this );
+}
+
+template<class tData>
+Statement& Statement::Bind( std::string parameter, tData data )
+{
+	int nIndex = sqlite3_bind_parameter_index( m_handle, parameter.c_str() );
+	Bind( nIndex, data );
+	return ( *this );
+}
+
+template<class tData>
+tData Statement::GetColumn( int index )
+{
+	return SqliteOps<tData>::GetColumn( m_handle, index );
+}
+
+template<class tData>
+tData Statement::GetColumn( std::string parameter )
+{
+	if( !m_fFetchedNames )
+		FetchColumnNames();
+
+	int nIndex = FindColumn( parameter );
+	if( nIndex == -1 )
+		throw SqlException( "Invalid column passed to Statement::GetColumn: " + parameter, 0 );
+	return GetColumn<tData>( nIndex );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//	\brief	A class to automatically reset a statement on destruction
+//
+///////////////////////////////////////////////////////////////////////////////
 class AutoReset : boost::noncopyable
 {
 public:
@@ -428,7 +369,7 @@ private:
 	const StatementPtr m_statement;
 };
 
-}; //namespace db
-}; //namespace kode
+}	// namespace db
+} 	// namespace kode
 
 #endif
