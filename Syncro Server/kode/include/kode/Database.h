@@ -186,7 +186,6 @@ public:
 	StatementPtr prepare( std::string insSql );
 
 #ifdef _WIN32
-//TODO: Figure out if this is just illegal syntax, or if it's gcc being stupid
 	template<>
 	std::string runScalar<std::string>( std::string query );
 #endif

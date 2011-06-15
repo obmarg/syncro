@@ -41,17 +41,9 @@ template<class DataType, class T=void>
 class SqliteOps
 {
 public:
-	static void Bind( sqlite3_stmt* statement, int index,  DataType data )
-	{
-		throw std::logic_error( "Sqlite error: attempted to bind unknown type" );
-		DataType::Break();
-	}
+	static void Bind( sqlite3_stmt* statement, int index,  DataType data );
 
-	static DataType GetColumn( sqlite3_stmt* statement, int index )
-	{
-		throw std::logic_error( "Sqlite error: Attempted to get unknown type" );
-		DataType::Break();
-	}
+	static DataType GetColumn( sqlite3_stmt* statement, int index );
 };
 
 template<>
