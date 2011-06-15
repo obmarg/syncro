@@ -3,7 +3,7 @@ import os
 
 
 try:
-	os.mkdir( "../../Messages/gen" )
+	os.mkdir( "../Messages/gen" )
 except OSError:
 	pass
 try:
