@@ -29,6 +29,32 @@
 
 namespace po = boost::program_options;
 
+void Upload(
+	syncro::client::Connection& conn,
+	int folderId,
+	bool oneShot,
+	const boost::filesystem::path& path,
+	const std::string& sendPath
+	)
+{
+	using namespace boost::filesystem;
+	using namespace syncro::client;
+
+	if( is_directory( path ) )
+	{
+		//TODO: Implement recursive directory uploads
+	}
+	else
+	{
+		conn.UploadFile(
+			FileTransferDetails()
+			.SetFolderId( folderId )
+			.SetLocalPath( sendPath )
+			.SetRemotePath( path.filename() )
+			.SetOneShot( oneShot )
+			);
+}
+
 int main( int argc, char* argv[] )
 {
 	using namespace syncro::client;
@@ -40,7 +66,7 @@ int main( int argc, char* argv[] )
 	( "list,l", "list folders" )
 	( "addfolder,a", po::value< std::string >(), "add folder" )
 	( "delfolder,d", po::value< int >(), "delete specified folder id" )
-	( "uploadfile,u", po::value< std::string >(), "upload file" )
+	( "upload,u", po::value< std::string >(), "upload file/folder" )
 	( "contents,c", po::value< int >(), "get contents of specified folder" )
 	( "folderid,f", po::value< int >(), "folder id to use for upload/download" )
 	( "oneshot,o", "upload file as one shot file" )
@@ -144,22 +170,14 @@ int main( int argc, char* argv[] )
 				std::cout << file.name << std::endl;
 			}
 		}
-		if( vm.count( "uploadfile" ) )
+		if( vm.count( "upload" ) )
 		{
 			if( !vm.count( "folderid" ) )
 			{
 				throw std::runtime_error( "Please provide a folder id to upload to" );
 			}
-			std::string filename = vm["uploadfile"].as<std::string>();
+			std::string filename = vm["upload"].as<std::string>();
 			boost::filesystem::path path( filename );
-
-			conn.UploadFile(
-			    FileTransferDetails()
-			    .SetFolderId( vm["folderid"].as<int>() )
-			    .SetLocalPath( filename )
-			    .SetRemotePath( path.filename() )
-			    .SetOneShot( vm.count( "oneshot" ) > 0 )
-			);
 
 		}
 	}
