@@ -137,6 +137,7 @@ public class ProgressNotification {
 	
 	public void clearFileDetails() {
 		m_haveFile = false;
+		update();
 	}
 	
 	public void setTotalNumFiles(int innTotalFiles) {

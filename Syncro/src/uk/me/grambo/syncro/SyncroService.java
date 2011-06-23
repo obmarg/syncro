@@ -408,6 +408,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 				m_progressNotification.setCurrentFileDetails( oFile, nFile, false );
 				m_progressNotification.setProgress( 0 );
 				fOK = m_conn.GetFile( oFile, destFilename, this );
+				m_progressNotification.clearFileDetails();
 				if( !fOK )
 					return false;
 			}
@@ -545,6 +546,7 @@ implements FolderContentsHandler,FolderListHandler, ProgressHandler
 						sendPath, 
 						this 
 						);
+				m_progressNotification.clearFileDetails();
 			}
 		}
 	}
