@@ -26,18 +26,7 @@
 namespace kode {
 namespace db { 
 
-#if 0
-class BaseSqliteOps
-{
-public:
-	BaseSqliteOps( sqlite3_stmt* handle ) :
-	m_handle( handle )
-	{
-
-	}
-#endif
-
-template<class DataType, class T=void>
+template<class DataType>
 class SqliteOps
 {
 public:
