@@ -53,6 +53,7 @@ void Upload(
 			.SetRemotePath( path.filename() )
 			.SetOneShot( oneShot )
 			);
+	}
 }
 
 int main( int argc, char* argv[] )
