@@ -24,7 +24,7 @@
 namespace syncro
 {
 
-const int	SyncroDB::EXPECTED_DB_VERSION	= 11;
+const int	SyncroDB::EXPECTED_DB_VERSION	= 12;
 std::string	SyncroDB::DEFAULT_DB_NAME		= "syncro.db";
 
 const std::string FOLDERS_TABLE_NAME = "Folders";
@@ -59,7 +59,12 @@ const std::string FILES_TABLE_CREATE =
     "FolderPath TEXT NOT NULL, " +
     "LocalPath TEXT NOT NULL, " +
     "OneShot INTEGER NOT NULL, "
-    "FolderID INTEGER NOT NULL);";
+    "FolderID INTEGER NOT NULL, "
+	"DeleteOnFinish INTEGER NOT NULL DEFAULT 0);";
+
+const std::string FILES_TABLE_UPGRADE_V11_V12 =
+	"ALTER TABLE " + FILES_TABLE_NAME +
+	" ADD COLUMN DeleteOnFinish INTEGER NOT NULL DEFAULT 0;";
 
 const std::string UPLOAD_HISTORY_TABLE_NAME = "UploadHistory";
 const std::string UPLOAD_HISTORY_CREATE =
@@ -153,6 +158,10 @@ bool SyncroDB::UpgradeDatabase( int nCurrentVersion )
 	{
 		run( "DELETE FROM " + USERS_TABLE_NAME + ";" );
 		run( DEFAULT_USER_CREATE );
+	}
+	if( nCurrentVersion < 12 )
+	{
+		run( FILES_TABLE_UPGRADE_V11_V12 );
 	}
 	clearResult();
 	return true;

@@ -41,13 +41,15 @@ public:
 	    const bool inOneShot,
 	    const int inFolderId,
 	    const std::string& inFolderPath,
-	    const std::string& inLocalPath
+	    const std::string& inLocalPath,
+		const bool inDeleteOnFinish
 	) :
 		fileName( inFilename ),
 		oneShot( inOneShot ),
 		folderId( inFolderId ),
 		folderPath( inFolderPath ),
-		localPath( inLocalPath )
+		localPath( inLocalPath ),
+		deleteOnFinish( inDeleteOnFinish )
 	{
 
 	}
@@ -56,6 +58,7 @@ public:
 	unsigned int folderId;
 	std::string folderPath;
 	std::string localPath;
+	bool deleteOnFinish;
 };
 
 // For now, DownloadFinishDetails is the same as upload finish
@@ -68,6 +71,7 @@ public:
 	    const int inFolderId,
 	    const std::string& inFolderPath,
 	    const std::string& inLocalPath,
+		bool inDeleteOnFinish,
 	    const int inFileId = -1
 	) :
 		UploadFinishDetails(
@@ -75,7 +79,8 @@ public:
 		    inOneShot,
 		    inFolderId,
 		    inFolderPath,
-		    inLocalPath
+		    inLocalPath,
+			inDeleteOnFinish
 		),
 		fileId( inFileId )
 	{ }
@@ -175,12 +180,14 @@ FolderMan::FileRequested(
 	rv += requestData.GetFilename();
 	bool oneShot = false;
 	int oneShotId = -1;
+	bool deleteOnFinish = false;
 	if( !exists( path( rv ) ) )
 	{
 		if( !m_findOneShot )
 		{
 			m_findOneShot = m_pDB->prepare(
-			                    "SELECT ID,LocalPath,OneShot FROM files "
+			                    "SELECT ID,LocalPath,OneShot,DeleteOnFinish"
+								" FROM files "
 			                    "WHERE FolderID=? AND FileName=?"
 			                );
 		}
@@ -194,6 +201,7 @@ FolderMan::FileRequested(
 			oneShotId = m_findOneShot->GetColumn< int >( 0 );
 			rv = m_findOneShot->GetColumn< std::string >( 1 );
 			oneShot = m_findOneShot->GetColumn< int >( 2 ) != 0;
+			deleteOnFinish = m_findOneShot->GetColumn< int >( 3 ) != 0;
 		}
 		else
 		{
@@ -212,6 +220,7 @@ FolderMan::FileRequested(
 	        requestData.GetFolderId(),
 	        "",
 	        rv,
+			deleteOnFinish,
 	        oneShotId
 	    )
 	);
@@ -266,7 +275,8 @@ FolderMan::IncomingFile(
 	        fileData.IsOneShot(),
 	        fileData.GetFolderId(),
 	        "",
-	        destFileName
+	        destFileName,
+			fileData.IsOneShot()
 	    )
 	);
 	details.m_callback = boost::bind(
@@ -324,8 +334,9 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 		{
 			m_addOneShot = m_pDB->prepare(
 			                   "INSERT INTO Files "
-			                   "(Filename,FolderPath,LocalPath,FolderId,OneShot) "
-			                   "VALUES (?, ?, ?, ?, 1);"
+			                   "(Filename,FolderPath,LocalPath,FolderId,"
+							   "OneShot,DeleteOnFinish) "
+			                   "VALUES (?, ?, ?, ?, 1, ?);"
 			               );
 		}
 		kode::db::AutoReset reset( m_addOneShot );
@@ -333,6 +344,7 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 		m_addOneShot->Bind( 2, details->folderPath );
 		m_addOneShot->Bind( 3, details->localPath );
 		m_addOneShot->Bind( 4, details->folderId );
+		m_addOneShot->Bind( 5, details->deleteOnFinish );
 		m_addOneShot->GetNextRow();
 		//TODO: Maybe after commiting that row, query it, and get the ID
 		//		then move the file to a prefix of that id (or just id for
@@ -374,6 +386,10 @@ void FolderMan::FileDownloadFinished( DownloadFinishDetailsPtr details )
 		kode::db::AutoReset reset( m_delOneShot );
 		m_delOneShot->Bind( 1, details->fileId );
 		m_delOneShot->GetNextRow();
+	}
+	if( details->deleteOnFinish )
+	{
+		boost::filesystem::remove( details->localPath );
 	}
 }
 
