@@ -16,6 +16,12 @@
     <Filter Include="Build Files">
       <UniqueIdentifier>{258a81ff-8a7f-477d-8240-dd6365444286}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\db">
+      <UniqueIdentifier>{b7b1d932-16df-420e-9da3-ca2850b9abf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\db">
+      <UniqueIdentifier>{34ec6a9e-f2dd-470b-90fa-b16f27f7bcf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Database.cpp">
@@ -29,6 +35,12 @@
     </ClCompile>
     <ClCompile Include="src\stopwatch.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\db\statement.cpp">
+      <Filter>Source Files\db</Filter>
+    </ClCompile>
+    <ClCompile Include="src\db\dbutils.cpp">
+      <Filter>Source Files\db</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +70,18 @@
     </ClInclude>
     <ClInclude Include="include\kode\responsefactory.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\sqliteexception.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\sqliteops.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\statement.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\utils.h">
+      <Filter>Header Files\db</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

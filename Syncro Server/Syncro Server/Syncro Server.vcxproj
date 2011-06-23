@@ -39,14 +39,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\Dependencies\;C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Debug;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Dependencies\;F:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Debug;F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\Dependencies;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;C:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Release;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;</LibraryPath>
+    <IncludePath>..\..\Dependencies;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;F:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Release;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

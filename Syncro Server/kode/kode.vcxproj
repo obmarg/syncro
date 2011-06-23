@@ -37,8 +37,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\Dependencies\;C:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
-    <LibraryPath>C:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <IncludePath>..\..\Dependencies\;F:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
+    <LibraryPath>F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>..\..\Dependencies\;C:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
@@ -74,6 +74,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\db\statement.cpp" />
+    <ClCompile Include="src\db\dbutils.cpp" />
     <ClCompile Include="src\stopwatch.cpp" />
     <ClCompile Include="src\tcpconnection.cpp" />
     <ClCompile Include="src\utils.cpp" />
@@ -81,6 +83,10 @@
   <ItemGroup>
     <ClInclude Include="include\kode\base64.h" />
     <ClInclude Include="include\kode\Database.h" />
+    <ClInclude Include="include\kode\db\sqliteexception.h" />
+    <ClInclude Include="include\kode\db\sqliteops.h" />
+    <ClInclude Include="include\kode\db\statement.h" />
+    <ClInclude Include="include\kode\db\utils.h" />
     <ClInclude Include="include\kode\hashutils.h" />
     <ClInclude Include="include\kode\net.h" />
     <ClInclude Include="include\kode\responsefactory.h" />

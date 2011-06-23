@@ -21,10 +21,8 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <vector>
 
-namespace kode
-{
-namespace utils
-{
+namespace kode {
+namespace utils {
 
 std::string GenerateUUID()
 {
