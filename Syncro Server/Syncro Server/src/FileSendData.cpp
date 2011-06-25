@@ -90,8 +90,8 @@ void FileSendData::FillBuffer(
 		if( !stream.Next( &pData, &nSize ) )
 		{
 			throw std::runtime_error( 
-				"ZeroCopyOutputStream returned false in 
-				CFileSendData::FillBuffer" 
+				"ZeroCopyOutputStream returned false in "
+				"CFileSendData::FillBuffer" 
 				);
 		}
 		char* pChars = reinterpret_cast< char* >( pData );
