@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClInclude Include="include\kode\base64.h" />
     <ClInclude Include="include\kode\Database.h" />
+    <ClInclude Include="include\kode\db\resultset.h" />
     <ClInclude Include="include\kode\db\sqliteexception.h" />
     <ClInclude Include="include\kode\db\sqliteops.h" />
     <ClInclude Include="include\kode\db\statement.h" />

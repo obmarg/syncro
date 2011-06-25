@@ -58,7 +58,26 @@ Database::~Database()
 	sqlite3_close( db );
 }
 
-Database::ResultSet Database::run( std::string query )
+void Database::runInsert( std::string query )
+{
+	char* errorMsg = 0;
+
+	int rc = sqlite3_exec( db, query.c_str(), NULL, NULL, &errorMsg );
+
+	if( rc != SQLITE_OK )
+	{
+		std::stringstream ss;
+		ss << "SQL Error";
+		if( errorMsg != NULL )
+		{
+			ss << ": " << errorMsg;
+		}
+		sqlite3_free( errorMsg );
+		throw SqlException( ss.str(), rc );
+	}
+}
+
+ResultSet Database::run( std::string query )
 {
 #ifdef USING_PTHREADS
 	pthread_mutex_lock( &mutex );
@@ -68,20 +87,17 @@ Database::ResultSet Database::run( std::string query )
 #endif
 	clearResult();
 	char* errorMsg = 0;
-	int rc = sqlite3_exec( db, query.c_str(), callback, this, 0 );
-	//int rc = sqlite3_exec(db, query.c_str(),callback,this,&errorMsg);
+	int rc = sqlite3_exec( db, query.c_str(), callback, this, &errorMsg );
 	if( rc != SQLITE_OK )
 	{
-		//Logger.Log("Sqlite error.  Query not executed",LOG_ERROR);
-		//error
-		std::string error = "SQL Error: ";
+		std::stringstream ss;
+		ss << "SQL Error";
 		if( errorMsg != NULL )
 		{
-			error += std::string( errorMsg );
+			ss << ": " << errorMsg;
 		}
-		error += "\nRunning query: " + query;
-		throw std::runtime_error( error.c_str() );
 		sqlite3_free( errorMsg );
+		throw SqlException( ss.str(), rc );
 	}
 #if USING_PTHREADS
 	pthread_mutex_unlock( &mutex );
@@ -122,7 +138,7 @@ int callback( void* ptrDB, int numCols, char** colValues, char** colNames )
 	Database* db = static_cast<Database*>( ptrDB );
 	if( db->result.numCols() == 0 )
 		db->result.defineCols( numCols, colNames );
-	Database::Row row;
+	Row row;
 	for( int i = 0; i < numCols; i++ )
 	{
 		row[colNames[i]] = colValues[i];

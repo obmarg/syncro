@@ -27,7 +27,8 @@ namespace db {
 class SqlException : std::runtime_error
 {
 public:
-	SqlException( std::string sMessage, int nErrorCode ) : runtime_error( sMessage.c_str() )
+	SqlException( std::string sMessage, int nErrorCode ) : 
+	runtime_error( sMessage.c_str() )
 	{
 		m_nErrorCode = nErrorCode;
 	}

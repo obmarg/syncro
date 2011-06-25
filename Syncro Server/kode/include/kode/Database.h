@@ -23,6 +23,7 @@
 
 #include "kode/db/sqliteexception.h"
 #include "kode/db/sqliteops.h"
+#include "kode/db/resultset.h"
 #include "kode/utils.h"
 #include <sqlite3.h>
 #include <boost/foreach.hpp>
@@ -52,111 +53,9 @@ class Database
 public:
 	typedef boost::shared_ptr<Database> TPointer;
 
-	typedef std::map<std::string, std::string, kode::utils::CStringLessThan> Row;
-
-	class ResultSet
-	{
-		friend class Database;
-	protected:
-		std::vector<Row> rows;
-		std::vector<std::string> colNames;
-	public:
-		ResultSet() {};
-		ResultSet( const ResultSet& inoOther ) : rows( inoOther.rows.begin(), inoOther.rows.end() ), colNames( inoOther.colNames.begin(), inoOther.colNames.end() ) { };
-
-		/*ResultSet& operator=(const syncro::Database::ResultsSet& inoRHS) {
-			rows = inoRHS.rows;
-			colNames = inoRHS.colNames;
-		}*/
-
-		typedef std::vector<Row>::iterator iterator;
-		typedef std::vector<Row>::const_iterator const_iterator;
-		iterator begin()
-		{
-			return rows.begin();
-		};
-		iterator end()
-		{
-			return rows.end();
-		};
-		const_iterator begin() const
-		{
-			return rows.begin();
-		};
-		const_iterator end() const
-		{
-			return rows.end();
-		};
-
-		bool empty() const
-		{
-			if( rows.empty() )
-				return true;
-			else
-				return colNames.empty();
-		}
-
-		Database::Row operator[]( int ID )
-		{
-			return rows[ID];
-		};
-		Database::Row getRow( int ID )
-		{
-			return rows[ID];
-		};
-		int numRows()
-		{
-			return rows.size();
-		};
-		int numCols()
-		{
-			return colNames.size();
-		};
-		void clear()
-		{
-			rows.clear();
-			colNames.clear();
-		};
-		void add( Database::Row row )
-		{
-			rows.push_back( row );
-		};
-		void defineCols( int num, char** names )
-		{
-			for( int i = 0; i < num; i++ )
-				colNames.push_back( std::string( names[i] ) );
-		}
-		Database::Row find( std::string col, std::string value )
-		{
-			BOOST_FOREACH( Row & oRow, rows )
-			{
-				Row::iterator pCol = oRow.find( col );
-				if(( pCol != oRow.end() ) && ( pCol->second == value ) )
-					return Row( oRow );
-			}
-			return Row();
-		}
-		void log( int level )
-		{
-			if( numRows() != 0 )
-			{
-				std::string names = "Columns:";
-				for( unsigned int i = 0; i < colNames.size(); i++ )
-					names += colNames[i] + "|";
-//				Logger.Log(names,level);
-				for( unsigned int i = 0; i < rows.size(); i++ )
-				{
-					std::string values = "";
-					for( unsigned int y = 0; y < colNames.size(); y++ )
-						values += rows[i][colNames[y]] + "|";
-					//Logger.Log(values,level);
-				}
-			}
-		}
-	};
-
 	friend int callback( void*, int, char**, char** );
 
+	void runInsert( std::string query );
 	ResultSet run( std::string query );
 
 	template<class tReturnType>

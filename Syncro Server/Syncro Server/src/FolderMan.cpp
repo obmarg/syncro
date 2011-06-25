@@ -36,9 +36,10 @@ using namespace kode::db;
 
 FolderMan::FolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
 {
-	Database::ResultSet oRS = inpDB->run( "SELECT ID,Name,Path,UploadPrefix FROM Folders" );
+	//TODO: Stop using result set here
+	ResultSet oRS = inpDB->run( "SELECT ID,Name,Path,UploadPrefix FROM Folders" );
 	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
-	foreach( Database::Row & oRow, oRS )
+	foreach( Row & oRow, oRS )
 	{
 		path oPath( oRow["Path"] );
 		if( !is_directory( oPath ) )

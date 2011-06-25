@@ -83,6 +83,9 @@
     <ClInclude Include="include\kode\db\utils.h">
       <Filter>Header Files\db</Filter>
     </ClInclude>
+    <ClInclude Include="include\kode\db\resultset.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SConscript">

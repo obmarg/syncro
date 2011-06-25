@@ -101,7 +101,13 @@ Database( insFilename )
 			fOK = UpgradeDatabase( nCurrentVersion );
 		}
 		if( fOK )
-			run( "PRAGMA user_version=" + boost::lexical_cast<std::string>( EXPECTED_DB_VERSION ) + ";" );
+		{
+			runInsert( 
+				"PRAGMA user_version=" + 
+				boost::lexical_cast<std::string>( EXPECTED_DB_VERSION ) + 
+				";" 
+				);
+		}
 	}
 }
 
@@ -113,12 +119,12 @@ SyncroDB::~SyncroDB()
 bool SyncroDB::CreateDatabase()
 {
 	//TODO: possibly add a new function to database that doesn' return a result set
-	run( FOLDERS_TABLE_CREATE );
-	run( SERVER_ID_TABLE_CREATE );
-	run( USERS_TABLE_CREATE );
-	run( FILES_TABLE_CREATE );
-	run( UPLOAD_HISTORY_CREATE );
-	run( DEFAULT_USER_CREATE );
+	runInsert( FOLDERS_TABLE_CREATE );
+	runInsert( SERVER_ID_TABLE_CREATE );
+	runInsert( USERS_TABLE_CREATE );
+	runInsert( FILES_TABLE_CREATE );
+	runInsert( UPLOAD_HISTORY_CREATE );
+	runInsert( DEFAULT_USER_CREATE );
 	clearResult();
 	return true;
 }
@@ -126,42 +132,42 @@ bool SyncroDB::CreateDatabase()
 bool SyncroDB::UpgradeDatabase( int nCurrentVersion )
 {
 	if( nCurrentVersion == 1 )
-		run( SERVER_ID_TABLE_CREATE );
+		runInsert( SERVER_ID_TABLE_CREATE );
 	if( nCurrentVersion == 2 )
 	{
-		run( "DROP TABLE " + SERVER_ID_TABLE_NAME + ";" );
-		run( SERVER_ID_TABLE_CREATE );
+		runInsert( "DROP TABLE " + SERVER_ID_TABLE_NAME + ";" );
+		runInsert( SERVER_ID_TABLE_CREATE );
 	}
 	if( nCurrentVersion < 5 )
 	{
-		run( USERS_TABLE_CREATE );
+		runInsert( USERS_TABLE_CREATE );
 	}
 	if( nCurrentVersion < 6 )
 	{
-		run( "DROP TABLE " + USERS_TABLE_NAME + ";" );
-		run( USERS_TABLE_CREATE );
+		runInsert( "DROP TABLE " + USERS_TABLE_NAME + ";" );
+		runInsert( USERS_TABLE_CREATE );
 	}
 	if( nCurrentVersion < 7 )
 	{
-		run( FILES_TABLE_CREATE );
+		runInsert( FILES_TABLE_CREATE );
 	}
 	if( nCurrentVersion < 8 )
 	{
-		run( "DROP TABLE " + FOLDERS_TABLE_NAME + ";" );
-		run( FOLDERS_TABLE_CREATE );
+		runInsert( "DROP TABLE " + FOLDERS_TABLE_NAME + ";" );
+		runInsert( FOLDERS_TABLE_CREATE );
 	}
 	if( nCurrentVersion < 9 )
 	{
-		run( UPLOAD_HISTORY_CREATE );
+		runInsert( UPLOAD_HISTORY_CREATE );
 	}
 	if( nCurrentVersion < 11 )
 	{
-		run( "DELETE FROM " + USERS_TABLE_NAME + ";" );
-		run( DEFAULT_USER_CREATE );
+		runInsert( "DELETE FROM " + USERS_TABLE_NAME + ";" );
+		runInsert( DEFAULT_USER_CREATE );
 	}
 	if( nCurrentVersion < 12 )
 	{
-		run( FILES_TABLE_UPGRADE_V11_V12 );
+		runInsert( FILES_TABLE_UPGRADE_V11_V12 );
 	}
 	clearResult();
 	return true;
