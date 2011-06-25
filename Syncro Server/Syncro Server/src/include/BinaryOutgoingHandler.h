@@ -44,8 +44,8 @@ public:
 		return comms::packet_types::BinaryResponse;
 	};
 protected:
-	pb::BinaryPacketHeader m_oPacketHeader;
-	FileSendData& m_oFileData;
+	pb::BinaryPacketHeader m_packetHeader;
+	FileSendData& m_fileData;
 };
 
 }	// namespace pbHandlers

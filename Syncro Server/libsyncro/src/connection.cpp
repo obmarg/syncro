@@ -527,6 +527,10 @@ void Connection::UploadFile( const FileTransferDetails& details )
 	request.set_direction(
 	    pb::BinaryDataRequest_TransferDirection_Upload
 	);
+	request.set_modified_time( 
+		boost::numeric_cast< int64_t >(
+			boost::filesystem::last_write_time( details.m_localPath )
+			) );
 	if( details.m_oneShot )
 	{
 		request.set_one_shot( details.m_oneShot );
@@ -604,7 +608,6 @@ void Connection::UploadFile( const FileTransferDetails& details )
 
 void Connection::DownloadFile( const FileTransferDetails& details )
 {
-	
 	pb::BinaryDataRequest request;
 	request.set_folder_id( details.m_folderId );
 	request.set_file_name( details.m_remotePath );
@@ -623,6 +626,7 @@ void Connection::DownloadFile( const FileTransferDetails& details )
 
 	//TODO: Add support for BinaryRejection packets
 	pb::BinaryPacketHeader response;
+	int64_t modifiedTime = 0;
 	bool done = false;
 	while( !done )
 	{
@@ -641,12 +645,27 @@ void Connection::DownloadFile( const FileTransferDetails& details )
 		{
 			fileOut.write( data, size );
 		}
-		if( response.binary_packet_type() == pb::BinaryPacketHeader_SectionType_END )
+		if( 
+			response.binary_packet_type() ==
+			pb::BinaryPacketHeader_SectionType_END 
+			)
 		{
 			done = true;
+			if( response.has_modified_time() )
+			{
+				modifiedTime = response.modified_time();
+			}
 		}
 	}
 	fileOut.close();
+	
+	if( modifiedTime != 0 )
+	{
+		boost::filesystem::last_write_time( 
+			details.m_localPath, 
+			modifiedTime 
+			);
+	}
 }
 
 

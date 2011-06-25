@@ -34,12 +34,14 @@ FileSendData::FileSendData(
     const std::string& fileName,
     const int requestedBufferSize,
     const VoidCallback& completionCallback,
-    int64_t fileStartOffset
+    int64_t fileStartOffset,
+	int64_t fileModifiedTime
 	) :
 m_fileName( fileName ),
 m_fileSize( 0 ),
 m_completionCallback( completionCallback ),
-m_finishedAfterChunk( false )
+m_finishedAfterChunk( false ),
+m_fileModifiedTime( fileModifiedTime )
 {
 	m_nRequestedBufferSize = requestedBufferSize;
 	OpenFile( fileStartOffset );
@@ -75,7 +77,9 @@ void FileSendData::OpenFile( int64_t fileStartOffset )
 		throw std::runtime_error( "CFileSendData called on non existant file" );
 }
 
-void FileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& stream )
+void FileSendData::FillBuffer( 
+	google::protobuf::io::ZeroCopyOutputStream& stream
+	)
 {
 	int nReadAmount = GetChunkSize();
 
@@ -84,7 +88,12 @@ void FileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& strea
 	while( nReadAmount > 0 )
 	{
 		if( !stream.Next( &pData, &nSize ) )
-			throw std::runtime_error( "ZeroCopyOutputStream returned false in CFileSendData::FillBuffer" );
+		{
+			throw std::runtime_error( 
+				"ZeroCopyOutputStream returned false in 
+				CFileSendData::FillBuffer" 
+				);
+		}
 		char* pChars = reinterpret_cast< char* >( pData );
 		//TODO: Maybe start using google's fileinputstream to read data?
 		m_file.read( pChars, nSize );
@@ -102,7 +111,8 @@ unsigned int FileSendData::GetChunkSize()
 	if( m_nRequestedBufferSize != 0 )
 	{
 		int nRequestedBufferSize = ( m_nRequestedBufferSize - 1024 );		//Take away 1k just to be safe?
-		nBufferSize = std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
+		nBufferSize = 
+			std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
 	}
 	//TODO: maybe stop doing the above -1024, and find a better way of doing it
 	int64_t nSizeLeft = m_fileSize - m_file.tellg();
@@ -154,7 +164,6 @@ void FileSendData::CallCompletionCallback()
 
 	try
 	{
-
 		int64_t timeMs = m_stopwatch.GetMS();
 		float dataTransferred =
 		    numeric_cast<float>( GetFilePosition() ) / 1024.0f;
@@ -166,7 +175,8 @@ void FileSendData::CallCompletionCallback()
 	}
 	catch( const std::exception& ex )
 	{
-		std::cout << "Error when calculating transfer rate in CFileSendData::CallCompletionCallback:\n"
+		std::cout << "Error when calculating transfer rate in "
+				  << "CFileSendData::CallCompletionCallback:\n"
 		          << ex.what();
 	}
 

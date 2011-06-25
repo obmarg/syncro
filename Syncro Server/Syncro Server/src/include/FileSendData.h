@@ -36,7 +36,8 @@ public:
 	    const std::string& fileName,
 	    int requestedBufferSize = 0,
 	    const VoidCallback& completionCallback = VoidCallback(),
-	    int64_t fileStartOffset = 0
+	    int64_t fileStartOffset = 0,
+		int64_t fileModifiedTime = 0
 	);
 
 	~FileSendData();
@@ -49,6 +50,10 @@ public:
 	{
 		return m_fileSize;
 	};
+	int64_t GetFileModifiedTime()
+	{
+		return m_fileModifiedTime;
+	}
 	bool IsFileFinished();
 	bool IsStartFile();
 	bool IsFileFinishedAfterChunk( unsigned int nextChunkSize );
@@ -63,6 +68,7 @@ private:
 	const std::string m_fileName;
 
 	int64_t	m_fileSize;
+	int64_t m_fileModifiedTime;
 
 	unsigned int m_nRequestedBufferSize;
 

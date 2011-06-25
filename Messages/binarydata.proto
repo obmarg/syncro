@@ -56,6 +56,8 @@ message BinaryPacketHeader {
 		END = 2;
 	}
 	optional SectionType binary_packet_type = 4;
+	
+	optional int64 modified_time = 5;
 };
 
 message BinaryIncomingResponse {

@@ -87,19 +87,35 @@ static const server::RegisterSessionResponse binaryDataRegister(
 	BinaryDataHandler()
 	);
 
-CBinaryDataResponse::CBinaryDataResponse( FileSendData& inoFileData )
-	: m_oFileData( inoFileData )
+CBinaryDataResponse::CBinaryDataResponse( FileSendData& inoFileData ) :
+m_fileData( inoFileData )
 {
-	m_oPacketHeader.set_file_offset( m_oFileData.GetFilePosition() );
-	m_oPacketHeader.set_file_size( m_oFileData.GetFileSize() );
-	m_oPacketHeader.set_hash_size( 0 );
+	m_packetHeader.set_file_offset( m_fileData.GetFilePosition() );
+	m_packetHeader.set_file_size( m_fileData.GetFileSize() );
+	m_packetHeader.set_hash_size( 0 );
 	if( inoFileData.IsStartFile() )
-		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_START );
+	{
+		m_packetHeader.set_binary_packet_type( 
+			pb::BinaryPacketHeader_SectionType_START 
+			);
+	}
+	else if( 
+		m_fileData.IsFileFinishedAfterChunk( m_fileData.GetChunkSize() ) 
+		)
+	{
+		m_packetHeader.set_binary_packet_type( 
+			pb::BinaryPacketHeader_SectionType_END 
+			);
+		m_packetHeader.set_modified_time( 
+			m_fileData.GetFileModifiedTime() 
+			);
+	}
 	else
-		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_MIDDLE );
-
-	if( m_oFileData.IsFileFinishedAfterChunk( m_oFileData.GetChunkSize() ) )
-		m_oPacketHeader.set_binary_packet_type( pb::BinaryPacketHeader_SectionType_END );
+	{
+		m_packetHeader.set_binary_packet_type( 
+			pb::BinaryPacketHeader_SectionType_MIDDLE 
+			);
+	}
 }
 
 CBinaryDataResponse::~CBinaryDataResponse()
@@ -117,11 +133,11 @@ uint32_t CBinaryDataResponse::GetSubpacketSize( uint32_t subpacket )
 	assert( subpacket == 0 || subpacket == 1 );
 	if( subpacket == 0 )
 	{
-		return m_oPacketHeader.ByteSize();
+		return m_packetHeader.ByteSize();
 	}
 	else if( subpacket == 1 )
 	{
-		return m_oFileData.GetChunkSize();
+		return m_fileData.GetChunkSize();
 	}
 	throw std::exception();
 }
@@ -129,10 +145,10 @@ uint32_t CBinaryDataResponse::GetSubpacketSize( uint32_t subpacket )
 void CBinaryDataResponse::WriteSubpacket( int inSubpacketIndex, google::protobuf::io::ZeroCopyOutputStream& stream )
 {
 	if( inSubpacketIndex == 0 )
-		WriteMessage( m_oPacketHeader, stream );
+		WriteMessage( m_packetHeader, stream );
 	else
 	{
-		m_oFileData.FillBuffer( stream );
+		m_fileData.FillBuffer( stream );
 	}
 }
 
