@@ -29,7 +29,8 @@ m_nFolderId( folderId ),
 m_nBufferSize( 0 ),
 m_nFileSize( -1 ),
 m_oneShot( false ),
-m_startOffset( 0 )
+m_startOffset( 0 ),
+m_modifiedTime( 0 )
 {
 
 }
@@ -61,6 +62,8 @@ BinaryDataRequest::BinaryDataRequest(
 		m_startOffset = 0;
 		if( oRequest.has_start_offset() )
 			m_startOffset = oRequest.start_offset();
+		if( oRequest.has_modified_time() )
+			m_modifiedTime = oRequest.modified_time();
 		//TODO: Add upload direction at some point?
 	}
 }

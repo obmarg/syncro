@@ -119,6 +119,7 @@
     <ClInclude Include="src\include\SyncroDB.h" />
     <ClInclude Include="src\include\SyncroPBResponseFactory.h" />
     <ClInclude Include="src\include\SyncroServer.h" />
+    <ClInclude Include="src\include\TransferFinishDetails.h" />
     <ClInclude Include="src\include\UserSession.h" />
     <ClInclude Include="src\include\VectorPBResponse.h" />
   </ItemGroup>

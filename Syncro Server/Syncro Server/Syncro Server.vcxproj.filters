@@ -117,6 +117,9 @@
     <ClInclude Include="src\include\SimplePBResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\TransferFinishDetails.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AdminCommandManager.cpp">

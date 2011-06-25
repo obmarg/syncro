@@ -50,6 +50,9 @@ public:
 	const int64_t GetStartOffset() const
 	{ return m_startOffset; }
 
+	const int64_t GetModifiedTime() const
+	{ return m_modifiedTime; }
+
 private:
 	std::string m_sFilename;
 	int m_nFolderId;
@@ -57,6 +60,7 @@ private:
 	int64_t m_nFileSize;
 	bool m_oneShot;
 	int64_t m_startOffset;
+	int64_t m_modifiedTime;
 };
 
 };	//namespace syncro

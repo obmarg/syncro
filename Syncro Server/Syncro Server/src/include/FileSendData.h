@@ -33,8 +33,8 @@ class FileSendData : boost::noncopyable
 {
 public:
 	FileSendData(
-	    const std::string& insFilename,
-	    int innRequestedBufferSize = 0,
+	    const std::string& fileName,
+	    int requestedBufferSize = 0,
 	    const VoidCallback& completionCallback = VoidCallback(),
 	    int64_t fileStartOffset = 0
 	);
@@ -47,11 +47,11 @@ public:
 	std::istream::pos_type GetFilePosition();
 	std::istream::pos_type GetFileSize()
 	{
-		return m_nFileSize;
+		return m_fileSize;
 	};
 	bool IsFileFinished();
 	bool IsStartFile();
-	bool IsFileFinishedAfterChunk( unsigned int inNextChunkSize );
+	bool IsFileFinishedAfterChunk( unsigned int nextChunkSize );
 
 private:
 
@@ -59,10 +59,10 @@ private:
 
 	void CallCompletionCallback();
 
-	std::ifstream m_oFile;
-	const std::string m_sFilename;
+	std::ifstream m_file;
+	const std::string m_fileName;
 
-	int64_t	m_nFileSize;
+	int64_t	m_fileSize;
 
 	unsigned int m_nRequestedBufferSize;
 

@@ -18,6 +18,7 @@
 #include "FolderMan.h"
 #include "Folder.h"
 #include "BinaryDataRequest.h"
+#include "TransferFinishDetails.h"
 #include <libsyncro/stringutils.h>
 #include <kode/db/statement.h>
 #include <kode/utils.h>
@@ -32,60 +33,6 @@ namespace syncro
 using namespace std;
 using namespace boost::filesystem;
 using namespace kode::db;
-
-class UploadFinishDetails
-{
-public:
-	UploadFinishDetails(
-	    const std::string& inFilename,
-	    const bool inOneShot,
-	    const int inFolderId,
-	    const std::string& inFolderPath,
-	    const std::string& inLocalPath,
-		const bool inDeleteOnFinish
-	) :
-		fileName( inFilename ),
-		oneShot( inOneShot ),
-		folderId( inFolderId ),
-		folderPath( inFolderPath ),
-		localPath( inLocalPath ),
-		deleteOnFinish( inDeleteOnFinish )
-	{
-
-	}
-	std::string fileName;
-	bool oneShot;
-	unsigned int folderId;
-	std::string folderPath;
-	std::string localPath;
-	bool deleteOnFinish;
-};
-
-// For now, DownloadFinishDetails is the same as upload finish
-class DownloadFinishDetails : public UploadFinishDetails
-{
-public:
-	DownloadFinishDetails(
-	    const std::string& inFilename,
-	    const bool inOneShot,
-	    const int inFolderId,
-	    const std::string& inFolderPath,
-	    const std::string& inLocalPath,
-		bool inDeleteOnFinish,
-	    const int inFileId = -1
-	) :
-		UploadFinishDetails(
-		    inFilename,
-		    inOneShot,
-		    inFolderId,
-		    inFolderPath,
-		    inLocalPath,
-			inDeleteOnFinish
-		),
-		fileId( inFileId )
-	{ }
-	int fileId;
-};
 
 FolderMan::FolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
 {
@@ -171,17 +118,17 @@ FolderMan::FileRequested(
     FileTransferDetails& details
 )
 {
-	std::string rv =
+	std::string fileName =
 	    FindFolder( requestData.GetFolderId() ).Path;
 
-	char aLastChar = *( rv.rbegin() ) ;
+	char aLastChar = *( fileName.rbegin() ) ;
 	if(( aLastChar != '\\' ) && ( aLastChar != '/' ) )
-		rv += "/";
-	rv += requestData.GetFilename();
+		fileName += "/";
+	fileName += requestData.GetFilename();
 	bool oneShot = false;
 	int oneShotId = -1;
 	bool deleteOnFinish = false;
-	if( !exists( path( rv ) ) )
+	if( !exists( path( fileName ) ) )
 	{
 		if( !m_findOneShot )
 		{
@@ -199,7 +146,7 @@ FolderMan::FileRequested(
 		{
 			//We've found a one shot file, sweet...
 			oneShotId = m_findOneShot->GetColumn< int >( 0 );
-			rv = m_findOneShot->GetColumn< std::string >( 1 );
+			fileName = m_findOneShot->GetColumn< std::string >( 1 );
 			oneShot = m_findOneShot->GetColumn< int >( 2 ) != 0;
 			deleteOnFinish = m_findOneShot->GetColumn< int >( 3 ) != 0;
 		}
@@ -208,18 +155,21 @@ FolderMan::FileRequested(
 			return false;
 		}
 	}
-	details.m_filename = rv;
+	details.m_filename = fileName;
+	details.m_modifiedTime = 
+		boost::numeric_cast< int64_t >( 
+			boost::filesystem::last_write_time( fileName )
+			);
 	//TODO: Add support for folder path in here. for now doesn't matter
 	//		can possibly remove the parameter if it turns out just the
 	//		name is good enough
-	//TODO: Also need to seperate UploadFInishDetails and DownloadFInishDetails
 	DownloadFinishDetailsPtr finishDetails(
 	    new DownloadFinishDetails(
 	        requestData.GetFilename(),
 	        oneShot,
 	        requestData.GetFolderId(),
 	        "",
-	        rv,
+	        fileName,
 			deleteOnFinish,
 	        oneShotId
 	    )
@@ -276,7 +226,8 @@ FolderMan::IncomingFile(
 	        fileData.GetFolderId(),
 	        "",
 	        destFileName,
-			fileData.IsOneShot()
+			fileData.IsOneShot(),
+			fileData.GetModifiedTime()
 	    )
 	);
 	details.m_callback = boost::bind(
@@ -365,6 +316,14 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 		m_addToUploadHistory->Bind( 2, details->folderId );
 		m_addToUploadHistory->Bind( 3, details->localPath );
 		m_addToUploadHistory->GetNextRow();
+	}
+
+	if( details->modifiedTime != 0 )
+	{
+		boost::filesystem::last_write_time( 
+			details->localPath,
+			boost::numeric_cast< time_t >( details->modifiedTime )
+			);
 	}
 
 	//TODO: At some point, would be good to clear out the old uploaded files database,

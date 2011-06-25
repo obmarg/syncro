@@ -324,7 +324,9 @@ public class Connection {
 		FileInputStream fileStream = 
 			new FileInputStream( localFilename );
 		
-		long totalFileSize = new File(localFilename).length();
+		File localFile = new File( localFilename );
+		long totalFileSize = localFile.length();
+		long modifiedTime = localFile.lastModified();
 		if( totalFileSize > Integer.MAX_VALUE )
 		{
 			throw new Exception("File is too big to send");
@@ -340,7 +342,7 @@ public class Connection {
 			.setDirection( Binarydata.BinaryDataRequest.TransferDirection.Upload )
 			.setFileSize( (int)totalFileSize )
 			.setOneShot(false)
-			
+			.setModifiedTime( modifiedTime )
 			.build();
 		
 		m_pbInterface.SendObject(

@@ -33,8 +33,8 @@ namespace syncro
 
 class BinaryDataRequest;
 class FileTransferDetails;
-class UploadFinishDetails;
-class DownloadFinishDetails;
+struct UploadFinishDetails;
+struct DownloadFinishDetails;
 class Folder;
 
 class FolderMan
@@ -96,10 +96,14 @@ public:
 
 	int64_t CurrentSize()
 	{ return m_currentSize; }
+
+	int64_t ModifiedTime()
+	{ return m_modifiedTime; }
 private:
 	std::string m_filename;
 	VoidCallback m_callback;
 	int64_t m_currentSize;
+	int64_t m_modifiedTime;
 };
 
 };

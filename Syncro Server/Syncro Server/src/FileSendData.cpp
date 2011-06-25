@@ -31,17 +31,17 @@ const unsigned char FILE_SECTION_FIRST_BYTE = 16;
 const unsigned char FILE_LAST_SECTION_FIRST_BYTE = 20;
 
 FileSendData::FileSendData(
-    const std::string& insFilename,
-    const int innRequestedBufferSize,
+    const std::string& fileName,
+    const int requestedBufferSize,
     const VoidCallback& completionCallback,
     int64_t fileStartOffset
-)
-	:
-	m_sFilename( insFilename ),
-	m_completionCallback( completionCallback ),
-	m_finishedAfterChunk( false )
+	) :
+m_fileName( fileName ),
+m_fileSize( 0 ),
+m_completionCallback( completionCallback ),
+m_finishedAfterChunk( false )
 {
-	m_nRequestedBufferSize = innRequestedBufferSize;
+	m_nRequestedBufferSize = requestedBufferSize;
 	OpenFile( fileStartOffset );
 }
 
@@ -62,14 +62,14 @@ void FileSendData::OpenFile( int64_t fileStartOffset )
 	{
 		cout << "Sending file: ";
 	} 
-	cout << m_sFilename.c_str() << "\n";
+	cout << m_fileName.c_str() << "\n";
 
-	m_oFile.open( m_sFilename.c_str() , ios::in | ios::binary );
-	if( m_oFile.is_open() )
+	m_file.open( m_fileName.c_str() , ios::in | ios::binary );
+	if( m_file.is_open() )
 	{
-		m_oFile.seekg( 0, ios::end );
-		m_nFileSize = m_oFile.tellg();
-		m_oFile.seekg( fileStartOffset, ios::beg );
+		m_file.seekg( 0, ios::end );
+		m_fileSize = m_file.tellg();
+		m_file.seekg( fileStartOffset, ios::beg );
 	}
 	else
 		throw std::runtime_error( "CFileSendData called on non existant file" );
@@ -87,7 +87,7 @@ void FileSendData::FillBuffer( google::protobuf::io::ZeroCopyOutputStream& strea
 			throw std::runtime_error( "ZeroCopyOutputStream returned false in CFileSendData::FillBuffer" );
 		char* pChars = reinterpret_cast< char* >( pData );
 		//TODO: Maybe start using google's fileinputstream to read data?
-		m_oFile.read( pChars, nSize );
+		m_file.read( pChars, nSize );
 		nReadAmount -= nSize;
 	}
 	if( m_finishedAfterChunk )
@@ -105,7 +105,7 @@ unsigned int FileSendData::GetChunkSize()
 		nBufferSize = std::min( DEFAULT_FILE_SEND_BUFFER_SIZE, nRequestedBufferSize );
 	}
 	//TODO: maybe stop doing the above -1024, and find a better way of doing it
-	int64_t nSizeLeft = m_nFileSize - m_oFile.tellg();
+	int64_t nSizeLeft = m_fileSize - m_file.tellg();
 	int64_t rv = std::min(
 	                 boost::numeric_cast<int64_t>( nBufferSize ),
 	                 nSizeLeft
@@ -115,7 +115,7 @@ unsigned int FileSendData::GetChunkSize()
 
 bool FileSendData::IsStartFile()
 {
-	if( m_oFile.tellg() == ( std::streamoff )0 )
+	if( m_file.tellg() == ( std::streamoff )0 )
 		return true;
 	return false;
 }
@@ -123,7 +123,7 @@ bool FileSendData::IsStartFile()
 bool FileSendData::IsFileFinished()
 {
 
-	if( m_oFile.tellg() == m_nFileSize || m_oFile.eof() )
+	if( m_file.tellg() == m_fileSize || m_file.eof() )
 	{
 		CallCompletionCallback();
 
@@ -134,13 +134,13 @@ bool FileSendData::IsFileFinished()
 
 std::istream::pos_type FileSendData::GetFilePosition()
 {
-	return m_oFile.tellg();
+	return m_file.tellg();
 }
 
 bool FileSendData::IsFileFinishedAfterChunk( unsigned int inNextChunkSize )
 {
-	std::streamoff nNextTell = m_oFile.tellg() + ( std::streamoff )inNextChunkSize;
-	if( nNextTell == m_nFileSize )
+	std::streamoff nNextTell = m_file.tellg() + ( std::streamoff )inNextChunkSize;
+	if( nNextTell == m_fileSize )
 	{
 		m_finishedAfterChunk = true;
 		return true;

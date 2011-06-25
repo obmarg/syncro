@@ -42,6 +42,7 @@ message BinaryDataRequest {
 	optional TransferDirection direction = 5;
 	optional bool one_shot = 6;
 	optional int64 start_offset = 7;
+	optional int64 modified_time = 8;
 };
 
 message BinaryPacketHeader {
