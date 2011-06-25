@@ -27,8 +27,6 @@ namespace kode
 namespace utils
 {
 
-#define foreach BOOST_FOREACH
-
 class CStringLessThan
 {
 public:

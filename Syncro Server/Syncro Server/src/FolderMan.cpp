@@ -34,23 +34,24 @@ using namespace std;
 using namespace boost::filesystem;
 using namespace kode::db;
 
-FolderMan::FolderMan( Database::TPointer inpDB ) : m_pDB( inpDB )
+FolderMan::FolderMan( Database::TPointer db ) : m_db( db )
 {
-	//TODO: Stop using result set here
-	ResultSet oRS = inpDB->run( "SELECT ID,Name,Path,UploadPrefix FROM Folders" );
+	StatementPtr statement = 
+		m_db->prepare( "SELECT ID,Name,Path,UploadPrefix FROM Folders");
+
 	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
-	foreach( Row & oRow, oRS )
+	while( statement->GetNextRow() )
 	{
-		path oPath( oRow["Path"] );
+		path oPath( statement->GetColumn< std::string >( "Path" ) );
 		if( !is_directory( oPath ) )
 			throw std::runtime_error( "Invalid path read from DB in CFolderMan constructor" );
 		//TODO: Do something with the name as well
 		m_folders.push_back(
 		    FolderInfo(
-		        boost::lexical_cast<int>( oRow["ID"] ) ,
-		        oRow["Name"],
+		        statement->GetColumn< int >( "ID" ),
+		        statement->GetColumn< std::string >( "Name" ),
 		        oPath.native_directory_string(),
-		        oRow["UploadPrefix"]
+		        statement->GetColumn< std::string >( "UploadPrefix" )
 		    )
 		);
 		if(( *m_folders.back().Path.rbegin() ) != '/'
@@ -69,7 +70,7 @@ FolderMan::~FolderMan()
 
 const FolderInfo& FolderMan::FindFolder( int nFolderId )
 {
-	foreach( const FolderInfo & oInfo, m_folders )
+	BOOST_FOREACH( const FolderInfo & oInfo, m_folders )
 	{
 		if( oInfo.Id == nFolderId )
 		{
@@ -91,7 +92,7 @@ FolderMan::GetFolder( int nFolderID )
 
 	if( !m_listOneShots )
 	{
-		m_listOneShots = m_pDB->prepare(
+		m_listOneShots = m_db->prepare(
 		                     "SELECT FileName,LocalPath FROM files "
 		                     "WHERE OneShot=1 AND FolderID=?"
 		                 );
@@ -133,7 +134,7 @@ FolderMan::FileRequested(
 	{
 		if( !m_findOneShot )
 		{
-			m_findOneShot = m_pDB->prepare(
+			m_findOneShot = m_db->prepare(
 			                    "SELECT ID,LocalPath,OneShot,DeleteOnFinish"
 								" FROM files "
 			                    "WHERE FolderID=? AND FileName=?"
@@ -251,7 +252,7 @@ FolderMan::IncomingFile(
 	//
 	if( !m_checkUploadHistory )
 	{
-		m_checkUploadHistory = m_pDB->prepare(
+		m_checkUploadHistory = m_db->prepare(
 		                           "SELECT ID,ActualFilename FROM UploadHistory "
 		                           "WHERE FolderID=? AND Filename=?"
 		                       );
@@ -284,7 +285,7 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 		//If we're a one shot file, we need to add a database entry
 		if( !m_addOneShot )
 		{
-			m_addOneShot = m_pDB->prepare(
+			m_addOneShot = m_db->prepare(
 			                   "INSERT INTO Files "
 			                   "(Filename,FolderPath,LocalPath,FolderId,"
 							   "OneShot,DeleteOnFinish) "
@@ -306,7 +307,7 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 	{
 		if( !m_addToUploadHistory )
 		{
-			m_addToUploadHistory = m_pDB->prepare(
+			m_addToUploadHistory = m_db->prepare(
 			                           "INSERT INTO UploadHistory "
 			                           "(Filename, FolderId, ActualFilename) "
 			                           "VALUES( ?, ?, ?);"
@@ -339,7 +340,7 @@ void FolderMan::FileDownloadFinished( DownloadFinishDetailsPtr details )
 	{
 		if( !m_delOneShot )
 		{
-			m_delOneShot = m_pDB->prepare(
+			m_delOneShot = m_db->prepare(
 			                   "DELETE FROM Files WHERE OneShot=1 AND ID=?"
 			               );
 		}

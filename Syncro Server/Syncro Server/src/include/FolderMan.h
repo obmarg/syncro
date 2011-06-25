@@ -60,7 +60,7 @@ public:
 
 private:
 	FolderList m_folders;
-	kode::db::Database::TPointer m_pDB;
+	kode::db::Database::TPointer m_db;
 
 	kode::db::StatementPtr m_addOneShot;
 	kode::db::StatementPtr m_listOneShots;
