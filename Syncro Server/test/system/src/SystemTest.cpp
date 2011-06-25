@@ -24,6 +24,7 @@
 #include <cryptopp/sha.h>
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include <time.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest );
 
@@ -112,14 +113,7 @@ void SystemTest::FileTransferTest()
 	using namespace syncro::client;
 	Connect();
 
-	bool fileCreated = false;
-	if( !boost::filesystem::exists( m_transferTestFileName ) )
-	{
-		fileCreated = true;
-		std::ofstream fileOut( m_transferTestFileName.c_str() );
-		fileOut << TRANSFER_FILE_CONTENTS;
-		fileOut.close();
-	}
+	bool fileCreated = CreateTestFile( m_transferTestFileName );
 	FileTransferDetails details;
 	details
 		.SetFolderId( 1 )
@@ -173,3 +167,79 @@ void SystemTest::FileTransferTest()
 	}
 }
 
+void SystemTest::FileModificationTimeTest()
+{
+	using namespace syncro::client;
+	Connect();
+
+	bool fileCreated = CreateTestFile( m_transferTestFileName );
+
+	//
+	// Modify the file time to be not just now
+	//
+	tm *timeStruct;
+	time_t currentTime = time( 0 );
+	timeStruct = localtime( &currentTime );
+	//TODO: This isn't perfect.  Time may overflow.  but deal with
+	//		that when not in rush
+	if( timeStruct->tm_sec > 3 )
+	{
+		timeStruct->tm_min -= 2;
+	}
+	else
+	{
+		timeStruct->tm_min += 2;
+	}
+	time_t newTime = mktime( timeStruct );
+
+	boost::filesystem::last_write_time( 
+		m_transferTestFileName,
+		newTime
+		);
+
+	CPPUNIT_ASSERT_EQUAL( 
+		newTime,
+		boost::filesystem::last_write_time( m_transferTestFileName )
+		);
+
+	//
+	// First, upload our file
+	//
+	FileTransferDetails details;
+	details
+		.SetFolderId( 1 )
+		.SetLocalPath( m_transferTestFileName )
+		.SetOneShot( false )
+		.SetRemotePath( m_transferTestFileName );
+
+	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+		"Upload file threw exception",
+		m_connection->UploadFile( details ) 
+		);
+
+	details.SetLocalPath( "temp.dat" );
+	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+		"File Download Threw Exception",
+		m_connection->DownloadFile( details ) 
+		);
+
+	CPPUNIT_ASSERT_EQUAL( 
+		newTime,
+		boost::filesystem::last_write_time( "temp.dat" )
+		);
+
+	boost::filesystem::remove( "temp.dat" );
+}
+
+bool SystemTest::CreateTestFile( const std::string& fileName )
+{
+	if( !boost::filesystem::exists( fileName ) )
+	{
+		std::ofstream fileOut( fileName.c_str() );
+		fileOut << TRANSFER_FILE_CONTENTS;
+		fileOut.close();
+		return true;
+	}
+
+	return false;
+}

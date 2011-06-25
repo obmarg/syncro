@@ -45,6 +45,7 @@ public:
 	CPPUNIT_TEST( FolderListTest );
 	CPPUNIT_TEST( FolderContentsTest );
 	CPPUNIT_TEST( FileTransferTest );
+	CPPUNIT_TEST( FileModificationTimeTest );
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -53,10 +54,19 @@ public:
 	void tearDown();
 
 public:
+	//
+	// Test functions
+	//
 	void ConnectionTest();
 	void FolderListTest();
 	void FolderContentsTest();
 	void FileTransferTest();
+	void FileModificationTimeTest();
+
+	//
+	// Utility functions
+	//
+	bool CreateTestFile( const std::string& fileName );
 
 public:
 	static void SetConnectionDetails( 
