@@ -99,21 +99,20 @@ m_fileData( inoFileData )
 			pb::BinaryPacketHeader_SectionType_START 
 			);
 	}
-	else if( 
-		m_fileData.IsFileFinishedAfterChunk( m_fileData.GetChunkSize() ) 
-		)
+	else
+	{
+		m_packetHeader.set_binary_packet_type( 
+			pb::BinaryPacketHeader_SectionType_MIDDLE 
+			);
+	}
+
+	if( m_fileData.IsFileFinishedAfterChunk( m_fileData.GetChunkSize() ) )
 	{
 		m_packetHeader.set_binary_packet_type( 
 			pb::BinaryPacketHeader_SectionType_END 
 			);
 		m_packetHeader.set_modified_time( 
 			m_fileData.GetFileModifiedTime() 
-			);
-	}
-	else
-	{
-		m_packetHeader.set_binary_packet_type( 
-			pb::BinaryPacketHeader_SectionType_MIDDLE 
 			);
 	}
 }

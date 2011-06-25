@@ -33,6 +33,8 @@ bool						SystemTest::m_serverPrepared;
 std::string					SystemTest::m_transferTestFileName =
 											"TransferTemp.txt";
 
+static const std::string ModifiedTimeTestFileName = "ModifiedTimeTest.txt";
+
 static const std::string TRANSFER_FILE_CONTENTS = "Testing.txt";
 
 void SystemTest::setUp()
@@ -143,6 +145,7 @@ void SystemTest::FileTransferTest()
 	}
 	CPPUNIT_ASSERT_MESSAGE( "Could not find file after upload", foundFile );
 
+	boost::filesystem::remove( "temp.dat" );
 	details.SetLocalPath( "temp.dat" );
 	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
 		"File Download Threw Exception",
@@ -172,7 +175,7 @@ void SystemTest::FileModificationTimeTest()
 	using namespace syncro::client;
 	Connect();
 
-	bool fileCreated = CreateTestFile( m_transferTestFileName );
+	bool fileCreated = CreateTestFile( ModifiedTimeTestFileName );
 
 	//
 	// Modify the file time to be not just now
@@ -193,13 +196,13 @@ void SystemTest::FileModificationTimeTest()
 	time_t newTime = mktime( timeStruct );
 
 	boost::filesystem::last_write_time( 
-		m_transferTestFileName,
+		ModifiedTimeTestFileName,
 		newTime
 		);
 
 	CPPUNIT_ASSERT_EQUAL( 
 		newTime,
-		boost::filesystem::last_write_time( m_transferTestFileName )
+		boost::filesystem::last_write_time( ModifiedTimeTestFileName )
 		);
 
 	//
@@ -208,15 +211,16 @@ void SystemTest::FileModificationTimeTest()
 	FileTransferDetails details;
 	details
 		.SetFolderId( 1 )
-		.SetLocalPath( m_transferTestFileName )
+		.SetLocalPath( ModifiedTimeTestFileName )
 		.SetOneShot( false )
-		.SetRemotePath( m_transferTestFileName );
+		.SetRemotePath( ModifiedTimeTestFileName );
 
 	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
 		"Upload file threw exception",
 		m_connection->UploadFile( details ) 
 		);
 
+	boost::filesystem::remove( "temp.dat" );
 	details.SetLocalPath( "temp.dat" );
 	CPPUNIT_ASSERT_NO_THROW_MESSAGE(
 		"File Download Threw Exception",
