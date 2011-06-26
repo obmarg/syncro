@@ -42,19 +42,59 @@ class Statement
 public:
 	virtual ~Statement();
 	
+	//!
+	//!	\brief	Fetches the next row from the statement
+	//!	
+	//!	\return	True if a new row was fetched
+	//!
 	bool GetNextRow();
 	
+	//!	\brief	Resets the statement
 	void Reset();
 
+	//!
+	//!	\brief	Binds some data to a parameter
+	//!	
+	//!	\param	index	The index of the parameter to bind ( 1 based )
+	//!	\param	data	The data to bind
+	//!
+	//!	\throws	SqlException on error
+	//!
 	template<class tData>
 	Statement& Bind( int index, tData data );
 
+	//!
+	//!	\brief	Binds some data to a parameter
+	//!	
+	//!	\param	parameter	The name of the parameter to bind
+	//!	\param	data		The data to bind
+	//!
+	//!	\throws	SqlException on error
+	//!
 	template<class tData>
 	Statement& Bind( std::string parameter, tData data );
 
+	//!
+	//!	\brief	Binds some data to a parameter
+	//!	
+	//!	\param	index	The index of the column to return ( 0 based )
+	//!
+	//!	\return	The data contained in the column
+	//!
+	//!	\throws	SqlException on error
+	//!
 	template<class tData>
 	tData GetColumn( int index );
 
+	//!
+	//!	\brief	Binds some data to a parameter
+	//!	
+	//!	\param	parameter	The name of the column to return
+	//!
+	//!	\return	The data contained in the column
+	//!
+	//!	\throws	SqlException on error
+	//!
 	template<class tData>
 	tData GetColumn( std::string parameter );
 

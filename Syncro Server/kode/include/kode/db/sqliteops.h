@@ -46,6 +46,8 @@ public:
 	//!	\param	index		The index of this parameter ( 1 based )
 	//!	\param	data		The data to bind
 	//!
+	//!	\throws A SqlException on error
+	//!
 	static void Bind( sqlite3_stmt* statement, int index,  DataType data );
 
 	//!
@@ -53,6 +55,10 @@ public:
 	//!
 	//!	\param	statement	The statement to retreive from
 	//!	\param	index		The index of this column ( 0 based )
+	//!
+	//!	\return	The data contained in the specified column
+	//!
+	//!	\throws A SqlException on error
 	//!
 	static DataType GetColumn( sqlite3_stmt* statement, int index );
 };
@@ -66,6 +72,15 @@ template<>
 class SqliteOps< std::string >
 {
 public:
+	//!
+	//!	\brief	Binds data to a statement
+	//!
+	//!	\param	statement	The statement to bind to
+	//!	\param	index		The index of this parameter ( 1 based )
+	//!	\param	data		The data to bind
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static void Bind( sqlite3_stmt* handle, int index, const std::string& data )
 	{
 		int errorCode = sqlite3_bind_text(
@@ -79,6 +94,16 @@ public:
 		utils::CheckErrorCode( errorCode, "SqliteOps<std::string>::Bind" );
 	}
 
+	//!
+	//!	\brief	Gets a column from a statement
+	//!
+	//!	\param	statement	The statement to retreive from
+	//!	\param	index		The index of this column ( 0 based )
+	//!
+	//!	\return	The data contained in the specified column
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static std::string GetColumn( sqlite3_stmt* handle, int index )
 	{
 		return std::string( 
@@ -99,6 +124,15 @@ template<>
 class SqliteOps< unsigned int >
 {
 public:
+	//!
+	//!	\brief	Binds data to a statement
+	//!
+	//!	\param	statement	The statement to bind to
+	//!	\param	index		The index of this parameter ( 1 based )
+	//!	\param	data		The data to bind
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static void Bind( sqlite3_stmt* handle, int index, unsigned int data )
 	{
 		int errorCode = sqlite3_bind_int64(
@@ -110,6 +144,16 @@ public:
 		utils::CheckErrorCode( errorCode, "SqliteOps< unsigned int >::Bind" );
 	}
 
+	//!
+	//!	\brief	Gets a column from a statement
+	//!
+	//!	\param	statement	The statement to retreive from
+	//!	\param	index		The index of this column ( 0 based )
+	//!
+	//!	\return	The data contained in the specified column
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static unsigned int GetColumn( sqlite3_stmt* handle, int index )
 	{
 		return sqlite3_column_int( handle, index );
@@ -127,6 +171,15 @@ template<>
 class SqliteOps< int >
 {
 public:
+	//!
+	//!	\brief	Binds data to a statement
+	//!
+	//!	\param	statement	The statement to bind to
+	//!	\param	index		The index of this parameter ( 1 based )
+	//!	\param	data		The data to bind
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static void Bind( sqlite3_stmt* handle, int index, int data )
 	{
 		int errorCode = sqlite3_bind_int(
@@ -138,6 +191,16 @@ public:
 		utils::CheckErrorCode( errorCode, "SqliteOps< unsigned int >::Bind" );
 	}
 
+	//!
+	//!	\brief	Gets a column from a statement
+	//!
+	//!	\param	statement	The statement to retreive from
+	//!	\param	index		The index of this column ( 0 based )
+	//!
+	//!	\return	The data contained in the specified column
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static int GetColumn( sqlite3_stmt* handle, int index )
 	{
 		return sqlite3_column_int( handle, index );
@@ -153,6 +216,15 @@ template<>
 class SqliteOps< bool >
 {
 public:
+	//!
+	//!	\brief	Binds data to a statement
+	//!
+	//!	\param	statement	The statement to bind to
+	//!	\param	index		The index of this parameter ( 1 based )
+	//!	\param	data		The data to bind
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static void Bind( sqlite3_stmt* handle, int index, bool data )
 	{
 		int errorCode = sqlite3_bind_int(
@@ -164,6 +236,16 @@ public:
 		utils::CheckErrorCode( errorCode, "SqliteOps< unsigned int >::Bind" );
 	}
 
+	//!
+	//!	\brief	Gets a column from a statement
+	//!
+	//!	\param	statement	The statement to retreive from
+	//!	\param	index		The index of this column ( 0 based )
+	//!
+	//!	\return	The data contained in the specified column
+	//!
+	//!	\throws A SqlException on error
+	//!
 	static bool GetColumn( sqlite3_stmt* handle, int index )
 	{
 		return sqlite3_column_int( handle, index ) != 0;
