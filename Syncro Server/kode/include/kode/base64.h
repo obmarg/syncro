@@ -31,7 +31,20 @@ namespace kode
 namespace base64
 {
 
-inline std::string Encode( const unsigned char* data, const unsigned int len )
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Encodes some bytes into base64
+//!
+//!	\param	data	The data buffer to encode
+//!	\param	len		The legnth of the data
+//!
+//!	\return	A base64 encoded string containing the data
+//!
+///////////////////////////////////////////////////////////////////////////////
+inline std::string Encode( 
+	const unsigned char* data, 
+	const unsigned int len 
+	)
 {
 	CryptoPP::Base64Encoder encoder;
 
@@ -61,7 +74,18 @@ inline std::string Encode( const unsigned char* data, const unsigned int len )
 	return std::string( destVector.begin(), destVector.end() );
 }
 
-inline void Decode( const std::string& input, std::vector< unsigned char >& output )
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Decodes a string from base64
+//!
+//!	\param	input	The string to decode
+//!	\param	output	A vector to write the decoded data to
+//!
+///////////////////////////////////////////////////////////////////////////////
+inline void Decode( 
+	const std::string& input, 
+	std::vector< unsigned char >& output 
+	)
 {
 	CryptoPP::Base64Decoder decoder;
 

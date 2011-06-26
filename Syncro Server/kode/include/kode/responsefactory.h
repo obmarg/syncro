@@ -22,11 +22,22 @@
 
 namespace kode {
 
-	//TODO: Rename base pb response factory
-	//TODO: Possibly make a generic factory template, then
-	//		a pb factory typedef, then a variant factory template on top
-	//		of that?
-	//TODO: move stuff out of syncro...
+//TODO: Rename base pb response factory
+//TODO: Possibly make a generic factory template, then
+//		a pb factory typedef, then a variant factory template on top
+//		of that?
+//TODO: move stuff out of syncro...
+
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Template for a response factory
+//!	
+//!	\tparam	Type		The base type of handler this response factory 
+//!						deals with
+//!	\tparam	InputData	The InputData for the handlers
+//!	\tparam	OutputData	The OutputData for the handlers
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<class Type,class InputData,class OutputData>
 class ResponseFactory
 {
@@ -38,12 +49,25 @@ public:
 	{ }
 	~ResponseFactory() { };
 
+	//!
+	//!	\brief	Adds a handler to this ResponseFactory instance
+	//!
+	//!	\param	messageId	The message id this handler deals with
+	//!	\param	handler		The new handler 
+	//!
 	void AddHandler( unsigned int messageId, Type handler )
 	{
 		m_handlers.insert(
 			std::make_pair(messageId,handler)
 			);
 	}
+
+	//!
+	//!	\brief	Adds a handler to all new ResponseFactory instances
+	//!
+	//!	\param	messageId	The message id this handler deals with
+	//!	\param	handler		The new handler 
+	//!
 	static void AddStaticHandler( unsigned int messageId, Type handler )
 	{
 		GetStaticHandlers().insert(
@@ -51,6 +75,14 @@ public:
 			);
 	}
 
+	//!
+	//!	\brief	Creates a response
+	//!
+	//!	\param	packetType	The type of packet to create a response to
+	//!	\param	inputData	The input data to pass to the handler
+	//!	
+	//!	\return The response
+	//!
 	virtual OutputData CreateResponse( 
 										const unsigned int packetType, 
 										InputData inputData 
@@ -69,6 +101,14 @@ public:
 		m_packetType = packetType;
 		return CallHandler( handlerIt->second, inputData );
 	}
+
+	//!
+	//!	\brief	Abstract function to handle calling a handler
+	//!			Should be implemented by child classes
+	//!
+	//!	\param	handler		The handler to call
+	//!	\param	data		The input data
+	//!
 	virtual OutputData CallHandler( const Type& handler, InputData data )=0;
 protected:
 	unsigned int m_packetType;
@@ -81,10 +121,24 @@ private:
 	}
 };
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Template for registering with a response factory
+//!	
+//!	\tparam	Factory		The type of factory to register with
+//!	\tparam	Handler		The type of handler to register
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<class Factory,class Handler>
 class ResponseRegister
 {
 public:
+	//!
+	//!	\brief	The constructor registers a static handler with the factory
+	//!
+	//!	\param	packetType	The type of packet this handler deals with
+	//!	\param	handler		The handler to register
+	//!
 	ResponseRegister( unsigned int packetType, Handler handler )
 	{
 		Factory::AddStaticHandler( packetType, handler );

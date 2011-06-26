@@ -23,11 +23,25 @@
 
 namespace kode {
 
-	//TODO: Rename base pb response factory
-	//TODO: Possibly make a generic factory template, then
-	//		a pb factory typedef, then a variant factory template on top
-	//		of that?
-	//TODO: move stuff out of syncro...
+//TODO: Rename base pb response factory
+//TODO: Possibly make a generic factory template, then
+//		a pb factory typedef, then a variant factory template on top
+//		of that?
+//TODO: move stuff out of syncro...
+
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	A ResponseFactory template that expects the input data to
+//!			be a Variant
+//!
+//!	\note	This class has not been used much, so may require testing
+//!
+//!	\tparam	Type		The base type of the handlers
+//!	\tparam	Visitor		The type of the visitor
+//!	\tparam	InputData	The input variant data type
+//!	\tparam	OutputData	The output data type
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<class Type,class Visitor,class InputData,class OutputData>
 class VariantResponseFactory
 {

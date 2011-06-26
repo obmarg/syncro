@@ -24,9 +24,22 @@
 namespace kode {
 namespace db {
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	A sql exception
+//!
+///////////////////////////////////////////////////////////////////////////////
 class SqlException : std::runtime_error
 {
 public:
+
+	//!
+	//!	\brief SqlException constructor
+	//!
+	//!	\param sMessage		The message to be returned when what() is 
+	//!						called
+	//!	\param nErrorCode	The error code returned by sqlite
+	//!
 	SqlException( std::string sMessage, int nErrorCode ) : 
 	runtime_error( sMessage.c_str() )
 	{

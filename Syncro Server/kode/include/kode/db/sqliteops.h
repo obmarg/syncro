@@ -26,15 +26,42 @@
 namespace kode {
 namespace db { 
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Generic template for performing Bind/GetColumn operations
+//!
+//!			This version of the template does not have definitions, and
+//!			should never be used, instead the specializations below
+//!			should be used.
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<class DataType>
 class SqliteOps
 {
 public:
+	//!
+	//!	\brief	Binds data to a statement
+	//!
+	//!	\param	statement	The statement to bind to
+	//!	\param	index		The index of this parameter ( 1 based )
+	//!	\param	data		The data to bind
+	//!
 	static void Bind( sqlite3_stmt* statement, int index,  DataType data );
 
+	//!
+	//!	\brief	Gets a column from a statement
+	//!
+	//!	\param	statement	The statement to retreive from
+	//!	\param	index		The index of this column ( 0 based )
+	//!
 	static DataType GetColumn( sqlite3_stmt* statement, int index );
 };
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	SqliteOps specialization for std::string
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<>
 class SqliteOps< std::string >
 {
@@ -62,6 +89,12 @@ public:
 };
 
 //TODO: These integer operations could generally be done better with boost enable_if etc.
+
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	SqliteOps specialization for unsigned ints
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<>
 class SqliteOps< unsigned int >
 {
@@ -84,6 +117,12 @@ public:
 };
 
 //TODO: These integer operations could generally be done better with boost enable_if etc.
+
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	SqliteOps specialization for int
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<>
 class SqliteOps< int >
 {
@@ -105,6 +144,11 @@ public:
 	}
 };
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	SqliteOps specialization for bool
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<>
 class SqliteOps< bool >
 {

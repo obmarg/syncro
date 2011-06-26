@@ -20,11 +20,14 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-namespace kode
-{
-namespace time
-{
+namespace kode {
+namespace time {
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	A class implementing a basic stopwatch style timer
+//!
+///////////////////////////////////////////////////////////////////////////////
 class Stopwatch
 {
 public:
@@ -34,10 +37,21 @@ public:
 		Start();
 	}
 
+	//!	\brief Start the stopwatch
 	void Start();
+
+	//!	\brief Reset the stopwatch
 	void Reset();
+
+	//!	\brief Stop the stopwatch
 	void Stop();
 
+	//!
+	//!	\brief Get the current reading
+	//!
+	//!	\return	The number of milliseconds the stopwatch has been running
+	//!			since it was last reset
+	//!
 	int64_t GetMS();
 private:
 	boost::posix_time::ptime m_startTime;

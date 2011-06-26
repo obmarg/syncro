@@ -22,11 +22,14 @@
 #include <boost/noncopyable.hpp>
 #include <string>
 
-namespace kode
-{
-namespace net
-{
+namespace kode {
+namespace net {
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	A class implementing the client side of a tcp connection
+//!
+///////////////////////////////////////////////////////////////////////////////
 class TCPConnection : boost::noncopyable
 {
 public:

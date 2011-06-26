@@ -24,6 +24,17 @@ namespace kode {
 namespace db {
 namespace utils {
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Utility function to check sqlite error codes
+//!	
+//!	\param	errorCode		The error code to check
+//!	\param	errorLocation	A string describing the location this check
+//!							is taking place
+//!
+//!	\throws	A SqlException if an error has occurred
+//!
+///////////////////////////////////////////////////////////////////////////////
 void CheckErrorCode( 
 	int errorCode,
 	const std::string& errorLocation

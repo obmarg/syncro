@@ -28,12 +28,29 @@
 
 namespace kode {
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Base class for representing a hash
+//!
+///////////////////////////////////////////////////////////////////////////////
 class BaseHash
 {
 public:
+	//!
+	//! \brief	Gets the length of the hash
+	//!
+	//!	\return	The legnth of the hash
+	//!
 	virtual unsigned int			Size() const = 0;
+
+	//!
+	//! \brief	Gets the start address of the hash
+	//!
+	//!	\return	the start address of the hash
+	//!
 	virtual const unsigned char*	GetHash()		const = 0;
 
+	//!	\brief Comparison operator
 	bool operator==( const BaseHash& other ) const
 	{
 		return Compare( other );
@@ -44,6 +61,13 @@ protected:
 
 typedef const boost::shared_ptr<BaseHash> HashPtr;
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Template implementing a BaseHash
+//!	
+//!	\tparam	tHash	The type of hash this class is representing
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<class tHash>
 class Hash : public BaseHash
 {
@@ -64,6 +88,18 @@ public:
 	unsigned char m_hash[ tHash::DIGESTSIZE ];
 };
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	Template implementing hashing of a file
+//!	
+//!	\tparam	tHash	The type of hash to create
+//!
+//!	\param	filename	The name of the file to hash
+//!	\param	sizeToHash	The legnth of the file to hash (defaults to all)
+//!
+//!	\return	A HashPtr containing the hash of the file
+//!
+///////////////////////////////////////////////////////////////////////////////
 template<class tHash>
 HashPtr HashFile( const std::string& filename, unsigned int sizeToHash=0 )
 {

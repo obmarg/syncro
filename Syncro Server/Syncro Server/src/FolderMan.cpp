@@ -327,6 +327,11 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 			boost::numeric_cast< time_t >( details->modifiedTime )
 			);
 	}
+	else
+	{
+		std::cout << "Warning: No modification time in FileUploadFinished"
+			<< std::endl;
+	}
 
 	//TODO: At some point, would be good to clear out the old uploaded files database,
 	//		based on clients no longer attempting to upload the file.
