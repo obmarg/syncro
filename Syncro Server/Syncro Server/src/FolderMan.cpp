@@ -39,7 +39,6 @@ FolderMan::FolderMan( Database::TPointer db ) : m_db( db )
 	StatementPtr statement = 
 		m_db->prepare( "SELECT ID,Name,Path,UploadPrefix FROM Folders");
 
-	//TODO: make sure boost foreach actually works on this, might need some more things added to resultset first (value_type etc. maybe)
 	while( statement->GetNextRow() )
 	{
 		path oPath( statement->GetColumn< std::string >( "Path" ) );
@@ -57,7 +56,6 @@ FolderMan::FolderMan( Database::TPointer db ) : m_db( db )
 		if(( *m_folders.back().Path.rbegin() ) != '/'
 		        && ( *m_folders.back().Path.rbegin() ) != '\\' )
 		{
-			//TODO: Replace this with real path seperator for current platform
 			m_folders.back().Path += kode::utils::PATH_SEPERATOR_STR;
 		}
 	}
@@ -143,7 +141,6 @@ FolderMan::FileRequested(
 		kode::db::AutoReset reset( m_findOneShot );
 		m_findOneShot->Bind( 1, requestData.GetFolderId() );
 		m_findOneShot->Bind( 2, requestData.GetFilename() );
-		//TODO: Need to check database in case this is a one shot file.
 		if( m_findOneShot->GetNextRow() )
 		{
 			//We've found a one shot file, sweet...

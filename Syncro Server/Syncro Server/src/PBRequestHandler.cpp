@@ -48,7 +48,6 @@ void PBRequestHandler::ResetVariables()
 bool PBRequestHandler::CanHandleReceive( const TCharBuffer& inoBuffer )
 {
 	unsigned int nHeadSize = comms::PacketHeader::BYTE_SIZE;
-	//TODO: Make this stuff use libsyncro's PacketHeader stuff at some point
 
 	//TODO: add stuff in here in case we've read more than we need to
 	bool fContinue;

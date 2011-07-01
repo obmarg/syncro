@@ -119,7 +119,6 @@ BasePBResponse::TPointer HandshakeRequest::GetResponse()
 HandshakeResponse::HandshakeResponse()
 {
 	m_oMessage.Clear();
-	//TODO: move this string to a static const or something
 	m_oMessage.set_magic( comms::HANDSHAKE_RESPONSE_MAGIC );
 #ifdef _WIN32
 	m_oMessage.set_windows( true );
@@ -142,13 +141,11 @@ HandshakeResponse::HandshakeResponse()
 		sUUID = kode::utils::GenerateUUID();
 		//TODO: Make the hostname customisable perhaps?
 		std::string sHostname = boost::asio::ip::host_name();
-		//TODO: this can exception if the uuid contains the wrong characters.  fix it (presumably by adding statements & binding)
-		//oDB->run("INSERT INTO ServerID(uuid,servername) VALUES('" + sUUID + "','" + sHostname + "');");
-		//TODO: Make sure this works
+		
 		oDB->prepare( "INSERT INTO ServerID(uuid,servername) VALUES(?,?);" )->
-		Bind( 1, sUUID )
-		.Bind( 2, sHostname )
-		.GetNextRow();
+			Bind( 1, sUUID )
+			.Bind( 2, sHostname )
+			.GetNextRow();
 
 	}
 	m_oMessage.set_uuid( sUUID );

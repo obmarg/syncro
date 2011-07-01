@@ -118,7 +118,6 @@ SyncroDB::~SyncroDB()
 
 bool SyncroDB::CreateDatabase()
 {
-	//TODO: possibly add a new function to database that doesn' return a result set
 	runInsert( FOLDERS_TABLE_CREATE );
 	runInsert( SERVER_ID_TABLE_CREATE );
 	runInsert( USERS_TABLE_CREATE );

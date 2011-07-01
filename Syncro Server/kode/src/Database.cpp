@@ -28,8 +28,6 @@ using std::string;
 //extern CLogger Logger;
 int callback( void*, int, char**, char** );
 
-void stringToLower( sqlite3_context* db, int argc, sqlite3_value** argv );
-
 Database::Database( const std::string& file )
 {
 #ifndef SQLITE_SINGLE_THREADED
@@ -44,7 +42,6 @@ Database::Database( const std::string& file )
 		std::string error = "Can't open database: " + file;
 		throw std::runtime_error( error.c_str() );
 	}
-	sqlite3_create_function( db, "strToLower", 1, SQLITE_UTF8, 0, stringToLower, 0, 0 );
 #ifdef USING_PTHREADS
 	pthread_mutex_init( &mutex, 0 );
 #endif
@@ -125,7 +122,6 @@ StatementPtr Database::prepare( std::string insSql )
 	}
 	catch( const std::exception& ex )
 	{
-		//TODO: do something
 		if( handle != NULL && !rv )
 			sqlite3_finalize( handle );
 		throw ex;
@@ -145,18 +141,6 @@ int callback( void* ptrDB, int numCols, char** colValues, char** colNames )
 	}
 	db->result.add( row );
 	return 0;
-}
-
-void stringToLower( sqlite3_context* db, int argc, sqlite3_value** argv )
-{
-	//TODO: add error checking?
-	char* text = ( char* )sqlite3_value_text( argv[0] );
-	for( unsigned int i = 0; i < strlen( text ); i++ )
-	{
-		text[i] = tolower( text[i] );
-	}
-	sqlite3_result_text( db, text, strlen( text ), SQLITE_TRANSIENT );
-	//TODO: find out if i need to delete the text here.
 }
 
 }	//namespace db

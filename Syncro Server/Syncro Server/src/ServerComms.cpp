@@ -78,7 +78,6 @@ TCPConnection::TCPConnection( io_service& inoIOService ) : m_oSocket( inoIOServi
 
 void TCPConnection::StartRecv( int inBytes )
 {
-
 	using namespace boost::asio;
 	using boost::bind;
 

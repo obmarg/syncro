@@ -48,7 +48,6 @@ bool PBResponseSendHandler::SendStarting()
 	if( !m_pResponse )
 		throw std::logic_error( "PB Send Starting, but PBResponseSendHandler has not been assigned any data" );
 
-	//TODO: Make this stuff use libsyncro's PacketHeader stuff at some point
 	unsigned int nHeadSize = comms::PacketHeader::BYTE_SIZE;
 
 	pb::PacketHeader oResponseHeader;
@@ -96,8 +95,6 @@ bool PBResponseSendHandler::SendStarting()
 
 void PBResponseSendHandler::SendDone( int innSent )
 {
-	//TODO: maybe don't start recv if there are no current recv handlers.  add checks for this
-
 	uint32_t recvBufferSize = 0;
 
 	if( m_pResponse->NextRecvBufferSize() != 0 )
