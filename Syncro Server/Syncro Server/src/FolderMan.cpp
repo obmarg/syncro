@@ -26,6 +26,7 @@
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <string>
+#include <iostream>
 
 namespace syncro
 {

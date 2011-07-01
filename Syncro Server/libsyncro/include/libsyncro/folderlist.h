@@ -24,27 +24,33 @@
 namespace syncro
 {
 
+///////////////////////////////////////////////////////////////////////////////
+//!
+//!	\brief	A struct containing info about a folder
+//!
+///////////////////////////////////////////////////////////////////////////////
 struct FolderInfo
 {
 	FolderInfo() : Id( -1 ) {};
 
-	FolderInfo( int innID, const std::string& insName, const std::string& insPath ) :
-		Id( innID ),
-		Name( insName ),
-		Path( insPath ),
-		UploadPrefix( "" )
-	{};
-
-	FolderInfo(
-	    int innID,
-	    const std::string& insName,
-	    const std::string& insPath,
-	    const std::string& uploadPrefix
-	) :
-		Id( innID ),
-		Name( insName ),
-		Path( insPath ),
-		UploadPrefix( uploadPrefix )
+	//!
+	//!	\brief	Constructor for FolderInfo
+	//!
+	//!	\param	id				The id of this folder
+	//!	\param	name			The name of this folder
+	//!	\param	path			The path to this folder
+	//!	\param	uploadPrefix	The upload prefix of this folder
+	//!
+	FolderInfo( 
+		int id, 
+		const std::string& name, 
+		const std::string& path,
+	    const std::string& uploadPrefix = std::string()
+		) :
+	Id( id ),
+	Name( name ),
+	Path( path ),
+	UploadPrefix( uploadPrefix )
 	{};
 
 	int Id;
@@ -53,6 +59,7 @@ struct FolderInfo
 	std::string UploadPrefix;
 };
 
+//!	Typedef for a vector of FolderInfos
 typedef std::vector< FolderInfo > FolderList;
 
 }	// namespace syncro
