@@ -326,7 +326,7 @@ public class Connection {
 		
 		File localFile = new File( localFilename );
 		long totalFileSize = localFile.length();
-		long modifiedTime = localFile.lastModified();
+		long modifiedTime = localFile.lastModified() / 1000;
 		if( totalFileSize > Integer.MAX_VALUE )
 		{
 			throw new Exception("File is too big to send");
