@@ -134,6 +134,13 @@ bool PBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 		m_fatalError = true;
 		std::cout << "Authentication failed for " + m_pConn->ClientIP() + "\n";
 	}
+	catch( const std::exception& ex )
+	{
+		m_fCloseConnection = true;
+		m_fatalError = true;
+		std::cout << "Caught exception in PBRequestHandler::HandleReceive."
+			<< std::endl << "What: " << ex.what() << std::endl;
+	}
 
 	ResetVariables();
 	return true;

@@ -43,6 +43,7 @@ FolderMan::FolderMan( Database::TPointer db ) : m_db( db )
 	while( statement->GetNextRow() )
 	{
 		path oPath( statement->GetColumn< std::string >( "Path" ) );
+		oPath = boost::filesystem::complete( oPath );
 		if( !is_directory( oPath ) )
 			throw std::runtime_error( "Invalid path read from DB in CFolderMan constructor" );
 		//TODO: Do something with the name as well
@@ -119,8 +120,10 @@ FolderMan::FileRequested(
     FileTransferDetails& details
 )
 {
-	std::string fileName =
+	std::string folderPath =
 	    FindFolder( requestData.GetFolderId() ).Path;
+
+	std::string fileName = folderPath;
 
 	char aLastChar = *( fileName.rbegin() ) ;
 	if(( aLastChar != '\\' ) && ( aLastChar != '/' ) )
@@ -155,6 +158,19 @@ FolderMan::FileRequested(
 			return false;
 		}
 	}
+	std::string absoluteFileName = 
+		boost::filesystem::complete( fileName ).native_file_string();
+	//
+	// Ensure that the absolute file name starts with the folder path
+	// for security purposes
+	//
+	if( absoluteFileName.compare( 0, folderPath.size(), folderPath ) != 0 )
+	{
+		throw std::runtime_error( 
+			"Client requested to download file outside of container folder"
+			);
+	}
+
 	details.m_filename = fileName;
 	details.m_modifiedTime = 
 		boost::numeric_cast< int64_t >( 
@@ -215,7 +231,8 @@ FolderMan::IncomingFile(
 	{
 		boost::filesystem::create_directories( destDir );
 	}
-	details.m_filename = destFile.native_file_string();
+	details.m_filename = 
+		boost::filesystem::complete( destFile ).native_file_string();
 	//TODO: Add support for folder path in here. for now doesn't matter
 	//		can possibly remove the parameter if it turns out just the
 	//		name is good enough
@@ -225,7 +242,7 @@ FolderMan::IncomingFile(
 	        fileData.IsOneShot(),
 	        fileData.GetFolderId(),
 	        "",
-	        destFileName,
+	        details.m_filename,
 			fileData.IsOneShot(),
 			fileData.GetModifiedTime()
 	    )
@@ -288,7 +305,7 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 			                   "(Filename,FolderPath,LocalPath,FolderId,"
 							   "OneShot,DeleteOnFinish) "
 			                   "VALUES (?, ?, ?, ?, 1, ?);"
-			               );
+								);
 		}
 		kode::db::AutoReset reset( m_addOneShot );
 		m_addOneShot->Bind( 1, details->fileName );
@@ -320,10 +337,19 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 
 	if( details->modifiedTime != 0 )
 	{
-		boost::filesystem::last_write_time( 
-			details->localPath,
-			boost::numeric_cast< time_t >( details->modifiedTime )
-			);
+		try
+		{
+			boost::filesystem::last_write_time( 
+				details->localPath,
+				boost::numeric_cast< time_t >( details->modifiedTime )
+				);
+		}
+		catch( const std::exception& ex )
+		{
+			std::cout << "Failed to set last write time in "
+				<< "CFolderMan::FileUploadFinished." << std::endl
+				<< "What: " << ex.what() << std::endl;
+		}
 	}
 	else
 	{

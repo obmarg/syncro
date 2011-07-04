@@ -107,7 +107,6 @@ void SystemTest::FolderListTest()
 void SystemTest::FolderContentsTest()
 {
 	Connect();
-
 }
 
 void SystemTest::FileTransferTest()
@@ -233,6 +232,12 @@ void SystemTest::FileModificationTimeTest()
 		);
 
 	boost::filesystem::remove( "temp.dat" );
+}
+
+void SystemTest::FilePathSecurityTest()
+{
+	//TODO: Implement me.
+	CPPUNIT_ASSERT_MESSAGE( "Test not implemeneted", false );
 }
 
 bool SystemTest::CreateTestFile( const std::string& fileName )

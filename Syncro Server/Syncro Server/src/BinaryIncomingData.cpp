@@ -55,11 +55,19 @@ BinaryIncomingData::HandlePacket( const InputStreamList& inaInputStreams )
 
 	if( !m_oFile.is_open() )
 	{
-		throw std::runtime_error( "CBinaryIncomingData::HandlePacket called, but destination file is not open" );
+		throw std::runtime_error( 
+			"CBinaryIncomingData::HandlePacket called, "
+			"but destination file is not open" 
+			);
 	}
 	pb::BinaryPacketHeader oPacket;
 	if( inaInputStreams.size() != 2 )
-		throw std::runtime_error( "Invalid number of streams passed to CBinaryIncomingData::HandlePacket" );
+	{
+		throw std::runtime_error( 
+			"Invalid number of streams passed to "
+			"CBinaryIncomingData::HandlePacket" 
+			);
+	}
 	oPacket.ParseFromZeroCopyStream( inaInputStreams[0] );
 	//TODO: Get Packet Size?
 	const void* pData = NULL;
@@ -99,12 +107,16 @@ void BinaryIncomingData::StartFile(int64_t startOffset)
 {
 	if( m_started )
 	{
-		throw std::logic_error( "Attempting to start a BinaryIncomingData that has already started" );
+		throw std::logic_error( 
+			"Attempting to start a BinaryIncomingData "
+			"that has already started" 
+			);
 	}
 	if( m_oFile.is_open() )
 	{
-		throw std::logic_error( "File already open, but started flag not set in "
-			"CBinaryIncomingData::StartFile"
+		throw std::logic_error( 
+			"File already open, but started flag not "
+			"set in CBinaryIncomingData::StartFile"
 			);
 	}
 

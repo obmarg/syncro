@@ -46,6 +46,7 @@ public:
 	CPPUNIT_TEST( FolderContentsTest );
 	CPPUNIT_TEST( FileTransferTest );
 	CPPUNIT_TEST( FileModificationTimeTest );
+	CPPUNIT_TEST( FilePathSecurityTest );
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -62,6 +63,7 @@ public:
 	void FolderContentsTest();
 	void FileTransferTest();
 	void FileModificationTimeTest();
+	void FilePathSecurityTest();
 
 	//
 	// Utility functions

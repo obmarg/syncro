@@ -74,9 +74,11 @@ public:
 		{
 			session.GetCurrentRecvData()->HandlePacket( *inputStreams );
 		}
-		catch( const std::exception& )
+		catch( const std::exception& ex )
 		{
 			fOK = false;
+			std::cout << "Caught exception in BinaryIncomingDataHandler: "
+				<< ex.what() << std::endl;
 		}
 		return BinaryIncomingResponse::Create( 
 			BinaryIncomingResponse::eResponseType_Ack, 
