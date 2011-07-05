@@ -62,7 +62,12 @@ FolderListResponse::FolderListResponse( const FolderList& list )
 			pb::FolderInfo* info = m_response.add_folders();
 			info->set_folder_id( folder.Id );
 			info->set_folder_name( folder.Name );
-			info->set_folder_path( folder.Path );
+			//TODO: I'm thinking folder path can probably be ditched from the
+			//		client side.  For now, it's just Name with a slash appended,
+			//		but look into removing it in the future.
+			info->set_folder_path( 
+				folder.Name + kode::utils::PATH_SEPERATOR_STR
+				);
 		}
 	}
 }
