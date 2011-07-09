@@ -48,7 +48,7 @@ public:
 	//!
 	//!	\throws A SqlException on error
 	//!
-	static void Bind( sqlite3_stmt* statement, int index,  DataType data );
+	static void Bind( sqlite3_stmt* statement, int index, DataType data );
 
 	//!
 	//!	\brief	Gets a column from a statement

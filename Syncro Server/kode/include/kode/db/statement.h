@@ -61,7 +61,7 @@ public:
 	//!	\throws	SqlException on error
 	//!
 	template<class tData>
-	Statement& Bind( int index, tData data );
+	Statement& Bind( int index, const tData& data );
 
 	//!
 	//!	\brief	Binds some data to a parameter
@@ -72,7 +72,7 @@ public:
 	//!	\throws	SqlException on error
 	//!
 	template<class tData>
-	Statement& Bind( std::string parameter, tData data );
+	Statement& Bind( std::string parameter, const tData& data );
 
 	//!
 	//!	\brief	Binds some data to a parameter
@@ -114,14 +114,14 @@ private:
 typedef boost::shared_ptr<Statement> StatementPtr;
 
 template<class tData>
-Statement& Statement::Bind( int index, tData data )
+Statement& Statement::Bind( int index, const tData& data )
 {
 	SqliteOps<tData>::Bind( m_handle, index, data );
 	return ( *this );
 }
 
 template<class tData>
-Statement& Statement::Bind( std::string parameter, tData data )
+Statement& Statement::Bind( std::string parameter, const tData& data )
 {
 	int nIndex = sqlite3_bind_parameter_index( m_handle, parameter.c_str() );
 	Bind( nIndex, data );
