@@ -85,7 +85,8 @@ void SystemTest::FolderListTest()
 
 		CPPUNIT_ASSERT( list[0].Id == 1 );
 		CPPUNIT_ASSERT( list[0].Name == "Test1" );
-		CPPUNIT_ASSERT( 
+		CPPUNIT_ASSERT_MESSAGE( 
+			("Path is incorrect",list[0].Path),
 			list[0].Path == "Test1/" || list[0].Path == "Test1\\"
 			);
 		CPPUNIT_ASSERT( list[0].UploadPrefix == "" );
