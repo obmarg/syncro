@@ -18,6 +18,8 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "SystemTest.h"
 #include <libsyncro/comms.h>
 #include <kode/hashutils.h>
