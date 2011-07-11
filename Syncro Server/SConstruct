@@ -3,6 +3,8 @@ import os
 import sys
 
 platform = sys.platform
+if platform != "win32":
+	platform = "linux"
 
 #
 # Make all the directories needed for protocol_buffers
