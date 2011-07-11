@@ -11,4 +11,5 @@ sources = [
 
 output = env.StaticLibrary( 'kode', sources )
 
-env.Install( libtargetdir ,output )
+installoutput = env.Install( libtargetdir ,output )
+env.Alias( 'kode', installoutput )

@@ -17,12 +17,12 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -42,11 +42,19 @@
     <IncludePath>..\..\Dependencies\;F:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Debug;F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <NMakeOutput>..\bin\syncro.exe</NMakeOutput>
+    <NMakeBuildCommandLine>scons -D syncro debug=1</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>scons -D -c syncro debug=1 &amp;&amp; scons -D syncro debug=1</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>scons -D -c syncro debug=1</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\..\Dependencies;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;F:\Users\Grambo\Documents\boost_1_44_0;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\Dependencies\cryptopp\Win32\Output\Release;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib;F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;</LibraryPath>
+    <NMakeOutput>bin/syncro.exe</NMakeOutput>
+    <NMakeBuildCommandLine>scons -D syncro</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>scons -D -c syncro &amp;&amp; scons -D syncro</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>scons -D -c syncro</NMakeCleanCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

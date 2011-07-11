@@ -1,6 +1,9 @@
-Import( 'env', 'libs', 'testdir' )
+Import( 'env', 'libs', 'testdir', 'platform', 'debug' )
 
-mylibs = libs + [ 'cppunit' ]
+if ( platform == 'win32' ) and int(debug):
+	mylibs = libs + [ 'cppunitd' ]
+else:
+	mylibs = libs + [ 'cppunit' ]
 
 sources = [ 
 	"main.cpp", 
@@ -15,4 +18,5 @@ output = env.Program(
 	LIBS=mylibs
 	)
 
-env.Install( testdir, output )
+installoutput = env.Install( testdir, output )
+env.Alias( 'SystemTest', installoutput )

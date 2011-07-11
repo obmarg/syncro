@@ -4,6 +4,9 @@ import sys
 
 platform = sys.platform
 
+if platform != "win32":
+	platform = "linux"
+
 #
 # Make all the directories needed for protocol_buffers
 #
@@ -11,7 +14,7 @@ Execute( Mkdir( "../Messages/gen" ) )
 Execute( Mkdir( "libsyncro/src/protocol_buffers" ) )
 Execute( Mkdir( 'libsyncro/include/libsyncro/protocol_buffers/' ) )
 
-
+#TODO: Would be good if the below only ran when needed
 if platform == "linux":
 	subprocess.call( ["./build.sh",""], shell=True, cwd="../Messages" )
 else:
@@ -61,18 +64,19 @@ if platform == 'linux':
 
 if platform == 'win32':
 	ccflags += [ '/nologo', '/W3', '/WX', '/FC', '/Z7', '/Zl' ]
-	lflags += [ 
-		'/MAP', '/DEBUG', '/PDB:${Target.base}.pdb', '/MANIFEST:NO',
-		'/MACHINE:X86'
-		]
+	lflags += [ '/MAP', '/MANIFEST:NO',	'/MACHINE:X86' ]
 	if int(debug):
 		ccflags += [ '/Od', '/MDd', '/RTC1' ]
+		lflags += [ '/DEBUG' ]
 	else:
 		ccflags += [ '/O2', '/Oy-', '/MD', '/GL', '/Gy' ]
 		lflags += [ '/OPT:REF', '/OPT:ICF', '/LTCG' ]
 
 	cppflags = ccflags + [ '/EHsc', '/GR' ]
-	cppdefines += [ 'WIN32', '_CONSOLE', '_WIN32_WINNT=0x0501' ]
+	cppdefines += [ 
+		'WIN32', '_CONSOLE', '_WIN32_WINNT=0x0501',
+		'_SCL_SECURE_NO_WARNINGS'
+		]
 
 	#Old debug flags copied from msvc dialog.
 	#ccflags += [ 
@@ -142,7 +146,9 @@ Export(
 	'libsyncrodirs',
 	'libtargetdir',
 	'installdir',
-	'testdir'
+	'testdir',
+	'platform',
+	'debug'
 	)
 
 SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )

@@ -15,9 +15,6 @@
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//This define is needed due to some of the uuid stuff before.  doesn't seem to like it for some reason
-#define _SCL_SECURE_NO_WARNINGS
-
 #include "HandshakeHandlers.h"
 #include "SyncroPBResponseFactory.h"
 #include "ResponseFunctions.h"

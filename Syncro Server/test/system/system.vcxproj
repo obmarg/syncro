@@ -18,12 +18,12 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -42,11 +42,17 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\..\..\Dependencies\cppunit-1.12.1\include\;..\..\..\Dependencies\;F:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
     <LibraryPath>..\..\..\Dependencies\cppunit-1.12.1\lib\;..\..\..\Dependencies\cryptopp\Win32\Output\Debug;F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <NMakeBuildCommandLine>scons -D SystemTest debug=1</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>scons -c -D SystemTest debug=1 &amp;&amp; scons -c -D SystemTest debug=1</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>scons -c -D SystemTest debug=1</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\..\..\Dependencies\cppunit-1.12.1\include\;..\..\..\Dependencies\;F:\Users\Grambo\Documents\boost_1_44_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;</IncludePath>
     <LibraryPath>..\..\..\Dependencies\cppunit-1.12.1\lib\;..\..\..\Dependencies\cryptopp\Win32\Output\Release;F:\Users\Grambo\Documents\boost_1_44_0\stage\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)\lib</LibraryPath>
+    <NMakeBuildCommandLine>scons -D SystemTest</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>scons -c -D SystemTest &amp;&amp; scons -c -D SystemTest</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>scons -c -D SystemTest </NMakeCleanCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

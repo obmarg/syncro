@@ -6,4 +6,5 @@ output = env.Program(
 	LIBS=libs
 	)
 
-env.Install( installdir, output )
+installoutput = env.Install( installdir, output )
+env.Alias( 'SyncroAdmin', installoutput )

@@ -2,20 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Syncro Server", "Syncro Server\Syncro Server.vcxproj", "{1F0A68D5-E093-4806-9E7D-F0CD8BF86BA3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DBE52E2B-7915-4645-9017-32596A46EC9F} = {DBE52E2B-7915-4645-9017-32596A46EC9F}
-		{2635E2D6-2097-46B8-8237-46A4450C4019} = {2635E2D6-2097-46B8-8237-46A4450C4019}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kode", "kode\kode.vcxproj", "{DBE52E2B-7915-4645-9017-32596A46EC9F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsyncro", "libsyncro\libsyncro.vcxproj", "{2635E2D6-2097-46B8-8237-46A4450C4019}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SyncroAdmin", "Tools\SyncroAdmin\SyncroAdmin.vcxproj", "{165CCAF3-F391-45DA-AF1D-216B381246F7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DBE52E2B-7915-4645-9017-32596A46EC9F} = {DBE52E2B-7915-4645-9017-32596A46EC9F}
-		{2635E2D6-2097-46B8-8237-46A4450C4019} = {2635E2D6-2097-46B8-8237-46A4450C4019}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExplorerExtension", "Tools\ExplorerExtension\ExplorerExtension.vcxproj", "{67B6E3D3-614F-4268-864A-3E6359BC9988}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -33,10 +25,8 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{75DCF5D4-1BCC-443F-8820-113154A777BF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "System Test", "test\system\system.vcxproj", "{D581884C-FADD-471F-9D07-ACB51A084C11}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DBE52E2B-7915-4645-9017-32596A46EC9F} = {DBE52E2B-7915-4645-9017-32596A46EC9F}
-		{2635E2D6-2097-46B8-8237-46A4450C4019} = {2635E2D6-2097-46B8-8237-46A4450C4019}
-	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kodetest", "kode\test\kodetest\kodetest.vcxproj", "{30B1D4D8-4000-4641-8EBB-56CAB6883D42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +66,10 @@ Global
 		{D581884C-FADD-471F-9D07-ACB51A084C11}.Debug|Win32.Build.0 = Debug|Win32
 		{D581884C-FADD-471F-9D07-ACB51A084C11}.Release|Win32.ActiveCfg = Release|Win32
 		{D581884C-FADD-471F-9D07-ACB51A084C11}.Release|Win32.Build.0 = Release|Win32
+		{30B1D4D8-4000-4641-8EBB-56CAB6883D42}.Debug|Win32.ActiveCfg = Debug|Win32
+		{30B1D4D8-4000-4641-8EBB-56CAB6883D42}.Debug|Win32.Build.0 = Debug|Win32
+		{30B1D4D8-4000-4641-8EBB-56CAB6883D42}.Release|Win32.ActiveCfg = Release|Win32
+		{30B1D4D8-4000-4641-8EBB-56CAB6883D42}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

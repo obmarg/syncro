@@ -28,5 +28,7 @@ sources = [ 	"AdminCommandHandler.cpp",
 
 output = env.Program( 'syncro', source = sources, LIBS=libs )
 
-env.Install( installdir, output )
-env.Install( testdir, output )
+installoutput = env.Install( installdir, output )
+installoutput += env.Install( testdir, output )
+
+env.Alias( 'syncro', installoutput )

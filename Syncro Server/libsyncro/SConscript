@@ -18,4 +18,5 @@ sources = [
 
 output = myenv.StaticLibrary( 'syncro', sources )
 
-myenv.Install( libtargetdir, output )
+installoutput = myenv.Install( libtargetdir, output )
+myenv.Alias( 'libsyncro', installoutput )
