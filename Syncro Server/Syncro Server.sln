@@ -26,7 +26,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "System Test", "test\system\system.vcxproj", "{D581884C-FADD-471F-9D07-ACB51A084C11}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kodetest", "kode\test\kodetest\kodetest.vcxproj", "{30B1D4D8-4000-4641-8EBB-56CAB6883D42}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kodetest", "kode\test\kodetest.vcxproj", "{30B1D4D8-4000-4641-8EBB-56CAB6883D42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,19 @@
+Import( 'env', 'libs', 'testdir', 'platform', 'debug' )
+
+if ( platform == 'win32' ) and int(debug):
+	mylibs = libs + [ 'cppunitd' ]
+else:
+	mylibs = libs + [ 'cppunit' ]
+
+sources = [ 
+	"main.cpp"
+	]
+
+output = env.Program( 
+	target = 'kodetest',
+	source = sources,
+	LIBS=mylibs
+	)
+
+installoutput = env.Install( testdir, output )
+env.Alias( 'kodetest', installoutput )

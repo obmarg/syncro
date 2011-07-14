@@ -13,3 +13,5 @@ output = env.StaticLibrary( 'kode', sources )
 
 installoutput = env.Install( libtargetdir ,output )
 env.Alias( 'kode', installoutput )
+
+SConscript( 'test/SConscript' )
