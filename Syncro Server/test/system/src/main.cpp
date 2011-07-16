@@ -100,7 +100,7 @@ int main( int argc, char** argv )
 	CppUnit::TestFactoryRegistry &registry = 
 		CppUnit::TestFactoryRegistry::getRegistry( tests );
 	
-	std::ofstream resultFile("result.xml");
+	std::ofstream resultFile("systemtest-result.xml");
 	// Specify XML output and inform the test runner of this format (optional)
     CppUnit::XmlOutputter* outputter =
 		new CppUnit::XmlOutputter(
