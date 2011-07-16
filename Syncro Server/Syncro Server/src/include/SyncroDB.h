@@ -18,7 +18,7 @@
 #ifndef __SYNCRO_DB_H_
 #define __SYNCRO_DB_H_
 
-#include <kode/Database.h>
+#include <kode/db/sqlitedatabase.h>
 #include <string>
 
 namespace syncro

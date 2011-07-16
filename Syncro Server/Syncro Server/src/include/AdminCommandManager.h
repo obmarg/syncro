@@ -19,7 +19,7 @@
 #define _ADMIN_COMMAND_MANAGER_H_
 
 #include "common.h"
-#include <kode/Database.h>
+#include <kode/db/database.h>
 #include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <stdexcept>

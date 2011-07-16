@@ -71,7 +71,7 @@ private:
 
 	AdminCommandManPtr				m_adminCommandMan;
 
-	DatabasePtr						m_db;
+	kode::db::DatabasePtr			m_db;
 	boost::scoped_ptr< FolderMan >	m_folderMan;
 
 	bool							m_authenticated;

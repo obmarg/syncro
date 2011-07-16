@@ -126,15 +126,24 @@ HandshakeResponse::HandshakeResponse()
 	kode::db::DatabasePtr oDB = SyncroDB::OpenDB();
 	std::string sUUID;
 	vector<unsigned char> aUUID( 16 );
-	try
+	
+	kode::db::StatementPtr statement = 
+		oDB->prepare( "SELECT uuid FROM ServerID" );
+	bool gotRow = statement->GetNextRow();
+
+	if( gotRow )
 	{
-		sUUID = oDB->runScalar<std::string>( "SELECT uuid FROM ServerID" );
+		sUUID = statement->GetColumn< std::string >( 0 );
 		if( sUUID.length() != 16 )
-			throw std::runtime_error( "Invalid legnth of UUID returned from database in CHandshakeResponse" );
+		{
+			throw std::runtime_error( 
+				"Invalid legnth of UUID returned from database "
+				"in CHandshakeResponse" 
+				);
+		}
 	}
-	catch( const std::out_of_range& )
+	else
 	{
-		//This probably means that the database call returned nothing (probably can happen for copying as well)
 		sUUID = kode::utils::GenerateUUID();
 		//TODO: Make the hostname customisable perhaps?
 		std::string sHostname = boost::asio::ip::host_name();

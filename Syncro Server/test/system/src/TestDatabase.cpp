@@ -45,10 +45,10 @@ void TestDatabase::Create()
 {
 	boost::filesystem::remove( m_filename );
 
-	SyncroDB::TPointer db( SyncroDB::OpenDB( m_filename ) );
-	db->run( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA1 );
-	db->run( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA2 );
-	db->run( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA3 );
+	kode::db::DatabasePtr db( SyncroDB::OpenDB( m_filename ) );
+	db->runInsert( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA1 );
+	db->runInsert( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA2 );
+	db->runInsert( FOLDER_INSERT_PREFIX + FOLDER_INSERT_DATA3 );
 }
 
 }	// namespace test

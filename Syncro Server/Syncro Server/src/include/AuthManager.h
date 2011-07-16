@@ -19,7 +19,7 @@
 #define _AUTH_MANAGER_H_
 
 #include "common.h"
-#include <kode/Database.h>
+#include <kode/db/database.h>
 #include <cryptopp/sha.h>
 #include <boost/shared_ptr.hpp>
 #include <stdint.h>

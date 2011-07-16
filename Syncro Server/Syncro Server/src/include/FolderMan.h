@@ -21,7 +21,7 @@
 #include "common.h"
 #include <libsyncro/folderlist.h>
 #include <kode/utils.h>
-#include <kode/Database.h>
+#include <kode/db/database.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <string>
