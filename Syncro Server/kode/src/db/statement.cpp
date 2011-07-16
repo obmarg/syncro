@@ -13,6 +13,8 @@
 
 	You should have received a copy of the GNU General Public License
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
+
+	This file contains the implementation for a database statement
 */
 
 #include "kode/db/statement.h"
@@ -24,7 +26,8 @@ namespace db {
 
 Statement::Statement( sqlite3_stmt* handle ) : 
 m_handle( handle ), 
-m_fFetchedNames( false ) 
+m_fFetchedNames( false ),
+m_queryDone( false )
 {
 }
 
@@ -43,6 +46,7 @@ bool Statement::GetNextRow()
 	case SQLITE_ROW:
 		return true;
 	case SQLITE_DONE:
+		m_queryDone = true;
 		return false;
 	default:
 		throw SqlException( "Error in Statement::GetNextRow", nErrorCode );
@@ -51,6 +55,7 @@ bool Statement::GetNextRow()
 
 void Statement::Reset()
 {
+	m_queryDone = false;
 	sqlite3_reset( m_handle );
 }
 

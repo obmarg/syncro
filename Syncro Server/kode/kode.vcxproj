@@ -79,7 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\db\sqlitedatabase.cpp" />
     <ClCompile Include="src\db\statement.cpp" />
     <ClCompile Include="src\db\dbutils.cpp" />
     <ClCompile Include="src\stopwatch.cpp" />
@@ -88,8 +88,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\kode\base64.h" />
-    <ClInclude Include="include\kode\Database.h" />
+    <ClInclude Include="include\kode\db\database.h" />
+    <ClInclude Include="include\kode\db\ops\basedata.h" />
+    <ClInclude Include="include\kode\db\ops\iteratormanager.h" />
+    <ClInclude Include="include\kode\db\ops\iterators.h" />
+    <ClInclude Include="include\kode\db\ops\optraits.h" />
+    <ClInclude Include="include\kode\db\ops\readops.h" />
+    <ClInclude Include="include\kode\db\ops\statements.h" />
+    <ClInclude Include="include\kode\db\ops\writeops.h" />
     <ClInclude Include="include\kode\db\resultset.h" />
+    <ClInclude Include="include\kode\db\sqlitedatabase.h" />
     <ClInclude Include="include\kode\db\sqliteexception.h" />
     <ClInclude Include="include\kode\db\sqliteops.h" />
     <ClInclude Include="include\kode\db\statement.h" />

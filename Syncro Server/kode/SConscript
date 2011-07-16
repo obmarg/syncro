@@ -1,12 +1,12 @@
 Import( 'env', 'libtargetdir' )
 
 sources = [ 
-	'src/Database.cpp', 
 	'src/utils.cpp', 
 	'src/tcpconnection.cpp', 
 	'src/stopwatch.cpp',
 	'src/db/dbutils.cpp',
-	'src/db/statement.cpp'
+	'src/db/statement.cpp',
+	'src/db/sqlitedatabase.cpp'
 	 ]
 
 output = env.StaticLibrary( 'kode', sources )

@@ -34,3 +34,7 @@ Release/
 lib/
 x86_release/
 x86_debug/
+win32_x86_release/
+win32_x86_debug/
+linux_x86_release/
+linux_x86_debug/

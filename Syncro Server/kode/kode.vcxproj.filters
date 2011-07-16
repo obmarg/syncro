@@ -22,11 +22,11 @@
     <Filter Include="Header Files\db">
       <UniqueIdentifier>{34ec6a9e-f2dd-470b-90fa-b16f27f7bcf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\db\ops">
+      <UniqueIdentifier>{6c97ce94-8ab9-42e3-937b-41e96ea5f02c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Database.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\tcpconnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,11 +42,11 @@
     <ClCompile Include="src\db\dbutils.cpp">
       <Filter>Source Files\db</Filter>
     </ClCompile>
+    <ClCompile Include="src\db\sqlitedatabase.cpp">
+      <Filter>Source Files\db</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\kode\Database.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\kode\tcpconnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -74,17 +74,44 @@
     <ClInclude Include="include\kode\db\sqliteexception.h">
       <Filter>Header Files\db</Filter>
     </ClInclude>
+    <ClInclude Include="include\kode\db\utils.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\resultset.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\database.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\ops\iteratormanager.h">
+      <Filter>Header Files\db\ops</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\ops\iterators.h">
+      <Filter>Header Files\db\ops</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\ops\optraits.h">
+      <Filter>Header Files\db\ops</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\ops\readops.h">
+      <Filter>Header Files\db\ops</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\ops\statements.h">
+      <Filter>Header Files\db\ops</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\ops\writeops.h">
+      <Filter>Header Files\db\ops</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kode\db\sqlitedatabase.h">
+      <Filter>Header Files\db</Filter>
+    </ClInclude>
     <ClInclude Include="include\kode\db\sqliteops.h">
       <Filter>Header Files\db</Filter>
     </ClInclude>
     <ClInclude Include="include\kode\db\statement.h">
       <Filter>Header Files\db</Filter>
     </ClInclude>
-    <ClInclude Include="include\kode\db\utils.h">
-      <Filter>Header Files\db</Filter>
-    </ClInclude>
-    <ClInclude Include="include\kode\db\resultset.h">
-      <Filter>Header Files\db</Filter>
+    <ClInclude Include="include\kode\db\ops\basedata.h">
+      <Filter>Header Files\db\ops</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

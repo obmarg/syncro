@@ -38,7 +38,7 @@ namespace db {
 class Statement
 {
 	//TODO: Make statement support pthreads stuff?
-	friend class Database;
+	friend class SqliteDatabase;
 public:
 	virtual ~Statement();
 	
@@ -51,6 +51,16 @@ public:
 	
 	//!	\brief	Resets the statement
 	void Reset();
+
+	//!
+	//!	\brief	Whether or not this statement is done
+	//!
+	//!	\return	true if the statement is done and needs reset
+	//!
+	bool IsDone()
+	{
+		return m_queryDone;
+	}
 
 	//!
 	//!	\brief	Binds some data to a parameter
@@ -109,6 +119,7 @@ private:
 	sqlite3_stmt* 							m_handle;
 	std::vector<std::string> 				m_columnNames;
 	bool 									m_fFetchedNames;
+	bool									m_queryDone;
 };
 
 typedef boost::shared_ptr<Statement> StatementPtr;
@@ -157,7 +168,10 @@ public:
 	AutoReset( const StatementPtr statement ) : m_statement( statement ) {};
 	~AutoReset()
 	{
-		m_statement->Reset();
+		if( m_statement )
+		{
+			m_statement->Reset();
+		}
 	};
 private:
 	const StatementPtr m_statement;

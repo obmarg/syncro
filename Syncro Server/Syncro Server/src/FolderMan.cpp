@@ -35,7 +35,7 @@ using namespace std;
 using namespace boost::filesystem;
 using namespace kode::db;
 
-FolderMan::FolderMan( Database::TPointer db ) : m_db( db )
+FolderMan::FolderMan( DatabasePtr db ) : m_db( db )
 {
 	StatementPtr statement = 
 		m_db->prepare( "SELECT ID,Name,Path,UploadPrefix FROM Folders");

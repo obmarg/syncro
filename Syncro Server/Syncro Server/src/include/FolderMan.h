@@ -41,7 +41,7 @@ class FolderMan
 {
 public:
 
-	FolderMan( kode::db::Database::TPointer inpDB );
+	FolderMan( kode::db::DatabasePtr inpDB );
 	~FolderMan();
 
 	const FolderList& GetFoldersInfo() const
@@ -60,7 +60,7 @@ public:
 
 private:
 	FolderList m_folders;
-	kode::db::Database::TPointer m_db;
+	kode::db::DatabasePtr  m_db;
 
 	kode::db::StatementPtr m_addOneShot;
 	kode::db::StatementPtr m_listOneShots;

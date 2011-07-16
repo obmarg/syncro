@@ -24,14 +24,14 @@
 namespace syncro
 {
 
-class SyncroDB : public kode::db::Database, boost::noncopyable
+class SyncroDB : public kode::db::SqliteDatabase, boost::noncopyable
 {
 public:
-	static Database::TPointer OpenDB(
+	static kode::db::DatabasePtr OpenDB(
 		const std::string& file=DEFAULT_DB_NAME
 		)
 	{
-		Database::TPointer pDatabase( new SyncroDB( file ) );
+		kode::db::DatabasePtr pDatabase( new SyncroDB( file ) );
 		return pDatabase;
 	}
 

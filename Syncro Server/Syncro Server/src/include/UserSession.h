@@ -66,17 +66,17 @@ public:
 	void DefaultAuth();
 
 private:
-	SendDataPtr			m_currentSendData;
-	RecvDataPtr			m_currentRecvData;
+	SendDataPtr						m_currentSendData;
+	RecvDataPtr						m_currentRecvData;
 
-	AdminCommandManPtr	m_adminCommandMan;
+	AdminCommandManPtr				m_adminCommandMan;
 
-	boost::shared_ptr< kode::db::Database >	m_db;
-	boost::scoped_ptr< FolderMan >			m_folderMan;
+	DatabasePtr						m_db;
+	boost::scoped_ptr< FolderMan >	m_folderMan;
 
-	bool					m_authenticated;
-	AuthToken				m_authToken;
-	AuthManager			m_authMan;
+	bool							m_authenticated;
+	AuthToken						m_authToken;
+	AuthManager						m_authMan;
 };
 
 }	// namespace server

@@ -123,7 +123,7 @@ HandshakeResponse::HandshakeResponse()
 	m_oMessage.set_windows( false );
 #endif
 
-	kode::db::Database::TPointer oDB = SyncroDB::OpenDB();
+	kode::db::DatabasePtr oDB = SyncroDB::OpenDB();
 	std::string sUUID;
 	vector<unsigned char> aUUID( 16 );
 	try

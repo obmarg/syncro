@@ -44,7 +44,7 @@ typedef std::map<
 ///////////////////////////////////////////////////////////////////////////////
 class ResultSet
 {
-	friend class Database;
+	friend class SqliteDatabase;
 protected:
 	std::vector<Row> rows;
 	std::vector<std::string> colNames;

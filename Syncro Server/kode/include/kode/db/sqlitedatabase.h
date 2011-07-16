@@ -13,7 +13,11 @@
 
 	You should have received a copy of the GNU General Public License
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
+
+	This file defines the implementation for sqlite databases
 */
+
+#include <kode/db/database.h>
 
 #ifndef __DATABASE_H_
 #define __DATABASE_H_
@@ -21,6 +25,7 @@
 //#include "Logger.h"
 //extern CLogger Logger;
 
+#include "kode/db/database.h"
 #include "kode/db/sqliteexception.h"
 #include "kode/db/sqliteops.h"
 #include "kode/db/resultset.h"
@@ -43,23 +48,17 @@
 namespace kode {
 namespace db {
 
-class Database;
-class Statement;
-typedef boost::shared_ptr<Database> DatabasePtr;
-typedef boost::shared_ptr<Statement> StatementPtr;
 
-class Database
+class SqliteDatabase : public BaseDatabase
 {
 public:
-	typedef boost::shared_ptr<Database> TPointer;
-
 	friend int callback( void*, int, char**, char** );
 
-	void runInsert( std::string query );
-	ResultSet run( std::string query );
+	virtual void runInsert( const std::string& query );
+	ResultSet run( const std::string& query );
 
 	template<class tReturnType>
-	tReturnType runScalar( std::string query )
+	tReturnType runScalar( const std::string& query )
 	{
 		ResultSet oResults = run( query );
 		if( oResults.empty() )
@@ -82,11 +81,11 @@ public:
 		return tReturnType();
 	}
 
-	StatementPtr prepare( std::string insSql );
+	virtual StatementPtr prepare( const std::string& insSql );
 
 #ifdef _WIN32
 	template<>
-	std::string runScalar<std::string>( std::string query );
+	std::string runScalar<std::string>( const std::string& query );
 #endif
 
 private:
@@ -100,14 +99,14 @@ private:
 protected:
 	void clearResult();
 
-	Database( const std::string& file );
-	virtual ~Database();
+	SqliteDatabase( const std::string& file );
+	virtual ~SqliteDatabase();
 };
 
 #ifdef _WIN32
 //TODO: figure out how the fuck you do specialization like this in gcc
 template<>
-std::string Database::runScalar<std::string>( std::string query )
+std::string SqliteDatabase::runScalar<std::string>( const std::string& query )
 {
 	ResultSet oResults( run( query ) );
 	if( oResults.empty() )

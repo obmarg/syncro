@@ -13,9 +13,11 @@
 
 	You should have received a copy of the GNU General Public License
 	along with Syncro.  If not, see <http://www.gnu.org/licenses/>.
+
+	This file contains the implementation for a sqlite database
 */
 
-#include "kode/Database.h"
+#include "kode/db/sqlitedatabase.h"
 #include "kode/db/statement.h"
 //#include "Logger.h"
 #include <ctype.h>
@@ -28,7 +30,7 @@ using std::string;
 //extern CLogger Logger;
 int callback( void*, int, char**, char** );
 
-Database::Database( const std::string& file )
+SqliteDatabase::SqliteDatabase( const std::string& file )
 {
 #ifndef SQLITE_SINGLE_THREADED
 	if( !sqlite3_threadsafe() )
@@ -47,7 +49,7 @@ Database::Database( const std::string& file )
 #endif
 }
 
-Database::~Database()
+SqliteDatabase::~SqliteDatabase()
 {
 #ifdef USING_PTHREADS
 	pthread_mutex_destroy( &mutex );
@@ -55,7 +57,7 @@ Database::~Database()
 	sqlite3_close( db );
 }
 
-void Database::runInsert( std::string query )
+void SqliteDatabase::runInsert( const std::string& query )
 {
 	char* errorMsg = 0;
 
@@ -74,7 +76,7 @@ void Database::runInsert( std::string query )
 	}
 }
 
-ResultSet Database::run( std::string query )
+ResultSet SqliteDatabase::run( const std::string& query )
 {
 #ifdef USING_PTHREADS
 	pthread_mutex_lock( &mutex );
@@ -102,12 +104,12 @@ ResultSet Database::run( std::string query )
 	return result;
 }
 
-void Database::clearResult()
+void SqliteDatabase::clearResult()
 {
 	result.clear();
 }
 
-StatementPtr Database::prepare( std::string insSql )
+StatementPtr SqliteDatabase::prepare( const std::string& insSql )
 {
 	sqlite3_stmt* handle = NULL;
 	StatementPtr rv;
@@ -131,7 +133,7 @@ StatementPtr Database::prepare( std::string insSql )
 
 int callback( void* ptrDB, int numCols, char** colValues, char** colNames )
 {
-	Database* db = static_cast<Database*>( ptrDB );
+	SqliteDatabase* db = static_cast<SqliteDatabase*>( ptrDB );
 	if( db->result.numCols() == 0 )
 		db->result.defineCols( numCols, colNames );
 	Row row;
@@ -143,5 +145,5 @@ int callback( void* ptrDB, int numCols, char** colValues, char** colNames )
 	return 0;
 }
 
-}	//namespace db
-};	//namespace kode
+}	// namespace db
+}	// namespace kode

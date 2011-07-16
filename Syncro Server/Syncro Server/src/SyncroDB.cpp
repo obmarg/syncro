@@ -85,7 +85,7 @@ const std::string DEFAULT_USER_CREATE =
 SyncroDB::SyncroDB( 
 	const std::string& insFilename 
 	) : 
-Database( insFilename )
+kode::db::SqliteDatabase( insFilename )
 {
 	int nCurrentVersion = runScalar<int>( "PRAGMA user_version;" );
 
