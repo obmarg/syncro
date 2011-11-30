@@ -38,7 +38,7 @@ testdir = Dir( 'test_' + builddir )
 ccflags = []
 cppflags = []
 lflags = []
-cppdefines = []
+cppdefines = [ 'BOOST_FILESYSTEM_VERSION=2' ]
 cpppath = [ "include" ]
 libpath = []
 
@@ -51,7 +51,7 @@ libs = [
 if platform == 'linux':
 	cppdefines += [ "_LINUX", "LINUX" ]
 	if int(debug):
-		ccflags += [ '-g' ]
+		ccflags += [ '-g', '-fpermissive' ]
 	cppflags = ccflags
 	libs += [
 		'boost_system', 
