@@ -76,7 +76,7 @@ bool SyncroServer::HandleAccept(
 
 	ReceiveHandler::TPointer recvHandler = 
 		PBRequestHandler::Create( 
-			inpNewConnection, 
+			*inpNewConnection, 
 			boost::bind(
 				&server::PBResponseFactory::CreateResponse,
 				factory,

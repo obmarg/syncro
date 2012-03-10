@@ -25,7 +25,7 @@
 //!	\brief Entry point for kodetest
 //!
 //////////////////////////////////////////////////////////////////////////
-int main( int argc, void** argv )
+int main( int argc, char** argv )
 {
 	std::string tests = "All Tests";
 	CppUnit::TextUi::TestRunner runner;
