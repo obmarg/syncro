@@ -86,7 +86,7 @@ int main( int argc, char** argv )
 	}
 	if( vm.count( "daemon" ) )
 	{
-#ifndef LINUX
+#ifdef WIN32
 		//throw std::logic_error( "Daemon not implemented on win32" )
 		std::cout << "Daemon not implemented on win32\n";
 		return 1;

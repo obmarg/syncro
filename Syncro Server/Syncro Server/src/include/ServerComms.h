@@ -150,6 +150,9 @@ private:
 
 	void StartAccept();
 	void HandleAccept( TCPConnection::TPointer inpConnection, const boost::system::error_code& inoError );
+
+private:
+    boost::asio::io_service& m_ioService;
 };
 
 };		//namespace syncro

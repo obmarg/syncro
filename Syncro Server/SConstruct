@@ -3,11 +3,8 @@ import os
 import sys
 
 platform = sys.platform
-if platform != "win32":
-	platform = "linux"
-
-if platform != "win32":
-	platform = "linux"
+if platform != "win32" and platform != 'darwin':
+    platform = "linux"
 
 #
 # Make all the directories needed for protocol_buffers
@@ -17,17 +14,17 @@ Execute( Mkdir( "libsyncro/src/protocol_buffers" ) )
 Execute( Mkdir( 'libsyncro/include/libsyncro/protocol_buffers/' ) )
 
 #TODO: Would be good if the below only ran when needed
-if platform == "linux":
-	subprocess.call( ["./build.sh",""], shell=True, cwd="../Messages" )
+if platform == "win32":
+    subprocess.call( ["build.bat",""], shell=True, cwd="../Messages" )
 else:
-	subprocess.call( ["build.bat",""], shell=True, cwd="../Messages" )
+    subprocess.call( ["./build.sh",""], shell=True, cwd="../Messages" )
 
 debug = ARGUMENTS.get( 'debug', 0 )
 
 buildtype = 'release'
 
 if int(debug):
-	buildtype = 'debug'
+    buildtype = 'debug'
 
 installdir = Dir( 'bin' )
 
@@ -36,122 +33,140 @@ builddir= platform + '_x86_' + buildtype
 testdir = Dir( 'test_' + builddir )
 
 ccflags = []
-cppflags = [ '-fpermissive' ]
+cppflags = [ ]
 lflags = []
 cppdefines = [ 'BOOST_FILESYSTEM_VERSION=2' ]
 cpppath = [ "include" ]
 libpath = []
+cc = cxx = None
 
 libs = [ 
-	'syncro', 
-	'kode', 
-	'sqlite3'
-	]
+    'syncro', 
+    'kode', 
+    'sqlite3'
+    ]
+
+if platform != 'win32':
+    if int(debug):
+        ccflags += [ '-g' ]
+        cppflags += ccflags
+    libs += [
+        'boost_system', 
+        'boost_filesystem', 
+        'boost_regex', 
+        'boost_date_time', 
+        'boost_program_options',
+        'cryptopp',
+        'protobuf-lite'
+        ]
 
 if platform == 'linux':
-	cppdefines += [ "_LINUX", "LINUX" ]
-	if int(debug):
-		ccflags += [ '-g' ]
-    	cppflags += ccflags
-	libs += [
-		'boost_system', 
-		'boost_thread', 
-		'boost_filesystem', 
-		'boost_regex', 
-		'boost_date_time', 
-		'boost_program_options',
-		'crypto++',
-		'protobuf-lite'
-		]
+    cppdefines += [ "_LINUX", "LINUX" ]
+    cppflags += [ '-fpermissive' ]
+    libs += [ 'boost_thread' ]
+
+if platform == 'darwin':
+    cppdefines += [ "_MACOS", 'MACOS' ]
+    cpppath += [ '/opt/local/include' ]
+    libpath += [ '/opt/local/lib' ]
+    cc = 'clang'
+    cxx = 'clang++'
+    libs += [ 'boost_thread-mt' ]
 
 if platform == 'win32':
-	ccflags += [ '/nologo', '/W3', '/WX', '/FC', '/Z7', '/Zl' ]
-	lflags += [ '/MAP', '/MANIFEST:NO',	'/MACHINE:X86' ]
-	if int(debug):
-		ccflags += [ '/Od', '/MDd', '/RTC1' ]
-		lflags += [ '/DEBUG' ]
-	else:
-		ccflags += [ '/O2', '/Oy-', '/MD', '/GL', '/Gy' ]
-		lflags += [ '/OPT:REF', '/OPT:ICF', '/LTCG' ]
+    ccflags += [ '/nologo', '/W3', '/WX', '/FC', '/Z7', '/Zl' ]
+    lflags += [ '/MAP', '/MANIFEST:NO', '/MACHINE:X86' ]
+    if int(debug):
+        ccflags += [ '/Od', '/MDd', '/RTC1' ]
+        lflags += [ '/DEBUG' ]
+    else:
+        ccflags += [ '/O2', '/Oy-', '/MD', '/GL', '/Gy' ]
+        lflags += [ '/OPT:REF', '/OPT:ICF', '/LTCG' ]
 
-	cppflags = ccflags + [ '/EHsc', '/GR' ]
-	cppdefines += [ 
-		'WIN32', '_CONSOLE', '_WIN32_WINNT=0x0501',
-		'_SCL_SECURE_NO_WARNINGS'
-		]
+    cppflags = ccflags + [ '/EHsc', '/GR' ]
+    cppdefines += [ 
+        'WIN32', '_CONSOLE', '_WIN32_WINNT=0x0501',
+        '_SCL_SECURE_NO_WARNINGS'
+        ]
 
-	#Old debug flags copied from msvc dialog.
-	#ccflags += [ 
-	#	'/EHsc', '/GS', '/fp:precise', '/Zc:wchar_t', 
-	#	'/Zc:forScope', '/Fd"Debug\vc100.pdb"', '/Gd', '/analyze-', 
-	#	'/errorReport:queue'
-	#	]
-	
-	#TODO: Make these dependency paths a bit more generic
-	cpppath += [ 
-		Dir( "../Dependencies/sqlite/" ), 
-		Dir( "../Dependencies/cppunit-1.12.1/include/" ),
-		Dir( "../Dependencies/" ),
-		Dir( "../Dependencies/protobuf-2.3.0/include/" ),
-		Dir( "../../boost_1_44_0/" )
-		]
-	buildtype = 'Release'
-	if int(debug):
-		buildtype = 'Debug'
-	libpath += [ 
-		Dir( "../Dependencies/sqlite/" + buildtype ), 
-		Dir( "../Dependencies/cppunit-1.12.1/lib" ),
-		Dir( "../Dependencies/cryptopp/Win32/Output/" + buildtype ),
-		Dir( "../Dependencies/protobuf-2.3.0/lib/" + buildtype ),
-		Dir( "../../boost_1_44_0/stage/lib" )
-		]
-	libs += [ 'libprotobuf-lite', 'cryptlib' ]
-	
+    #Old debug flags copied from msvc dialog.
+    #ccflags += [ 
+    #   '/EHsc', '/GS', '/fp:precise', '/Zc:wchar_t', 
+    #   '/Zc:forScope', '/Fd"Debug\vc100.pdb"', '/Gd', '/analyze-', 
+    #   '/errorReport:queue'
+    #   ]
+    
+    #TODO: Make these dependency paths a bit more generic
+    cpppath += [ 
+        Dir( "../Dependencies/sqlite/" ), 
+        Dir( "../Dependencies/cppunit-1.12.1/include/" ),
+        Dir( "../Dependencies/" ),
+        Dir( "../Dependencies/protobuf-2.3.0/include/" ),
+        Dir( "../../boost_1_44_0/" )
+        ]
+    buildtype = 'Release'
+    if int(debug):
+        buildtype = 'Debug'
+    libpath += [ 
+        Dir( "../Dependencies/sqlite/" + buildtype ), 
+        Dir( "../Dependencies/cppunit-1.12.1/lib" ),
+        Dir( "../Dependencies/cryptopp/Win32/Output/" + buildtype ),
+        Dir( "../Dependencies/protobuf-2.3.0/lib/" + buildtype ),
+        Dir( "../../boost_1_44_0/stage/lib" )
+        ]
+    libs += [ 'libprotobuf-lite', 'cryptlib' ]
+    
 if int(debug):
-	cppdefines += [ '_DEBUG' ]
+    cppdefines += [ '_DEBUG' ]
 else:
-	cppdefines += [ 'NDEBUG' ]
+    cppdefines += [ 'NDEBUG' ]
 
 
 cppdirs = [
-	Dir( "kode/include/" ), 
-	Dir( "libsyncro/include/" ), 
-	] 
+    Dir( "kode/include/" ), 
+    Dir( "libsyncro/include/" ), 
+    ] 
 
 libsyncrodirs = [
-	Dir( "libsyncro/include/libsyncro/" ),
-	Dir( "libsyncro/include/libsyncro/protocol_buffers" )
-	]
+    Dir( "libsyncro/include/libsyncro/" ),
+    Dir( "libsyncro/include/libsyncro/protocol_buffers" )
+    ]
 
 libtargetdir = Dir( "lib/" + builddir )
 
 libpath += [ 
-	libtargetdir
-	] 
+    libtargetdir
+    ] 
 
 env = Environment()
 
 
 env.Append( 
-	CPPPATH = cpppath, 
-	LIBPATH=libpath, 
-	CPPDEFINES=cppdefines,
-	CCFLAGS=ccflags,
-	CXXFLAGS=cppflags,
-	LINKFLAGS=lflags
-	)
+    CPPPATH = cpppath, 
+    LIBPATH=libpath, 
+    CPPDEFINES=cppdefines,
+    CCFLAGS=ccflags,
+    CXXFLAGS=cppflags,
+    LINKFLAGS=lflags
+    )
 env.Append( CPPPATH= cppdirs )
 
+if cc != None:
+    env.Replace(
+            CC=cc,
+            CXX=cxx
+            )
+
 Export(
-	'env',
-	'libs',
-	'libsyncrodirs',
-	'libtargetdir',
-	'installdir',
-	'testdir',
-	'platform',
-	'debug'
-	)
+    'env',
+    'libs',
+    'libsyncrodirs',
+    'libtargetdir',
+    'installdir',
+    'testdir',
+    'platform',
+    'debug'
+    )
 
 SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )
 
@@ -159,10 +174,10 @@ SConscript( 'SConscript', variant_dir=builddir, duplicate=0 )
 # Targets
 #
 alltargets = [
-	'libs',
-	'bin',
-	'test'
-	]
+    'libs',
+    'bin',
+    'test'
+    ]
 
 
 env.Alias( 'libs', libtargetdir )

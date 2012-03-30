@@ -160,7 +160,7 @@ private:
 		m_size( size )
 	{
 	};
-	mutable std::ifstream& m_file;
+	std::ifstream& m_file;
 	unsigned int m_size;
 };
 
