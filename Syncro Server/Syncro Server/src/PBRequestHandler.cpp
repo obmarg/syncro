@@ -28,14 +28,14 @@ using std::string;
 using kode::utils::FromJavaEndian;
 
 PBRequestHandler::PBRequestHandler( 
-	TCPConnection::TPointer inpConn, 
+	TCPConnection& connection, 
 	ResponseCallback responseCallback
 	) : 
-m_pConn( inpConn ), 
+m_connection( connection ), 
 m_getResponse( responseCallback )
 {
 	m_fCloseConnection = false;
-	m_pSendHandler = PBResponseSendHandler::Create( m_pConn );
+	m_pSendHandler = PBResponseSendHandler::Create( connection );
 	ResetVariables();		//don't know if this is needed, but can't hurt much
 }
 
@@ -125,14 +125,15 @@ bool PBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 			*m_pSendHandler 
 			).SetPBResponse( response );
 
-		m_pConn->Send( m_pSendHandler );
+		m_connection.Send( m_pSendHandler );
 	}
 	catch( const authentication_exception& )
 	{
 		//TODO: do we want to return false here?
 		m_fCloseConnection = true;
 		m_fatalError = true;
-		std::cout << "Authentication failed for " + m_pConn->ClientIP() + "\n";
+		std::cout << "Authentication failed for " 
+		    << m_connection.ClientIP() << "\n";
 	}
 	catch( const std::exception& ex )
 	{

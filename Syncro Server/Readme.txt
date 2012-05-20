@@ -22,7 +22,19 @@ Ensure you have all the neccesary dependencies installed.
 
 On debian based systems, this command should install the dependencies:
 
-apt-get install build-essential libboost-all-dev libsqlite3-dev scons libcrypto++-dev libprotobuf-dev protobuf-compiler libcppunit-dev
+sudo apt-get install build-essential libboost-all-dev libsqlite3-dev scons libcrypto++-dev libprotobuf-dev protobuf-compiler libcppunit-dev 
+
+Then just run scons from the Syncro Server directory
+Binaries will be generated in the bin folder
+
+
+Building on mac os
+-------------
+Ensure you have all the neccesary dependencies installed.
+
+Assuming MacPorts is installed, the following command should install the dependencies:
+
+sudo port install boost libcryptopp protobuf-cpp cppunit
 
 Then just run scons from the Syncro Server directory
 Binaries will be generated in the bin folder

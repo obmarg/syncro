@@ -36,7 +36,7 @@ public class StartServiceReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction(); 
-		if( action == "uk.me.grambo.syncro.START_SERVICE" )
+		if( action.equals( "uk.me.grambo.syncro.START_SERVICE" ) )
 		{
 			Bundle extras = intent.getExtras();
 			if( extras != null ) {

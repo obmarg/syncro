@@ -31,7 +31,8 @@ using std::cout;
 const int DEFAULT_RECV_BUFFER = 1000;
 
 ServerComms::ServerComms( io_service& inoIOService, unsigned int port ) :
-	m_oAcceptor( inoIOService, tcp::endpoint( tcp::v4(), port ) )
+m_oAcceptor( inoIOService, tcp::endpoint( tcp::v4(), port ) ),
+m_ioService( inoIOService )
 {
 	StartAccept();
 }
@@ -44,7 +45,8 @@ ServerComms::~ServerComms()
 
 void ServerComms::StartAccept()
 {
-	TCPConnection::TPointer oNewConn = TCPConnection::CreateConnection( m_oAcceptor.io_service() );
+	TCPConnection::TPointer oNewConn = 
+	    TCPConnection::CreateConnection( m_ioService  );
 	m_oAcceptor.async_accept( oNewConn->GetSocket(), boost::bind( &ServerComms::HandleAccept, this, oNewConn, boost::asio::placeholders::error ) );
 }
 

@@ -31,9 +31,9 @@ public:
 	virtual ~PBResponseSendHandler();
 	virtual bool SendStarting();	//Want to override this definetly (i think)
 
-	static SendHandler::TPointer Create( TCPConnection::TPointer inpConn )
+	static SendHandler::TPointer Create( TCPConnection& connection )
 	{
-		return SendHandler::TPointer( new PBResponseSendHandler( inpConn ) );
+		return SendHandler::TPointer( new PBResponseSendHandler( connection ) );
 	}
 
 	void SetPBResponse( BasePBResponse::TPointer inpResponse )
@@ -44,11 +44,11 @@ public:
 	virtual void SendDone( int innSent );
 protected:
 
-	TCPConnection::TPointer m_pConn;
+	TCPConnection& m_connection;
 
 	BasePBResponse::TPointer m_pResponse;
 
-	PBResponseSendHandler( TCPConnection::TPointer inpConn );
+	PBResponseSendHandler( TCPConnection& connection );
 };
 
 } //namespace syncro;

@@ -45,14 +45,14 @@ public:
 	};
 
 	static ReceiveHandler::TPointer Create( 
-		TCPConnection::TPointer inpConn, 
+		TCPConnection& connection, 
 		ResponseCallback responseCallback 
 		)
 	{
 		return ReceiveHandler::TPointer( 
 			static_cast<ReceiveHandler*>( 
 				new PBRequestHandler( 
-					inpConn, 
+					connection, 
 					responseCallback 
 					) 
 				) 
@@ -61,7 +61,7 @@ public:
 protected:
 	bool m_fCloseConnection;
 
-	TCPConnection::TPointer m_pConn;
+	TCPConnection& m_connection;
 	ResponseCallback m_getResponse;
 
 	SendHandler::TPointer m_pSendHandler;
@@ -70,7 +70,7 @@ protected:
 	unsigned int m_nBufferReadSoFar;
 
 	PBRequestHandler( 
-		TCPConnection::TPointer inpConn, 
+		TCPConnection& connection, 
 		ResponseCallback responseCallback
 		);
 

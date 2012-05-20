@@ -164,11 +164,14 @@ FolderMan::FileRequested(
 	// Ensure that the absolute file name starts with the folder path
 	// for security purposes
 	//
-	if( absoluteFileName.compare( 0, folderPath.size(), folderPath ) != 0 )
+	if( 
+            !oneShot && 
+            absoluteFileName.compare( 0, folderPath.size(), folderPath ) != 0 
+            )
 	{
-		throw std::runtime_error( 
-			"Client requested to download file outside of container folder"
-			);
+        throw std::runtime_error( 
+            "Client requested to download file outside of container folder"
+            );
 	}
 
 	details.m_filename = fileName;

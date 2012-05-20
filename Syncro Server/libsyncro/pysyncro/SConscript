@@ -1,0 +1,26 @@
+Import( 'env', 'libs', 'libsyncrodirs', 'libtargetdir' )
+
+myenv = env.Clone()
+
+l = libs + [
+        'boost_python',
+        'python2.7'
+        ]
+
+p = libsyncrodirs + [
+        '/usr/include/python2.7'
+        ]
+
+myenv.Append( 
+        CPPPATH=p,
+        LIBS=l,
+        )
+
+sources = [ 
+	'pysyncro.cpp'
+    ]
+
+output = myenv.SharedLibrary( 'pysyncro', sources )
+
+installoutput = myenv.Install( libtargetdir, output )
+myenv.Alias( 'pysyncro', installoutput )

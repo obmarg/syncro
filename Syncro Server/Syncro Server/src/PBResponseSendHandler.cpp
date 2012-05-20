@@ -29,7 +29,8 @@ namespace syncro
 // Uncomment to enable PB packet debug output
 //#define PB_PACKET_DEBUG
 
-PBResponseSendHandler::PBResponseSendHandler( TCPConnection::TPointer inpConn ) : m_pConn( inpConn )
+PBResponseSendHandler::PBResponseSendHandler( TCPConnection& connection ) : 
+m_connection( connection )
 {
 
 };
@@ -103,7 +104,7 @@ void PBResponseSendHandler::SendDone( int innSent )
 		    + comms::PacketHeader::BYTE_SIZE
 		    + 1024;
 
-	m_pConn->StartRecv( recvBufferSize );
+	m_connection.StartRecv( recvBufferSize );
 
 	m_pResponse.reset( );
 }
