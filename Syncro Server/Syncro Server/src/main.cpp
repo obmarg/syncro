@@ -17,21 +17,28 @@
 
 #include "SyncroServer.h"
 #include "SyncroDB.h"
+#include "Config.h"
 #include <boost/program_options.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stdlib.h>
 
 #ifdef LINUX
 #include <sys/types.h>
 #include <unistd.h>
 #endif
 
-namespace po = boost::program_options;
+static const std::string DefaultConfigFile = "~/.syncro/syncro.conf";
+
+void InitConfig( const std::string& path );
 
 int main( int argc, char** argv )
 {
 	using namespace syncro;
+
+    std::string config = DefaultConfigFile;
 
 	po::options_description desc( "Allowed options" );
 	desc.add_options()
@@ -47,7 +54,12 @@ int main( int argc, char** argv )
 			"database,d", 
 			po::value<std::string>(), 
 			"use specified database file" 
-			);
+			)
+		( 
+		    "config,c", 
+		    po::value<std::string>( &config ), 
+		    "use specified config file" 
+		    );
 
 	po::variables_map vm;
 	bool parsedOk = true;
@@ -107,6 +119,7 @@ int main( int argc, char** argv )
 		}
 #endif
 	}
+	InitConfig( config );
 
 	boost::shared_ptr< syncro::SyncroServer > server;
 	server.reset( 
@@ -114,4 +127,61 @@ int main( int argc, char** argv )
 		);
 	bool fOK = server->Run();
 	return fOK ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////
+//!
+//! \brief  Initialises the Config class with values 
+//!
+////////////////////////////////////////////////////////////////////////
+void InitConfig( const std::string& path )
+{
+    using namespace syncro;
+    namespace fs = boost::filesystem;
+
+    std::string resolved;
+    if ( path.find( '~' ) != path.npos )
+    {
+        char* homeDir = getenv( "HOME" );
+        if ( homeDir == nullptr )
+        {
+            return;
+        }
+        resolved = boost::replace_first_copy( 
+                path, 
+                "~", 
+                std::make_pair( homeDir, homeDir + strlen( homeDir ) )
+                );
+    }
+    else
+    {
+        resolved = path;
+    }
+   
+    fs::path pathObj( resolved );
+    fs::path parentPath = pathObj.parent_path();
+    
+    if ( !fs::exists( parentPath ) )
+    {
+        fs::create_directories( parentPath );
+    }
+    
+    if ( fs::exists( pathObj ) )
+    {
+        std::ifstream fileStream( resolved.c_str() );
+
+        if ( !fileStream )
+        {
+            return;
+        }
+
+        auto& config = Config::GetInstance();
+        auto desc = config.GetOptionsDescription();
+
+        po::variables_map vm;
+        po::store( po::parse_config_file( fileStream, desc ), vm );
+        po::notify( vm );
+
+        config.Init( vm );
+    }
 }
