@@ -19,7 +19,9 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include <vector>
+#include <stdlib.h>
 
 namespace kode {
 namespace utils {
@@ -68,6 +70,29 @@ std::string string( const std::wstring& str )
 		( *destIt ) = boost::numeric_cast<char>( *srcIt );
 	}
 	return rv;
+}
+
+std::string ReplaceHomeDir( const std::string path )
+{
+    std::string resolved;
+    if ( path.find( '~' ) != path.npos )
+    {
+        char* homeDir = getenv( "HOME" );
+        if ( homeDir == nullptr )
+        {
+            throw std::runtime_error( "Could not get home dir" );
+        }
+        resolved = boost::replace_first_copy( 
+                path, 
+                "~", 
+                std::make_pair( homeDir, homeDir + strlen( homeDir ) )
+                );
+    }
+    else
+    {
+        resolved = path;
+    }
+    return resolved;
 }
 
 }	// namespace utils

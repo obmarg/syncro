@@ -17,7 +17,10 @@
 
 #include "SyncroServer.h"
 #include "SyncroDB.h"
+#include "Config.h"
+#include <kode/utils.h>
 #include <boost/program_options.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -27,11 +30,15 @@
 #include <unistd.h>
 #endif
 
-namespace po = boost::program_options;
+static const std::string DefaultConfigFile = "~/.syncro/syncro.conf";
+
+void InitConfig( const std::string& path );
 
 int main( int argc, char** argv )
 {
 	using namespace syncro;
+
+    std::string config = DefaultConfigFile;
 
 	po::options_description desc( "Allowed options" );
 	desc.add_options()
@@ -47,7 +54,12 @@ int main( int argc, char** argv )
 			"database,d", 
 			po::value<std::string>(), 
 			"use specified database file" 
-			);
+			)
+		( 
+		    "config,c", 
+		    po::value<std::string>( &config ), 
+		    "use specified config file" 
+		    );
 
 	po::variables_map vm;
 	bool parsedOk = true;
@@ -61,6 +73,7 @@ int main( int argc, char** argv )
 		std::cout << "Invalid parameters\n";
 		std::cout << "What: " << ex.what() << "\n\n";
 	}
+	bool databaseSet = false;
 
 	if( !parsedOk || vm.count( "help" ) )
 	{
@@ -69,6 +82,7 @@ int main( int argc, char** argv )
 	}
 	if( vm.count( "database" ) )
 	{
+        databaseSet = true;
 		std::string databaseFile( vm[ "database" ].as< std::string >() );
 		std::cout << "Using database file: " << databaseFile << "\n";
 		SyncroDB::SetDefaultFilename( databaseFile );
@@ -107,6 +121,15 @@ int main( int argc, char** argv )
 		}
 #endif
 	}
+	InitConfig( config );
+
+	if ( !databaseSet )
+    {
+        // Use database file from Config
+		SyncroDB::SetDefaultFilename( 
+		        Config::GetInstance().DatabasePath()
+		        );
+    }
 
 	boost::shared_ptr< syncro::SyncroServer > server;
 	server.reset( 
@@ -114,4 +137,52 @@ int main( int argc, char** argv )
 		);
 	bool fOK = server->Run();
 	return fOK ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////
+//!
+//! \brief  Initialises the Config class with values 
+//!
+////////////////////////////////////////////////////////////////////////
+void InitConfig( const std::string& path )
+{
+    using namespace syncro;
+    namespace fs = boost::filesystem;
+
+    std::string resolved;
+    try
+    {
+        resolved = kode::utils::ReplaceHomeDir( path );
+    }
+    catch( const std::exception& )
+    {
+        return;
+    }
+   
+    fs::path pathObj( resolved );
+    fs::path parentPath = pathObj.parent_path();
+    
+    if ( !fs::exists( parentPath ) )
+    {
+        fs::create_directories( parentPath );
+    }
+    
+    if ( fs::exists( pathObj ) )
+    {
+        std::ifstream fileStream( resolved.c_str() );
+
+        if ( !fileStream )
+        {
+            return;
+        }
+
+        auto& config = Config::GetInstance();
+        auto desc = config.GetOptionsDescription();
+
+        po::variables_map vm;
+        po::store( po::parse_config_file( fileStream, desc ), vm );
+        po::notify( vm );
+
+        config.Init( vm );
+    }
 }

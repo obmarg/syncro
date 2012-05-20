@@ -23,7 +23,8 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"VectorPBResponse.cpp",
 		"FolderContentsHandlers.cpp",
 		"UserSession.cpp",
-		"BinaryIncomingHandler.cpp"
+		"BinaryIncomingHandler.cpp",
+		"Config.cpp",
 		]
 
 output = env.Program( 'syncro', source = sources, LIBS=libs )
