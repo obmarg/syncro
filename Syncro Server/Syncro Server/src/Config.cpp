@@ -23,6 +23,7 @@
 namespace syncro {
 
 static const std::string DefaultTempDir = "~/.syncro/temp";
+static const std::string DefaultDatabasePath = "~/.syncro/data.db";
 
 ////////////////////////////////////////////////////////////////////////
 //!
@@ -31,7 +32,8 @@ static const std::string DefaultTempDir = "~/.syncro/temp";
 //!
 ////////////////////////////////////////////////////////////////////////
 Config::Config() :
-m_tempFilesPath( kode::utils::ReplaceHomeDir( DefaultTempDir ) )
+m_tempFilesPath( kode::utils::ReplaceHomeDir( DefaultTempDir ) ),
+m_databasePath( kode::utils::ReplaceHomeDir( DefaultDatabasePath ) )
 {
 
 }
@@ -61,7 +63,13 @@ po::options_description Config::GetOptionsDescription()
             "tempdir", 
             po::value< std::string>(), 
             "Directory for temporary files" 
+            )
+        (
+            "db",
+            po::value< std::string >(),
+            "Path to database file"
             );
+
     return desc;
 }
 
@@ -77,6 +85,12 @@ void Config::Init( const po::variables_map& vars )
     {
         m_tempFilesPath = kode::utils::ReplaceHomeDir(
                 vars[ "tempdir" ].as< std::string >()
+                );
+    }
+    if ( vars.count( "db" ) )
+    {
+        m_databasePath = kode::utils::ReplaceHomeDir(
+                vars[ "db" ].as< std::string >()
                 );
     }
 }

@@ -73,6 +73,7 @@ int main( int argc, char** argv )
 		std::cout << "Invalid parameters\n";
 		std::cout << "What: " << ex.what() << "\n\n";
 	}
+	bool databaseSet = false;
 
 	if( !parsedOk || vm.count( "help" ) )
 	{
@@ -81,6 +82,7 @@ int main( int argc, char** argv )
 	}
 	if( vm.count( "database" ) )
 	{
+        databaseSet = true;
 		std::string databaseFile( vm[ "database" ].as< std::string >() );
 		std::cout << "Using database file: " << databaseFile << "\n";
 		SyncroDB::SetDefaultFilename( databaseFile );
@@ -120,6 +122,14 @@ int main( int argc, char** argv )
 #endif
 	}
 	InitConfig( config );
+
+	if ( !databaseSet )
+    {
+        // Use database file from Config
+		SyncroDB::SetDefaultFilename( 
+		        Config::GetInstance().DatabasePath()
+		        );
+    }
 
 	boost::shared_ptr< syncro::SyncroServer > server;
 	server.reset( 

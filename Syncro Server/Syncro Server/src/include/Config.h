@@ -42,11 +42,15 @@ public:
     std::string TempFilesPath()
     { return m_tempFilesPath; }
 
+    std::string DatabasePath()
+    { return m_databasePath; }
+
 private:
     Config();
 
 private:
     std::string m_tempFilesPath;
+    std::string m_databasePath;
 };
 
 }   // namespace syncro
