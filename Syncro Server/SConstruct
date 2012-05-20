@@ -62,7 +62,7 @@ if platform != 'win32':
 
 if platform == 'linux':
     cppdefines += [ "_LINUX", "LINUX" ]
-    cppflags += [ '-fpermissive', "-std=c++11" ]
+    cppflags += [ '-fpermissive', "-std=c++0x" ]
     libs += [ 'boost_thread' ]
 
 if platform == 'darwin':
