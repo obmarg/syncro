@@ -177,9 +177,15 @@ int main( int argc, char* argv[] )
 			{
 				throw std::runtime_error( "Please provide a folder id to upload to" );
 			}
-			std::string filename = vm["upload"].as<std::string>();
+			auto filename = vm["upload"].as<std::string>();
 			boost::filesystem::path path( filename );
-
+			Upload( 
+			        conn,
+			        vm[ "folderid" ].as< int >(),
+			        vm.count( "oneshot" ) > 0,
+			        filename,
+			        path.filename()
+                    );
 		}
 	}
 	catch( const kode::net::NetworkException& ex )
