@@ -18,6 +18,7 @@
 */
 
 #include "Config.h"
+#include <kode/utils.h>
 
 namespace syncro {
 
@@ -30,7 +31,7 @@ static const std::string DefaultTempDir = "~/.syncro/temp";
 //!
 ////////////////////////////////////////////////////////////////////////
 Config::Config() :
-m_tempFilesPath( DefaultTempDir )
+m_tempFilesPath( kode::utils::ReplaceHomeDir( DefaultTempDir ) )
 {
 
 }
@@ -74,7 +75,9 @@ void Config::Init( const po::variables_map& vars )
 {
     if ( vars.count( "tempdir" ) )
     {
-        m_tempFilesPath = vars[ "tempdir" ].as< std::string >();
+        m_tempFilesPath = kode::utils::ReplaceHomeDir(
+                vars[ "tempdir" ].as< std::string >()
+                );
     }
 }
 

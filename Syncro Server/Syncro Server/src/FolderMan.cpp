@@ -19,6 +19,7 @@
 #include "Folder.h"
 #include "BinaryDataRequest.h"
 #include "TransferFinishDetails.h"
+#include "Config.h"
 #include <libsyncro/stringutils.h>
 #include <kode/db/statement.h>
 #include <kode/utils.h>
@@ -213,11 +214,7 @@ FolderMan::IncomingFile(
 	if( fileData.IsOneShot() )
 	{
 		//If one shot, then we need to upload to a temporary folder
-
-		//TODO: First, have the temporary path configurable
-		//		(for now it's just temp in run dir)
-		//		Then: Extract configuration stuff to a seperate class in kode...
-		destFileName = "temp/";
+		destFileName = Config::GetInstance().TempFilesPath();
 	}
 	else if( !folderInfo.UploadPrefix.empty() )
 	{
