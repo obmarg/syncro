@@ -18,12 +18,12 @@
 #include "SyncroServer.h"
 #include "SyncroDB.h"
 #include "Config.h"
+#include <kode/utils.h>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <stdlib.h>
 
 #ifdef LINUX
 #include <sys/types.h>
@@ -140,22 +140,13 @@ void InitConfig( const std::string& path )
     namespace fs = boost::filesystem;
 
     std::string resolved;
-    if ( path.find( '~' ) != path.npos )
+    try
     {
-        char* homeDir = getenv( "HOME" );
-        if ( homeDir == nullptr )
-        {
-            return;
-        }
-        resolved = boost::replace_first_copy( 
-                path, 
-                "~", 
-                std::make_pair( homeDir, homeDir + strlen( homeDir ) )
-                );
+        resolved = kode::utils::ReplaceHomeDir( path );
     }
-    else
+    catch( const std::exception& )
     {
-        resolved = path;
+        return;
     }
    
     fs::path pathObj( resolved );

@@ -118,7 +118,7 @@ T FromJavaEndian( const T& source )
 //!	\return	A string containing the generated UUID
 //!
 ///////////////////////////////////////////////////////////////////////////////
-extern std::string GenerateUUID();
+std::string GenerateUUID();
 
 ///////////////////////////////////////////////////////////////////////////////
 //!
@@ -129,7 +129,7 @@ extern std::string GenerateUUID();
 //!	\return	The converted string
 //!
 ///////////////////////////////////////////////////////////////////////////////
-extern std::wstring wstring( const std::string& str );
+std::wstring wstring( const std::string& str );
 
 ///////////////////////////////////////////////////////////////////////////////
 //!
@@ -140,7 +140,7 @@ extern std::wstring wstring( const std::string& str );
 //!	\return	The converted string
 //!
 ///////////////////////////////////////////////////////////////////////////////
-extern std::string string( const std::wstring& str );
+std::string string( const std::wstring& str );
 
 #ifdef _WIN32
 const std::string PATH_SEPERATOR_STR = "\\";
@@ -149,6 +149,18 @@ const char PATH_SEPERATOR_CHAR = '\\';
 const std::string PATH_SEPERATOR_STR = "/";
 const char PATH_SEPERATOR_CHAR = '/';
 #endif
+
+////////////////////////////////////////////////////////////////////////
+//!
+//! \brief  Replaces ~ in a string with the users actual home directory
+//!
+//! \param  path    The path string to replace
+//! \return         The path with the users home directory replaced
+//!                 (or the same string if there was no ~)
+//! \throws runtime_error on error
+//!
+////////////////////////////////////////////////////////////////////////
+std::string ReplaceHomeDir( const std::string path );
 
 }	// namespace utils
 };	// namespace kode
