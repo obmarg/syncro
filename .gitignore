@@ -39,3 +39,4 @@ win32_x86_debug/
 linux_x86_release/
 linux_x86_debug/
 *result.xml
+.DS_STORE

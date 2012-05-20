@@ -62,11 +62,12 @@ if platform != 'win32':
 
 if platform == 'linux':
     cppdefines += [ "_LINUX", "LINUX" ]
-    cppflags += [ '-fpermissive' ]
+    cppflags += [ '-fpermissive', "-std=c++11" ]
     libs += [ 'boost_thread' ]
 
 if platform == 'darwin':
     cppdefines += [ "_MACOS", 'MACOS' ]
+    cppflags += [ "-std=c++11" ]
     cpppath += [ '/opt/local/include' ]
     libpath += [ '/opt/local/lib' ]
     cc = 'clang'
