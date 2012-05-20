@@ -22,7 +22,7 @@
 
 namespace syncro {
 
-static const std::string DefaultTempDir = "~/.syncro/temp";
+static const std::string DefaultTempDir = "~/.syncro/temp/";
 static const std::string DefaultDatabasePath = "~/.syncro/data.db";
 
 ////////////////////////////////////////////////////////////////////////

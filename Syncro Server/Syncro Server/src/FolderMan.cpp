@@ -124,16 +124,13 @@ FolderMan::FileRequested(
 	std::string folderPath =
 	    FindFolder( requestData.GetFolderId() ).Path;
 
-	std::string fileName = folderPath;
+    boost::filesystem::path fileName = folderPath;
 
-	char aLastChar = *( fileName.rbegin() ) ;
-	if(( aLastChar != '\\' ) && ( aLastChar != '/' ) )
-		fileName += "/";
-	fileName += requestData.GetFilename();
+	fileName /= requestData.GetFilename();
 	bool oneShot = false;
 	int oneShotId = -1;
 	bool deleteOnFinish = false;
-	if( !exists( path( fileName ) ) )
+	if( !exists( fileName ) )
 	{
 		if( !m_findOneShot )
 		{
@@ -174,8 +171,8 @@ FolderMan::FileRequested(
             "Client requested to download file outside of container folder"
             );
 	}
-
-	details.m_filename = fileName;
+	auto fileNameString = fileName.native_file_string();
+	details.m_filename = fileNameString;
 	details.m_modifiedTime = 
 		boost::numeric_cast< int64_t >( 
 			boost::filesystem::last_write_time( fileName )
@@ -189,7 +186,7 @@ FolderMan::FileRequested(
 	        oneShot,
 	        requestData.GetFolderId(),
 	        "",
-	        fileName,
+	        fileNameString,
 			deleteOnFinish,
 	        oneShotId
 	    )
@@ -210,22 +207,20 @@ FolderMan::IncomingFile(
 )
 {
 	const FolderInfo& folderInfo = FindFolder( fileData.GetFolderId() );
-	std::string destFileName = folderInfo.Path;
+    boost::filesystem::path rootPath = folderInfo.Path;
 	if( fileData.IsOneShot() )
 	{
 		//If one shot, then we need to upload to a temporary folder
-		destFileName = Config::GetInstance().TempFilesPath();
+		rootPath = Config::GetInstance().TempFilesPath();
 	}
 	else if( !folderInfo.UploadPrefix.empty() )
 	{
 		std::string prefix = folderInfo.UploadPrefix;
 		syncro::utils::ReplaceStringVars( prefix );
-		//TODO: Need to ensure that the prefix has a trailing slash
-		destFileName += prefix;
+		rootPath /= prefix;
 	}
-	destFileName += fileData.GetFilename();
-	boost::filesystem::path destFile( destFileName );
-	boost::filesystem::path destDir( destFile );
+	auto destFile = rootPath / fileData.GetFilename();
+	auto destDir = destFile;
 	destDir.remove_filename();
 	if( !boost::filesystem::exists( destDir ) )
 	{
