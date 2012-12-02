@@ -44,18 +44,24 @@ public:
 		server::UserSession& session
 		)
 	{
-	    // TODO: Need to check that we actually have a
-	    //       RecvData at this point, otherwise
-	    //       we're going to call ShouldResume
-	    //       without a RecvData
-		pbHandlers::FileHashRequest request( 
+	    //
+        // If we're currently receiving, then we want to setup a callback to
+        // mark the current file as ok to resume
+	    //
+        FileHashRequest::HashOkCallback callback;
+	    auto recvData = session.GetCurrentRecvData(); 
+	    if ( recvData )
+        {
+            callback = 
+                boost::bind( 
+                    &BinaryIncomingData::ShouldResume,
+                    recvData, _1, _2
+                    );
+        }
+		FileHashRequest request( 
 			( *inputStreams ), 
 			session.GetFolderMan(),
-			boost::bind( 
-				&BinaryIncomingData::ShouldResume,
-				session.GetCurrentRecvData(),
-				_1, _2
-				)
+			callback
 			);
 		return request.GetResponse();
 	}
@@ -99,6 +105,8 @@ FileHashRequest::FileHashRequest(
 		return;
 	}
 
+    // TODO: This function call is going to block, would probably 
+    //       be nice to shift it out to another thread or something
 	kode::HashPtr hashObj = 
 		kode::HashFile< CryptoPP::SHA >( fileDetails.Filename().c_str() );
 
