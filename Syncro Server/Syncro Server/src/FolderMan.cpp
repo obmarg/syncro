@@ -44,7 +44,7 @@ FolderMan::FolderMan( DatabasePtr db ) : m_db( db )
 	while( statement->GetNextRow() )
 	{
 		path oPath( statement->GetColumn< std::string >( "Path" ) );
-		oPath = boost::filesystem::complete( oPath );
+		oPath = boost::filesystem::absolute( oPath );
 		if( !is_directory( oPath ) )
 			throw std::runtime_error( "Invalid path read from DB in CFolderMan constructor" );
 		//TODO: Do something with the name as well
@@ -157,7 +157,7 @@ FolderMan::FileRequested(
 		}
 	}
 	std::string absoluteFileName = 
-		boost::filesystem::complete( fileName ).string();
+		boost::filesystem::absolute( fileName ).string();
 	//
 	// Ensure that the absolute file name starts with the folder path
 	// for security purposes
@@ -227,7 +227,7 @@ FolderMan::IncomingFile(
 		boost::filesystem::create_directories( destDir );
 	}
 	details.m_filename = 
-		boost::filesystem::complete( destFile ).string();
+		boost::filesystem::absolute( destFile ).string();
 	//TODO: Add support for folder path in here. for now doesn't matter
 	//		can possibly remove the parameter if it turns out just the
 	//		name is good enough
