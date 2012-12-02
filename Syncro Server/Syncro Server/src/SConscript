@@ -25,6 +25,7 @@ sources = [ 	"AdminCommandHandler.cpp",
 		"UserSession.cpp",
 		"BinaryIncomingHandler.cpp",
 		"Config.cpp",
+		"Logging.cpp",
 		]
 
 output = env.Program( 'syncro', source = sources, LIBS=libs )

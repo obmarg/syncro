@@ -18,6 +18,7 @@
 #include "SyncroServer.h"
 #include "SyncroDB.h"
 #include "Config.h"
+#include "Logging.h"
 #include <kode/utils.h>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
@@ -59,7 +60,8 @@ int main( int argc, char** argv )
 		    "config,c", 
 		    po::value<std::string>( &config ), 
 		    "use specified config file" 
-		    );
+		    )
+		( "verbose,v", "set output verbosity" );
 
 	po::variables_map vm;
 	bool parsedOk = true;
@@ -75,11 +77,15 @@ int main( int argc, char** argv )
 	}
 	bool databaseSet = false;
 
+	int logLevel = 1 + vm.count("verbose");
+    syncro::log::g_log.SetLevel( logLevel );
+
 	if( !parsedOk || vm.count( "help" ) )
 	{
 		std::cout << desc;
 		return 1;
 	}
+
 	if( vm.count( "database" ) )
 	{
         databaseSet = true;
