@@ -18,6 +18,7 @@
 #include "AdminCommandManager.h"
 #include "AuthManager.h"
 #include "SyncroDB.h"
+#include "Logging.h"
 #include <kode/db/statement.h>
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
@@ -136,8 +137,8 @@ void AdminCommandManager::HandleCommand(
 	}
 	catch( const MissingParamException& ex )
 	{
-		std::cout << "Admin command failed: " << sName << "\n";
-		std::cout << "Missing parameter: " << ex.what() << "\n";
+        log::error << "Admin command failed: " << sName << "\n";
+        log::error << "Missing parameter: " << ex.what() << "\n";
 		//TODO: Throw admin command exception?
 	}
 }

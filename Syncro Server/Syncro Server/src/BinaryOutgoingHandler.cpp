@@ -18,6 +18,7 @@
 #include "BinaryDataRequest.h"
 #include "BinaryOutgoingHandler.h"
 #include "SimplePBResponse.h"
+#include "Logging.h"
 #include <libsyncro/packet_types.h>
 
 namespace syncro {
@@ -51,14 +52,11 @@ public:
 			session.GetFolderMan().FileRequested( oRequest, details );
 		if( !fAccept )
 		{
-#ifdef _DEBUG
-			//TODO: Maybe remove this once finished debugging
-			std::cout << "Binary Request Rejected.\n" <<
+            log::info << "Binary Request Rejected.\n" <<
 				"FolderId: " <<		oRequest.GetFolderId()		<< "\n" <<
 				"Filename: " <<	oRequest.GetFilename().c_str()	<< "\n" <<
 				"Filesize: " <<		oRequest.GetFileSize()		<< "\n" <<
 				"Start Offset:" <<	oRequest.GetStartOffset()	<< "\n";
-#endif
 			return BasePBResponse::TPointer(
 				new SimplePBResponse( 
 					comms::packet_types::BinaryRequestRejected 

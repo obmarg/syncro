@@ -20,6 +20,7 @@
 #include "BinaryDataRequest.h"
 #include "UserSession.h"
 #include "ResponseFunctions.h"
+#include "Logging.h"
 #include <libsyncro/packet_types.h>
 #include <iostream>
 
@@ -45,9 +46,9 @@ public:
 					details.CompletionCallback()
 					)
 				);
-			std::cout << "Accepted Binary Incoming Request\n";
-			std::cout << "Filename: " << details.Filename().c_str() << "\n";
-			std::cout << "Current Size: " << details.CurrentSize() << "\n";
+            log::info << "Accepted Binary Incoming Request\n";
+            log::info << "Filename: " << details.Filename().c_str() << "\n";
+            log::info << "Current Size: " << details.CurrentSize() << "\n";
 		}
 		return BinaryIncomingResponse::Create( 
 			BinaryIncomingResponse::eResponseType_Response, 
@@ -77,8 +78,8 @@ public:
 		catch( const std::exception& ex )
 		{
 			fOK = false;
-			std::cout << "Caught exception in BinaryIncomingDataHandler: "
-				<< ex.what() << std::endl;
+            log::error << "Caught exception in BinaryIncomingDataHandler: "
+				<< ex.what() << "\n";
 		}
 		return BinaryIncomingResponse::Create( 
 			BinaryIncomingResponse::eResponseType_Ack, 

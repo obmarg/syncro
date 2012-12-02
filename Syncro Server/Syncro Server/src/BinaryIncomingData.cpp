@@ -16,6 +16,7 @@
 */
 
 #include "BinaryIncomingData.h"
+#include "Logging.h"
 #include <libsyncro/protocol_buffers/binarydata.pb.h>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/filesystem.hpp>
@@ -84,7 +85,7 @@ BinaryIncomingData::HandlePacket( const InputStreamList& inaInputStreams )
 		float dataTransferred = numeric_cast<float>( m_dataTransferred ) / 1024.0f;
 		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f;
 		float rate = dataTransferred / timeSecs;
-		std::cout << "Finished receiving file (" << rate << "kb/s)\n";
+        log::info << "Finished receiving file (" << rate << "kb/s)\n";
 		if( m_completedCallback )
 		{
 			m_completedCallback();
@@ -155,13 +156,13 @@ void BinaryIncomingData::StartFile(int64_t startOffset)
 
 	if( startOffset > 0 )
 	{
-		std::cout << "Resuming receive of file: ";
+        log::info << "Resuming receive of file: ";
 	}
 	else
 	{
-		std::cout << "Receiving file: ";
+        log::info << "Receiving file: ";
 	} 
-	std::cout << m_filename.c_str() << "\n";
+    log::info << m_filename.c_str() << "\n";
 }
 
 }

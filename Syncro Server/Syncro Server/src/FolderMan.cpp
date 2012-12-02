@@ -20,6 +20,7 @@
 #include "BinaryDataRequest.h"
 #include "TransferFinishDetails.h"
 #include "Config.h"
+#include "Logging.h"
 #include <libsyncro/stringutils.h>
 #include <kode/db/statement.h>
 #include <kode/utils.h>
@@ -341,15 +342,15 @@ void FolderMan::FileUploadFinished( UploadFinishDetailsPtr details )
 		}
 		catch( const std::exception& ex )
 		{
-			std::cout << "Failed to set last write time in "
-				<< "CFolderMan::FileUploadFinished." << std::endl
-				<< "What: " << ex.what() << std::endl;
+            log::warning << "Failed to set last write time in "
+				<< "CFolderMan::FileUploadFinished." << "\n"
+				<< "What: " << ex.what() << "\n";
 		}
 	}
 	else
 	{
-		std::cout << "Warning: No modification time in FileUploadFinished"
-			<< std::endl;
+        log::warning << "Warning: No modification time in FileUploadFinished"
+			<< "\n";
 	}
 
 	//TODO: At some point, would be good to clear out the old uploaded files database,

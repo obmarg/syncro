@@ -17,8 +17,11 @@
 
 #include "PBRequestHandler.h"
 #include "PBResponseSendHandler.h"
+#include "Logging.h"
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <libsyncro/comms.h>
+#include <libsyncro/packet_types.h>
+#include <boost/numeric/conversion/cast.hpp>
 #include <iostream>
 
 namespace syncro
@@ -89,6 +92,7 @@ bool PBRequestHandler::CanHandleReceive( const TCharBuffer& inoBuffer )
 
 bool PBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 {
+	using namespace comms::packet_types;
 	using std::vector;
 	using google::protobuf::io::ArrayInputStream;
 	using boost::shared_ptr;
@@ -110,14 +114,10 @@ bool PBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 
 	try
 	{
-#ifdef PB_PACKET_DEBUG
-		packet_types::ePBPacketTypes packetType =
-			numeric_cast< packet_types::ePBPacketTypes >( innPacketType );
-		std::cout <<
-			"Received " <<
-			packet_types::Str( packetType ) <<
-			" packet\n";
-#endif
+		ePBPacketTypes packetType =
+			boost::numeric_cast< ePBPacketTypes >( m_oHeader.packet_type() );
+        log::debug << "Received " << Str( packetType ) << " packet\n";
+
 		BasePBResponse::TPointer response = 
 			m_getResponse( m_oHeader.packet_type(), &subpackets );
 
@@ -132,15 +132,15 @@ bool PBRequestHandler::HandleReceive( const TCharBuffer& inoBuffer )
 		//TODO: do we want to return false here?
 		m_fCloseConnection = true;
 		m_fatalError = true;
-		std::cout << "Authentication failed for " 
+        log::info << "Authentication failed for " 
 		    << m_connection.ClientIP() << "\n";
 	}
 	catch( const std::exception& ex )
 	{
 		m_fCloseConnection = true;
 		m_fatalError = true;
-		std::cout << "Caught exception in PBRequestHandler::HandleReceive."
-			<< std::endl << "What: " << ex.what() << std::endl;
+        log::error << "Caught exception in PBRequestHandler::HandleReceive."
+			<< "\n" << "What: " << ex.what() << "\n";
 	}
 
 	ResetVariables();

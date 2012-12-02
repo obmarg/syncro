@@ -77,27 +77,27 @@ int main( int argc, char** argv )
 	}
 	bool databaseSet = false;
 
-	int logLevel = 1 + vm.count("verbose");
-    syncro::log::g_log.SetLevel( logLevel );
-
 	if( !parsedOk || vm.count( "help" ) )
 	{
 		std::cout << desc;
-		return 1;
+		return 2;
 	}
+
+	int logLevel = 2 + vm.count("verbose");
+    syncro::log::g_log.SetLevel( logLevel );
 
 	if( vm.count( "database" ) )
 	{
         databaseSet = true;
 		std::string databaseFile( vm[ "database" ].as< std::string >() );
-		std::cout << "Using database file: " << databaseFile << "\n";
+        log::info << "Using database file: " << databaseFile << "\n";
 		SyncroDB::SetDefaultFilename( databaseFile );
 	}
 	unsigned int port = 0;
 	if( vm.count("port") )
 	{
 		port = vm[ "port" ].as< unsigned int >();
-		std::cout << "Using port: " << port << "\n";
+        log::info << "Using port: " << port << "\n";
 	}
 	bool broadcast = true;
 	if( vm.count( "nobroadcast" ) )
@@ -108,12 +108,12 @@ int main( int argc, char** argv )
 	{
 #ifdef WIN32
 		//throw std::logic_error( "Daemon not implemented on win32" )
-		std::cout << "Daemon not implemented on win32\n";
+        log::error << "Daemon not implemented on win32\n";
 		return 1;
 #else
 		if( daemon( true, false ) == -1 )
 		{
-			std::cout << "Could not run as daemon\n";
+            log::error << "Could not run as daemon\n";
 			return 1;	
 		}
 		std::string pidFilename = 

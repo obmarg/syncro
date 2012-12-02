@@ -16,6 +16,7 @@
 */
 
 #include "PBResponseSendHandler.h"
+#include "Logging.h"
 #include <libsyncro/comms.h>
 #include <libsyncro/packet_types.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
@@ -25,9 +26,6 @@
 
 namespace syncro
 {
-
-// Uncomment to enable PB packet debug output
-//#define PB_PACKET_DEBUG
 
 PBResponseSendHandler::PBResponseSendHandler( TCPConnection& connection ) : 
 m_connection( connection )
@@ -53,14 +51,13 @@ bool PBResponseSendHandler::SendStarting()
 
 	pb::PacketHeader oResponseHeader;
 	oResponseHeader.set_packet_type( m_pResponse->GetPacketType() );
-#ifdef PB_PACKET_DEBUG
+
 	packet_types::ePBPacketTypes packetType =
 	    numeric_cast< packet_types::ePBPacketTypes >( m_pResponse->GetPacketType() );
-	std::cout <<
+    log::debug <<
 	          "Sending " <<
 	          packet_types::Str( packetType ) <<
 	          " packet\n";
-#endif
 
 	int numPackets = m_pResponse->GetSubpacketCount();
 	uint32_t nTotalPacketSize = 0;

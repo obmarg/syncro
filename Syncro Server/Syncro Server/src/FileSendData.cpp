@@ -16,6 +16,7 @@
 */
 
 #include "FileSendData.h"
+#include "Logging.h"
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <stdint.h>
@@ -171,11 +172,11 @@ void FileSendData::CallCompletionCallback()
 		float timeSecs = numeric_cast<float>( timeMs ) / 1000.0f;
 
 		float rate = dataTransferred / timeSecs;
-		std::cout << "Finished sending file (" << rate << "kb/s)\n";
+        log::info << "Finished sending file (" << rate << "kb/s)\n";
 	}
 	catch( const std::exception& ex )
 	{
-		std::cout << "Error when calculating transfer rate in "
+        log::warning << "Error when calculating transfer rate in "
 				  << "CFileSendData::CallCompletionCallback:\n"
 		          << ex.what();
 	}

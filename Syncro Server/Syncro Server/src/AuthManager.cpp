@@ -17,6 +17,7 @@
 
 #include "AuthManager.h"
 #include "SyncroDB.h"
+#include "Logging.h"
 #include <kode/db/statement.h>
 #include <kode/base64.h>
 #include <cryptopp/hmac.h>
@@ -39,7 +40,7 @@ AuthManager::AuthManager()
 	);
 
 	m_saltString = kode::base64::Encode( m_salt, sizeof( m_salt ) );
-	std::cout << "Salt: " << m_saltString << "\n";
+    log::debug << "Salt: " << m_saltString << "\n";
 }
 
 AuthManager::~AuthManager()

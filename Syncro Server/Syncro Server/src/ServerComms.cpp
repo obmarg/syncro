@@ -17,6 +17,7 @@
 
 #include "ServerComms.h"
 #include "HandshakeHandlers.h"
+#include "Logging.h"
 #include <libsyncro/comms.h>
 #include <boost/bind.hpp>
 #include <iostream>
@@ -26,7 +27,6 @@ namespace syncro
 
 using namespace boost::asio::ip;
 using boost::asio::io_service;
-using std::cout;
 
 const int DEFAULT_RECV_BUFFER = 1000;
 
@@ -98,8 +98,8 @@ bool TCPConnection::IsRecvFinished( const boost::system::error_code& inoError, s
 {
 	if( inoError )
 	{
-		cout << "Error when checking received:  Received " << innBytesSoFar << " bytes\n";
-		cout << inoError.message() << "\n";
+        log::error << "Error when checking received:  Received " << innBytesSoFar << " bytes\n";
+        log::error << inoError.message() << "\n";
 		return true;
 	}
 	TCharBuffer oBuffer( m_aBuffer, innBytesSoFar );
@@ -122,21 +122,21 @@ void TCPConnection::FinishedRecv( const boost::system::error_code& inoError, std
 	bool fatalError = false;
 	if( inoError )
 	{
-		cout << "Error when receiving:  Received " << innBytes << " bytes\n";
-		cout << inoError.message() << "\n";
+        log::error << "Error when receiving:  Received " << innBytes << " bytes\n";
+        log::error << inoError.message() << "\n";
 		return;
 	}
 	else
 	{
 #ifdef COMMS_DEBUG
-		cout << "Received " << innBytes << "\n";
+        log::debug << "Received " << innBytes << "\n";
 #endif 
 
 		TCharBuffer oBuffer( m_aBuffer, innBytes );
 
 		if( !m_pSelectedRecvHandler )
 		{
-			cout << "ERROR: FinishedRecv called with no recv handler selected\n";
+            log::error << "ERROR: FinishedRecv called with no recv handler selected\n";
 			fatalError = true;
 		}
 		else
@@ -187,8 +187,8 @@ TCPConnection::IsSendFinished( const boost::system::error_code& inoError, std::s
 {
 	if( inoError )
 	{
-		cout << "Error when sending: Sent " << innBytesSoFar << " bytes\n";
-		cout << inoError.message() << "\n";
+        log::error << "Error when sending: Sent " << innBytesSoFar << " bytes\n";
+        log::error << inoError.message() << "\n";
 		return true;
 	}
 	return m_pSendHandler->HandleSend( innBytesSoFar );
@@ -199,8 +199,8 @@ TCPConnection::FinishedSend( const boost::system::error_code& inoError, std::siz
 {
 	if( inoError )
 	{
-		cout << "Error when sending:  Received " << innBytes << " bytes\n";
-		cout << inoError.message() << "\n";
+        log::error << "Error when sending:  Received " << innBytes << " bytes\n";
+        log::error << inoError.message() << "\n";
 		return;
 	}
 	SendHandler::TPointer pHandler = m_pSendHandler;
@@ -208,7 +208,7 @@ TCPConnection::FinishedSend( const boost::system::error_code& inoError, std::siz
 	pHandler->SendDone( innBytes );
 
 #ifdef COMMS_DEBUG
-	cout << "Sent " << innBytes << " OK!";
+    log::debug << "Sent " << innBytes << " OK!";
 #endif
 }
 
