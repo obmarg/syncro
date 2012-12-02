@@ -35,14 +35,14 @@ testdir = Dir( 'test_' + builddir )
 ccflags = []
 cppflags = [ ]
 lflags = []
-cppdefines = [ 'BOOST_FILESYSTEM_VERSION=2' ]
+cppdefines = [ ]
 cpppath = [ "include" ]
 libpath = []
 cc = cxx = None
 
-libs = [ 
-    'syncro', 
-    'kode', 
+libs = [
+    'syncro',
+    'kode',
     'sqlite3'
     ]
 

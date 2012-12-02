@@ -48,10 +48,10 @@ void Upload(
 	{
 		conn.UploadFile(
 			FileTransferDetails()
-			.SetFolderId( folderId )
-			.SetLocalPath( sendPath )
-			.SetRemotePath( path.filename() )
-			.SetOneShot( oneShot )
+                .SetFolderId( folderId )
+                .SetLocalPath( sendPath )
+                .SetRemotePath( path.filename().string() )
+                .SetOneShot( oneShot )
 			);
 	}
 }
@@ -135,7 +135,7 @@ int main( int argc, char* argv[] )
 			{
 				Connection::StringMap params;
 				params.insert( std::make_pair( "path", folderName ) );
-				params.insert( std::make_pair( "name", path.native_file_string() ) );
+				params.insert( std::make_pair( "name", path.string() ) );
 				conn.SendAdminCommand( "AddFolder", params );
 			}
 		}
@@ -184,7 +184,7 @@ int main( int argc, char* argv[] )
 			        vm[ "folderid" ].as< int >(),
 			        vm.count( "oneshot" ) > 0,
 			        filename,
-			        path.filename()
+			        path.filename().string()
                     );
 		}
 	}

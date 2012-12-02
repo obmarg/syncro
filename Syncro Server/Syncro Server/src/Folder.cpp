@@ -34,7 +34,7 @@ Folder::Folder( const string& insPath, const string& name ) :
 	using boost::filesystem::file_size;
 
 	path oPath( insPath );
-	m_sPath = oPath.filename();
+	m_sPath = oPath.filename().string();
 	if( !is_directory( oPath ) )
 		return;
 	for( directory_iterator pItem( oPath ); pItem != directory_iterator(); pItem++ )
@@ -43,8 +43,8 @@ Folder::Folder( const string& insPath, const string& name ) :
 		{
 			boost::shared_ptr<Folder> folder(
 			    new Folder(
-			        pItem->path().directory_string(),
-			        pItem->path().filename()
+			        pItem->path().string(),
+			        pItem->path().filename().string()
 			    )
 			);
 			m_oChildren.push_back( folder );
@@ -53,7 +53,11 @@ Folder::Folder( const string& insPath, const string& name ) :
 		{
 			//m_oFiles.push_back( pItem->path().directory_string() );
 
-			m_oFiles.push_back( sFileData( pItem->filename(), ( const unsigned int )file_size( pItem->path() ) ) );
+			m_oFiles.push_back( 
+			        sFileData( 
+			            pItem->path().filename().string(), 
+			            ( const unsigned int )file_size( pItem->path() ) 
+			            ) );
 		}
 	}
 }

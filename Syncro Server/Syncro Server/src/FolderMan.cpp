@@ -52,7 +52,7 @@ FolderMan::FolderMan( DatabasePtr db ) : m_db( db )
 		    FolderInfo(
 		        statement->GetColumn< int >( "ID" ),
 		        statement->GetColumn< std::string >( "Name" ),
-		        oPath.native_directory_string(),
+		        oPath.string(),
 		        statement->GetColumn< std::string >( "UploadPrefix" )
 		    )
 		);
@@ -157,7 +157,7 @@ FolderMan::FileRequested(
 		}
 	}
 	std::string absoluteFileName = 
-		boost::filesystem::complete( fileName ).native_file_string();
+		boost::filesystem::complete( fileName ).string();
 	//
 	// Ensure that the absolute file name starts with the folder path
 	// for security purposes
@@ -171,7 +171,7 @@ FolderMan::FileRequested(
             "Client requested to download file outside of container folder"
             );
 	}
-	auto fileNameString = fileName.native_file_string();
+	auto fileNameString = fileName.string();
 	details.m_filename = fileNameString;
 	details.m_modifiedTime = 
 		boost::numeric_cast< int64_t >( 
@@ -227,7 +227,7 @@ FolderMan::IncomingFile(
 		boost::filesystem::create_directories( destDir );
 	}
 	details.m_filename = 
-		boost::filesystem::complete( destFile ).native_file_string();
+		boost::filesystem::complete( destFile ).string();
 	//TODO: Add support for folder path in here. for now doesn't matter
 	//		can possibly remove the parameter if it turns out just the
 	//		name is good enough

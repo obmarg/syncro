@@ -44,6 +44,10 @@ public:
 		server::UserSession& session
 		)
 	{
+	    // TODO: Need to check that we actually have a
+	    //       RecvData at this point, otherwise
+	    //       we're going to call ShouldResume
+	    //       without a RecvData
 		pbHandlers::FileHashRequest request( 
 			( *inputStreams ), 
 			session.GetFolderMan(),
